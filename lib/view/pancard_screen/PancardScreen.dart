@@ -153,7 +153,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                 // Make the synchronous API call
                                 var result= await Provider.of<DataProvider>(context, listen: false)
                                     .getLeadValidPanCard("JKMPS4653E");
-                                
+
 
                               } catch (error) {
                                 // Handle any errors that occur during the API call
