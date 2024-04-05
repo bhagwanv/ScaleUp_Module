@@ -13,6 +13,7 @@ import '../../../utils/constants.dart';
 class LoginForm extends StatefulWidget {
   DataProvider? productProvider;
 
+
   LoginForm({
     required this.productProvider,
     Key? key,
@@ -23,7 +24,6 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-
   @override
   void initState() {
     super.initState();
@@ -32,8 +32,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     SharedPref sharedPref = SharedPref();
-    bool isChecked = false;
-    String _code="";
+
     final TextEditingController _mobileNumberCl = TextEditingController();
 
     return Column(
@@ -94,7 +93,7 @@ class _LoginFormState extends State<LoginForm> {
         const SizedBox(
           height: 50,
         ),
-        const Column(
+         Column(
           children: [
             CustomCheckbox(),
           ],
@@ -110,21 +109,21 @@ class _LoginFormState extends State<LoginForm> {
                   } else if (!Utils.isPhoneNoValid(_mobileNumberCl.text)) {
                     Utils.showToast("Please Enter Valid Mobile Number");
                   } else {
-
-                    sharedPref.addStringToSF(sharedPref.MOBILE_NUMBER,_mobileNumberCl.text );
+                    Utils.hideKeyBored(context);
+                    sharedPref.save(
+                        SharedPref.LOGIN_MOBILE_NUMBER, _mobileNumberCl.text);
 
                     Utils.onLoading(context, "Loading....");
-                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(_mobileNumberCl.text, 2);
+                    await Provider.of<DataProvider>(context, listen: false)
+                        .genrateOtp(_mobileNumberCl.text, 2);
                     if (!widget.productProvider!.genrateOptData!.status!) {
                       Navigator.of(context, rootNavigator: true).pop();
                       Utils.showToast("Something went wrong");
                     } else {
                       Navigator.of(context, rootNavigator: true).pop();
                       final signcode = await SmsAutoFill().getAppSignature;
-                      setState(() {
-                        _code = '123456';
-                      });
-                      print("Bhagwan "+signcode);
+                      print("Bhagwan " + signcode);
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -157,7 +156,6 @@ class CustomCheckbox extends StatefulWidget {
 
 class _CustomCheckboxState extends State<CustomCheckbox> {
   bool isChecked = false;
-
   @override
   Widget build(BuildContext context) {
     return InkWell(

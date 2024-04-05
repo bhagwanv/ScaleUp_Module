@@ -1,14 +1,20 @@
+
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:pinput/pinput.dart';
+import 'package:provider/provider.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/utils/common_elevted_button.dart';
 import 'package:scale_up_module/utils/kyc_faild_widgets.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import '../../data_provider/DataProvider.dart';
 import '../../utils/constants.dart';
 
 class OtpScreen extends StatefulWidget {
-
   const OtpScreen({super.key});
 
   @override
@@ -16,28 +22,68 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
-
   String? appSignature;
   String? otpCode;
+  DataProvider? productProvider;
+  late Timer _timer;
+  int _start = 30;
+  String? userLoginMobile;
+  bool isReSendDisable = true;
 
   @override
   void codeUpdated() {
     setState(() {
       otpCode = code;
+      print("Code ######## " + otpCode!);
     });
   }
+
   @override
   void initState() {
     super.initState();
+    listenOtp();
+    startTimer();
     SmsAutoFill().getAppSignature.then((signature) {
       setState(() {
         appSignature = signature;
-        print("MUkesh "+appSignature!);
+        print("MUkesh " + appSignature!);
       });
     });
   }
 
+  void startTimer() async {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            isReSendDisable = false;
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
 
+  void listenOtp() async {
+    userLoginMobile = await SharedPref().getString(SharedPref.LOGIN_MOBILE_NUMBER);
+    await SmsAutoFill().unregisterListener();
+    listenForCode();
+    await SmsAutoFill().listenForCode();
+    print("OTP listen  Called");
+  }
+
+  @override
+  void dispose() {
+    SmsAutoFill().unregisterListener();
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,95 +101,150 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       ),
     );
 
-
     return SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.white,
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30,top: 50,right: 30,bottom: 30),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(height: 69,width: 51,
-                      alignment:Alignment.topLeft,
-                      child:  Image.asset('assets/images/scale.png')
-                  ),
-                  const SizedBox(height: 50,),
-                  const Text(
-                    'Enter \nVerification Code',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 35, color: Colors.black),
-                  ),
-                  const SizedBox(height: 20,),
-                  const Text(
-                    'We just sent to +91 XXXX XXX224',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 15, color: Colors.black),
-                  ),
-                  const SizedBox(height: 55,),
-                  Center(
-                    child: Pinput(
-                      length: 6,
-                      androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsRetrieverApi,
-                      showCursor: true,
-                      defaultPinTheme: defaultPinTheme,
-                      focusedPinTheme: defaultPinTheme.copyWith(
-                        decoration: defaultPinTheme.decoration!.copyWith(
-                          border: Border.all(color: kPrimaryColor),
-                        ),
+      backgroundColor: Colors.white,
+      body: Consumer<DataProvider>(builder: (context, productProvider, child) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(left: 30, top: 50, right: 30, bottom: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    height: 69,
+                    width: 51,
+                    alignment: Alignment.topLeft,
+                    child: Image.asset('assets/images/scale.png')),
+                const SizedBox(
+                  height: 50,
+                ),
+                const Text(
+                  'Enter \nVerification Code',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(fontSize: 35, color: Colors.black),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'We just sent to +91 $userLoginMobile',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(fontSize: 15, color: Colors.black),
+                ),
+                const SizedBox(
+                  height: 55,
+                ),
+                Center(
+                  child: Pinput(
+                    length: 6,
+                    androidSmsAutofillMethod:
+                        AndroidSmsAutofillMethod.smsRetrieverApi,
+                    showCursor: true,
+                    defaultPinTheme: defaultPinTheme,
+                    focusedPinTheme: defaultPinTheme.copyWith(
+                      decoration: defaultPinTheme.decoration!.copyWith(
+                        border: Border.all(color: kPrimaryColor),
                       ),
-                      onCompleted: (pin) => debugPrint(pin),
                     ),
+                    onCompleted: (pin) => debugPrint(pin),
                   ),
-                  const SizedBox(height: 40,),
-                  const SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      'Resend Code in 55 s',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 15, color: kPrimaryColor,fontWeight: FontWeight.normal),
-                    ),
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                 SizedBox(
+                  width: double.infinity,
+                  child:Text(
+                    'Resend Code in ${_start} s',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.normal),
                   ),
-                  const SizedBox(height: 20,),
-                  Container(
-                      padding: EdgeInsets.all(10),
-                      child: Center(
-                        child: RichText(
-                          text: TextSpan(
-                              text: 'If you didn’t received a code!',
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 14,fontWeight: FontWeight.normal),
-                              children: <TextSpan>[
-                                TextSpan(text: '  Resend',
-                                    style: const TextStyle(
-                                        color: Colors.blueAccent, fontSize: 14,fontWeight: FontWeight.normal),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        // navigate to desired screen
-                                      }
-                                )
-                              ]
-                          ),
-                        ),
-                      )
-                  ),
-                  const SizedBox(height: 10,),
-                  CommonElevatedButton(onPressed: (){ bottomSheetMenu(context);}, text: "Verify Code",upperCase: true, )
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.all(10),
+                    child: Center(
+                      child:   RichText(
+                        text: TextSpan(
+                            text: 'If you didn’t received a code!',
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal),
+                            children: <TextSpan>[
+                              isReSendDisable? TextSpan(
+                                  text: '  Resend',
+                                  style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = ()  async {
 
-                ],
-              ),
+                                    }): TextSpan(
+                                  text: '  Resend',
+                                  style: const TextStyle(
+                                      color: Colors.blueAccent,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = ()  async {
+                                      isReSendDisable = true;
+                                      listenOtp();
+                                      reSendOpt(context, productProvider);
+                                      _start = 30;
+                                      startTimer();
+                                    })
+                            ]),
+                      ),
+                    )),
+                const SizedBox(
+                  height: 10,
+                ),
+                CommonElevatedButton(
+                  onPressed: () {
+                    bottomSheetMenu(context);
+                  },
+                  text: "Verify Code",
+                  upperCase: true,
+                )
+              ],
             ),
           ),
-        ));
+        );
+      }),
+    ));
+  }
+}
+
+
+
+void reSendOpt(BuildContext context, DataProvider productProvider) async {
+  Utils.onLoading(context, "Loading....");
+
+  await Provider.of<DataProvider>(context, listen: false)
+      .genrateOtp( await SharedPref().getString(SharedPref.LOGIN_MOBILE_NUMBER), 2);
+  if (!productProvider.genrateOptData!.status!) {
+    Navigator.of(context, rootNavigator: true).pop();
+
+    Utils.showToast("Something went wrong");
+  } else {
+    Navigator.of(context, rootNavigator: true).pop();
+
   }
 }
 
 void bottomSheetMenu(BuildContext context) {
   showModalBottomSheet(
       context: context,
-      builder: (builder){
+      builder: (builder) {
         return const KycFailedWidgets();
-      }
-  );
+      });
 }
