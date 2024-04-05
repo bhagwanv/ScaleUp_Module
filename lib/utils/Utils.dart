@@ -58,4 +58,8 @@ class Utils {
       ),
     );
   }
+
+  static void hideKeyBored(BuildContext context){
+    FocusScope.of(context).requestFocus(new FocusNode());
+  }
 }

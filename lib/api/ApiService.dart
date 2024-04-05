@@ -99,4 +99,26 @@ class ApiService {
       throw Exception('No internet connection');
     }
   }
+
+  Future<GenrateOptResponceModel> getLeadValidPanCard(
+      String panNumber, int CompanyID) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.get(Uri.parse(
+          '${apiUrls.baseUrl + apiUrls.getLeadValidPanCard}?PanNumber=$panNumber'));
+
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final GenrateOptResponceModel responseModel = GenrateOptResponceModel.fromJson(
+            jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
 }
