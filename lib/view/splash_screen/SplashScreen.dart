@@ -50,6 +50,8 @@ class _SplashScreenState extends State<SplashScreen> {
       vintageDays: 0,
       isEditable: true,);
      Provider.of<DataProvider>(context, listen: false).leadCurrentActivityAsync(leadCurrentRequestModel );*/
+    SharedPref sharedPref = SharedPref();
+    sharedPref.getStringValuesSF(sharedPref.MOBILE_NUMBER).then((value) {value;});
 
     return Scaffold(
       appBar: AppBar(

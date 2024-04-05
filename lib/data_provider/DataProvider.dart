@@ -18,6 +18,7 @@ class DataProvider extends ChangeNotifier {
 
   LeadCurrentResponseModel? _leadCurrentActivityAsyncData;
   LeadCurrentResponseModel? get leadCurrentActivityAsyncData => _leadCurrentActivityAsyncData;
+
   GenrateOptResponceModel? _genrateOptData;
   GenrateOptResponceModel? get genrateOptData => _genrateOptData;
 

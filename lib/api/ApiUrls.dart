@@ -9,6 +9,7 @@ class ApiUrls{
   final String getLeadPAN="/aggregator/LeadAgg/GetLeadPAN";
 
   final String generateOtp="/aggregator/LeadAgg/GenerateOtp";
+  final String getLeadValidPanCard="/services/kyc/v1/KYCDoc/GetLeadValidPanCard";
 
 
 }
