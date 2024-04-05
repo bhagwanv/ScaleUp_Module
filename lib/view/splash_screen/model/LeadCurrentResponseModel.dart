@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'LeadProductActivity.dart';
 
 class LeadCurrentResponseModel {
+  int? currentSequence;
+  List<LeadProductActivity>? leadProductActivity;
+
   LeadCurrentResponseModel({
       this.currentSequence, 
       this.leadProductActivity,});
@@ -14,8 +19,6 @@ class LeadCurrentResponseModel {
       });
     }
   }
-  int? currentSequence;
-  List<LeadProductActivity>? leadProductActivity;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -25,5 +28,4 @@ class LeadCurrentResponseModel {
     }
     return map;
   }
-
 }

@@ -12,21 +12,26 @@ import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
 class DataProvider extends ChangeNotifier {
   final ApiService apiService = ApiService();
 
-
   GetLeadResponseModel? _getLeadData;
+
   GetLeadResponseModel? get getLeadData => _getLeadData;
 
   LeadCurrentResponseModel? _leadCurrentActivityAsyncData;
-  LeadCurrentResponseModel? get leadCurrentActivityAsyncData => _leadCurrentActivityAsyncData;
+
+  LeadCurrentResponseModel? get leadCurrentActivityAsyncData =>
+      _leadCurrentActivityAsyncData;
   GenrateOptResponceModel? _genrateOptData;
+
   GenrateOptResponceModel? get genrateOptData => _genrateOptData;
 
   LeadPanResponseModel? _getLeadPANData;
+
   LeadPanResponseModel? get getLeadPANData => _getLeadPANData;
 
-
-  Future<void> getLeads(int mobile,int productId,int companyId,int leadId) async {
-    _getLeadData = await apiService.getLeads(mobile,productId,companyId,leadId);
+  Future<void> getLeads(
+      int mobile, int productId, int companyId, int leadId) async {
+    _getLeadData =
+        await apiService.getLeads(mobile, productId, companyId, leadId);
     notifyListeners();
   }
 
@@ -36,8 +41,14 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> genrateOtp(String mobileNumber, int CompanyID) async {
-    _genrateOptData = await apiService.genrateOtp(mobileNumber,CompanyID);
+    _genrateOptData = await apiService.genrateOtp(mobileNumber, CompanyID);
     notifyListeners();
   }
 
+  Future<void> leadCurrentActivityAsync(
+      LeadCurrentRequestModel leadCurrentRequestModel) async {
+    _leadCurrentActivityAsyncData =
+        await apiService.leadCurrentActivityAsync(leadCurrentRequestModel);
+    notifyListeners();
+  }
 }
