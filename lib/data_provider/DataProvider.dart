@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import '../api/ApiService.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/pancard_screen/model/LeadPanResponseModel.dart';
+import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
@@ -25,6 +26,9 @@ class DataProvider extends ChangeNotifier {
   LeadPanResponseModel? _getLeadPANData;
   LeadPanResponseModel? get getLeadPANData => _getLeadPANData;
 
+  ValidPanCardResponsModel? _getLeadValidPanCardData;
+  ValidPanCardResponsModel? get getLeadValidPanCardData => _getLeadValidPanCardData;
+
 
   Future<void> getLeads(int mobile,int productId,int companyId,int leadId) async {
     _getLeadData = await apiService.getLeads(mobile,productId,companyId,leadId);
@@ -38,6 +42,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> genrateOtp(String mobileNumber, int CompanyID) async {
     _genrateOptData = await apiService.genrateOtp(mobileNumber,CompanyID);
+    notifyListeners();
+  }
+
+  Future<void> getLeadValidPanCard(String panNumber) async {
+    _getLeadValidPanCardData = await apiService.getLeadValidPanCard(panNumber);
     notifyListeners();
   }
 
