@@ -3,52 +3,72 @@ import 'dart:ffi';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPref {
-  static final SharedPref _instance = SharedPref._internal();
-  final String? MOBILE_NUMBER = "";
-  String myName = "name";
 
-  factory SharedPref() {
-    return _instance;
+  static String LOGIN_MOBILE_NUMBER = "login_mobile_number";
+
+
+
+  Future<bool> keycontains(String key) async {
+    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    if (sharedPrefs.containsKey(key)) {
+      return true;
+    }
+    return false;
   }
 
-  SharedPref._internal();
-
-  Future<void> addStringToSF(String? key,String? value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(key!, value!);
+  save(String key, dynamic value) async {
+    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    if (value is bool) {
+      sharedPrefs.setBool(key, value);
+    } else if (value is String) {
+      sharedPrefs.setString(key, value);
+    } else if (value is int) {
+      sharedPrefs.setInt(key, value);
+    } else if (value is double) {
+      sharedPrefs.setDouble(key, value);
+    } else if (value is List<String>) {
+      sharedPrefs.setStringList(key, value);
+    } else {
+      sharedPrefs.setString(key, value);
+    }
+    return true;
   }
 
-  Future<void> addIntToSF(String? key,int? value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt(key!, value!);
+  getBool(String key) async {
+    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    if (!sharedPrefs.containsKey(key)) {
+      return false;
+    }
+    return sharedPrefs.getBool(key);
   }
 
-  Future<void> addDoubleToSF(String? key,double? value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setDouble(key!, value!);
+  getString(String key) async {
+    final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    return sharedPrefs.getString(key);
   }
 
-  Future<void> addBoolToSF(String? key,bool? value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool(key!, value!);
+  getInt(String key) async {
+    final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    return sharedPrefs.getInt(key);
   }
 
-
-  Future<String?> getStringValuesSF(String? key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Return String
-    return prefs.getString(key!);
+  getDouble(String key) async {
+    final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    return sharedPrefs.getDouble(key);
   }
 
-  Future<int?> getIntValuesSF(String? key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Return int
-    return prefs.getInt(key!);
+  getObject(String key) async {
+    final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    return sharedPrefs.get(key);
+  }
+  getStringList(String key) async {
+    final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    return sharedPrefs.getStringList(key);
   }
 
-  Future<double?> getDoubleValuesSF(String? key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Return double
-    return prefs.getDouble(key!);
+  remove(String key) async {
+    SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    sharedPrefs.remove(key);
   }
+
 }
