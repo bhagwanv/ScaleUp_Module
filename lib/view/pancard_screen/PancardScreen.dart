@@ -67,6 +67,7 @@ class _PancardScreenState extends State<PancardScreen> {
             } else {
               if (productProvider.getLeadPANData != null && isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
+                isLoading = false;
               }
 
               var LeadPANData = productProvider.getLeadPANData!;
@@ -138,22 +139,27 @@ class _PancardScreenState extends State<PancardScreen> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
                             ),
-                            suffixIcon: Container(
+                            suffixIcon: productProvider.getLeadValidPanCardData?.message=="Valid Pancard."
+                                ? Container(
                               padding: EdgeInsets.all(10),
                               child: SvgPicture.asset(
                                 'assets/images/verify_pan.svg',
                                 semanticsLabel: 'My SVG Image',
                               ),
-                            ),
+                            )
+                                : null
                           ),
                           onChanged: (text) async {
                             print('First text field: $text (${text.characters.length})');
                             if (text.characters.length == 10) {
                               try {
-                                // Make the synchronous API call
-                                var result= await Provider.of<DataProvider>(context, listen: false)
-                                    .getLeadValidPanCard("JKMPS4653E");
+                                Utils.onLoading(context,"");
+                                await Provider.of<DataProvider>(context, listen: false).getLeadValidPanCard("JKMPS4653E");
 
+                                if(productProvider.getLeadValidPanCardData!=null){
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
+                                }
 
                               } catch (error) {
                                 // Handle any errors that occur during the API call
@@ -336,7 +342,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                 Utils.showToast(
                                     "Please Enter Father Name (As Per Pan))");
                               } else {
-                                isLoading = false;
+
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
                                 Navigator.push(
@@ -349,7 +355,6 @@ class _PancardScreenState extends State<PancardScreen> {
                                 );
                               }
                             } else {
-                              isLoading = false;
                               Navigator.of(context, rootNavigator: true).pop();
                               Navigator.push(
                                 context,
