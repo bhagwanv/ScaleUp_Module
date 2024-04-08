@@ -120,8 +120,6 @@ class _LoginFormState extends State<LoginForm> {
                     Utils.showToast("Please Check Terms And Conditions");
                   } else {
                     Utils.hideKeyBored(context);
-                    sharedPref.save(
-                        SharedPref.LOGIN_MOBILE_NUMBER, _mobileNumberCl.text);
 
                     Utils.onLoading(context, "Loading....");
                     await Provider.of<DataProvider>(context, listen: false)

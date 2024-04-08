@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/gestures.dart';
@@ -55,7 +54,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
-          (Timer timer) {
+      (Timer timer) {
         if (_start == 0) {
           setState(() {
             isReSendDisable = false;
@@ -71,7 +70,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   }
 
   void listenOtp() async {
-    userLoginMobile = await SharedPref().getString(SharedPref.LOGIN_MOBILE_NUMBER);
     await SmsAutoFill().unregisterListener();
     listenForCode();
     await SmsAutoFill().listenForCode();
@@ -154,9 +152,9 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                 const SizedBox(
                   height: 40,
                 ),
-                 SizedBox(
+                SizedBox(
                   width: double.infinity,
-                  child:Text(
+                  child: Text(
                     'Resend Code in ${_start} s',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -171,37 +169,38 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                 Container(
                     padding: EdgeInsets.all(10),
                     child: Center(
-                      child:   RichText(
+                      child: RichText(
                         text: TextSpan(
                             text: 'If you didn’t received a code!',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal),
                             children: <TextSpan>[
-                              isReSendDisable? TextSpan(
-                                  text: '  Resend',
-                                  style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.normal),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = ()  async {
-
-                                    }): TextSpan(
-                                  text: '  Resend',
-                                  style: const TextStyle(
-                                      color: Colors.blueAccent,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.normal),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = ()  async {
-                                      isReSendDisable = true;
-                                      listenOtp();
-                                      reSendOpt(context, productProvider);
-                                      _start = 30;
-                                      startTimer();
-                                    })
+                              isReSendDisable
+                                  ? TextSpan(
+                                      text: '  Resend',
+                                      style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () async {})
+                                  : TextSpan(
+                                      text: '  Resend',
+                                      style: const TextStyle(
+                                          color: Colors.blueAccent,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () async {
+                                          isReSendDisable = true;
+                                          listenOtp();
+                                          reSendOpt(context, productProvider,
+                                              userLoginMobile!);
+                                          _start = 30;
+                                          startTimer();
+                                        })
                             ]),
                       ),
                     )),
@@ -224,20 +223,18 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   }
 }
 
-
-
-void reSendOpt(BuildContext context, DataProvider productProvider) async {
+void reSendOpt(BuildContext context, DataProvider productProvider,
+    String userLoginMobile) async {
   Utils.onLoading(context, "Loading....");
 
   await Provider.of<DataProvider>(context, listen: false)
-      .genrateOtp( await SharedPref().getString(SharedPref.LOGIN_MOBILE_NUMBER), 2);
+      .genrateOtp(userLoginMobile, 2);
   if (!productProvider.genrateOptData!.status!) {
     Navigator.of(context, rootNavigator: true).pop();
 
     Utils.showToast("Something went wrong");
   } else {
     Navigator.of(context, rootNavigator: true).pop();
-
   }
 }
 

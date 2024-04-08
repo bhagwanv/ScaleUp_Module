@@ -7,9 +7,9 @@ class GetLeadResponseModel {
 
   factory GetLeadResponseModel.fromJson(Map<String, dynamic> json) {
     return GetLeadResponseModel(
-      sequenceNo: json['sequenceNo'] as int,
-      leadId: json['leadId'] as int,
-      userId: json['userId'] as String,
+      sequenceNo: json['sequenceNo'] as int?,
+      leadId: json['leadId'] as int?,
+      userId: json['userId'] as String?,
     );
   }
 }
