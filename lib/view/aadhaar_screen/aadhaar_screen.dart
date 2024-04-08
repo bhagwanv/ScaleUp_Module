@@ -5,8 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/aadhaar_screen/aadhaar_otp_screen.dart';
+import 'package:scale_up_module/view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../utils/ImagePicker.dart';
+import '../../utils/Utils.dart';
 import '../../utils/aadhaar_number_formatter.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
@@ -259,10 +261,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                 const SizedBox(height: 46),
                 CommonElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const AadhaarOtpScreen()));
+                    callAPI(context, productProvider, _aadhaarController.text);
                   },
                   text: 'Proceed to E-Aadhaar',
                   upperCase: true,
@@ -292,5 +291,28 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
     // Clean up the controller when the widget is disposed
     _aadhaarController.dispose();
     super.dispose();
+  }
+
+  void callAPI(BuildContext context, DataProvider productProvider,
+      String documentNumber) async {
+    Utils.onLoading(context, "Loading....");
+    var request = AadhaarGenerateOTPRequestModel(
+        DocumentNumber: documentNumber,
+        FrontFileUrl: "",
+        BackFileUrl: "",
+        FrontDocumentId: "",
+        BackDocumentId: "",
+        otp: "",
+        requestId: "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .leadAadharGenerateOTP(request);
+    if (!productProvider.genrateOptData!.status!) {
+      Navigator.of(context, rootNavigator: true).pop();
+      Utils.showToast("Something went wrong");
+    } else {
+      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const AadhaarOtpScreen()));
+    }
   }
 }

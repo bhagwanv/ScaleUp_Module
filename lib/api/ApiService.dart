@@ -167,7 +167,8 @@ class ApiService {
       final response = await interceptor.post(
           Uri.parse('${apiUrls.baseUrl + apiUrls.getLeadAadharGenerateOTP}'),
           headers: {
-            'Content-Type': 'application/json', // Set the content type as JSON
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJlNzM3MTVmYS1kMmUxLTQ4OGItYTBiZi0xZWNmZDRlNWQwNDIiLCJ1c2VybmFtZSI6Ijk1MjIzOTI4MDEiLCJsb2dnZWRvbiI6IjA0LzA4LzIwMjQgMDU6MzQ6MjAiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTIyMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIyIiwibmJmIjoxNzEyNTU0NDYwLCJleHAiOjE3MTI2NDA4NjAsImlhdCI6MTcxMjU1NDQ2MCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.PYqOJsgsTyUsdanHTCkrPA6msGsaZZAWog0uzNcUgf1NrHE66g-G09mH41OrNnxZL-4Di1LxEFHfV7saPQE55_5F7s2YYQaXMBDT5G9oMd5c7MBbFo2WbzkU98qYaUqAZbVcmRG-f9h_OHgAQehE3Ud90tEt0vaENnzv8RxRI8FgubapUegTKutqlgxy755s_4Q3_Ygomb0hc-hK3RD0lYBII66e1Bo6cc3VVOvlMYpPSFLehn0E3oMo7uVLld3KrPGXc-0aGTYduLXJ9dnMdKdAFGfANp4ep3s13md1nxBeANyXpn2oyN5UJ2NequrQroJIOw9LuzyySgkkzJ9vcw'
           },
           body: json.encode(aadhaarGenerateOTPRequestModel));
       print(response.body); // Print the response body once here
