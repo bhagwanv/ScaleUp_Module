@@ -1,7 +1,6 @@
 
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -12,7 +11,6 @@ import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/utils/common_elevted_button.dart';
 import 'package:scale_up_module/utils/kyc_faild_widgets.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import '../../api/ApiService.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../utils/constants.dart';
 import '../../utils/customer_sequence_logic.dart';
@@ -85,6 +83,10 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     });
     listenForCode();
     await SmsAutoFill().listenForCode();
+    currentSequence(
+      context,
+      userLoginMobile!,
+    );
     print("OTP listen  Called");
   }
 
@@ -211,7 +213,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                                         ..onTap = () async {
                                           isReSendDisable = true;
                                           listenOtp();
-                                          reSendOpt(context, productProvider,userLoginMobile!);
+                                          reSendOpt(context, productProvider);
                                           _start = 30;
                                           startTimer();
                                         })

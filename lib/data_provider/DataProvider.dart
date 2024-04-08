@@ -111,19 +111,21 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> getFathersNameByValidPanCard(String panNumber) async {
-    _getFathersNameByValidPanCardData = await apiService.getFathersNameByValidPanCard(panNumber);
+    _getFathersNameByValidPanCardData =
+        await apiService.getFathersNameByValidPanCard(panNumber);
     notifyListeners();
   }
 
-  Future<void> postSingleFile(File imageFile, bool isValidForLifeTime,String validityInDays,String subFolderName ) async {
-    _getPostSingleFileData = await apiService.postSingleFile(imageFile,isValidForLifeTime,validityInDays,subFolderName);
+  Future<void> postSingleFile(File imageFile, bool isValidForLifeTime,
+      String validityInDays, String subFolderName) async {
+    _getPostSingleFileData = await apiService.postSingleFile(
+        imageFile, isValidForLifeTime, validityInDays, subFolderName);
     notifyListeners();
   }
 
   Future<void> postLeadPAN(
       PostLeadPanRequestModel postLeadPanRequestModel) async {
-    _getPostLeadPanData =
-    await apiService.postLeadPAN(postLeadPanRequestModel);
+    _getPostLeadPanData = await apiService.postLeadPAN(postLeadPanRequestModel);
     notifyListeners();
   }
 }
