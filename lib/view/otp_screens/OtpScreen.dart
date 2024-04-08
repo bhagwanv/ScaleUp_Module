@@ -1,6 +1,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -11,6 +12,7 @@ import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/utils/common_elevted_button.dart';
 import 'package:scale_up_module/utils/kyc_faild_widgets.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import '../../api/ApiService.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../utils/constants.dart';
 import '../../utils/customer_sequence_logic.dart';
@@ -83,10 +85,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     });
     listenForCode();
     await SmsAutoFill().listenForCode();
-    currentSequence(
-      context,
-      userLoginMobile!,
-    );
     print("OTP listen  Called");
   }
 
@@ -213,7 +211,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                                         ..onTap = () async {
                                           isReSendDisable = true;
                                           listenOtp();
-                                          reSendOpt(context, productProvider);
+                                          reSendOpt(context, productProvider,userLoginMobile!);
                                           _start = 30;
                                           startTimer();
                                         })
@@ -271,8 +269,8 @@ Future<void> fetchData(BuildContext context) async {
   try {
     LeadCurrentResponseModel? leadCurrentActivityAsyncData;
     var leadCurrentRequestModel = LeadCurrentRequestModel(
-      companyId: 2,
-      productId: 2,
+      companyId: SharedPref().COMPANY_ID,
+      productId: SharedPref().PRODUCT_ID,
       leadId: 0,
       mobileNo:  SharedPref().getString(SharedPref().LOGIN_MOBILE_NUMBER).then((value) { value;}).toString(),
       activityId: 0,
@@ -298,28 +296,6 @@ Future<void> fetchData(BuildContext context) async {
   }
 }
 
-
-void currentSequence(BuildContext context, String userLoginMobile) async {
-  var leadCurrentRequestModel = LeadCurrentRequestModel(
-    companyId: 2,
-    productId: 2,
-    leadId: 30,
-    mobileNo: userLoginMobile,
-    activityId: 0,
-    subActivityId: 0,
-    userId: "ddf8360f-ef82-4310-bf6c-a64072728ec3",
-    monthlyAvgBuying: 0,
-    vintageDays: 0,
-    isEditable: true,
-  );
-
-  Provider.of<DataProvider>(context, listen: false)
-      .leadCurrentActivityAsync(leadCurrentRequestModel);
-  Provider.of<DataProvider>(context, listen: false)
-      .getLeads(userLoginMobile, 2, 2, 0);
-  var provider = Provider.of<DataProvider>(context, listen: false);
-
-}
 
 void reSendOpt(BuildContext context, DataProvider productProvider, String userLoginMobile) async {
   Utils.onLoading(context, "Loading....");
