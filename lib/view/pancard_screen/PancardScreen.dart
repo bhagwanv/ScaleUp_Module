@@ -159,6 +159,11 @@ class _PancardScreenState extends State<PancardScreen> {
                                 if(productProvider.getLeadValidPanCardData!=null){
                                   Navigator.of(context, rootNavigator: true)
                                       .pop();
+                                  if(productProvider.getLeadValidPanCardData!.nameOnPancard!=null){
+                                    Utils.showToast(productProvider.getLeadValidPanCardData!.message!!);
+                                  }else{
+                                    Utils.showToast(productProvider.getLeadValidPanCardData!.message!!);
+                                  }
                                 }
 
                               } catch (error) {
