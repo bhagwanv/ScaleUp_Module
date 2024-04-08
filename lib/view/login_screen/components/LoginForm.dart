@@ -35,6 +35,7 @@ class _LoginFormState extends State<LoginForm> {
     SharedPref sharedPref = SharedPref();
      bool isTermsChecks= false;
     final TextEditingController _mobileNumberCl = TextEditingController();
+    String _code="";
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,15 +125,16 @@ class _LoginFormState extends State<LoginForm> {
                         SharedPref.LOGIN_MOBILE_NUMBER, _mobileNumberCl.text);
 
                     Utils.onLoading(context, "Loading....");
-                    await Provider.of<DataProvider>(context, listen: false)
-                        .genrateOtp(_mobileNumberCl.text, 2);
+                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(_mobileNumberCl.text, 2);
                     if (!widget.productProvider!.genrateOptData!.status!) {
                       Navigator.of(context, rootNavigator: true).pop();
                       Utils.showToast("Something went wrong");
                     } else {
                       Navigator.of(context, rootNavigator: true).pop();
-                      final signcode = await SmsAutoFill().getAppSignature;
-                      print("Bhagwan " + signcode);
+                      var appSignatureID = await SmsAutoFill().getAppSignature;
+                      setState(() {
+                        _code = '123456';
+                      });
 
                       Navigator.push(
                         context,

@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 
 import '../api/ApiService.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
+import '../view/otp_screens/model/VarifayOtpRequest.dart';
+import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/pancard_screen/model/LeadPanResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
@@ -30,8 +32,12 @@ class DataProvider extends ChangeNotifier {
   ValidPanCardResponsModel? _getLeadValidPanCardData;
   ValidPanCardResponsModel? get getLeadValidPanCardData => _getLeadValidPanCardData;
 
+  VerifyOtpResponce? _getVerifyData;
+
+  VerifyOtpResponce? get getVerifyData => _getVerifyData;
+
   Future<void> getLeads(
-      int mobile, int productId, int companyId, int leadId) async {
+      String mobile, int productId, int companyId, int leadId) async {
     _getLeadData =
         await apiService.getLeads(mobile, productId, companyId, leadId);
     notifyListeners();
@@ -56,6 +62,11 @@ class DataProvider extends ChangeNotifier {
       LeadCurrentRequestModel leadCurrentRequestModel) async {
     _leadCurrentActivityAsyncData =
         await apiService.leadCurrentActivityAsync(leadCurrentRequestModel);
+    notifyListeners();
+  }
+
+  Future<void> verifyOtp(VarifayOtpRequest verifayOtp) async {
+    _getVerifyData = await apiService.verifyOtp(verifayOtp);
     notifyListeners();
   }
 }

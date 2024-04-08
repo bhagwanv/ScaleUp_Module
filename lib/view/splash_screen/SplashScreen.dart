@@ -37,12 +37,9 @@ class _SplashScreenState extends State<SplashScreen> {
       vintageDays: 0,
       isEditable: true,
     );
-    Provider.of<DataProvider>(context, listen: false)
-        .leadCurrentActivityAsync(leadCurrentRequestModel);
+    Provider.of<DataProvider>(context, listen: false).leadCurrentActivityAsync(leadCurrentRequestModel);
 
-    Provider.of<DataProvider>(context, listen: false)
-        .getLeads(8319552433, 2, 2, 0);
-
+    Provider.of<DataProvider>(context, listen: false).getLeads("8959311437", 2, 2, 0);
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text('Scaleup')),
