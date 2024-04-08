@@ -8,6 +8,7 @@ import 'package:scale_up_module/view/otp_screens/OtpScreen.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../../shared_preferences/SharedPref.dart';
+import '../../../utils/common_check_box.dart';
 import '../../../utils/constants.dart';
 
 class LoginForm extends StatefulWidget {
@@ -32,7 +33,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     SharedPref sharedPref = SharedPref();
-
+     bool isTermsChecks= false;
     final TextEditingController _mobileNumberCl = TextEditingController();
 
     return Column(
@@ -95,7 +96,14 @@ class _LoginFormState extends State<LoginForm> {
         ),
          Column(
           children: [
-            CustomCheckbox(),
+            CommonCheckBox(
+              onChanged: (bool isChecked) {
+                print("$isChecked");
+                isTermsChecks = isChecked;
+              },
+              text: "I acknowledge and consent to the sharing of my data for the purpose of Scaleup pay application. I understand that my data may be used in accordance with the scaleup privacy policy. By proceeding, I agree to these terms.",
+              upperCase: true,
+            ),
           ],
         ),
         Padding(
@@ -108,6 +116,8 @@ class _LoginFormState extends State<LoginForm> {
                     Utils.showToast("Please Enter Mobile Number");
                   } else if (!Utils.isPhoneNoValid(_mobileNumberCl.text)) {
                     Utils.showToast("Please Enter Valid Mobile Number");
+                  }else if(!isTermsChecks) {
+                    Utils.showToast("Please Check Terms And Conditions");
                   } else {
                     Utils.hideKeyBored(context);
                     sharedPref.save(
@@ -147,52 +157,3 @@ class _LoginFormState extends State<LoginForm> {
   }
 }
 
-class CustomCheckbox extends StatefulWidget {
-  const CustomCheckbox({super.key});
-
-  @override
-  _CustomCheckboxState createState() => _CustomCheckboxState();
-}
-
-class _CustomCheckboxState extends State<CustomCheckbox> {
-  bool isChecked = false;
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          isChecked = !isChecked;
-        });
-      },
-      child: Container(
-        child: Row(
-          children: [
-            Container(
-              width: 24.0,
-              height: 24.0,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 0.0,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: isChecked
-                  ? Container(
-                      color: Color(0xff0196CE),
-                      child: Icon(
-                        Icons.check,
-                        size: 18.0,
-                        color: Colors.white,
-                      ),
-                    )
-                  : Container(),
-            ),
-            SizedBox(width: 8.0),
-            Text('Terms & Conditions.'),
-          ],
-        ),
-      ),
-    );
-  }
-}

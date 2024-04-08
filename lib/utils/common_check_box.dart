@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'constants.dart';
 
@@ -57,9 +58,11 @@ class _CommonCheckBoxState extends State<CommonCheckBox> {
               )
                   : Container(),
             ),
-            SizedBox(width: 8.0),
-            Text(
-              widget.upperCase ? widget.text!.toUpperCase() : widget.text!,
+            SizedBox(width: 18.0),
+            Expanded(
+              child: Text(
+                widget.upperCase ? widget.text!.toUpperCase() : widget.text!,
+              ),
             ),
           ],
         ),
