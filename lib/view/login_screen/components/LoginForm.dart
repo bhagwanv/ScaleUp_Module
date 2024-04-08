@@ -123,7 +123,7 @@ class _LoginFormState extends State<LoginForm> {
                     Utils.hideKeyBored(context);
 
                     Utils.onLoading(context, "Loading....");
-                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(_mobileNumberCl.text, 2);
+                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(_mobileNumberCl.text, SharedPref().COMPANY_ID);
                     if (!widget.productProvider!.genrateOptData!.status!) {
                       Navigator.of(context, rootNavigator: true).pop();
                       Utils.showToast("Something went wrong");

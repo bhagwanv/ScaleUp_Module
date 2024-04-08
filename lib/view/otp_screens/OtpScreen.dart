@@ -1,6 +1,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -11,10 +12,14 @@ import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/utils/common_elevted_button.dart';
 import 'package:scale_up_module/utils/kyc_faild_widgets.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import '../../api/ApiService.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../utils/constants.dart';
+import '../../utils/customer_sequence_logic.dart';
 import '../../utils/loader.dart';
+import '../splash_screen/model/GetLeadResponseModel.dart';
 import '../splash_screen/model/LeadCurrentRequestModel.dart';
+import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'model/VarifayOtpRequest.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -75,14 +80,11 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   }
 
   void listenOtp() async {
-    userLoginMobile =
-        await SharedPref().getString(SharedPref.LOGIN_MOBILE_NUMBER);
+    SharedPref().getString(SharedPref().LOGIN_MOBILE_NUMBER).then((value) {
+      userLoginMobile = value;
+    });
     listenForCode();
     await SmsAutoFill().listenForCode();
-    currentSequence(
-      context,
-      userLoginMobile!,
-    );
     print("OTP listen  Called");
   }
 
@@ -209,7 +211,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                                         ..onTap = () async {
                                           isReSendDisable = true;
                                           listenOtp();
-                                          reSendOpt(context, productProvider);
+                                          reSendOpt(context, productProvider,userLoginMobile!);
                                           _start = 30;
                                           startTimer();
                                         })
@@ -242,18 +244,58 @@ void callVerifyOtpApi(BuildContext context, String otpText, DataProvider product
     Utils.showToast("PLease Enter Valid Otp");
   } else {
     Utils.onLoading(context, "Loading....");
-    await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(activityId: 1,companyId: 2,mobileNo: "8959311437",otp: otpText,productId: 2,subActivityId: 0,vintageDays: 0,monthlyAvgBuying: 0,screen: "MobileOtp"));
+    await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(activityId: 1,companyId: SharedPref().COMPANY_ID,mobileNo: SharedPref().getString(SharedPref().LOGIN_MOBILE_NUMBER).then((value) { value;}).toString(),otp: otpText,productId: SharedPref().PRODUCT_ID,subActivityId: 0,vintageDays: 0,monthlyAvgBuying: 0,screen: "MobileOtp"));
 
     if (!productProvider.getVerifyData!.status!) {
       Navigator.of(context, rootNavigator: true).pop();
       Utils.showToast("Something went wrong");
     } else {
       Navigator.of(context, rootNavigator: true).pop();
+      SharedPref().save(SharedPref().USER_ID, productProvider.getVerifyData?.userId);
+      SharedPref().save(SharedPref().TOKEN, productProvider.getVerifyData?.userTokan);
+      SharedPref().save(SharedPref().LEADE_ID, productProvider.getVerifyData?.leadId);
+
+
+    fetchData(context);
 
 
     }
   }
 }
+
+Future<void> fetchData(BuildContext context) async {
+
+
+  try {
+    LeadCurrentResponseModel? leadCurrentActivityAsyncData;
+    var leadCurrentRequestModel = LeadCurrentRequestModel(
+      companyId: 2,
+      productId: 2,
+      leadId: 0,
+      mobileNo:  SharedPref().getString(SharedPref().LOGIN_MOBILE_NUMBER).then((value) { value;}).toString(),
+      activityId: 0,
+      subActivityId: 0,
+      userId: "",
+      monthlyAvgBuying: 0,
+      vintageDays: 0,
+      isEditable: true,
+    );
+    leadCurrentActivityAsyncData =
+    await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+    as LeadCurrentResponseModel?;
+
+    GetLeadResponseModel? getLeadData;
+    getLeadData = await ApiService().getLeads( SharedPref().getString(SharedPref().LOGIN_MOBILE_NUMBER).then((value) { value;}).toString(), 2, 2, 0)
+    as GetLeadResponseModel?;
+
+    customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+  } catch (error) {
+    if (kDebugMode) {
+      print('Error occurred during API call: $error');
+    }
+  }
+}
+
 
 void currentSequence(BuildContext context, String userLoginMobile) async {
   var leadCurrentRequestModel = LeadCurrentRequestModel(
@@ -275,17 +317,12 @@ void currentSequence(BuildContext context, String userLoginMobile) async {
       .getLeads(userLoginMobile, 2, 2, 0);
   var provider = Provider.of<DataProvider>(context, listen: false);
 
-  if (provider.getLeadData!.sequenceNo != 0) {
-    var leadCurrentActivity =
-        provider.leadCurrentActivityAsyncData!.leadProductActivity!.firstWhere(
-            (product) => product.sequence == provider.getLeadData!.sequenceNo!);
-  }
 }
 
-void reSendOpt(BuildContext context, DataProvider productProvider) async {
+void reSendOpt(BuildContext context, DataProvider productProvider, String userLoginMobile) async {
   Utils.onLoading(context, "Loading....");
 
-  await Provider.of<DataProvider>(context, listen: false).genrateOtp(await SharedPref().getString(SharedPref.LOGIN_MOBILE_NUMBER), 2);
+  await Provider.of<DataProvider>(context, listen: false).genrateOtp(userLoginMobile, 2);
   if (!productProvider.genrateOptData!.status!) {
     Navigator.of(context, rootNavigator: true).pop();
 

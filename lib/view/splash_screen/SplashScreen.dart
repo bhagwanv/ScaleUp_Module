@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> fetchData() async {
-    String? mobile = "7803994667";
+    String? mobile = "8959311437";
     SharedPref sharedPref = SharedPref();
     sharedPref.save(sharedPref.LOGIN_MOBILE_NUMBER, mobile);
 
@@ -60,15 +60,14 @@ class _SplashScreenState extends State<SplashScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-              as LeadCurrentResponseModel?;
-
+      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel) as LeadCurrentResponseModel?;
       GetLeadResponseModel? getLeadData;
-      getLeadData = await ApiService().getLeads(mobile!, 2, 2, 0)
-          as GetLeadResponseModel?;
+      getLeadData = await ApiService().getLeads(mobile!, 2, 2, 0) as GetLeadResponseModel?;
 
       customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+
+
+
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');

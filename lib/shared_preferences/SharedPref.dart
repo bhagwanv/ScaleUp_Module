@@ -4,6 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPref {
   final String LOGIN_MOBILE_NUMBER = "login_mobile_number";
+  final String USER_ID = "user_id";
+  final String TOKEN = "token";
+  final String LEADE_ID = "lead_id";
+  final int COMPANY_ID = 2;
+  final int PRODUCT_ID = 2;
+
+
 
   Future<bool> keycontains(String key) async {
     SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
