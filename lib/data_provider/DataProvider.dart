@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:scale_up_module/view/pancard_screen/model/PostLeadPANRequestModel.dart';
@@ -8,6 +8,8 @@ import '../api/ApiService.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
 import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
+import '../view/otp_screens/model/VarifayOtpRequest.dart';
+import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/pancard_screen/model/LeadPanResponseModel.dart';
 import '../view/pancard_screen/model/PostLeadPANResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
@@ -57,6 +59,10 @@ class DataProvider extends ChangeNotifier {
   PostLeadPanResponseModel? get getPostLeadPaneData => _getPostLeadPanData;
 
 
+  VerifyOtpResponce? _getVerifyData;
+
+  VerifyOtpResponce? get getVerifyData => _getVerifyData;
+
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
     _getLeadData =
@@ -83,6 +89,11 @@ class DataProvider extends ChangeNotifier {
       LeadCurrentRequestModel leadCurrentRequestModel) async {
     _leadCurrentActivityAsyncData =
         await apiService.leadCurrentActivityAsync(leadCurrentRequestModel);
+    notifyListeners();
+  }
+
+  Future<void> verifyOtp(VarifayOtpRequest verifayOtp) async {
+    _getVerifyData = await apiService.verifyOtp(verifayOtp);
     notifyListeners();
   }
 
@@ -115,3 +126,4 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+

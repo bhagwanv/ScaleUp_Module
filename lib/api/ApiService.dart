@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'dart:convert';
 
 
@@ -9,6 +7,8 @@ import 'package:scale_up_module/api/ApiUrls.dart';
 import 'package:scale_up_module/utils/InternetConnectivity.dart';
 import 'package:scale_up_module/view/login_screen/model/GenrateOptResponceModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
+import '../view/otp_screens/model/VarifayOtpRequest.dart';
+import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
 import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/pancard_screen/model/LeadPanResponseModel.dart';
@@ -204,6 +204,31 @@ class ApiService {
         final dynamic jsonData = json.decode(response.body);
         final ValidPanCardResponsModel responseModel = ValidPanCardResponsModel.fromJson(
             jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+
+  Future<VerifyOtpResponce> verifyOtp(VarifayOtpRequest verifayOtp) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.post(
+          Uri.parse('${apiUrls.baseUrl + apiUrls.LeadMobileValidate}'),
+          headers: {
+            'Content-Type': 'application/json', // Set the content type as JSON
+          },
+          body: json.encode(verifayOtp));
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final VerifyOtpResponce responseModel =
+        VerifyOtpResponce.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');

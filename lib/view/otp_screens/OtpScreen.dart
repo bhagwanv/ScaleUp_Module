@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import 'package:flutter/gestures.dart';
@@ -12,6 +13,9 @@ import 'package:scale_up_module/utils/kyc_faild_widgets.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../utils/constants.dart';
+import '../../utils/loader.dart';
+import '../splash_screen/model/LeadCurrentRequestModel.dart';
+import 'model/VarifayOtpRequest.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
@@ -28,6 +32,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   int _start = 30;
   String? userLoginMobile;
   bool isReSendDisable = true;
+  var isLoading = true;
 
   @override
   void codeUpdated() {
@@ -70,9 +75,14 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   }
 
   void listenOtp() async {
-    await SmsAutoFill().unregisterListener();
+    userLoginMobile =
+        await SharedPref().getString(SharedPref.LOGIN_MOBILE_NUMBER);
     listenForCode();
     await SmsAutoFill().listenForCode();
+    currentSequence(
+      context,
+      userLoginMobile!,
+    );
     print("OTP listen  Called");
   }
 
@@ -85,6 +95,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
   @override
   Widget build(BuildContext context) {
+    final pinController = TextEditingController();
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 60,
@@ -136,10 +147,12 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                 ),
                 Center(
                   child: Pinput(
+                    controller: pinController,
                     length: 6,
                     androidSmsAutofillMethod:
                         AndroidSmsAutofillMethod.smsRetrieverApi,
                     showCursor: true,
+                    pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                     defaultPinTheme: defaultPinTheme,
                     focusedPinTheme: defaultPinTheme.copyWith(
                       decoration: defaultPinTheme.decoration!.copyWith(
@@ -172,7 +185,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                       child: RichText(
                         text: TextSpan(
                             text: 'If you didn’t received a code!',
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal),
@@ -196,8 +209,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                                         ..onTap = () async {
                                           isReSendDisable = true;
                                           listenOtp();
-                                          reSendOpt(context, productProvider,
-                                              userLoginMobile!);
+                                          reSendOpt(context, productProvider);
                                           _start = 30;
                                           startTimer();
                                         })
@@ -209,7 +221,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                 ),
                 CommonElevatedButton(
                   onPressed: () {
-                    bottomSheetMenu(context);
+                    callVerifyOtpApi(context, pinController.text,productProvider);
                   },
                   text: "Verify Code",
                   upperCase: true,
@@ -223,18 +235,64 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   }
 }
 
-void reSendOpt(BuildContext context, DataProvider productProvider,
-    String userLoginMobile) async {
+void callVerifyOtpApi(BuildContext context, String otpText, DataProvider productProvider) async {
+  if (otpText.isEmpty) {
+    Utils.showToast("Please Enter Opt");
+  } else if (otpText.length < 6) {
+    Utils.showToast("PLease Enter Valid Otp");
+  } else {
+    Utils.onLoading(context, "Loading....");
+    await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(activityId: 1,companyId: 2,mobileNo: "8959311437",otp: otpText,productId: 2,subActivityId: 0,vintageDays: 0,monthlyAvgBuying: 0,screen: "MobileOtp"));
+
+    if (!productProvider.getVerifyData!.status!) {
+      Navigator.of(context, rootNavigator: true).pop();
+      Utils.showToast("Something went wrong");
+    } else {
+      Navigator.of(context, rootNavigator: true).pop();
+
+
+    }
+  }
+}
+
+void currentSequence(BuildContext context, String userLoginMobile) async {
+  var leadCurrentRequestModel = LeadCurrentRequestModel(
+    companyId: 2,
+    productId: 2,
+    leadId: 30,
+    mobileNo: userLoginMobile,
+    activityId: 0,
+    subActivityId: 0,
+    userId: "ddf8360f-ef82-4310-bf6c-a64072728ec3",
+    monthlyAvgBuying: 0,
+    vintageDays: 0,
+    isEditable: true,
+  );
+
+  Provider.of<DataProvider>(context, listen: false)
+      .leadCurrentActivityAsync(leadCurrentRequestModel);
+  Provider.of<DataProvider>(context, listen: false)
+      .getLeads(userLoginMobile, 2, 2, 0);
+  var provider = Provider.of<DataProvider>(context, listen: false);
+
+  if (provider.getLeadData!.sequenceNo != 0) {
+    var leadCurrentActivity =
+        provider.leadCurrentActivityAsyncData!.leadProductActivity!.firstWhere(
+            (product) => product.sequence == provider.getLeadData!.sequenceNo!);
+  }
+}
+
+void reSendOpt(BuildContext context, DataProvider productProvider) async {
   Utils.onLoading(context, "Loading....");
 
-  await Provider.of<DataProvider>(context, listen: false)
-      .genrateOtp(userLoginMobile, 2);
+  await Provider.of<DataProvider>(context, listen: false).genrateOtp(await SharedPref().getString(SharedPref.LOGIN_MOBILE_NUMBER), 2);
   if (!productProvider.genrateOptData!.status!) {
     Navigator.of(context, rootNavigator: true).pop();
 
     Utils.showToast("Something went wrong");
   } else {
     Navigator.of(context, rootNavigator: true).pop();
+
   }
 }
 
