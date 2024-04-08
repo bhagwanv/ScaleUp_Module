@@ -31,7 +31,6 @@ class _PancardScreenState extends State<PancardScreen> {
   final TextEditingController _nameAsPanCl = TextEditingController();
   final TextEditingController _dOBAsPanCl = TextEditingController();
   final TextEditingController _fatherNameAsPanCl = TextEditingController();
-
   var isLoading = true;
 
   @override
@@ -40,7 +39,10 @@ class _PancardScreenState extends State<PancardScreen> {
     // Loader();
     Provider.of<DataProvider>(context, listen: false)
         .getLeadPAN("ddf8360f-ef82-4310-bf6c-a64072728ec3");
+    // Provider.of<DataProvider>(context, listen: false)
+    //     .getLeadValidPanCard("JKMPS4653E");
   }
+
 
   // Callback function to receive the selected image
   void _onImageSelected(File imageFile) {
@@ -65,6 +67,7 @@ class _PancardScreenState extends State<PancardScreen> {
             } else {
               if (productProvider.getLeadPANData != null && isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
+                isLoading = false;
               }
 
               var LeadPANData = productProvider.getLeadPANData!;
@@ -116,8 +119,10 @@ class _PancardScreenState extends State<PancardScreen> {
                           keyboardType: TextInputType.text,
                           cursorColor: kPrimaryColor,
                           textCapitalization: TextCapitalization.characters,
-                          maxLength: 10,
                           maxLines: 1,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(10), // Limit to 10 digits
+                          ],
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 16.0, horizontal: 16.0),
@@ -134,14 +139,36 @@ class _PancardScreenState extends State<PancardScreen> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
                             ),
-                            suffixIcon: Container(
+                            suffixIcon: productProvider.getLeadValidPanCardData?.message=="Valid Pancard."
+                                ? Container(
                               padding: EdgeInsets.all(10),
                               child: SvgPicture.asset(
                                 'assets/images/verify_pan.svg',
                                 semanticsLabel: 'My SVG Image',
                               ),
-                            ),
+                            )
+                                : null
                           ),
+                          onChanged: (text) async {
+                            print('First text field: $text (${text.characters.length})');
+                            if (text.characters.length == 10) {
+                              try {
+                                Utils.onLoading(context,"");
+                                await Provider.of<DataProvider>(context, listen: false).getLeadValidPanCard("JKMPS4653E");
+
+                                if(productProvider.getLeadValidPanCardData!=null){
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
+                                }
+
+                              } catch (error) {
+                                // Handle any errors that occur during the API call
+                                print('Error: $error');
+                              }
+                            }
+                          },
+
+
                         ),
                         SizedBox(height: 20),
                         Text(
@@ -315,7 +342,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                 Utils.showToast(
                                     "Please Enter Father Name (As Per Pan))");
                               } else {
-                                isLoading = false;
+
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
                                 Navigator.push(
@@ -328,7 +355,6 @@ class _PancardScreenState extends State<PancardScreen> {
                                 );
                               }
                             } else {
-                              isLoading = false;
                               Navigator.of(context, rootNavigator: true).pop();
                               Navigator.push(
                                 context,
