@@ -1,12 +1,17 @@
 import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
+import 'package:scale_up_module/view/pancard_screen/model/PostLeadPANRequestModel.dart';
+import 'package:scale_up_module/view/pancard_screen/model/PostSingleFileResponseModel.dart';
 
 import '../api/ApiService.dart';
+import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
+import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/pancard_screen/model/LeadPanResponseModel.dart';
+import '../view/pancard_screen/model/PostLeadPANResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
@@ -20,6 +25,7 @@ class DataProvider extends ChangeNotifier {
   GetLeadResponseModel? get getLeadData => _getLeadData;
 
   LeadCurrentResponseModel? _leadCurrentActivityAsyncData;
+
   LeadCurrentResponseModel? get leadCurrentActivityAsyncData =>
       _leadCurrentActivityAsyncData;
   GenrateOptResponceModel? _genrateOptData;
@@ -27,10 +33,31 @@ class DataProvider extends ChangeNotifier {
   GenrateOptResponceModel? get genrateOptData => _genrateOptData;
 
   LeadPanResponseModel? _getLeadPANData;
+
   LeadPanResponseModel? get getLeadPANData => _getLeadPANData;
 
   ValidPanCardResponsModel? _getLeadValidPanCardData;
-  ValidPanCardResponsModel? get getLeadValidPanCardData => _getLeadValidPanCardData;
+
+  ValidPanCardResponsModel? get getLeadValidPanCardData =>
+      _getLeadValidPanCardData;
+
+  ValidPanCardResponsModel? _getLeadAadhaar;
+
+  ValidPanCardResponsModel? get getLeadAadhaar => _getLeadAadhaar;
+
+  AadhaarGenerateOTPResponseModel? _getLeadAadharGenerateOTP;
+
+  AadhaarGenerateOTPResponseModel? get getLeadAadharGenerateOTP => _getLeadAadharGenerateOTP;
+
+  ValidPanCardResponsModel? _getFathersNameByValidPanCardData;
+  ValidPanCardResponsModel? get getFathersNameByValidPanCardData => _getFathersNameByValidPanCardData;
+
+  PostSingleFileResponseModel? _getPostSingleFileData;
+  PostSingleFileResponseModel? get getPostSingleFileData => _getPostSingleFileData;
+
+  PostLeadPanResponseModel? _getPostLeadPanData;
+  PostLeadPanResponseModel? get getPostLeadPaneData => _getPostLeadPanData;
+
 
   VerifyOtpResponce? _getVerifyData;
 
@@ -67,6 +94,35 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> verifyOtp(VarifayOtpRequest verifayOtp) async {
     _getVerifyData = await apiService.verifyOtp(verifayOtp);
+    notifyListeners();
+  }
+
+  Future<void> getLeadAadhar(String userId) async {
+    _getLeadAadhaar = await apiService.getLeadAadhar(userId);
+    notifyListeners();
+  }
+
+  Future<void> leadAadharGenerateOTP(
+      AadhaarGenerateOTPRequestModel aadhaarGenerateOTPRequestModel) async {
+    _getLeadAadharGenerateOTP =
+    await apiService.getLeadAadharGenerateOTP(aadhaarGenerateOTPRequestModel);
+    notifyListeners();
+  }
+
+  Future<void> getFathersNameByValidPanCard(String panNumber) async {
+    _getFathersNameByValidPanCardData = await apiService.getFathersNameByValidPanCard(panNumber);
+    notifyListeners();
+  }
+
+  Future<void> postSingleFile(File imageFile, bool isValidForLifeTime,String validityInDays,String subFolderName ) async {
+    _getPostSingleFileData = await apiService.postSingleFile(imageFile,isValidForLifeTime,validityInDays,subFolderName);
+    notifyListeners();
+  }
+
+  Future<void> postLeadPAN(
+      PostLeadPanRequestModel postLeadPanRequestModel) async {
+    _getPostLeadPanData =
+    await apiService.postLeadPAN(postLeadPanRequestModel);
     notifyListeners();
   }
 }

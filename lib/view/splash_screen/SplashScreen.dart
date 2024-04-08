@@ -1,14 +1,12 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:scale_up_module/view/login_screen/login_screen.dart';
+import 'package:scale_up_module/api/ApiService.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/LeadCurrentRequestModel.dart';
-import 'package:scale_up_module/shared_preferences/SharedPref.dart';
-
-import '../../data_provider/DataProvider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../shared_preferences/SharedPref.dart';
+import '../../utils/customer_sequence_logic.dart';
+import 'model/LeadCurrentResponseModel.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,54 +16,63 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  String? mobileNumber;
-  String? list;
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var mobile = "9522392801";
-
-    var leadCurrentRequestModel = LeadCurrentRequestModel(
-      companyId: 2,
-      productId: 2,
-      leadId: 30,
-      mobileNo: mobile,
-      activityId: 0,
-      subActivityId: 0,
-      userId: "ddf8360f-ef82-4310-bf6c-a64072728ec3",
-      monthlyAvgBuying: 0,
-      vintageDays: 0,
-      isEditable: true,
-    );
-    Provider.of<DataProvider>(context, listen: false).leadCurrentActivityAsync(leadCurrentRequestModel);
-
-    Provider.of<DataProvider>(context, listen: false).getLeads("8959311437", 2, 2, 0);
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(child: Text('Scaleup')),
-      ),
-      body: Consumer<DataProvider>(builder: (context, provider, child) {
-        if ((provider.getLeadData != null) &&
-            (provider.leadCurrentActivityAsyncData != null)) {
-          return customerSequence(context);
-        } else {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(child: Image.asset('assets/images/scalup_gif_logo.gif')),
-            ],
-          );
-        }
-      }),
-    );
+        appBar: AppBar(
+          title: const Center(child: Text('Scaleup')),
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(child: Image.asset('assets/images/scalup_gif_logo.gif')),
+          ],
+        ));
   }
 
-  customerSequence(BuildContext context) {
-    var provider = Provider.of<DataProvider>(context, listen: false);
+  Future<void> fetchData() async {
+    String? mobile = "7803994667";
+    SharedPref sharedPref = SharedPref();
+    sharedPref.save(sharedPref.LOGIN_MOBILE_NUMBER, mobile);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-    );
+    sharedPref.getString(sharedPref.LOGIN_MOBILE_NUMBER).then((value) {
+      mobile = value;
+    });
+    try {
+      LeadCurrentResponseModel? leadCurrentActivityAsyncData;
+
+      print("mobile::: ${mobile}");
+      var leadCurrentRequestModel = LeadCurrentRequestModel(
+        companyId: 2,
+        productId: 2,
+        leadId: 0,
+        mobileNo: mobile,
+        activityId: 0,
+        subActivityId: 0,
+        userId: "",
+        monthlyAvgBuying: 0,
+        vintageDays: 0,
+        isEditable: true,
+      );
+      leadCurrentActivityAsyncData =
+          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+              as LeadCurrentResponseModel?;
+
+      GetLeadResponseModel? getLeadData;
+      getLeadData = await ApiService().getLeads(mobile!, 2, 2, 0)
+          as GetLeadResponseModel?;
+
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error occurred during API call: $error');
+      }
+    }
   }
 }

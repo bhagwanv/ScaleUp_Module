@@ -1,5 +1,6 @@
+
 import 'dart:async';
-import 'dart:ffi';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -76,7 +77,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   void listenOtp() async {
     userLoginMobile =
         await SharedPref().getString(SharedPref.LOGIN_MOBILE_NUMBER);
-
     listenForCode();
     await SmsAutoFill().listenForCode();
     currentSequence(
@@ -292,6 +292,7 @@ void reSendOpt(BuildContext context, DataProvider productProvider) async {
     Utils.showToast("Something went wrong");
   } else {
     Navigator.of(context, rootNavigator: true).pop();
+
   }
 }
 

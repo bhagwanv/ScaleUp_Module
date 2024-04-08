@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/aadhaar_screen/aadhaar_otp_screen.dart';
+import '../../data_provider/DataProvider.dart';
 import '../../utils/ImagePicker.dart';
 import '../../utils/aadhaar_number_formatter.dart';
 import '../../utils/common_elevted_button.dart';
@@ -23,10 +25,7 @@ class AadhaarScreen extends StatefulWidget {
 class _AadhaarScreenState extends State<AadhaarScreen> {
   final TextEditingController _aadhaarController = TextEditingController();
 
-  // Callback function to receive the selected image
   void _onFontImageSelected(File imageFile) {
-    // Handle the selected image here
-    // For example, you can setState to update UI with the selected image
     setState(() {
       widget.frontImage = imageFile;
       Navigator.pop(context);
@@ -60,8 +59,9 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
     return SafeArea(
       top: true,
       bottom: true,
-      child: Scaffold(
-        body: Padding(
+      child: Scaffold(body:
+          Consumer<DataProvider>(builder: (context, productProvider, child) {
+        return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
           child: SingleChildScrollView(
             child: Column(
@@ -282,8 +282,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
               ],
             ),
           ),
-        ),
-      ),
+        );
+      })),
     );
   }
 
