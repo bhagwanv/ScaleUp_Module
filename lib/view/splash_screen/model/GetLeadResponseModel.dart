@@ -5,12 +5,6 @@ class GetLeadResponseModel {
 
   GetLeadResponseModel({ this.sequenceNo,  this.leadId, this.userId});
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['sequenceNo'] = sequenceNo;
-    map['leadId'] = leadId;
-    map['userId'] = userId;
-    return map;
   factory GetLeadResponseModel.fromJson(Map<String, dynamic> json) {
     return GetLeadResponseModel(
       sequenceNo: json['sequenceNo'] as int?,

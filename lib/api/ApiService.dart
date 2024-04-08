@@ -1,8 +1,5 @@
 import 'dart:convert';
-
-
-import 'package:http/http.dart';
-import 'package:http/http.dart';
+import 'dart:io';
 import 'package:scale_up_module/api/ApiUrls.dart';
 import 'package:scale_up_module/utils/InternetConnectivity.dart';
 import 'package:scale_up_module/view/login_screen/model/GenrateOptResponceModel.dart';
