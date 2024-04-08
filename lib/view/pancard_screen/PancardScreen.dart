@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:scale_up_module/view/pancard_screen/model/PostLeadPANRequestModel.dart';
 
 import '../../data_provider/DataProvider.dart';
 import '../../utils/DateTextFormatter.dart';
@@ -48,8 +50,13 @@ class _PancardScreenState extends State<PancardScreen> {
   void _onImageSelected(File imageFile) {
     // Handle the selected image here
     // For example, you can setState to update UI with the selected image
-    setState(() {
-      widget.image = imageFile;
+    setState(()async{
+   //   widget.image = imageFile;
+      Utils.onLoading(context,"");
+      await Provider.of<DataProvider>(context, listen: false)
+          .postSingleFile(imageFile,true,"","dfhsjfh");
+
+      Navigator.of(context, rootNavigator: true).pop();
       Navigator.pop(context);
     });
   }
@@ -139,7 +146,7 @@ class _PancardScreenState extends State<PancardScreen> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
                             ),
-                            suffixIcon: productProvider.getLeadValidPanCardData?.message=="Valid Pancard."
+                            suffixIcon: productProvider.getLeadValidPanCardData?.nameOnPancard!=null
                                 ? Container(
                               padding: EdgeInsets.all(10),
                               child: SvgPicture.asset(
@@ -154,13 +161,23 @@ class _PancardScreenState extends State<PancardScreen> {
                             if (text.characters.length == 10) {
                               try {
                                 Utils.onLoading(context,"");
-                                await Provider.of<DataProvider>(context, listen: false).getLeadValidPanCard("JKMPS4653E");
+                                await Provider.of<DataProvider>(context, listen: false).getLeadValidPanCard(_panNumberCl.text);
 
                                 if(productProvider.getLeadValidPanCardData!=null){
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
+                                  Navigator.of(context, rootNavigator: true).pop();
                                   if(productProvider.getLeadValidPanCardData!.nameOnPancard!=null){
+                                    _nameAsPanCl.text = productProvider.getLeadValidPanCardData!.nameOnPancard!;
                                     Utils.showToast(productProvider.getLeadValidPanCardData!.message!!);
+                                    Utils.onLoading(context,"");
+                                    await Provider.of<DataProvider>(context, listen: false).getFathersNameByValidPanCard(_panNumberCl.text);
+                                    if(productProvider.getFathersNameByValidPanCardData!=null){
+                                      Navigator.of(context, rootNavigator: true).pop();
+                                    }
+                                    if(productProvider.getFathersNameByValidPanCardData!.dob!=Null){
+                                      _dOBAsPanCl.text=productProvider.getFathersNameByValidPanCardData!.dob;
+                                    }
+
+
                                   }else{
                                     Utils.showToast(productProvider.getLeadValidPanCardData!.message!!);
                                   }
@@ -282,17 +299,20 @@ class _PancardScreenState extends State<PancardScreen> {
                                   color: Color(0xffEFFAFF),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: (widget.image != null)
+                                child: (productProvider.getPostSingleFileData != null)
                                     ? ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(8.0),
-                                        child: Image.file(
-                                          widget.image as File,
+                                        child: Image.network(
+                                          productProvider.getPostSingleFileData!.filePath! as String,
                                           fit: BoxFit.cover,
                                           width: double.infinity,
                                           height: 148,
                                         ),
                                       )
+                                  /*  Column(
+                                      children: [Text(productProvider.getPostSingleFileData!.filePath!)],
+                                    )*/
                                     : Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
@@ -315,25 +335,19 @@ class _PancardScreenState extends State<PancardScreen> {
                                       ),
                               ),
                             )),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            CommonCheckBox(
-                              onChanged: (bool isChecked) {
-                                // Handle the state change here
-                                print('Checkbox state changed: $isChecked');
-                              },
-                              text: "Term & Condition",
-                              upperCase: true,
-                            )
-                          ],
-                        ),
                         SizedBox(height: 20),
-                        Text(
-                            "I hereby accept Scaleup T&C & Privacy Notice. Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners"),
+                        CommonCheckBox(
+                          onChanged: (bool isChecked) {
+                            // Handle the state change here
+                            print('Checkbox state changed: $isChecked');
+                          },
+                          text: "Term & Condition ",
+                          upperCase: true,
+                        ),
                         SizedBox(height: 30),
                         CommonElevatedButton(
                           onPressed: () async {
+
                             if (LeadPANData.panCard == null) {
                               if (_panNumberCl.text.isEmpty) {
                                 Utils.showToast("Please Enter Pan Number");
@@ -346,18 +360,40 @@ class _PancardScreenState extends State<PancardScreen> {
                               } else if (_fatherNameAsPanCl.text.isEmpty) {
                                 Utils.showToast(
                                     "Please Enter Father Name (As Per Pan))");
+                              }else if (productProvider.getPostSingleFileData?.filePath==null) {
+                                Utils.showToast(
+                                    "Please Upload Pan Image ");
                               } else {
-
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
-                                Navigator.push(
+
+
+                               var postLeadPanRequestModel=PostLeadPanRequestModel(
+                                 leadId: 4,
+                                 userId: "e73715fa-d2e1-488b-a0bf-1ecfd4e5d042",
+                                 activityId: 2,
+                                 subActivityId: 2,
+                                 uniqueId: _panNumberCl.text,
+                                 imagePath: productProvider.getPostSingleFileData?.filePath,
+                                 documentId: 31,
+                                 companyId: 2,
+                                 fathersName: _fatherNameAsPanCl.text,
+                                 dob: _dOBAsPanCl.text,
+                                 name: _nameAsPanCl.text,
+
+                               );
+
+                                Provider.of<DataProvider>(context, listen: false)
+                                    .postLeadPAN(postLeadPanRequestModel);
+
+                               /* Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
                                       return const PermissionsScreen();
                                     },
                                   ),
-                                );
+                                );*/
                               }
                             } else {
                               Navigator.of(context, rootNavigator: true).pop();

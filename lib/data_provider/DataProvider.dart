@@ -1,12 +1,15 @@
-import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:scale_up_module/view/pancard_screen/model/PostLeadPANRequestModel.dart';
+import 'package:scale_up_module/view/pancard_screen/model/PostSingleFileResponseModel.dart';
 
 import '../api/ApiService.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
 import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/pancard_screen/model/LeadPanResponseModel.dart';
+import '../view/pancard_screen/model/PostLeadPANResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
@@ -43,6 +46,16 @@ class DataProvider extends ChangeNotifier {
   AadhaarGenerateOTPResponseModel? _getLeadAadharGenerateOTP;
 
   AadhaarGenerateOTPResponseModel? get getLeadAadharGenerateOTP => _getLeadAadharGenerateOTP;
+
+  ValidPanCardResponsModel? _getFathersNameByValidPanCardData;
+  ValidPanCardResponsModel? get getFathersNameByValidPanCardData => _getFathersNameByValidPanCardData;
+
+  PostSingleFileResponseModel? _getPostSingleFileData;
+  PostSingleFileResponseModel? get getPostSingleFileData => _getPostSingleFileData;
+
+  PostLeadPanResponseModel? _getPostLeadPanData;
+  PostLeadPanResponseModel? get getPostLeadPaneData => _getPostLeadPanData;
+
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -82,6 +95,23 @@ class DataProvider extends ChangeNotifier {
       AadhaarGenerateOTPRequestModel aadhaarGenerateOTPRequestModel) async {
     _getLeadAadharGenerateOTP =
     await apiService.getLeadAadharGenerateOTP(aadhaarGenerateOTPRequestModel);
+    notifyListeners();
+  }
+
+  Future<void> getFathersNameByValidPanCard(String panNumber) async {
+    _getFathersNameByValidPanCardData = await apiService.getFathersNameByValidPanCard(panNumber);
+    notifyListeners();
+  }
+
+  Future<void> postSingleFile(File imageFile, bool isValidForLifeTime,String validityInDays,String subFolderName ) async {
+    _getPostSingleFileData = await apiService.postSingleFile(imageFile,isValidForLifeTime,validityInDays,subFolderName);
+    notifyListeners();
+  }
+
+  Future<void> postLeadPAN(
+      PostLeadPanRequestModel postLeadPanRequestModel) async {
+    _getPostLeadPanData =
+    await apiService.postLeadPAN(postLeadPanRequestModel);
     notifyListeners();
   }
 }
