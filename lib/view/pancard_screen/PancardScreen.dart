@@ -209,7 +209,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                     context,
                                     MaterialPageRoute<dynamic>(
                                       builder: (BuildContext context) =>
-                                          LoginScreen(),
+                                          const LoginScreen(activityId: 0,subActivityId: 0),
                                     ),
                                     (route) =>
                                         false, //if you want to disable back feature set to false
@@ -223,7 +223,7 @@ class _PancardScreenState extends State<PancardScreen> {
                           },
                         ),
                         SizedBox(height: 20),
-                        Text(
+                        const Text(
                           'Name ( As per PAN )',
                           textAlign: TextAlign.start,
                           style:
