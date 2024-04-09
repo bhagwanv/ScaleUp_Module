@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scale_up_module/view/Bank_details_screen/BankDetailsScreen.dart';
 import 'package:scale_up_module/view/login_screen/login_screen.dart';
+import 'package:scale_up_module/view/otp_screens/OtpScreen.dart';
 import 'package:scale_up_module/view/pancard_screen/PancardScreen.dart';
-import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 
 import 'data_provider/DataProvider.dart';
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const BankDetailsScreen(),
+      home: SplashScreen(),
 
       //home: const TakeSelfie(),
     );

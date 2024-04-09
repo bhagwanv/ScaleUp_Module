@@ -53,6 +53,7 @@ dependencies:
   http_interceptor: ^1.0.0
   connectivity: ^3.0.6
   shared_preferences: ^2.2.2
+  timer_count_down: ^2.2.0
 
 dev_dependencies:
   flutter_test:

@@ -17,7 +17,7 @@ ScreenType? customerSequence(
     LeadCurrentResponseModel? leadCurrentActivityAsyncData) {
   if ((getLeadData != null) && (leadCurrentActivityAsyncData != null)) {
     if (getLeadData.sequenceNo! != 0) {
-      print("111111");
+      print("sequence no.  ${getLeadData.sequenceNo.toString()}");
       var leadCurrentActivity =
           leadCurrentActivityAsyncData.leadProductActivity!.firstWhere(
               (product) => product.sequence == getLeadData!.sequenceNo!);
