@@ -37,7 +37,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   String? otpCode;
   DataProvider? productProvider;
   late Timer _timer;
-  int _start = 10;
+  int _start = 60;
   String? userLoginMobile;
   bool isReSendDisable = true;
   var isLoading = true;
@@ -55,7 +55,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   void initState() {
     super.initState();
     listenOtp();
-    _start = 10;
+    _start = 60;
     // startTimer();
     SmsAutoFill().getAppSignature.then((signature) {
       setState(() {

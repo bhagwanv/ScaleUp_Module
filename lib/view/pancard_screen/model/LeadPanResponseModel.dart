@@ -16,8 +16,8 @@ class LeadPanResponseModel {
     nameOnCard = json['nameOnCard'];
   }
   String? panCard;
-  dynamic panImagePath;
-  dynamic documentId;
+  String? panImagePath;
+  int? documentId;
   String? fatherName;
   String? dob;
   String? nameOnCard;

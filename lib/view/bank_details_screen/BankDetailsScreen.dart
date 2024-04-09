@@ -1,5 +1,3 @@
-
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,18 +23,18 @@ class BankDetailsScreen extends StatefulWidget {
 }
 
 class _BankDetailsScreenState extends State<BankDetailsScreen> {
-  final TextEditingController _accountHolderController = TextEditingController();
+  final TextEditingController _accountHolderController =
+      TextEditingController();
   final TextEditingController _bankAccountNumberCl = TextEditingController();
   final TextEditingController _ifsccodeCl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-     Provider.of<DataProvider>(context, listen: false).getBankList();
-     Provider.of<DataProvider>(context, listen: false).getBankDetails(2);
+    callAPI(context);
   }
-  var isLoading = true;
 
+  var isLoading = true;
 
   final List<String> accountTypeList = [
     'Saving',
@@ -101,7 +99,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     return itemsHeights;
   }
 
-  List<DropdownMenuItem<LiveBankList>> _addDividersAfterItems1(List<LiveBankList> items) {
+  List<DropdownMenuItem<LiveBankList>> _addDividersAfterItems1(
+      List<LiveBankList> items) {
     final List<DropdownMenuItem<LiveBankList>> menuItems = [];
     for (final LiveBankList item in items) {
       menuItems.addAll(
@@ -135,205 +134,232 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         top: true,
         bottom: true,
         child: Scaffold(
-          body:Consumer<DataProvider>(builder: (context, productProvider, child) {
-             if(productProvider.getBankListData != null && productProvider.getBankDetailsData != null   && isLoading) {
-               Navigator.of(context, rootNavigator: true).pop();
-               isLoading = false;
-               if(productProvider.getBankDetailsData!=null && productProvider.getBankDetailsData!.isSuccess!){
-                 _accountHolderController.text= productProvider.getBankDetailsData!.result!.accountHolderName!;
-                 _bankAccountNumberCl.text= productProvider.getBankDetailsData!.result!.accountNumber!;
-                 _ifsccodeCl.text= productProvider.getBankDetailsData!.result!.ifscCode!;
-               }else{
-                 Utils.showToast(productProvider.getBankDetailsData!.message!);
-               }
+          body: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
+            if (productProvider.getBankListData != null &&
+                productProvider.getBankDetailsData != null &&
+                isLoading) {
+              Navigator.of(context, rootNavigator: true).pop();
+              isLoading = false;
+              if (productProvider.getBankDetailsData != null &&
+                  productProvider.getBankDetailsData!.isSuccess!) {
+                _accountHolderController.text = productProvider
+                    .getBankDetailsData!.result!.accountHolderName!;
+                _bankAccountNumberCl.text =
+                    productProvider.getBankDetailsData!.result!.accountNumber!;
+                _ifsccodeCl.text =
+                    productProvider.getBankDetailsData!.result!.ifscCode!;
+              } else {
+                Utils.showToast(productProvider.getBankDetailsData!.message!);
+              }
 
-               return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    Text(
-                      "Step 4",
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.w600,
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 16.0,
                       ),
-                      textAlign: TextAlign.start,
-                    ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    Text(
-                      "Bank Details",
-                      style: TextStyle(
-                        fontSize: 40.0,
-                        color: blackSmall,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    DropdownButtonFormField2<LiveBankList>(
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                        fillColor: textFiledBackgroundColour,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                          const BorderSide(color: kPrimaryColor, width: 1),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                          const BorderSide(color: kPrimaryColor, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: kPrimaryColor, width: 1),
-                        ),
-                      ),
-                      hint: const Text(
-                        'Bank Name',
+                      Text(
+                        "Step 4",
                         style: TextStyle(
-                          color: blueColor,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 15.0,
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Text(
+                        "Bank Details",
+                        style: TextStyle(
+                          fontSize: 40.0,
+                          color: blackSmall,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
-                      items: _addDividersAfterItems1(productProvider.getBankListData!.liveBankList!),
-                      onChanged: (LiveBankList? value) {
-                        /*setState(() {
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      DropdownButtonFormField2<LiveBankList>(
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 16),
+                          fillColor: textFiledBackgroundColour,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide:
+                                BorderSide(color: kPrimaryColor, width: 1),
+                          ),
+                        ),
+                        hint: const Text(
+                          'Bank Name',
+                          style: TextStyle(
+                            color: blueColor,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        items: _addDividersAfterItems1(
+                            productProvider.getBankListData!.liveBankList!),
+                        onChanged: (LiveBankList? value) {
+                          /*setState(() {
                           selectedBankNameValue = value!;
                         });*/
-                      },
-                      buttonStyleData: const ButtonStyleData(
-                        padding: EdgeInsets.only(right: 8),
-                      ),
-                      dropdownStyleData: const DropdownStyleData(
-                        maxHeight: 200,
-                      ),
-                      menuItemStyleData: MenuItemStyleData(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        customHeights: _getCustomItemsHeights1(productProvider.getBankListData!.liveBankList!),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        openMenuIcon: Icon(Icons.arrow_drop_up),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _accountHolderController,
-                      hintText: "Account Holder Name ",
-                      labelText: "Account Holder Name ",
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      keyboardType: TextInputType.number,
-                      controller: _bankAccountNumberCl,
-                      maxLines: 1,
-                      hintText: "Bank Acc Number ",
-                      labelText: "Bank Acc Number ",
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    DropdownButtonFormField2<String>(
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                        fillColor: textFiledBackgroundColour,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                          const BorderSide(color: kPrimaryColor, width: 1),
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.only(right: 8),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                          const BorderSide(color: kPrimaryColor, width: 1),
+                        dropdownStyleData: const DropdownStyleData(
+                          maxHeight: 200,
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: kPrimaryColor, width: 1),
+                        menuItemStyleData: MenuItemStyleData(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          customHeights: _getCustomItemsHeights1(
+                              productProvider.getBankListData!.liveBankList!),
+                        ),
+                        iconStyleData: const IconStyleData(
+                          openMenuIcon: Icon(Icons.arrow_drop_up),
                         ),
                       ),
-                      hint: const Text(
-                        'Account Type',
-                        style: TextStyle(
-                          color: blueColor,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      SizedBox(
+                        height: 16.0,
                       ),
-                      items: _addDividersAfterItems(accountTypeList),
-                      value: selectedAccountTypeValue,
-                      onChanged: (String? value) {
-                       /* setState(() {
+                      CommonTextField(
+                        controller: _accountHolderController,
+                        hintText: "Account Holder Name ",
+                        labelText: "Account Holder Name ",
+                      ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+                      CommonTextField(
+                        keyboardType: TextInputType.number,
+                        controller: _bankAccountNumberCl,
+                        maxLines: 1,
+                        hintText: "Bank Acc Number ",
+                        labelText: "Bank Acc Number ",
+                      ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+                      DropdownButtonFormField2<String>(
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 16),
+                          fillColor: textFiledBackgroundColour,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide:
+                                BorderSide(color: kPrimaryColor, width: 1),
+                          ),
+                        ),
+                        hint: const Text(
+                          'Account Type',
+                          style: TextStyle(
+                            color: blueColor,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        items: _addDividersAfterItems(accountTypeList),
+                        value: selectedAccountTypeValue,
+                        onChanged: (String? value) {
+                          /* setState(() {
                           selectedAccountTypeValue = value;
                         });*/
-                      },
-                      buttonStyleData: const ButtonStyleData(
-                        padding: EdgeInsets.only(right: 8),
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.only(right: 8),
+                        ),
+                        dropdownStyleData: const DropdownStyleData(
+                          maxHeight: 200,
+                        ),
+                        menuItemStyleData: MenuItemStyleData(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          customHeights:
+                              _getCustomItemsHeights(accountTypeList),
+                        ),
+                        iconStyleData: const IconStyleData(
+                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                        ),
                       ),
-                      dropdownStyleData: const DropdownStyleData(
-                        maxHeight: 200,
+                      SizedBox(
+                        height: 16.0,
                       ),
-                      menuItemStyleData: MenuItemStyleData(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        customHeights: _getCustomItemsHeights(accountTypeList),
+                      CommonTextField(
+                        controller: _ifsccodeCl,
+                        hintText: "IFSC Code",
+                        labelText: "IFSC Code",
+                        textCapitalization: TextCapitalization.characters,
                       ),
-                      iconStyleData: const IconStyleData(
-                        openMenuIcon: Icon(Icons.arrow_drop_up),
+                      SizedBox(
+                        height: 30.0,
                       ),
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _ifsccodeCl,
-                      hintText: "IFSC Code",
-                      labelText: "IFSC Code",
-                      textCapitalization: TextCapitalization.characters,
-                    ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    CommonElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const AgreementScreen();
-                            },
-                          ),
-                        );
-                      },
-                      text: 'Next',
-                      upperCase: true,
-                    ),
-                  ],
+                      CommonElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return const AgreementScreen();
+                              },
+                            ),
+                          );
+                        },
+                        text: 'Next',
+                        upperCase: true,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-             } else {
-              return Center(child:  Loader());
+              );
+            } else {
+              return Center(child: Loader());
             }
           }),
         ));
   }
-}
 
+  Future<void> callAPI(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+    print("daddd ${leadId}");
+    Provider.of<DataProvider>(context, listen: false).getBankList();
+
+    if(leadId != null) {
+      Provider.of<DataProvider>(context, listen: false).getBankDetails(leadId!);
+    } else {
+      Utils.showToast("Lead Id should not be null or 0");
+    }
+  }
+}
