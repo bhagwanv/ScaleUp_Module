@@ -225,7 +225,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                 ),
                 CommonElevatedButton(
                   onPressed: () {
-                    callVerifyOtpApi(context, pinController.text,productProvider, widget.activityId!, widget.subActivityId!);
+                    callVerifyOtpApi(context, pinController.text,productProvider, widget.activityId!, widget.subActivityId!,userLoginMobile!);
                   },
                   text: "Verify Code",
                   upperCase: true,
@@ -239,38 +239,39 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   }
 }
 
-void callVerifyOtpApi(BuildContext context, String otpText, DataProvider productProvider, int activityId, int subActivityId) async {
+void callVerifyOtpApi(BuildContext context, String otpText, DataProvider productProvider, int activityId, int subActivityId, String userLoginMobile) async {
   if (otpText.isEmpty) {
     Utils.showToast("Please Enter Opt");
   } else if (otpText.length < 6) {
     Utils.showToast("PLease Enter Valid Otp");
   } else {
     Utils.onLoading(context, "Loading....");
-    await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(activityId: activityId,companyId: SharedPref().COMPANY_ID,mobileNo: SharedPref().getString(SharedPref().LOGIN_MOBILE_NUMBER).then((value) { value;}).toString(),otp: otpText,productId: SharedPref().PRODUCT_ID,subActivityId: subActivityId,vintageDays: 0,monthlyAvgBuying: 0,screen: "MobileOtp"));
+    await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(activityId: activityId,companyId: SharedPref().COMPANY_ID,mobileNo: userLoginMobile,otp: otpText,productId: SharedPref().PRODUCT_ID,subActivityId: subActivityId,vintageDays: 0,monthlyAvgBuying: 0,screen: "MobileOtp"));
 
     if (!productProvider.getVerifyData!.status!) {
       Navigator.of(context, rootNavigator: true).pop();
-      Utils.showToast("Something went wrong");
+      Utils.showToast(productProvider.getVerifyData!.message!);
     } else {
       Navigator.of(context, rootNavigator: true).pop();
       SharedPref().save(SharedPref().USER_ID, productProvider.getVerifyData?.userId);
       SharedPref().save(SharedPref().TOKEN, productProvider.getVerifyData?.userTokan);
       SharedPref().save(SharedPref().LEADE_ID, productProvider.getVerifyData?.leadId);
-    fetchData(context);
+    fetchData(context,userLoginMobile);
+
 
 
     }
   }
 }
 
-Future<void> fetchData(BuildContext context) async {
+Future<void> fetchData(BuildContext context,String userLoginMobile) async {
   try {
     LeadCurrentResponseModel? leadCurrentActivityAsyncData;
     var leadCurrentRequestModel = LeadCurrentRequestModel(
       companyId: SharedPref().COMPANY_ID,
       productId: SharedPref().PRODUCT_ID,
       leadId: 0,
-      mobileNo:  SharedPref().getString(SharedPref().LOGIN_MOBILE_NUMBER).then((value) { value;}).toString(),
+      mobileNo:userLoginMobile,
       activityId: 0,
       subActivityId: 0,
       userId: "",

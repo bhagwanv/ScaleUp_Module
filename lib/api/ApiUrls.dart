@@ -16,6 +16,9 @@ class ApiUrls{
   final String postSingleFile="/services/media/v1/PostSingleFile";
   final String postLeadPAN="/services/lead/v1/PostLeadPAN";
   final String LeadMobileValidate="/aggregator/LeadAgg/LeadMobileValidate";
+  final String bankListApi="/services/lead/v1/api/eNach/BankList";
+  final String GetLeadBankDetail="/services/lead/v1/api/LeadBankDetail/GetLeadBankDetail";
+
 
 
 

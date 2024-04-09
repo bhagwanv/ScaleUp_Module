@@ -19,6 +19,8 @@ class CommonTextField extends StatefulWidget {
   final Color? textColor;
   final Color? accentColor;
   final Color fillColor;
+  final TextCapitalization? textCapitalization;
+
 
   const CommonTextField({
     Key? key,
@@ -38,6 +40,7 @@ class CommonTextField extends StatefulWidget {
     this.maxLines = 1,
     this.accentColor,
     this.fillColor = textFiledBackgroundColour,
+    this.textCapitalization =  TextCapitalization.none,
   }) : super(key: key);
 
   @override
@@ -53,6 +56,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
     return TextField(
       controller: widget.controller,
       keyboardType: widget.keyboardType,
+      textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
       obscureText: _isObscure,
       onChanged: widget.onChanged,
       textInputAction: widget.textInputAction,
@@ -60,7 +64,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
       style: TextStyle(
         fontSize: 16.0,
         fontWeight: FontWeight.w500,
-        color: widget.textColor ?? Colors.black,), // Set text color
+        color: widget.textColor ?? Colors.black,),
       decoration: InputDecoration(
         fillColor: widget.fillColor,
         filled: true,

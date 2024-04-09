@@ -8,6 +8,8 @@ import 'package:scale_up_module/view/pancard_screen/model/PostSingleFileResponse
 import '../api/ApiService.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
 import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
+import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
+import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
@@ -63,6 +65,14 @@ class DataProvider extends ChangeNotifier {
   VerifyOtpResponce? _getVerifyData;
 
   VerifyOtpResponce? get getVerifyData => _getVerifyData;
+
+  BankListResponceModel? _getBankListData;
+
+  BankListResponceModel? get getBankListData => _getBankListData;
+
+  BankDetailsResponceModel? _getBankDetailsData;
+
+  BankDetailsResponceModel? get getBankDetailsData => _getBankDetailsData;
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -126,6 +136,16 @@ class DataProvider extends ChangeNotifier {
   Future<void> postLeadPAN(
       PostLeadPanRequestModel postLeadPanRequestModel) async {
     _getPostLeadPanData = await apiService.postLeadPAN(postLeadPanRequestModel);
+    notifyListeners();
+  }
+
+  Future<void> getBankList() async {
+    _getBankListData = await apiService.getBankList();
+    notifyListeners();
+  }
+
+  Future<void> getBankDetails(int leadID) async {
+    _getBankDetailsData = await apiService.GetLeadBankDetail(leadID);
     notifyListeners();
   }
 }

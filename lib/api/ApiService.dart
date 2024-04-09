@@ -8,6 +8,8 @@ import 'package:scale_up_module/api/ApiUrls.dart';
 import 'package:scale_up_module/utils/InternetConnectivity.dart';
 import 'package:scale_up_module/view/login_screen/model/GenrateOptResponceModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
+import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
+import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
@@ -311,6 +313,55 @@ class ApiService {
         final dynamic jsonData = json.decode(response.body);
         final PostLeadPanResponseModel responseModel =
         PostLeadPanResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+  Future<BankListResponceModel> getBankList() async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.get(
+          Uri.parse('${apiUrls.baseUrl + apiUrls.bankListApi}'),
+          headers: {
+            'Content-Type': 'application/json', // Set the content type as JSON
+          },
+      );
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final BankListResponceModel responseModel =
+        BankListResponceModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+
+  Future<BankDetailsResponceModel> GetLeadBankDetail(int leadID) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.get(
+          Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadBankDetail}?PanNumber=$leadID'),
+          headers: {
+            'Content-Type': 'application/json', // Set the content type as JSON
+          },
+      );
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final BankDetailsResponceModel responseModel =
+        BankDetailsResponceModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
