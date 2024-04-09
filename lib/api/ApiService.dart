@@ -64,7 +64,7 @@ class ApiService {
         final LeadCurrentResponseModel responseModel =
             LeadCurrentResponseModel.fromJson(jsonData);
         return responseModel;
-      } else {
+      }  else {
         throw Exception('Failed to load products');
       }
     } else {
@@ -125,7 +125,6 @@ class ApiService {
           // Set the content type as JSON
         },
       );
-       //   headers: {"eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJlNzM3MTVmYS1kMmUxLTQ4OGItYTBiZi0xZWNmZDRlNWQwNDIiLCJ1c2VybmFtZSI6Ijk1MjIzOTI4MDEiLCJsb2dnZWRvbiI6IjA0LzA1LzIwMjQgMTE6MTE6MzUiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTIyMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIyIiwibmJmIjoxNzEyMzE1NDk1LCJleHAiOjE3MTI0MDE4OTUsImlhdCI6MTcxMjMxNTQ5NSwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.mTi2DTiQi5-OINhBrdOprmrebkR2oZGVTtweDSvY6xNvL27SbE0f9-A-E8j2CPeBvOYXLeDABVMy15h3ZY7NngjEV3LW_ISx0-NVdpUtv5jRtbjmy-QA4j0qBiszz-UebAGpZFWoyYB5VuyOKv5nI6nDkAb4gPveI6FvCTJx7nmLrJBz8JnNWv2tSVziSWncyl5R4OvQpYtq6NWR1MEzCqATjeTQqEYrjF85bhzOEFU-mrihgupy7Smho-9Mtz58g0vHIQXexHg_lllvHVvBwmwHGdyzeYHyXscmjvageOZTyo5n6fsIGadrm1xGZpas43TL5zmWoU8y0EcbeMhy5w");}
 
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
@@ -134,6 +133,8 @@ class ApiService {
         final ValidPanCardResponsModel responseModel =
             ValidPanCardResponsModel.fromJson(jsonData);
         return responseModel;
+      } else if(response.statusCode == 401) {
+        return ValidPanCardResponsModel(statusCode: 401);
       } else {
         throw Exception('Failed to load products');
       }

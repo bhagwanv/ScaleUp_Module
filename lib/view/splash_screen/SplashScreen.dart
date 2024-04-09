@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> fetchData() async {
-    String? mobile = "8959311437";
+    String? mobile = "7803994667";
     SharedPref sharedPref = SharedPref();
     sharedPref.save(sharedPref.LOGIN_MOBILE_NUMBER, mobile);
 
