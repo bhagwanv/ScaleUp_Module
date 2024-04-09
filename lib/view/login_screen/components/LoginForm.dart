@@ -13,12 +13,11 @@ import '../../../utils/constants.dart';
 
 class LoginForm extends StatefulWidget {
   DataProvider? productProvider;
+  int? activityId;
+  int? subActivityId;
 
 
-  LoginForm({
-    required this.productProvider,
-    Key? key,
-  }) : super(key: key);
+  LoginForm({required this.productProvider, required this.activityId, required this.subActivityId, super.key });
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -126,19 +125,19 @@ class _LoginFormState extends State<LoginForm> {
                     await Provider.of<DataProvider>(context, listen: false).genrateOtp(_mobileNumberCl.text, SharedPref().COMPANY_ID);
                     if (!widget.productProvider!.genrateOptData!.status!) {
                       Navigator.of(context, rootNavigator: true).pop();
-                      Utils.showToast("Something went wrong");
+                      Utils.showToast(widget.productProvider!.genrateOptData!.message!);
                     } else {
                       Navigator.of(context, rootNavigator: true).pop();
-                      var appSignatureID = await SmsAutoFill().getAppSignature;
-                      setState(() {
+                     // var appSignatureID = await SmsAutoFill().getAppSignature;
+                    /*  setState(() {
                         _code = '123456';
-                      });
+                      });*/
 
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return const OtpScreen();
+                            return OtpScreen(activityId: widget.activityId!, subActivityId:widget.subActivityId!);
                           },
                         ),
                       );
