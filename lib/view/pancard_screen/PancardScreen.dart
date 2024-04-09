@@ -209,7 +209,8 @@ class _PancardScreenState extends State<PancardScreen> {
                                     context,
                                     MaterialPageRoute<dynamic>(
                                       builder: (BuildContext context) =>
-                                          const LoginScreen(activityId: 0,subActivityId: 0),
+                                          const LoginScreen(
+                                              activityId: 0, subActivityId: 0),
                                     ),
                                     (route) =>
                                         false, //if you want to disable back feature set to false

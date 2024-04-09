@@ -5,6 +5,7 @@ import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.da
 import 'package:scale_up_module/view/splash_screen/model/LeadCurrentRequestModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared_preferences/SharedPref.dart';
+import '../../utils/constants.dart';
 import '../../utils/customer_sequence_logic.dart';
 import 'model/LeadCurrentResponseModel.dart';
 
@@ -37,22 +38,19 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> fetchData() async {
-    String? mobile = "7803994667";
-    SharedPref sharedPref = SharedPref();
-    sharedPref.save(sharedPref.LOGIN_MOBILE_NUMBER, mobile);
-
-    sharedPref.getString(sharedPref.LOGIN_MOBILE_NUMBER).then((value) {
-      mobile = value;
-    });
+    final prefsUtil = await SharedPref.getInstance();
+    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, '7803994667');
+    await prefsUtil.saveInt(COMPANY_ID, 2);
+    await prefsUtil.saveInt(PRODUCT_ID, 2);
+    final String? data = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
     try {
       LeadCurrentResponseModel? leadCurrentActivityAsyncData;
-
-      print("mobile::: ${mobile}");
+      print("dsdsdd::: $data");
       var leadCurrentRequestModel = LeadCurrentRequestModel(
-        companyId: 2,
-        productId: 2,
+        companyId: prefsUtil.getInt(COMPANY_ID),
+        productId: prefsUtil.getInt(PRODUCT_ID),
         leadId: 0,
-        mobileNo: mobile,
+        mobileNo: data,
         activityId: 0,
         subActivityId: 0,
         userId: "",
@@ -60,14 +58,18 @@ class _SplashScreenState extends State<SplashScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel) as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData =
+          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+              as LeadCurrentResponseModel?;
       GetLeadResponseModel? getLeadData;
-      getLeadData = await ApiService().getLeads(mobile!, 2, 2, 0) as GetLeadResponseModel?;
+      print("dsdsdd1111111::: $data");
+      getLeadData = await ApiService().getLeads(
+          data!,
+          prefsUtil.getInt(COMPANY_ID)!,
+          prefsUtil.getInt(PRODUCT_ID)!,
+          0) as GetLeadResponseModel?;
 
       customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
-
-
-
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');

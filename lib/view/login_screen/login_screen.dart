@@ -3,22 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/data_provider/DataProvider.dart';
-import 'package:scale_up_module/responsive/Responsive.dart';
-import '../../shared_preferences/SharedPref.dart';
 import '../../utils/constants.dart';
-import 'Background.dart';
 import 'components/LoginForm.dart';
-
-/*class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return  SingleChildScrollView(child: LoginScreen());
-  }
-
-}*/
 
 class LoginScreen extends StatelessWidget {
   final int activityId;
