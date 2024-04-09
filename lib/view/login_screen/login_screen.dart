@@ -21,9 +21,11 @@ import 'components/LoginForm.dart';
 }*/
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({
-    Key? key,
-  }) : super(key: key);
+  final int activityId;
+  final int subActivityId;
+
+  const LoginScreen(
+      {super.key, required this.activityId, required this.subActivityId});
 
   @override
   Widget build(BuildContext context) {
@@ -31,34 +33,37 @@ class LoginScreen extends StatelessWidget {
       top: false,
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Consumer<DataProvider>(
-          builder: (context, productProvider, child) {
+        body:
+            Consumer<DataProvider>(builder: (context, productProvider, child) {
           return SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    LoginScreenTopImage(),
-                    Row(
-                      children: [
-                        Spacer(),
-                        Expanded(
-                          flex: 8,
-                          child: LoginForm(productProvider: productProvider),
-                        ),
-                        Spacer(),
-                      ],
+            child: Column(
+              children: <Widget>[
+                LoginScreenTopImage(),
+                Row(
+                  children: [
+                    Spacer(),
+                    Expanded(
+                      flex: 8,
+                      child: LoginForm(
+                        productProvider: productProvider,
+                        activityId: activityId,
+                        subActivityId: subActivityId,
+                      ),
                     ),
+                    Spacer(),
                   ],
                 ),
-              );
-            }
-        ),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }
 }
 
 class LoginScreenTopImage extends StatelessWidget {
-  const LoginScreenTopImage( {
+  const LoginScreenTopImage({
     Key? key,
   }) : super(key: key);
 

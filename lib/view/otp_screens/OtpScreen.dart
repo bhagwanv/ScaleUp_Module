@@ -23,7 +23,11 @@ import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'model/VarifayOtpRequest.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  int? activityId;
+  int? subActivityId;
+
+
+  OtpScreen({ required this.activityId, required this.subActivityId, super.key });
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -83,7 +87,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     SharedPref().getString(SharedPref().LOGIN_MOBILE_NUMBER).then((value) {
       userLoginMobile = value;
     });
-    listenForCode();
     await SmsAutoFill().listenForCode();
     print("OTP listen  Called");
   }
@@ -151,8 +154,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                   child: Pinput(
                     controller: pinController,
                     length: 6,
-                    androidSmsAutofillMethod:
-                        AndroidSmsAutofillMethod.smsRetrieverApi,
+                    androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsRetrieverApi,
                     showCursor: true,
                     pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                     defaultPinTheme: defaultPinTheme,
@@ -223,7 +225,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                 ),
                 CommonElevatedButton(
                   onPressed: () {
-                    callVerifyOtpApi(context, pinController.text,productProvider);
+                    callVerifyOtpApi(context, pinController.text,productProvider, widget.activityId!, widget.subActivityId!);
                   },
                   text: "Verify Code",
                   upperCase: true,
@@ -237,14 +239,14 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   }
 }
 
-void callVerifyOtpApi(BuildContext context, String otpText, DataProvider productProvider) async {
+void callVerifyOtpApi(BuildContext context, String otpText, DataProvider productProvider, int activityId, int subActivityId) async {
   if (otpText.isEmpty) {
     Utils.showToast("Please Enter Opt");
   } else if (otpText.length < 6) {
     Utils.showToast("PLease Enter Valid Otp");
   } else {
     Utils.onLoading(context, "Loading....");
-    await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(activityId: 1,companyId: SharedPref().COMPANY_ID,mobileNo: SharedPref().getString(SharedPref().LOGIN_MOBILE_NUMBER).then((value) { value;}).toString(),otp: otpText,productId: SharedPref().PRODUCT_ID,subActivityId: 0,vintageDays: 0,monthlyAvgBuying: 0,screen: "MobileOtp"));
+    await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(activityId: activityId,companyId: SharedPref().COMPANY_ID,mobileNo: SharedPref().getString(SharedPref().LOGIN_MOBILE_NUMBER).then((value) { value;}).toString(),otp: otpText,productId: SharedPref().PRODUCT_ID,subActivityId: subActivityId,vintageDays: 0,monthlyAvgBuying: 0,screen: "MobileOtp"));
 
     if (!productProvider.getVerifyData!.status!) {
       Navigator.of(context, rootNavigator: true).pop();
@@ -254,8 +256,6 @@ void callVerifyOtpApi(BuildContext context, String otpText, DataProvider product
       SharedPref().save(SharedPref().USER_ID, productProvider.getVerifyData?.userId);
       SharedPref().save(SharedPref().TOKEN, productProvider.getVerifyData?.userTokan);
       SharedPref().save(SharedPref().LEADE_ID, productProvider.getVerifyData?.leadId);
-
-
     fetchData(context);
 
 
@@ -264,8 +264,6 @@ void callVerifyOtpApi(BuildContext context, String otpText, DataProvider product
 }
 
 Future<void> fetchData(BuildContext context) async {
-
-
   try {
     LeadCurrentResponseModel? leadCurrentActivityAsyncData;
     var leadCurrentRequestModel = LeadCurrentRequestModel(
@@ -303,8 +301,8 @@ void reSendOpt(BuildContext context, DataProvider productProvider, String userLo
   await Provider.of<DataProvider>(context, listen: false).genrateOtp(userLoginMobile, 2);
   if (!productProvider.genrateOptData!.status!) {
     Navigator.of(context, rootNavigator: true).pop();
-
     Utils.showToast("Something went wrong");
+
   } else {
     Navigator.of(context, rootNavigator: true).pop();
 

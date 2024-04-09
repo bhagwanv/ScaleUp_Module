@@ -23,7 +23,7 @@ ScreenType? customerSequence(
               (product) => product.sequence == getLeadData!.sequenceNo!);
       if (leadCurrentActivity.activityName == "MobileOtp") {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => LoginScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
         );
         return ScreenType.login;
       } else if (leadCurrentActivity.activityName == "KYC") {
@@ -64,9 +64,9 @@ ScreenType? customerSequence(
         );
         return ScreenType.login;
       } else if (leadCurrentActivity.activityName == "Show Offer") {
-        Navigator.of(context).pushReplacement(
+       /* Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => LoginScreen()),
-        );
+        );*/
         return ScreenType.login;
       }
     } else {
