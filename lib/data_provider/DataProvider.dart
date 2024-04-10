@@ -2,12 +2,15 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
+import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
 import 'package:scale_up_module/view/pancard_screen/model/PostLeadPANRequestModel.dart';
 import 'package:scale_up_module/view/pancard_screen/model/PostSingleFileResponseModel.dart';
 
 import '../api/ApiService.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
 import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
+import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
@@ -47,9 +50,9 @@ class DataProvider extends ChangeNotifier {
   ValidPanCardResponsModel? get getLeadValidPanCardData =>
       _getLeadValidPanCardData;
 
-  ValidPanCardResponsModel? _getLeadAadhaar;
+  LeadAadhaarResponse? _getLeadAadhaar;
 
-  ValidPanCardResponsModel? get getLeadAadhaar => _getLeadAadhaar;
+  LeadAadhaarResponse? get getLeadAadhaar => _getLeadAadhaar;
 
   AadhaarGenerateOTPResponseModel? _getLeadAadharGenerateOTP;
 
@@ -60,6 +63,9 @@ class DataProvider extends ChangeNotifier {
 
   PostSingleFileResponseModel? _getPostSingleFileData;
   PostSingleFileResponseModel? get getPostSingleFileData => _getPostSingleFileData;
+
+  PostSingleFileResponseModel? _getPostBackAadhaarSingleFileData;
+  PostSingleFileResponseModel? get getPostBackAadhaarSingleFileData => _getPostBackAadhaarSingleFileData;
 
   PostLeadPanResponseModel? _getPostLeadPanData;
   PostLeadPanResponseModel? get getPostLeadPaneData => _getPostLeadPanData;
@@ -88,6 +94,10 @@ class DataProvider extends ChangeNotifier {
   List<CityResponce>? _getAllCityData;List<CityResponce> ? get getAllCityData => _getAllCityData;
 
 
+
+  ValidateAadhaarOTPResponseModel? _getValidateAadhaarOTPData;
+
+  ValidateAadhaarOTPResponseModel? get getValidateAadhaarOTPData => _getValidateAadhaarOTPData;
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -177,6 +187,18 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getAllCity(int stateID) async {
     _getAllCityData = await apiService.GetCityByStateId(stateID);
+    notifyListeners();
+  }
+
+  Future<void> postAadhaarBackSingleFile(File imageFile, bool isValidForLifeTime,
+      String validityInDays, String subFolderName) async {
+    _getPostBackAadhaarSingleFileData = await apiService.postSingleFile(
+        imageFile, isValidForLifeTime, validityInDays, subFolderName);
+    notifyListeners();
+  }
+
+  Future<void> validateAadhaarOtp(ValidateAadhaarOTPRequestModel verifayOtp) async {
+    _getValidateAadhaarOTPData = await apiService.validateAadhaarOtp(verifayOtp);
     notifyListeners();
   }
 }

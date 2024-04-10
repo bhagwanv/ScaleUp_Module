@@ -57,14 +57,14 @@ class KycFailedWidgets extends StatelessWidget {
               padding: const EdgeInsets.only(top: 20,bottom: 40,right: 20,left: 20),
               child:
               CommonElevatedButton(onPressed: (){
-                Navigator.push(
+                /*Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) {
                       return PancardScreen();
                     },
                   ),
-                );
+                );*/
 
               }, text: "RETRY",upperCase: true, ),
             )

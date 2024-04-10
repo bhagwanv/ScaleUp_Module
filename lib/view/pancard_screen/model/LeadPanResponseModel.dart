@@ -15,12 +15,12 @@ class LeadPanResponseModel {
     dob = json['dob'];
     nameOnCard = json['nameOnCard'];
   }
-  String? panCard;
-  String? panImagePath;
-  int? documentId;
-  String? fatherName;
-  String? dob;
-  String? nameOnCard;
+  String? panCard="";
+  String? panImagePath="";
+  int? documentId=0;
+  String? fatherName="";
+  String? dob="";
+  String? nameOnCard="";
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

@@ -10,8 +10,8 @@ enum ImageSourceType { gallery, camera }
 class ImagePickerWidgets extends StatefulWidget {
   late Function(File) onImageSelected;
   ImagePickerWidgets({
-    Key? key,  required this.onImageSelected
-  }) : super(key: key);
+    super.key,  required this.onImageSelected
+  });
 
   @override
   State<ImagePickerWidgets> createState() => _ImagePickerWidgetsState();

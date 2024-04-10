@@ -4,6 +4,7 @@ class AadhaarGenerateOTPResponseModel {
   String? error;
   String? personId;
   Data? data;
+  int? errorCode;
 
   AadhaarGenerateOTPResponseModel({
     this.requestId,
@@ -11,6 +12,7 @@ class AadhaarGenerateOTPResponseModel {
     this.error,
     this.personId,
     this.data,
+    this.errorCode,
   });
 
   AadhaarGenerateOTPResponseModel.fromJson(dynamic json) {

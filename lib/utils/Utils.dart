@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 class Utils {
   static void showToast(String msg) {
@@ -61,5 +62,18 @@ class Utils {
 
   static void hideKeyBored(BuildContext context){
     FocusScope.of(context).requestFocus(new FocusNode());
+  }
+
+  static String dateFormate(BuildContext context,String date){
+    String inputString = date;
+
+    // Parse the input string into a DateTime object
+    DateTime dateTime = DateTime.parse(inputString);
+
+    // Format the DateTime into "dd/MM/yyyy" using intl package
+    String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
+
+    return formattedDate;
+
   }
 }

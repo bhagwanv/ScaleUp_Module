@@ -29,12 +29,12 @@ ScreenType? customerSequence(
       } else if (leadCurrentActivity.activityName == "KYC") {
         if (leadCurrentActivity.subActivityName == "Pan") {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => PancardScreen()),
+            MaterialPageRoute(builder: (context) => PancardScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
           );
           return ScreenType.pancard;
         } else if (leadCurrentActivity.subActivityName == "Aadhar") {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => AadhaarScreen()),
+            MaterialPageRoute(builder: (context) => AadhaarScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
           );
           return ScreenType.aadhar;
         } else if (leadCurrentActivity.subActivityName == "Selfie") {

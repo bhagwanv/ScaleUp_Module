@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 
-
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart';
 import 'package:scale_up_module/api/ApiUrls.dart';
 import 'package:scale_up_module/utils/InternetConnectivity.dart';
+import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
 import 'package:scale_up_module/view/login_screen/model/GenrateOptResponceModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
+import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
+import '../view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
@@ -138,7 +141,7 @@ class ApiService {
         final ValidPanCardResponsModel responseModel =
             ValidPanCardResponsModel.fromJson(jsonData);
         return responseModel;
-      } else if(response.statusCode == 401) {
+      } else if (response.statusCode == 401) {
         return ValidPanCardResponsModel(statusCode: 401);
       } else {
         throw Exception('Failed to load products');
@@ -148,7 +151,7 @@ class ApiService {
     }
   }
 
-  Future<ValidPanCardResponsModel> getLeadAadhar(String userId) async {
+  Future<LeadAadhaarResponse> getLeadAadhar(String userId) async {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(Uri.parse(
           '${apiUrls.baseUrl + apiUrls.getLeadAadhar}?UserId=$userId'));
@@ -157,8 +160,8 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
 
-        final ValidPanCardResponsModel responseModel =
-            ValidPanCardResponsModel.fromJson(jsonData);
+        final LeadAadhaarResponse responseModel =
+            LeadAadhaarResponse.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -175,16 +178,21 @@ class ApiService {
           Uri.parse('${apiUrls.baseUrl + apiUrls.getLeadAadharGenerateOTP}'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJlNzM3MTVmYS1kMmUxLTQ4OGItYTBiZi0xZWNmZDRlNWQwNDIiLCJ1c2VybmFtZSI6Ijk1MjIzOTI4MDEiLCJsb2dnZWRvbiI6IjA0LzA5LzIwMjQgMDY6NDc6NTkiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTIyMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIyIiwibmJmIjoxNzEyNjQ1Mjc5LCJleHAiOjE3MTI3MzE2NzksImlhdCI6MTcxMjY0NTI3OSwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.Os-9IT2eM_jkCPuzaLhfep_W5ggvZ-Hg7CRkox3uv_26uXpqrZxpwDO0iBz30oSw13RweSM9CCJlNp2Yt_Cw-0amzo488JtRogjG0aOmJ7lwzc6ed6z396BRGSBi1u3tLpeMJxrgLYBj8eOK-kyaUk9moV4JktjGYP-0T1ixP3U5Jr4-mT_voGLUXdscQTG8Mvkjd2jfLGsxnwP2HNrV0sIlgJN7cO0mXddUt9bm1Hgzd7PgwkyXZTOnYh46CNBszY7XEX6ZSdptGzrJe1upeZg2kSYVBTp2YwPRCvx7ZKA3xlkXdrK4F9WUOF5oHturar4nptgianOFQO0WFdBKRA'
+            'Authorization':
+                'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiIwMjQ3ODViYS1kNjRiLTQ1YmYtODJjOS0yZmNmNWE3ZWFiMWIiLCJ1c2VybmFtZSI6Ijc4MDM5OTQ2NjciLCJsb2dnZWRvbiI6IjA0LzEwLzIwMjQgMTI6NTc6MjkiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI3ODAzOTk0NjY3IiwiZW1haWwiOiJkZnNkQGdtYWlsLmNvbSIsInJvbGVzIjoiIiwiY29tcGFueWlkIjoiMiIsInByb2R1Y3RpZCI6IjIiLCJuYmYiOjE3MTI3NTM4NDksImV4cCI6MTcxMjg0MDI0OSwiaWF0IjoxNzEyNzUzODQ5LCJpc3MiOiJodHRwczovL2lkZW50aXR5LXVhdC5zY2FsZXVwZmluLmNvbSIsImF1ZCI6ImNybUFwaSJ9.cNK1EVTwAxoC06LZYcqv6FQlj5tGgozgRaIbWxiMbD1ep89EMy2VsenKg8xmj6pw8uH11jNo3cWDBmhw2-MMgUAD7iiVWHAVkzUTeJqTWwFtXgJxMNdh0I_x-R9yaDRMBAqD2BeyvxPEaKJxU5I5wQFB4pG7u9O-xF9reV_KUoGQalCyqxOLs29Q-bRKhY-YtXZ0ktGj2vhW21fvJKsI5RELSCP1zdOqCNYGuVfC6oYsADnXd9HM-fBY9y_dYlEQPXrAQjdpA7bClLl4DI80Tal0QF6QH01AYY923m0'
           },
           body: json.encode(aadhaarGenerateOTPRequestModel));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
+        print("ewewewewewee11111");
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final AadhaarGenerateOTPResponseModel responseModel =
             AadhaarGenerateOTPResponseModel.fromJson(jsonData);
         return responseModel;
+      } else if (response.statusCode == 401) {
+        print("Unauthorized access. Please login again.");
+        return AadhaarGenerateOTPResponseModel(errorCode: 401);return AadhaarGenerateOTPResponseModel(statusCode: 401);
       } else {
         throw Exception('Failed to load products');
       }
@@ -196,11 +204,14 @@ class ApiService {
   Future<ValidPanCardResponsModel> getFathersNameByValidPanCard(
       String panNumber) async {
     if (await internetConnectivity.networkConnectivity()) {
-      final response = await interceptor.get(Uri.parse(
-          '${apiUrls.baseUrl + apiUrls.getFathersNameByValidPanCard}?PanNumber=$panNumber'),
+      final response = await interceptor.get(
+        Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.getFathersNameByValidPanCard}?PanNumber=$panNumber'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization':'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJlNzM3MTVmYS1kMmUxLTQ4OGItYTBiZi0xZWNmZDRlNWQwNDIiLCJ1c2VybmFtZSI6Ijk1MjIzOTI4MDEiLCJsb2dnZWRvbiI6IjA0LzA5LzIwMjQgMDY6NDc6NTkiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTIyMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIyIiwibmJmIjoxNzEyNjQ1Mjc5LCJleHAiOjE3MTI3MzE2NzksImlhdCI6MTcxMjY0NTI3OSwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.Os-9IT2eM_jkCPuzaLhfep_W5ggvZ-Hg7CRkox3uv_26uXpqrZxpwDO0iBz30oSw13RweSM9CCJlNp2Yt_Cw-0amzo488JtRogjG0aOmJ7lwzc6ed6z396BRGSBi1u3tLpeMJxrgLYBj8eOK-kyaUk9moV4JktjGYP-0T1ixP3U5Jr4-mT_voGLUXdscQTG8Mvkjd2jfLGsxnwP2HNrV0sIlgJN7cO0mXddUt9bm1Hgzd7PgwkyXZTOnYh46CNBszY7XEX6ZSdptGzrJe1upeZg2kSYVBTp2YwPRCvx7ZKA3xlkXdrK4F9WUOF5oHturar4nptgianOFQO0WFdBKRA'// Set the content type as JSON
+          'Authorization':
+              'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJlNzM3MTVmYS1kMmUxLTQ4OGItYTBiZi0xZWNmZDRlNWQwNDIiLCJ1c2VybmFtZSI6Ijk1MjIzOTI4MDEiLCJsb2dnZWRvbiI6IjA0LzA5LzIwMjQgMDY6NDc6NTkiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTIyMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIyIiwibmJmIjoxNzEyNjQ1Mjc5LCJleHAiOjE3MTI3MzE2NzksImlhdCI6MTcxMjY0NTI3OSwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.Os-9IT2eM_jkCPuzaLhfep_W5ggvZ-Hg7CRkox3uv_26uXpqrZxpwDO0iBz30oSw13RweSM9CCJlNp2Yt_Cw-0amzo488JtRogjG0aOmJ7lwzc6ed6z396BRGSBi1u3tLpeMJxrgLYBj8eOK-kyaUk9moV4JktjGYP-0T1ixP3U5Jr4-mT_voGLUXdscQTG8Mvkjd2jfLGsxnwP2HNrV0sIlgJN7cO0mXddUt9bm1Hgzd7PgwkyXZTOnYh46CNBszY7XEX6ZSdptGzrJe1upeZg2kSYVBTp2YwPRCvx7ZKA3xlkXdrK4F9WUOF5oHturar4nptgianOFQO0WFdBKRA'
+          // Set the content type as JSON
         },
       );
       //   headers: {"eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJlNzM3MTVmYS1kMmUxLTQ4OGItYTBiZi0xZWNmZDRlNWQwNDIiLCJ1c2VybmFtZSI6Ijk1MjIzOTI4MDEiLCJsb2dnZWRvbiI6IjA0LzA1LzIwMjQgMTE6MTE6MzUiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTIyMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIyIiwibmJmIjoxNzEyMzE1NDk1LCJleHAiOjE3MTI0MDE4OTUsImlhdCI6MTcxMjMxNTQ5NSwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.mTi2DTiQi5-OINhBrdOprmrebkR2oZGVTtweDSvY6xNvL27SbE0f9-A-E8j2CPeBvOYXLeDABVMy15h3ZY7NngjEV3LW_ISx0-NVdpUtv5jRtbjmy-QA4j0qBiszz-UebAGpZFWoyYB5VuyOKv5nI6nDkAb4gPveI6FvCTJx7nmLrJBz8JnNWv2tSVziSWncyl5R4OvQpYtq6NWR1MEzCqATjeTQqEYrjF85bhzOEFU-mrihgupy7Smho-9Mtz58g0vHIQXexHg_lllvHVvBwmwHGdyzeYHyXscmjvageOZTyo5n6fsIGadrm1xGZpas43TL5zmWoU8y0EcbeMhy5w");}
@@ -209,8 +220,8 @@ class ApiService {
       if (response.statusCode == 200) {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
-        final ValidPanCardResponsModel responseModel = ValidPanCardResponsModel.fromJson(
-            jsonData);
+        final ValidPanCardResponsModel responseModel =
+            ValidPanCardResponsModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -235,7 +246,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final VerifyOtpResponce responseModel =
-        VerifyOtpResponce.fromJson(jsonData);
+            VerifyOtpResponce.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -246,11 +257,11 @@ class ApiService {
   }
 
   Future<PostSingleFileResponseModel> postSingleFile(
-      File file,
-      bool isValidForLifeTime,
-      String? validityInDays,
-      String? subFolderName,
-      ) async {
+    File file,
+    bool isValidForLifeTime,
+    String? validityInDays,
+    String? subFolderName,
+  ) async {
     if (await internetConnectivity.networkConnectivity()) {
       try {
         var request = http.MultipartRequest(
@@ -289,7 +300,8 @@ class ApiService {
           var responseModel = PostSingleFileResponseModel.fromJson(jsonData);
           return responseModel;
         } else {
-          throw Exception('Failed to upload file: ${streamedResponse.reasonPhrase}');
+          throw Exception(
+              'Failed to upload file: ${streamedResponse.reasonPhrase}');
         }
       } catch (e) {
         throw Exception('Error uploading file: $e');
@@ -307,7 +319,9 @@ class ApiService {
           Uri.parse('${apiUrls.baseUrl + apiUrls.postLeadPAN}'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization':'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJlNzM3MTVmYS1kMmUxLTQ4OGItYTBiZi0xZWNmZDRlNWQwNDIiLCJ1c2VybmFtZSI6Ijk1MjIzOTI4MDEiLCJsb2dnZWRvbiI6IjA0LzA5LzIwMjQgMDY6Mzc6NDkiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTIyMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIyIiwibmJmIjoxNzEyNjQ0NjY5LCJleHAiOjE3MTI3MzEwNjksImlhdCI6MTcxMjY0NDY2OSwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.LdcZVrR6HVDZfLBgn4Y6UaoSh3LWE23Oq2uVOHdoVbqMBs8cAp1FFCenRf3ySBHvMrhLJqclHsDbLkoRrYsKeim1y20XUldxk9hp_Gtyg3o45cXBdIiyTiXkNoLwintgdJ7Bk2N7so_Q4lu3Y3SMs6Lx-TelcQfOkrMdXEIZ7vDug4krRDSmD2mwq3bnRATLKTd6KjgsRN1-pKv30XEYoCo9QAwEWyG7umEzhCF2W8oEVbhkcvt6PXVZKKabvfpVqdA-aFYfv4r3mlNFjFyY0t1f1dC08DDRAvWatNMFNwLfLOxGdD7_Lo6gKcb_fmJMg8Ydi0dRkzVm_Q5shife0w'// Set the content type as JSON// Set the content type as JSON
+            'Authorization':
+                'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJlNzM3MTVmYS1kMmUxLTQ4OGItYTBiZi0xZWNmZDRlNWQwNDIiLCJ1c2VybmFtZSI6Ijk1MjIzOTI4MDEiLCJsb2dnZWRvbiI6IjA0LzA5LzIwMjQgMDY6Mzc6NDkiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTIyMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIyIiwibmJmIjoxNzEyNjQ0NjY5LCJleHAiOjE3MTI3MzEwNjksImlhdCI6MTcxMjY0NDY2OSwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.LdcZVrR6HVDZfLBgn4Y6UaoSh3LWE23Oq2uVOHdoVbqMBs8cAp1FFCenRf3ySBHvMrhLJqclHsDbLkoRrYsKeim1y20XUldxk9hp_Gtyg3o45cXBdIiyTiXkNoLwintgdJ7Bk2N7so_Q4lu3Y3SMs6Lx-TelcQfOkrMdXEIZ7vDug4krRDSmD2mwq3bnRATLKTd6KjgsRN1-pKv30XEYoCo9QAwEWyG7umEzhCF2W8oEVbhkcvt6PXVZKKabvfpVqdA-aFYfv4r3mlNFjFyY0t1f1dC08DDRAvWatNMFNwLfLOxGdD7_Lo6gKcb_fmJMg8Ydi0dRkzVm_Q5shife0w'
+            // Set the content type as JSON// Set the content type as JSON
           },
           body: json.encode(postLeadPanRequestModel));
       //print(json.encode(leadCurrentRequestModel));
@@ -316,7 +330,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final PostLeadPanResponseModel responseModel =
-        PostLeadPanResponseModel.fromJson(jsonData);
+            PostLeadPanResponseModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -329,10 +343,10 @@ class ApiService {
   Future<BankListResponceModel> getBankList() async {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(
-          Uri.parse('${apiUrls.baseUrl + apiUrls.bankListApi}'),
-          headers: {
-            'Content-Type': 'application/json', // Set the content type as JSON
-          },
+        Uri.parse('${apiUrls.baseUrl + apiUrls.bankListApi}'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type as JSON
+        },
       );
       //print(json.encode(leadCurrentRequestModel));
       print(response.body); // Print the response body once here
@@ -340,7 +354,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final BankListResponceModel responseModel =
-        BankListResponceModel.fromJson(jsonData);
+            BankListResponceModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -354,10 +368,11 @@ class ApiService {
   Future<BankDetailsResponceModel> GetLeadBankDetail(int leadID) async {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(
-          Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadBankDetail}?PanNumber=$leadID'),
-          headers: {
-            'Content-Type': 'application/json', // Set the content type as JSON
-          },
+        Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.GetLeadBankDetail}?PanNumber=$leadID'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type as JSON
+        },
       );
       //print(json.encode(leadCurrentRequestModel));
       print(response.body); // Print the response body once here
@@ -365,7 +380,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final BankDetailsResponceModel responseModel =
-        BankDetailsResponceModel.fromJson(jsonData);
+            BankDetailsResponceModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -447,4 +462,29 @@ class ApiService {
     }
   }
 
+  Future<ValidateAadhaarOTPResponseModel> validateAadhaarOtp(
+      ValidateAadhaarOTPRequestModel verifayOtp) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.post(
+          Uri.parse(apiUrls.baseUrl + apiUrls.LeadMobileValidate),
+          headers: {
+            'Content-Type': 'application/json', // Set the content type as JSON
+          },
+          body: json.encode(verifayOtp));
+      if (kDebugMode) {
+        print(response.body);
+      } // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final ValidateAadhaarOTPResponseModel responseModel =
+        ValidateAadhaarOTPResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
 }
