@@ -37,6 +37,26 @@ class _PermissionsWidget extends State<PermissionsWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    // Handle tap event here
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    height: 20,
+                    width: 20,
+                    child: SvgPicture.asset(
+                      'assets/icons/close_dilog_icons.svg',
+                      semanticsLabel: 'My SVG Image',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
             const Text(
               'to setup your account, we need a few permissions',
               textAlign: TextAlign.start,
