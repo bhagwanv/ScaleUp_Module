@@ -39,21 +39,32 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> fetchData() async {
     final prefsUtil = await SharedPref.getInstance();
-    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, '7313103573');
+    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, '7803994667');
     await prefsUtil.saveInt(COMPANY_ID, 2);
     await prefsUtil.saveInt(PRODUCT_ID, 2);
-    final String? data = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
+    final String? mobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
+
+    //lead id
+    var leadId = 0;
+    var userID = "";
+    if (prefsUtil.getInt(LEADE_ID) != null) {
+      leadId = prefsUtil.getInt(LEADE_ID)!;
+    }
+    if (prefsUtil.getString(USER_ID) != null) {
+      userID = prefsUtil.getString(USER_ID)!;
+    }
+
     try {
       LeadCurrentResponseModel? leadCurrentActivityAsyncData;
-      print("dsdsdd::: $data");
+      print("dsdsdd::: $mobile");
       var leadCurrentRequestModel = LeadCurrentRequestModel(
         companyId: prefsUtil.getInt(COMPANY_ID),
         productId: prefsUtil.getInt(PRODUCT_ID),
-        leadId: 0,
-        mobileNo: data,
+        leadId: leadId,
+        mobileNo: mobile,
         activityId: 0,
         subActivityId: 0,
-        userId: "",
+        userId: userID,
         monthlyAvgBuying: 0,
         vintageDays: 0,
         isEditable: true,
@@ -62,13 +73,14 @@ class _SplashScreenState extends State<SplashScreen> {
           await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
               as LeadCurrentResponseModel?;
       GetLeadResponseModel? getLeadData;
-      print("dsdsdd1111111::: $data");
       getLeadData = await ApiService().getLeads(
-          data!,
+          mobile!,
           prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(PRODUCT_ID)!,
-          0) as GetLeadResponseModel?;
+          leadId) as GetLeadResponseModel?;
 
+      prefsUtil.saveString(USER_ID, getLeadData!.userId!);
+      prefsUtil.saveInt(LEADE_ID, getLeadData!.leadId!);
       customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
     } catch (error) {
       if (kDebugMode) {

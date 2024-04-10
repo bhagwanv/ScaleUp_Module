@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,13 +17,20 @@ import '../../utils/common_check_box.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
 import '../../utils/loader.dart';
+import '../aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
 import '../login_screen/login_screen.dart';
 import 'PermissionsScreen.dart';
 
 class PancardScreen extends StatefulWidget {
   String? image;
+  final int activityId;
+  final int subActivityId;
 
-  PancardScreen({super.key, this.image});
+  PancardScreen(
+      {super.key,
+      this.image,
+      required this.activityId,
+      required this.subActivityId});
 
   @override
   State<PancardScreen> createState() => _PancardScreenState();
@@ -56,7 +64,7 @@ class _PancardScreenState extends State<PancardScreen> {
       Utils.onLoading(context, "");
 
       await Provider.of<DataProvider>(context, listen: false)
-          .postSingleFile(imageFile, true, "", "dfhsjfh");
+          .postSingleFile(imageFile, true, "", "");
       Navigator.pop(context);
       Navigator.of(context, rootNavigator: true).pop();
     });
@@ -104,27 +112,27 @@ class _PancardScreenState extends State<PancardScreen> {
                             width: 100,
                             alignment: Alignment.topLeft,
                             child: Image.asset('assets/images/scale.png')),
-                        Text(
+                        const Text(
                           'Enter Your PAN',
                           textAlign: TextAlign.start,
                           style: TextStyle(fontSize: 40, color: Colors.black),
                         ),
-                        SizedBox(height: 20),
-                        Text(
+                        const SizedBox(height: 20),
+                        const Text(
                           'Verify the PAN number',
                           textAlign: TextAlign.start,
                           style: TextStyle(fontSize: 15, color: Colors.black),
                         ),
-                        SizedBox(height: 20),
-                        Text(
+                        const SizedBox(height: 20),
+                        const Text(
                           'PAN Number',
                           textAlign: TextAlign.start,
                           style:
                               TextStyle(fontSize: 14, color: Color(0xff858585)),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 2.0, horizontal: 16.0),
                           decoration: BoxDecoration(
                             color: textFiledBackgroundColour,
@@ -149,7 +157,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                     LengthLimitingTextInputFormatter(10),
                                     // Limit to 10 characters
                                   ],
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     contentPadding: EdgeInsets.symmetric(
                                         vertical: 0.0, horizontal: 0.0),
                                     hintText: "Enter PAN Number",
@@ -273,19 +281,19 @@ class _PancardScreenState extends State<PancardScreen> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        Text(
+                        const Text(
                           'Name ( As per PAN )',
                           textAlign: TextAlign.start,
                           style:
                               TextStyle(fontSize: 14, color: Color(0xff858585)),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         TextField(
                           controller: _nameAsPanCl,
                           keyboardType: TextInputType.text,
                           cursorColor: kPrimaryColor,
                           enabled: false,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 16.0, horizontal: 16.0),
                             enabledBorder: OutlineInputBorder(
@@ -470,14 +478,14 @@ class _PancardScreenState extends State<PancardScreen> {
                                     prefsUtil.getInt(COMPANY_ID);
                                 var postLeadPanRequestModel =
                                     PostLeadPanRequestModel(
-                                  leadId: 1,
+                                  leadId: prefsUtil.getInt(LEADE_ID),
                                   userId: userId,
-                                  activityId: 2,
-                                  subActivityId: 2,
+                                  activityId: widget.activityId,
+                                  subActivityId: widget.subActivityId,
                                   uniqueId: _panNumberCl.text,
                                   imagePath: productProvider
                                       .getPostSingleFileData?.filePath,
-                                  documentId: 31,
+                                  documentId: productProvider.getPostSingleFileData?.docId,
                                   companyId: companyId,
                                   fathersName: _fatherNameAsPanCl.text,
                                   dob: _dOBAsPanCl.text,

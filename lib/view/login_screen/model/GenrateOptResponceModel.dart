@@ -1,17 +1,17 @@
 class GenrateOptResponceModel {
-  GenrateOptResponceModel({
-      this.status, 
-      this.message, 
-      this.otp,});
+  bool? status;
+  String? message;
+  String? otp;
+  int? statusCode;
+
+  GenrateOptResponceModel(
+      {this.status, this.message, this.otp, this.statusCode});
 
   GenrateOptResponceModel.fromJson(dynamic json) {
     status = json['status'];
     message = json['message'];
     otp = json['otp'];
   }
-  bool? status;
-  String? message;
-  String? otp;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -20,5 +20,4 @@ class GenrateOptResponceModel {
     map['otp'] = otp;
     return map;
   }
-
 }

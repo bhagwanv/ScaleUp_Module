@@ -47,14 +47,13 @@ class _PermissionsWidget extends State<PermissionsWidget> {
               style: TextStyle(fontSize: 18, color: Colors.black),
             ),
             const SizedBox(height: 20),
-
             ListTile(
               title: Stack(
                 children: [
                   Positioned(
                     top: 0,
                     left: 0,
-                    child:SvgPicture.asset(
+                    child: SvgPicture.asset(
                       'assets/icons/mobile_icon.svg',
                       semanticsLabel: 'mobile_icon',
                     ),
@@ -63,10 +62,12 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                     padding: EdgeInsets.only(left: 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [ // Adjust the spacing between icon and text
+                      children: [
+                        // Adjust the spacing between icon and text
                         Text(
                           'Read Phone State & Phone Number',
-                          style: TextStyle(fontSize: 15, color: Color(0xff0196CE)),
+                          style:
+                              TextStyle(fontSize: 15, color: Color(0xff0196CE)),
                         ),
                         Text(
                           'This will help us in reading your mobile number and securely link your account',
@@ -77,21 +78,19 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                   ),
                 ],
               ),
-
-              contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
               dense: true,
               enabled: false,
               selected: true,
             ),
-
-
             ListTile(
               title: Stack(
                 children: [
                   Positioned(
                     top: 0,
                     left: 0,
-                    child:SvgPicture.asset(
+                    child: SvgPicture.asset(
                       'assets/icons/call_icon.svg',
                       semanticsLabel: 'Call_icon',
                     ),
@@ -100,10 +99,12 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                     padding: EdgeInsets.only(left: 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [ // Adjust the spacing between icon and text
+                      children: [
+                        // Adjust the spacing between icon and text
                         Text(
                           'sms (send/read)',
-                          style: TextStyle(fontSize: 15, color: Color(0xff0196CE)),
+                          style:
+                              TextStyle(fontSize: 15, color: Color(0xff0196CE)),
                         ),
                         Text(
                           'Our app collects SMS data to assess your profile for various Scaleup products and/or services, including those offered in partnership with lending partners and other financial services providers. Additionally, send SMS access is required to verify your phone number and other verification purposes. This data may be collected even when the app is closed or not in use.',
@@ -114,20 +115,18 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                   ),
                 ],
               ),
-
               contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
               dense: true,
               enabled: false,
               selected: true,
             ),
-
             ListTile(
               title: Stack(
                 children: [
                   Positioned(
                     top: 0,
                     left: 0,
-                    child:SvgPicture.asset(
+                    child: SvgPicture.asset(
                       'assets/icons/camera_icon.svg',
                       semanticsLabel: 'camera_icon',
                     ),
@@ -136,10 +135,12 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                     padding: EdgeInsets.only(left: 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [ // Adjust the spacing between icon and text
+                      children: [
+                        // Adjust the spacing between icon and text
                         Text(
                           'sms (send/read)',
-                          style: TextStyle(fontSize: 15, color: Color(0xff0196CE)),
+                          style:
+                              TextStyle(fontSize: 15, color: Color(0xff0196CE)),
                         ),
                         Text(
                           'Our app collects SMS data to assess your profile for various Scaleup products and/or services, including those offered in partnership with lending partners and other financial services providers. Additionally, send SMS access is required to verify your phone number and other verification purposes. This data may be collected even when the app is closed or not in use.',
@@ -150,20 +151,18 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                   ),
                 ],
               ),
-
               contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
               dense: true,
               enabled: false,
               selected: true,
             ),
-
             ListTile(
               title: Stack(
                 children: [
                   Positioned(
                     top: 0,
                     left: 0,
-                    child:SvgPicture.asset(
+                    child: SvgPicture.asset(
                       'assets/icons/file_icon.svg',
                       semanticsLabel: 'file_icon',
                     ),
@@ -172,10 +171,12 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                     padding: EdgeInsets.only(left: 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [ // Adjust the spacing between icon and text
+                      children: [
+                        // Adjust the spacing between icon and text
                         Text(
                           'Storage',
-                          style: TextStyle(fontSize: 15, color: Color(0xff0196CE)),
+                          style:
+                              TextStyle(fontSize: 15, color: Color(0xff0196CE)),
                         ),
                         Text(
                           'This app can access the file stored on your device to help you submit your KYC documents, Bank statement and other required documents to complete the loan application process.',
@@ -186,20 +187,18 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                   ),
                 ],
               ),
-
               contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
               dense: true,
               enabled: false,
               selected: true,
             ),
-
             ListTile(
               title: Stack(
                 children: [
                   Positioned(
                     top: 0,
                     left: 0,
-                    child:SvgPicture.asset(
+                    child: SvgPicture.asset(
                       'assets/icons/location_icon.svg',
                       semanticsLabel: 'location_icon',
                     ),
@@ -208,10 +207,12 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                     padding: const EdgeInsets.only(left: 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [ // Adjust the spacing between icon and text
+                      children: [
+                        // Adjust the spacing between icon and text
                         Text(
                           'Location',
-                          style: TextStyle(fontSize: 15, color: Color(0xff0196CE)),
+                          style:
+                              TextStyle(fontSize: 15, color: Color(0xff0196CE)),
                         ),
                         Text(
                           'This will help us in showing Cash Deposit Points near you',
@@ -222,29 +223,22 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                   ),
                 ],
               ),
-
               contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
               dense: true,
               enabled: false,
               selected: true,
             ),
-
             Text(
               'By continuing. I agree to Scaleup T&Cs and Privacy Policy',
               textAlign: TextAlign.start,
               style: TextStyle(fontSize: 12, color: Colors.black),
             ),
             SizedBox(height: 20),
-            CommonElevatedButton(onPressed: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return AadhaarScreen();
-                  },
-                ),
-              );
-              ;}, text: "Accept and Continue",upperCase: true, )
+            CommonElevatedButton(
+              onPressed: () {},
+              text: "Accept and Continue",
+              upperCase: true,
+            )
           ],
         ),
       ),

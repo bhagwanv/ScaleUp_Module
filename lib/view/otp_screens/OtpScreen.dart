@@ -36,7 +36,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   String? appSignature;
   String? otpCode;
   DataProvider? productProvider;
-  late Timer _timer;
   int _start = 60;
   String? userLoginMobile;
   bool isReSendDisable = true;
@@ -97,7 +96,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   @override
   void dispose() {
     SmsAutoFill().unregisterListener();
-    _timer.cancel();
     super.dispose();
   }
 
@@ -289,8 +287,8 @@ void callVerifyOtpApi(
           USER_ID, productProvider.getVerifyData!.userId.toString());
       await prefsUtil.saveString(
           TOKEN, productProvider.getVerifyData!.userTokan.toString());
-      await prefsUtil.saveString(
-          LEADE_ID, productProvider.getVerifyData!.leadId.toString());
+      await prefsUtil.saveInt(
+          LEADE_ID, productProvider.getVerifyData!.leadId!);
 
       fetchData(context, userLoginMobile);
     }

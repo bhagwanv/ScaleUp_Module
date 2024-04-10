@@ -16,7 +16,7 @@ class _LoaderState extends State<Loader> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _showCustomDialog(context, "");
     });
   }
