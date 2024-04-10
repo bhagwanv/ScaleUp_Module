@@ -8,12 +8,14 @@ class CommonCheckBox extends StatefulWidget {
   final ValueChanged<bool>? onChanged;
   final String? text;
   final bool upperCase;
+  bool isChecked = false;
 
   CommonCheckBox({
     Key? key,
     this.onChanged,
     this.text,
     this.upperCase = false,
+    this.isChecked = false,
   }) : super(key: key);
 
   @override
@@ -21,15 +23,14 @@ class CommonCheckBox extends StatefulWidget {
 }
 
 class _CommonCheckBoxState extends State<CommonCheckBox> {
-  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         setState(() {
-          isChecked = !isChecked;
-          widget.onChanged?.call(isChecked);
+          widget.isChecked = !widget.isChecked;
+          widget.onChanged?.call(widget.isChecked);
         });
       },
       child: Container(
@@ -46,7 +47,7 @@ class _CommonCheckBoxState extends State<CommonCheckBox> {
                 ),
                 borderRadius: BorderRadius.circular(5.0),
               ),
-              child: isChecked
+              child: widget.isChecked
                   ? Container(
                 color: (kPrimaryColor),
                 child: Icon(

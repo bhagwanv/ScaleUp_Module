@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/pancard_screen/model/PostLeadPANRequestModel.dart';
 
+import '../../api/ApiService.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
 import '../../utils/DateTextFormatter.dart';
@@ -16,13 +17,16 @@ import '../../utils/Utils.dart';
 import '../../utils/common_check_box.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
+import '../../utils/customer_sequence_logic.dart';
 import '../../utils/loader.dart';
-import '../aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
 import '../login_screen/login_screen.dart';
+import '../splash_screen/model/GetLeadResponseModel.dart';
+import '../splash_screen/model/LeadCurrentRequestModel.dart';
+import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'PermissionsScreen.dart';
 
 class PancardScreen extends StatefulWidget {
-  String? image;
+  String image = "";
   final int activityId;
   final int subActivityId;
 
@@ -37,7 +41,6 @@ class PancardScreen extends StatefulWidget {
 }
 
 class _PancardScreenState extends State<PancardScreen> {
-  bool isTermsChecks = false;
   final TextEditingController _panNumberCl = TextEditingController();
   final TextEditingController _nameAsPanCl = TextEditingController();
   final TextEditingController _dOBAsPanCl = TextEditingController();
@@ -46,6 +49,7 @@ class _PancardScreenState extends State<PancardScreen> {
   var isEnabledPanNumber = true;
   var isVerifyPanNumber = false;
   var isDataClear = false;
+  var _acceptPermissions = false;
 
   @override
   void initState() {
@@ -59,14 +63,19 @@ class _PancardScreenState extends State<PancardScreen> {
     // Handle the selected image here
     // For example, you can setState to update UI with the selected image
     setState(() async {
-      //   widget.image = imageFile;
-      //api call
       Utils.onLoading(context, "");
-
       await Provider.of<DataProvider>(context, listen: false)
           .postSingleFile(imageFile, true, "", "");
       Navigator.pop(context);
       Navigator.of(context, rootNavigator: true).pop();
+    });
+  }
+
+  void _handlePermissionsAccepted(bool accept) {
+    setState(() {
+      _acceptPermissions = accept;
+
+      print("asdfads$_acceptPermissions");
     });
   }
 
@@ -86,18 +95,16 @@ class _PancardScreenState extends State<PancardScreen> {
                 isLoading = false;
               }
               var LeadPANData = productProvider.getLeadPANData!;
-              /* LeadPANData.panCard="JKMPS653E";
-              LeadPANData.nameOnCard="Atul Singh";
-              LeadPANData.dob="28/07/1999";
-              LeadPANData.fatherName="Dinesh singh";*/
+
               if (LeadPANData.panCard != null && !isDataClear) {
                 isVerifyPanNumber = true;
                 isEnabledPanNumber = false;
                 _panNumberCl.text = LeadPANData.panCard!;
                 _nameAsPanCl.text = LeadPANData.nameOnCard!;
-                _dOBAsPanCl.text = LeadPANData.dob!;
+                var formateDob=Utils.dateFormate(context,LeadPANData.dob!);
+                _dOBAsPanCl.text =formateDob;
                 _fatherNameAsPanCl.text = LeadPANData.fatherName!;
-                widget.image = LeadPANData.panImagePath;
+                widget.image = LeadPANData.panImagePath!;
               }
 
               return Center(
@@ -212,9 +219,10 @@ class _PancardScreenState extends State<PancardScreen> {
                                                     .getFathersNameByValidPanCardData!
                                                     .dob !=
                                                 Null) {
-                                              _dOBAsPanCl.text = productProvider
+                                              var formateDob=Utils.dateFormate(context,productProvider
                                                   .getFathersNameByValidPanCardData!
-                                                  .dob;
+                                                  .dob);
+                                              _dOBAsPanCl.text = formateDob;
                                             }
                                           } else {
                                             Utils.showToast(productProvider
@@ -227,7 +235,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                             MaterialPageRoute<dynamic>(
                                               builder: (BuildContext context) =>
                                                   LoginScreen(
-                                                      activityId: 0,
+                                                      activityId: 1,
                                                       subActivityId: 0),
                                             ),
                                             (route) =>
@@ -260,13 +268,15 @@ class _PancardScreenState extends State<PancardScreen> {
                                               _panNumberCl.text = "";
                                               _nameAsPanCl.text = "";
                                               _dOBAsPanCl.text = "";
+                                              _fatherNameAsPanCl.text = "";
+                                              widget.image = "";
+                                              _acceptPermissions = false;
 
                                               LeadPANData.panCard = "";
                                               LeadPANData.nameOnCard = "";
                                               LeadPANData.dob = "";
                                               LeadPANData.fatherName = "";
-
-                                              print("fdhg");
+                                              LeadPANData.panImagePath = "";
                                             });
                                           },
                                           child: SvgPicture.asset(
@@ -402,12 +412,12 @@ class _PancardScreenState extends State<PancardScreen> {
                                           height: 148,
                                         ),
                                       )
-                                    : (widget.image != null)
+                                    : (widget.image.isNotEmpty)
                                         ? ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             child: Image.network(
-                                              widget.image as String,
+                                              widget.image!,
                                               fit: BoxFit.cover,
                                               width: double.infinity,
                                               height: 148,
@@ -438,89 +448,101 @@ class _PancardScreenState extends State<PancardScreen> {
                             )),
                         SizedBox(height: 20),
                         CommonCheckBox(
-                          onChanged: (bool isChecked) {
+                          onChanged: (bool isChecked) async {
                             // Handle the state change here
                             print('Checkbox state changed: $isChecked');
-                            isTermsChecks = isChecked;
+                            if (isChecked) {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PermissionsScreen()),
+                              );
+                              // Handle the result from Screen B using the callback function
+                              _handlePermissionsAccepted(result ?? false);
+                            }
                           },
-                          text: "Term & Condition ",
+                          isChecked: _acceptPermissions,
+                          text: "By proceeding, I provide consent on the following",
                           upperCase: true,
                         ),
+                        SizedBox(height: 20),
+                        Text("I hereby accept Scaleup T&C & Privacy Policy . Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners"),
                         SizedBox(height: 30),
                         CommonElevatedButton(
                           onPressed: () async {
-                            print("sdfsdf$isTermsChecks");
-                            if (LeadPANData.panCard == null) {
-                              if (_panNumberCl.text.isEmpty) {
-                                Utils.showToast("Please Enter Pan Number");
-                              } else if (_nameAsPanCl.text.isEmpty) {
-                                Utils.showToast(
-                                    "Please Enter Name (As Per Pan))");
-                              } else if (_dOBAsPanCl.text.isEmpty) {
-                                Utils.showToast(
-                                    "Please Enter Name (As Per Pan))");
-                              } else if (_fatherNameAsPanCl.text.isEmpty) {
-                                Utils.showToast(
-                                    "Please Enter Father Name (As Per Pan))");
-                              } else if (productProvider
-                                      .getPostSingleFileData?.filePath ==
-                                  null) {
-                                Utils.showToast("Please Upload Pan Image ");
-                              } else if (!isTermsChecks) {
-                                Utils.showToast(
-                                    "Please Check Terms And Conditions");
-                              } else {
-                                final prefsUtil =
-                                    await SharedPref.getInstance();
-                                final String? userId =
-                                    prefsUtil.getString(USER_ID);
-                                final int? companyId =
-                                    prefsUtil.getInt(COMPANY_ID);
-                                var postLeadPanRequestModel =
-                                    PostLeadPanRequestModel(
-                                  leadId: prefsUtil.getInt(LEADE_ID),
-                                  userId: userId,
-                                  activityId: widget.activityId,
-                                  subActivityId: widget.subActivityId,
-                                  uniqueId: _panNumberCl.text,
-                                  imagePath: productProvider
-                                      .getPostSingleFileData?.filePath,
-                                  documentId: productProvider.getPostSingleFileData?.docId,
-                                  companyId: companyId,
-                                  fathersName: _fatherNameAsPanCl.text,
-                                  dob: _dOBAsPanCl.text,
-                                  name: _nameAsPanCl.text,
-                                );
+                            final prefsUtil = await SharedPref.getInstance();
+                            final String? userId = prefsUtil.getString(USER_ID);
+                            final int? companyId = prefsUtil.getInt(COMPANY_ID);
 
-                                //api call
-                                Utils.onLoading(context, "Loading...");
-                                await Provider.of<DataProvider>(context,
-                                        listen: false)
-                                    .postLeadPAN(postLeadPanRequestModel);
+                            if (productProvider.getPostSingleFileData != null) {
+                              if (productProvider.getPostSingleFileData!.filePath != null) {
+                                widget.image = productProvider.getPostSingleFileData!.filePath!;
+                              }
+                            }
 
+                            if (_panNumberCl.text.isEmpty) {
+                                  Utils.showToast("Please Enter Pan Number");
+                            } else if (_nameAsPanCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Name (As Per Pan))");
+                            } else if (_dOBAsPanCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Name (As Per Pan))");
+                            } else if (_fatherNameAsPanCl.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Father Name (As Per Pan))");
+                            } else if (widget.image == "") {
+                              Utils.showToast("Please Upload Pan Image ");
+                            } else if (!_acceptPermissions) {
+                              Utils.showToast(
+                                  "Please Check Terms And Conditions");
+                            }else{
+                              var postLeadPanRequestModel =
+                              PostLeadPanRequestModel(
+                                leadId: 1,
+                                userId: userId,
+                                activityId: 1,
+                                subActivityId: 0,
+                                uniqueId: _panNumberCl.text,
+                                imagePath: widget.image,
+                                documentId: 31,
+                                companyId: companyId,
+                                fathersName: _fatherNameAsPanCl.text,
+                                dob: productProvider.getFathersNameByValidPanCardData!.dob,
+                                name: _nameAsPanCl.text,
+                              );
+
+                              Utils.onLoading(context, "Loading...");
+                              await Provider.of<DataProvider>(context,
+                                  listen: false)
+                                  .postLeadPAN(postLeadPanRequestModel);
+
+                              if (productProvider.getPostLeadPaneData?.statusCode != 401) {
                                 if (productProvider.getPostLeadPaneData !=
                                     null) {
                                   Navigator.of(context, rootNavigator: true)
                                       .pop();
-                                  Utils.showToast(productProvider
-                                      .getPostLeadPaneData!.message!);
-                                  if (productProvider
-                                      .getPostLeadPaneData!.isSuccess!) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return const PermissionsScreen();
-                                        },
-                                      ),
-                                    );
+                                  Utils.showToast(
+                                      productProvider.getPostLeadPaneData!
+                                          .message!);
+                                  if (productProvider.getPostLeadPaneData!
+                                      .isSuccess!) {
+                                    // call sequence api
+                                    print("sdfksadfkj;saf");
+                                    fetchData(context);
                                   }
-                                } else {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
-                                  Utils.showToast(productProvider
-                                      .getPostLeadPaneData!.message!);
                                 }
+                              }else{
+                                Navigator.pushAndRemoveUntil<dynamic>(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                    builder: (BuildContext context) =>
+                                        LoginScreen(
+                                            activityId: 1, subActivityId: 0),
+                                  ),
+                                      (route) =>
+                                  false, //if you want to disable back feature set to false
+                                );
                               }
                             }
                           },
@@ -562,4 +584,39 @@ Future<void> callApi(BuildContext context) async {
   final String? userId = prefsUtil.getString(USER_ID);
 
   Provider.of<DataProvider>(context, listen: false).getLeadPAN(userId!);
+}
+
+Future<void> fetchData(BuildContext context) async {
+  final prefsUtil = await SharedPref.getInstance();
+  try {
+    LeadCurrentResponseModel? leadCurrentActivityAsyncData;
+    var leadCurrentRequestModel = LeadCurrentRequestModel(
+      companyId: prefsUtil.getInt(COMPANY_ID),
+      productId: prefsUtil.getInt(PRODUCT_ID),
+      leadId: 0,
+      mobileNo: prefsUtil.getString(LOGIN_MOBILE_NUMBER),
+      activityId: 1,
+      subActivityId: 0,
+      userId: prefsUtil.getString(USER_ID),
+      monthlyAvgBuying: 0,
+      vintageDays: 0,
+      isEditable: true,
+    );
+    leadCurrentActivityAsyncData =
+    await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+    as LeadCurrentResponseModel?;
+
+    GetLeadResponseModel? getLeadData;
+    getLeadData = await ApiService().getLeads(
+        prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
+        prefsUtil.getInt(COMPANY_ID)!,
+        prefsUtil.getInt(PRODUCT_ID)!,
+        0) as GetLeadResponseModel?;
+
+    customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+  } catch (error) {
+    if (kDebugMode) {
+      print('Error occurred during API call: $error');
+    }
+  }
 }
