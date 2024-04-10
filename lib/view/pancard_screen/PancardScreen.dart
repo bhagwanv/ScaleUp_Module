@@ -68,8 +68,7 @@ class _PancardScreenState extends State<PancardScreen> {
         top: true,
         bottom: true,
         child: Scaffold(
-          body: Consumer<DataProvider>(
-              builder: (context, productProvider, child) {
+          body: Consumer<DataProvider>(builder: (context, productProvider, child) {
             if (productProvider.getLeadPANData == null && isLoading) {
               return Loader();
             } else {

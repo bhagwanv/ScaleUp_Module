@@ -16,6 +16,9 @@ import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/pancard_screen/model/LeadPanResponseModel.dart';
 import '../view/pancard_screen/model/PostLeadPANResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
+import '../view/personal_info/model/AllStateResponce.dart';
+import '../view/personal_info/model/CityResponce.dart';
+import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
@@ -73,6 +76,18 @@ class DataProvider extends ChangeNotifier {
   BankDetailsResponceModel? _getBankDetailsData;
 
   BankDetailsResponceModel? get getBankDetailsData => _getBankDetailsData;
+
+  PersonalDetailsResponce? _getPersonalDetailsData;
+
+  PersonalDetailsResponce? get getPersonalDetailsData => _getPersonalDetailsData;
+
+  AllStateResponce? _getAllStateData;
+
+  AllStateResponce? get getAllStateData => _getAllStateData;
+
+  List<CityResponce>? _getAllCityData;List<CityResponce> ? get getAllCityData => _getAllCityData;
+
+
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -146,6 +161,22 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getBankDetails(int leadID) async {
     _getBankDetailsData = await apiService.GetLeadBankDetail(leadID);
+    notifyListeners();
+  }
+
+
+  Future<void> getLeadPersonalDetails(String leadID) async {
+    _getPersonalDetailsData = await apiService.getLeadPersnalDetails(leadID);
+    notifyListeners();
+  }
+
+  Future<void> getAllState() async {
+    _getAllStateData = await apiService.getAllState();
+    notifyListeners();
+  }
+
+  Future<void> getAllCity(int stateID) async {
+    _getAllCityData = await apiService.GetCityByStateId(stateID);
     notifyListeners();
   }
 }

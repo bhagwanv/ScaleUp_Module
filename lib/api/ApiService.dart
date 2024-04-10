@@ -19,6 +19,9 @@ import '../view/pancard_screen/model/PostLeadPANRequestModel.dart';
 import '../view/pancard_screen/model/PostLeadPANResponseModel.dart';
 import '../view/pancard_screen/model/PostSingleFileResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
+import '../view/personal_info/model/AllStateResponce.dart';
+import '../view/personal_info/model/CityResponce.dart';
+import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import 'Interceptor.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
@@ -363,6 +366,78 @@ class ApiService {
         final dynamic jsonData = json.decode(response.body);
         final BankDetailsResponceModel responseModel =
         BankDetailsResponceModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+  Future<PersonalDetailsResponce> getLeadPersnalDetails(String leadID) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.get(
+        Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=$leadID'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type as JSON
+        },
+      );
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final PersonalDetailsResponce responseModel =
+        PersonalDetailsResponce.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+
+  Future<AllStateResponce> getAllState() async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.get(
+        Uri.parse('${apiUrls.baseUrl + apiUrls.GetAllState}'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type as JSON
+        },
+      );
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final AllStateResponce responseModel =
+        AllStateResponce.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+  Future<List<CityResponce>> GetCityByStateId(int stateID) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.get(
+        Uri.parse('${apiUrls.baseUrl + apiUrls.GetCityByStateId}?stateId=$stateID'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type as JSON
+        },
+      );
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final List<CityResponce> responseModel = List<CityResponce>.from(jsonData.map((model) => CityResponce.fromJson(model)));
         return responseModel;
       } else {
         throw Exception('Failed to load products');

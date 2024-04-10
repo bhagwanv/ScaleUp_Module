@@ -23,8 +23,7 @@ class BankDetailsScreen extends StatefulWidget {
 }
 
 class _BankDetailsScreenState extends State<BankDetailsScreen> {
-  final TextEditingController _accountHolderController =
-      TextEditingController();
+  final TextEditingController _accountHolderController = TextEditingController();
   final TextEditingController _bankAccountNumberCl = TextEditingController();
   final TextEditingController _ifsccodeCl = TextEditingController();
 
@@ -134,11 +133,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         top: true,
         bottom: true,
         child: Scaffold(
-          body: Consumer<DataProvider>(
-              builder: (context, productProvider, child) {
-            if (productProvider.getBankListData != null &&
-                productProvider.getBankDetailsData != null &&
-                isLoading) {
+          body: Consumer<DataProvider>(builder: (context, productProvider, child) {
+            if (productProvider.getBankListData != null && productProvider.getBankDetailsData != null && isLoading) {
               Navigator.of(context, rootNavigator: true).pop();
               isLoading = false;
               if (productProvider.getBankDetailsData != null &&

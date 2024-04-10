@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> fetchData() async {
     final prefsUtil = await SharedPref.getInstance();
-    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, '7313103573');
+    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, '1122785554');
     await prefsUtil.saveInt(COMPANY_ID, 2);
     await prefsUtil.saveInt(PRODUCT_ID, 2);
     final String? data = prefsUtil.getString(LOGIN_MOBILE_NUMBER);

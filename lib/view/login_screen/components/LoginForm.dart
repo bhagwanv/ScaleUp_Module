@@ -101,7 +101,7 @@ class _LoginFormState extends State<LoginForm> {
                 isTermsChecks = isChecked;
               },
               text: "I acknowledge and consent to the sharing of my data for the purpose of Scaleup pay application. I understand that my data may be used in accordance with the scaleup privacy policy. By proceeding, I agree to these terms.",
-              upperCase: true,
+              upperCase: false,
             ),
           ],
         ),
