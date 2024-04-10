@@ -32,7 +32,6 @@ class PancardScreen extends StatefulWidget {
 
   PancardScreen(
       {super.key,
-      this.image,
       required this.activityId,
       required this.subActivityId});
 

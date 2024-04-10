@@ -73,7 +73,6 @@ class _SplashScreenState extends State<SplashScreen> {
           await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
               as LeadCurrentResponseModel?;
       GetLeadResponseModel? getLeadData;
-      print("dsdsdd1111111::: $data");
       getLeadData = await ApiService().getLeads(
           mobile!,
           prefsUtil.getInt(COMPANY_ID)!,
