@@ -1,7 +1,7 @@
 class GetLeadResponseModel {
   final int? sequenceNo;
-  final int? leadId;
-  final String? userId;
+  int? leadId = 0;
+  String? userId = "";
 
   GetLeadResponseModel({ this.sequenceNo,  this.leadId, this.userId});
 

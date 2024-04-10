@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +34,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   String? appSignature;
   String? otpCode;
   DataProvider? productProvider;
-  late Timer _timer;
+
   int _start = 60;
   String? userLoginMobile;
   bool isReSendDisable = true;
@@ -97,7 +95,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   @override
   void dispose() {
     SmsAutoFill().unregisterListener();
-    _timer.cancel();
     super.dispose();
   }
 
