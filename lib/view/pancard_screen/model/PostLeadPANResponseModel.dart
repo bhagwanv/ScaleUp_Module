@@ -9,7 +9,6 @@ class PostLeadPanResponseModel {
     result = json['result'];
     isSuccess = json['isSuccess'];
     message = json['message'];
-    statusCode = json['statusCode'];
 
   }
   int? result;
@@ -22,7 +21,6 @@ class PostLeadPanResponseModel {
     map['result'] = result;
     map['isSuccess'] = isSuccess;
     map['message'] = message;
-    map['statusCode']=statusCode;
     return map;
   }
 

@@ -6,9 +6,11 @@ import 'package:http/http.dart';
 import 'package:http/http.dart';
 import 'package:scale_up_module/api/ApiUrls.dart';
 import 'package:scale_up_module/utils/InternetConnectivity.dart';
+import 'package:scale_up_module/utils/constants.dart';
 import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
 import 'package:scale_up_module/view/login_screen/model/GenrateOptResponceModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
+import '../shared_preferences/SharedPref.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
@@ -76,7 +78,7 @@ class ApiService {
         final LeadCurrentResponseModel responseModel =
             LeadCurrentResponseModel.fromJson(jsonData);
         return responseModel;
-      }  else {
+      } else {
         throw Exception('Failed to load products');
       }
     } else {
@@ -196,7 +198,8 @@ class ApiService {
         return responseModel;
       } else if (response.statusCode == 401) {
         print("Unauthorized access. Please login again.");
-        return AadhaarGenerateOTPResponseModel(errorCode: 401);return AadhaarGenerateOTPResponseModel(statusCode: 401);
+        return AadhaarGenerateOTPResponseModel(errorCode: 401);
+        return AadhaarGenerateOTPResponseModel(statusCode: 401);
       } else {
         throw Exception('Failed to load products');
       }
@@ -234,7 +237,6 @@ class ApiService {
       throw Exception('No internet connection');
     }
   }
-
 
   Future<VerifyOtpResponce> verifyOtp(VarifayOtpRequest verifayOtp) async {
     if (await internetConnectivity.networkConnectivity()) {
@@ -315,16 +317,16 @@ class ApiService {
     }
   }
 
-
   Future<PostLeadPanResponseModel> postLeadPAN(
       PostLeadPanRequestModel postLeadPanRequestModel) async {
     if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.post(
           Uri.parse('${apiUrls.baseUrl + apiUrls.postLeadPAN}'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization':
-                'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJlNzM3MTVmYS1kMmUxLTQ4OGItYTBiZi0xZWNmZDRlNWQwNDIiLCJ1c2VybmFtZSI6Ijk1MjIzOTI4MDEiLCJsb2dnZWRvbiI6IjA0LzA5LzIwMjQgMDY6Mzc6NDkiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTIyMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIyIiwibmJmIjoxNzEyNjQ0NjY5LCJleHAiOjE3MTI3MzEwNjksImlhdCI6MTcxMjY0NDY2OSwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.LdcZVrR6HVDZfLBgn4Y6UaoSh3LWE23Oq2uVOHdoVbqMBs8cAp1FFCenRf3ySBHvMrhLJqclHsDbLkoRrYsKeim1y20XUldxk9hp_Gtyg3o45cXBdIiyTiXkNoLwintgdJ7Bk2N7so_Q4lu3Y3SMs6Lx-TelcQfOkrMdXEIZ7vDug4krRDSmD2mwq3bnRATLKTd6KjgsRN1-pKv30XEYoCo9QAwEWyG7umEzhCF2W8oEVbhkcvt6PXVZKKabvfpVqdA-aFYfv4r3mlNFjFyY0t1f1dC08DDRAvWatNMFNwLfLOxGdD7_Lo6gKcb_fmJMg8Ydi0dRkzVm_Q5shife0w'
+            'Authorization': 'Bearer $token'
             // Set the content type as JSON// Set the content type as JSON
           },
           body: json.encode(postLeadPanRequestModel));
@@ -336,6 +338,9 @@ class ApiService {
         final PostLeadPanResponseModel responseModel =
             PostLeadPanResponseModel.fromJson(jsonData);
         return responseModel;
+      }
+      if (response.statusCode == 401) {
+        return PostLeadPanResponseModel(statusCode: 401);
       } else {
         throw Exception('Failed to load products');
       }
@@ -368,7 +373,6 @@ class ApiService {
     }
   }
 
-
   Future<BankDetailsResponceModel> GetLeadBankDetail(int leadID) async {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(
@@ -397,7 +401,8 @@ class ApiService {
   Future<PersonalDetailsResponce> getLeadPersnalDetails(String leadID) async {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(
-        Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=$leadID'),
+        Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=$leadID'),
         headers: {
           'Content-Type': 'application/json', // Set the content type as JSON
         },
@@ -408,7 +413,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final PersonalDetailsResponce responseModel =
-        PersonalDetailsResponce.fromJson(jsonData);
+            PersonalDetailsResponce.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -417,7 +422,6 @@ class ApiService {
       throw Exception('No internet connection');
     }
   }
-
 
   Future<AllStateResponce> getAllState() async {
     if (await internetConnectivity.networkConnectivity()) {
@@ -433,7 +437,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final AllStateResponce responseModel =
-        AllStateResponce.fromJson(jsonData);
+            AllStateResponce.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -446,7 +450,8 @@ class ApiService {
   Future<List<CityResponce>> GetCityByStateId(int stateID) async {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(
-        Uri.parse('${apiUrls.baseUrl + apiUrls.GetCityByStateId}?stateId=$stateID'),
+        Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.GetCityByStateId}?stateId=$stateID'),
         headers: {
           'Content-Type': 'application/json', // Set the content type as JSON
         },
@@ -456,7 +461,8 @@ class ApiService {
       if (response.statusCode == 200) {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
-        final List<CityResponce> responseModel = List<CityResponce>.from(jsonData.map((model) => CityResponce.fromJson(model)));
+        final List<CityResponce> responseModel = List<CityResponce>.from(
+            jsonData.map((model) => CityResponce.fromJson(model)));
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -482,7 +488,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final ValidateAadhaarOTPResponseModel responseModel =
-        ValidateAadhaarOTPResponseModel.fromJson(jsonData);
+            ValidateAadhaarOTPResponseModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
