@@ -2,9 +2,9 @@ import 'ReturnObject.dart';
 
 class AllStateResponce {
   AllStateResponce({
-      this.status, 
-      this.message, 
-      this.returnObject,});
+    this.status,
+    this.message,
+    this.returnObject,});
 
   AllStateResponce.fromJson(dynamic json) {
     status = json['status'];

@@ -8,9 +8,10 @@ import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/LeadCurrentResponseModel.dart';
 import 'package:scale_up_module/view/take_selfi/camera_selfie_open.dart';
+import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';
 import '../view/login_screen/login_screen.dart';
 import '../view/profile_screen/ProfileReview.dart';
-import '../view/take_selfi/take_selfi.dart';
+
 
 ScreenType? customerSequence(
     BuildContext context,
@@ -41,7 +42,11 @@ ScreenType? customerSequence(
           return ScreenType.aadhar;
         } else if (leadCurrentActivity.subActivityName == "Selfie") {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => TakeSelfie()),
+
+            MaterialPageRoute(builder: (context) => TakeSelfieScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
+
+
+
           );
           return ScreenType.selfie;
         }

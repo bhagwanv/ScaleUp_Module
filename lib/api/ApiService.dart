@@ -32,6 +32,9 @@ import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
+import '../view/take_selfi/model/LeadSelfieResponseModel.dart';
+import '../view/take_selfi/model/PostLeadSelfieRequestModel.dart';
+import '../view/take_selfi/model/PostLeadSelfieResponseModel.dart';
 import 'Interceptor.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
 import 'package:http/http.dart' as http;
@@ -572,6 +575,58 @@ class ApiService {
         final ValidEmResponce responseModel =
         ValidEmResponce.fromJson(jsonData);
         return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+  Future<LeadSelfieResponseModel> getLeadSelfie(String userId) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.get(Uri.parse(
+          '${apiUrls.baseUrl + apiUrls.getLeadSelfie}?UserId=$userId'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+
+        final LeadSelfieResponseModel responseModel =
+        LeadSelfieResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+  Future<PostLeadSelfieResponseModel> postLeadSelfie(
+      PostLeadSelfieRequestModel postLeadSelfieRequestModel) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = await prefsUtil.getString(TOKEN);
+      final response = await interceptor.post(
+          Uri.parse('${apiUrls.baseUrl + apiUrls.postLeadSelfie}'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+          body: json.encode(postLeadSelfieRequestModel));
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final PostLeadSelfieResponseModel responseModel =
+        PostLeadSelfieResponseModel.fromJson(jsonData);
+        return responseModel;
+      }
+      if (response.statusCode == 401) {
+        return PostLeadSelfieResponseModel(statusCode: 401);
       } else {
         throw Exception('Failed to load products');
       }

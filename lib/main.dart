@@ -7,6 +7,7 @@ import 'package:scale_up_module/view/otp_screens/OtpScreen.dart';
 import 'package:scale_up_module/view/pancard_screen/PancardScreen.dart';
 import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
+import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';
 
 import 'data_provider/DataProvider.dart';
 
@@ -31,10 +32,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: PersonalInformation(),
+
+      home: TakeSelfieScreen(activityId: 2, subActivityId: 3),
+
+
      /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
      /*LoginScreen(activityId: 1, subActivityId: 0),*/
-      //home: const TakeSelfie(),
+      //TakeSelfieScreen(activityId: 2, subActivityId: 1),
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
-import 'package:scale_up_module/view/take_selfi/take_selfi.dart';
+import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import '../../api/ApiService.dart';

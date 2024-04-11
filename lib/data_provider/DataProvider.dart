@@ -29,6 +29,9 @@ import '../view/personal_info/model/ValidEmResponce.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
+import '../view/take_selfi/model/LeadSelfieResponseModel.dart';
+import '../view/take_selfi/model/PostLeadSelfieRequestModel.dart';
+import '../view/take_selfi/model/PostLeadSelfieResponseModel.dart';
 
 class DataProvider extends ChangeNotifier {
   final ApiService apiService = ApiService();
@@ -99,6 +102,14 @@ class DataProvider extends ChangeNotifier {
   List<CityResponce?>? get getAllCityData => _getAllCityData;
 
 
+  LeadSelfieResponseModel? _getLeadSelfieData;
+
+  LeadSelfieResponseModel? get getLeadSelfieData => _getLeadSelfieData;
+
+  PostLeadSelfieResponseModel? _getPostLeadSelfieData;
+
+  PostLeadSelfieResponseModel? get getPostLeadSelfieData =>
+      _getPostLeadSelfieData;
 
   ValidateAadhaarOTPResponseModel? _getValidateAadhaarOTPData;
 
@@ -232,6 +243,18 @@ class DataProvider extends ChangeNotifier {
   Future<void> otpValidateForEmail(OtpValidateForEmailRequest model) async {
     _getValidOtpEmailData = await apiService.otpValidateForEmail(model);
     notifyListeners();
+  }
+
+  Future<void> getLeadSelfie(String userId) async {
+    _getLeadSelfieData = await apiService.getLeadSelfie(userId);
+    notifyListeners();
+  }
+
+  Future<void> postLeadSelfie(
+      PostLeadSelfieRequestModel postLeadSelfieRequestModel) async {
+    _getPostLeadSelfieData =
+    await apiService.postLeadSelfie(postLeadSelfieRequestModel);
+
   }
 }
 

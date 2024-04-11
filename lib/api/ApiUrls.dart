@@ -18,6 +18,8 @@ class ApiUrls{
   final String GetLeadPersonalDetail="/aggregator/LeadAgg/GetLeadPersonalDetail";
   final String GetAllState="/services/location/v1/State/GetAllState";
   final String GetCityByStateId="/services/location/v1/City/GetCityByStateId";
+  final String getLeadSelfie="/aggregator/LeadAgg/GetLeadSelfie";
+  final String postLeadSelfie="/services/lead/v1/PostLeadSelfie";
   final String EmailExist="/services/kyc/v1/KYCDoc/EmailExist";
   final String SendOtpOnEmail="/aggregator/LeadAgg/SendOtpOnEmail";
   final String OTPValidateForEmail="/aggregator/LeadAgg/OTPValidateForEmail";
