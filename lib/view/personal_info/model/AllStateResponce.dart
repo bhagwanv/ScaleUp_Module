@@ -2,9 +2,9 @@ import 'ReturnObject.dart';
 
 class AllStateResponce {
   AllStateResponce({
-      this.status, 
-      this.message, 
-      this.returnObject,});
+    this.status,
+    this.message,
+    this.returnObject,});
 
   AllStateResponce.fromJson(dynamic json) {
     status = json['status'];
@@ -18,14 +18,14 @@ class AllStateResponce {
   }
   bool? status;
   String? message;
-  List<ReturnObject>? returnObject;
+  List<ReturnObject?>? returnObject;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['status'] = status;
     map['message'] = message;
     if (returnObject != null) {
-      map['returnObject'] = returnObject?.map((v) => v.toJson()).toList();
+      map['returnObject'] = returnObject?.map((v) => v?.toJson()).toList();
     }
     return map;
   }

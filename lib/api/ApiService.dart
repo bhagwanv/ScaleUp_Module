@@ -26,7 +26,11 @@ import '../view/pancard_screen/model/PostSingleFileResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
 import '../view/personal_info/model/AllStateResponce.dart';
 import '../view/personal_info/model/CityResponce.dart';
+import '../view/personal_info/model/EmailExistRespoce.dart';
+import '../view/personal_info/model/OTPValidateForEmailRequest.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
+import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
+import '../view/personal_info/model/ValidEmResponce.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/take_selfi/model/LeadSelfieResponseModel.dart';
 import '../view/take_selfi/model/PostLeadSelfieRequestModel.dart';
@@ -488,6 +492,80 @@ class ApiService {
         final dynamic jsonData = json.decode(response.body);
         final ValidateAadhaarOTPResponseModel responseModel =
             ValidateAadhaarOTPResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+
+  Future<EmailExistRespoce> emailExist(String userID,String EmailId) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.get(
+        Uri.parse('${apiUrls.baseUrl + apiUrls.EmailExist}?UserId=$userID&EmailId=$EmailId'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type as JSON
+        },
+      );
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final EmailExistRespoce responseModel =
+        EmailExistRespoce.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+  Future<SendOtpOnEmailResponce> sendOtpOnEmail(String EmailId) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.get(
+        Uri.parse('${apiUrls.baseUrl + apiUrls.SendOtpOnEmail}?email=$EmailId'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type as JSON
+        },
+      );
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final SendOtpOnEmailResponce responseModel =
+        SendOtpOnEmailResponce.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+  Future<ValidEmResponce> otpValidateForEmail(OtpValidateForEmailRequest model) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.post(
+        Uri.parse('${apiUrls.baseUrl + apiUrls.OTPValidateForEmail}'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type as JSON
+        },
+          body: json.encode(model)
+
+      );
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final ValidEmResponce responseModel =
+        ValidEmResponce.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');

@@ -21,7 +21,11 @@ import '../view/pancard_screen/model/PostLeadPANResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
 import '../view/personal_info/model/AllStateResponce.dart';
 import '../view/personal_info/model/CityResponce.dart';
+import '../view/personal_info/model/EmailExistRespoce.dart';
+import '../view/personal_info/model/OTPValidateForEmailRequest.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
+import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
+import '../view/personal_info/model/ValidEmResponce.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
@@ -94,18 +98,34 @@ class DataProvider extends ChangeNotifier {
 
   AllStateResponce? get getAllStateData => _getAllStateData;
 
-  List<CityResponce>? _getAllCityData;List<CityResponce> ? get getAllCityData => _getAllCityData;
+  List<CityResponce?>? _getAllCityData;
+  List<CityResponce?>? get getAllCityData => _getAllCityData;
 
-
-
-  ValidateAadhaarOTPResponseModel? _getValidateAadhaarOTPData;
-  ValidateAadhaarOTPResponseModel? get getValidateAadhaarOTPData => _getValidateAadhaarOTPData;
 
   LeadSelfieResponseModel? _getLeadSelfieData;
+
   LeadSelfieResponseModel? get getLeadSelfieData => _getLeadSelfieData;
 
   PostLeadSelfieResponseModel? _getPostLeadSelfieData;
-  PostLeadSelfieResponseModel? get getPostLeadSelfieData => _getPostLeadSelfieData;
+
+  PostLeadSelfieResponseModel? get getPostLeadSelfieData =>
+      _getPostLeadSelfieData;
+
+  ValidateAadhaarOTPResponseModel? _getValidateAadhaarOTPData;
+
+  ValidateAadhaarOTPResponseModel? get getValidateAadhaarOTPData => _getValidateAadhaarOTPData;
+
+  EmailExistRespoce? _getEmailExistData;
+
+  EmailExistRespoce? get getEmailExistData => _getEmailExistData;
+
+  SendOtpOnEmailResponce? _getOtpOnEmailData;
+
+  SendOtpOnEmailResponce? get getOtpOnEmailData => _getOtpOnEmailData;
+
+  ValidEmResponce? _getValidOtpEmailData;
+
+  ValidEmResponce? get getValidOtpEmailData => _getValidOtpEmailData;
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -210,14 +230,31 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> isEmailExist(String UserID,String Emailid) async {
+    _getEmailExistData = await apiService.emailExist(UserID,Emailid);
+    notifyListeners();
+  }
+
+  Future<void> getSendOtpOnEmail(String Emailid) async {
+    _getOtpOnEmailData = await apiService.sendOtpOnEmail(Emailid);
+    notifyListeners();
+  }
+
+  Future<void> otpValidateForEmail(OtpValidateForEmailRequest model) async {
+    _getValidOtpEmailData = await apiService.otpValidateForEmail(model);
+    notifyListeners();
+  }
+
   Future<void> getLeadSelfie(String userId) async {
     _getLeadSelfieData = await apiService.getLeadSelfie(userId);
     notifyListeners();
   }
 
-  Future<void> postLeadSelfie(PostLeadSelfieRequestModel postLeadSelfieRequestModel) async {
-    _getPostLeadSelfieData = await apiService.postLeadSelfie(postLeadSelfieRequestModel);
-    notifyListeners();
+  Future<void> postLeadSelfie(
+      PostLeadSelfieRequestModel postLeadSelfieRequestModel) async {
+    _getPostLeadSelfieData =
+    await apiService.postLeadSelfie(postLeadSelfieRequestModel);
+
   }
 }
 
