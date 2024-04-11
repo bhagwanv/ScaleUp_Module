@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -49,7 +48,7 @@ class _PancardScreenState extends State<PancardScreen> {
   var isDataClear = false;
   var _acceptPermissions = false;
   String dobAsPan = "";
-
+  int documentId = 0;
 
   @override
   void initState() {
@@ -106,6 +105,7 @@ class _PancardScreenState extends State<PancardScreen> {
                 _dOBAsPanCl.text =formateDob;
                 _fatherNameAsPanCl.text = LeadPANData.fatherName!;
                 widget.image = LeadPANData.panImagePath!;
+                documentId = LeadPANData.documentId!;
               }
 
               return Center(
@@ -410,8 +410,8 @@ class _PancardScreenState extends State<PancardScreen> {
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                         child: Image.network(
-                                          productProvider.getPostSingleFileData!
-                                              .filePath! as String,
+                                          productProvider
+                                              .getPostSingleFileData!.filePath!,
                                           fit: BoxFit.cover,
                                           width: double.infinity,
                                           height: 148,
@@ -518,6 +518,8 @@ class _PancardScreenState extends State<PancardScreen> {
                                   null) {
                                 widget.image = productProvider
                                     .getPostSingleFileData!.filePath!;
+                                documentId = productProvider
+                                    .getPostSingleFileData!.docId!;
                               }
                             }
 
@@ -540,10 +542,10 @@ class _PancardScreenState extends State<PancardScreen> {
                             } else {
                               var postLeadPanRequestModel =
                                   PostLeadPanRequestModel(
-                                leadId: 1,
+                                leadId: prefsUtil.getInt(LEADE_ID),
                                 userId: userId,
-                                activityId: 1,
-                                subActivityId: 0,
+                                activityId: widget.activityId,
+                                subActivityId: widget.subActivityId,
                                 uniqueId: _panNumberCl.text,
                                 imagePath: widget.image,
                                 documentId: 31,
@@ -569,8 +571,6 @@ class _PancardScreenState extends State<PancardScreen> {
                                       .getPostLeadPaneData!.message!);
                                   if (productProvider
                                       .getPostLeadPaneData!.isSuccess!) {
-                                    // call sequence api
-                                    print("sdfksadfkj;saf");
                                     fetchData(context);
                                   }
                                 }
@@ -634,44 +634,45 @@ class _PancardScreenState extends State<PancardScreen> {
   }
 }
 
-Future<void> callApi(BuildContext context) async {
-  final prefsUtil = await SharedPref.getInstance();
-  final String? userId = prefsUtil.getString(USER_ID);
+  Future<void> callApi(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final String? userId = prefsUtil.getString(USER_ID);
 
-  Provider.of<DataProvider>(context, listen: false).getLeadPAN(userId!);
-}
+    Provider.of<DataProvider>(context, listen: false).getLeadPAN(userId!);
+  }
 
-Future<void> fetchData(BuildContext context) async {
-  final prefsUtil = await SharedPref.getInstance();
-  try {
-    LeadCurrentResponseModel? leadCurrentActivityAsyncData;
-    var leadCurrentRequestModel = LeadCurrentRequestModel(
-      companyId: prefsUtil.getInt(COMPANY_ID),
-      productId: prefsUtil.getInt(PRODUCT_ID),
-      leadId: 0,
-      mobileNo: prefsUtil.getString(LOGIN_MOBILE_NUMBER),
-      activityId: 1,
-      subActivityId: 0,
-      userId: prefsUtil.getString(USER_ID),
-      monthlyAvgBuying: 0,
-      vintageDays: 0,
-      isEditable: true,
-    );
-    leadCurrentActivityAsyncData =
-        await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-            as LeadCurrentResponseModel?;
+  Future<void> fetchData(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    try {
+      LeadCurrentResponseModel? leadCurrentActivityAsyncData;
+      var leadCurrentRequestModel = LeadCurrentRequestModel(
+        companyId: prefsUtil.getInt(COMPANY_ID),
+        productId: prefsUtil.getInt(PRODUCT_ID),
+        leadId: prefsUtil.getInt(LEADE_ID),
+        mobileNo: prefsUtil.getString(LOGIN_MOBILE_NUMBER),
+        activityId: widget.activityId,
+        subActivityId: widget.subActivityId,
+        userId: prefsUtil.getString(USER_ID),
+        monthlyAvgBuying: 0,
+        vintageDays: 0,
+        isEditable: true,
+      );
+      leadCurrentActivityAsyncData =
+          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+              as LeadCurrentResponseModel?;
 
-    GetLeadResponseModel? getLeadData;
-    getLeadData = await ApiService().getLeads(
-        prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
-        prefsUtil.getInt(COMPANY_ID)!,
-        prefsUtil.getInt(PRODUCT_ID)!,
-        0) as GetLeadResponseModel?;
+      GetLeadResponseModel? getLeadData;
+      getLeadData = await ApiService().getLeads(
+          prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
+          prefsUtil.getInt(COMPANY_ID)!,
+          prefsUtil.getInt(PRODUCT_ID)!,
+          0) as GetLeadResponseModel?;
 
-    customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
-  } catch (error) {
-    if (kDebugMode) {
-      print('Error occurred during API call: $error');
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error occurred during API call: $error');
+      }
     }
   }
 }
