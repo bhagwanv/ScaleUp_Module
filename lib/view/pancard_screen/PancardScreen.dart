@@ -49,6 +49,11 @@ class _PancardScreenState extends State<PancardScreen> {
   var isVerifyPanNumber = false;
   var isDataClear = false;
   var _acceptPermissions = false;
+  String panCard = "";
+  String nameAsPan = "";
+  String dobAsPan = "";
+  String fatherNameAsPan = "";
+  String panImageUrl = "";
 
   @override
   void initState() {
@@ -99,8 +104,8 @@ class _PancardScreenState extends State<PancardScreen> {
                 isEnabledPanNumber = false;
                 _panNumberCl.text = LeadPANData.panCard!;
                 _nameAsPanCl.text = LeadPANData.nameOnCard!;
-                var formateDob=Utils.dateFormate(context,LeadPANData.dob!);
-                _dOBAsPanCl.text =formateDob;
+              //  var formateDob=Utils.dateFormate(context,LeadPANData.dob!);
+                _dOBAsPanCl.text =LeadPANData.dob!;
                 _fatherNameAsPanCl.text = LeadPANData.fatherName!;
                 widget.image = LeadPANData.panImagePath!;
               }
@@ -217,10 +222,12 @@ class _PancardScreenState extends State<PancardScreen> {
                                                     .getFathersNameByValidPanCardData!
                                                     .dob !=
                                                 Null) {
-                                              var formateDob=Utils.dateFormate(context,productProvider
+                                             /* var formateDob=Utils.dateFormate(context,productProvider
                                                   .getFathersNameByValidPanCardData!
-                                                  .dob);
-                                              _dOBAsPanCl.text = formateDob;
+                                                  .dob);*/
+                                              _dOBAsPanCl.text = productProvider
+                                                  .getFathersNameByValidPanCardData!
+                                                  .dob;
                                             }
                                           } else {
                                             Utils.showToast(productProvider
@@ -506,7 +513,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                 documentId: 31,
                                 companyId: companyId,
                                 fathersName: _fatherNameAsPanCl.text,
-                                dob: productProvider.getFathersNameByValidPanCardData!.dob,
+                                dob: _dOBAsPanCl.text,
                                 name: _nameAsPanCl.text,
                               );
 
