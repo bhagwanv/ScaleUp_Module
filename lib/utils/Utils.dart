@@ -21,6 +21,10 @@ class Utils {
     return regExp.hasMatch(phoneNo);
   }
 
+ static bool validateEmail(String value) {
+    return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
+  }
+
   static void showMsgDialog(BuildContext context, String title, String msg,) {
     showDialog(
       context: context,

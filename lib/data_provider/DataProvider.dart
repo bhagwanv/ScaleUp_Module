@@ -21,7 +21,11 @@ import '../view/pancard_screen/model/PostLeadPANResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
 import '../view/personal_info/model/AllStateResponce.dart';
 import '../view/personal_info/model/CityResponce.dart';
+import '../view/personal_info/model/EmailExistRespoce.dart';
+import '../view/personal_info/model/OTPValidateForEmailRequest.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
+import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
+import '../view/personal_info/model/ValidEmResponce.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
@@ -99,6 +103,18 @@ class DataProvider extends ChangeNotifier {
   ValidateAadhaarOTPResponseModel? _getValidateAadhaarOTPData;
 
   ValidateAadhaarOTPResponseModel? get getValidateAadhaarOTPData => _getValidateAadhaarOTPData;
+
+  EmailExistRespoce? _getEmailExistData;
+
+  EmailExistRespoce? get getEmailExistData => _getEmailExistData;
+
+  SendOtpOnEmailResponce? _getOtpOnEmailData;
+
+  SendOtpOnEmailResponce? get getOtpOnEmailData => _getOtpOnEmailData;
+
+  ValidEmResponce? _getValidOtpEmailData;
+
+  ValidEmResponce? get getValidOtpEmailData => _getValidOtpEmailData;
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -200,6 +216,21 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> validateAadhaarOtp(ValidateAadhaarOTPRequestModel verifayOtp) async {
     _getValidateAadhaarOTPData = await apiService.validateAadhaarOtp(verifayOtp);
+    notifyListeners();
+  }
+
+  Future<void> isEmailExist(String UserID,String Emailid) async {
+    _getEmailExistData = await apiService.emailExist(UserID,Emailid);
+    notifyListeners();
+  }
+
+  Future<void> getSendOtpOnEmail(String Emailid) async {
+    _getOtpOnEmailData = await apiService.sendOtpOnEmail(Emailid);
+    notifyListeners();
+  }
+
+  Future<void> otpValidateForEmail(OtpValidateForEmailRequest model) async {
+    _getValidOtpEmailData = await apiService.otpValidateForEmail(model);
     notifyListeners();
   }
 }
