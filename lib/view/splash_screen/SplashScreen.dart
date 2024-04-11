@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> fetchData() async {
     final prefsUtil = await SharedPref.getInstance();
-    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, '7803994667');
+    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, '1122785554');
     await prefsUtil.saveInt(COMPANY_ID, 2);
     await prefsUtil.saveInt(PRODUCT_ID, 2);
     final String? mobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
@@ -69,9 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-              as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel) as LeadCurrentResponseModel?;
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
           mobile!,

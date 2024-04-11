@@ -1,13 +1,9 @@
 class ApiUrls{
 
   final String baseUrl = 'https://gateway-uat.scaleupfin.com';
-
-
   final String getLeadCurrentActivity="/services/lead/v1/GetLeadCurrentActivity";
   final String leadCurrentActivityAsync="/aggregator/LeadAgg/LeadCurrentActivityAsync";
-
   final String getLeadPAN="/aggregator/LeadAgg/GetLeadPAN";
-
   final String generateOtp="/aggregator/LeadAgg/GenerateOtp";
   final String getLeadValidPanCard="/services/kyc/v1/KYCDoc/GetLeadValidPanCard";
   final String getLeadAadhar="/aggregator/LeadAgg/GetLeadAadhar";
@@ -21,7 +17,8 @@ class ApiUrls{
   final String GetLeadPersonalDetail="/aggregator/LeadAgg/GetLeadPersonalDetail";
   final String GetAllState="/services/location/v1/State/GetAllState";
   final String GetCityByStateId="/services/location/v1/City/GetCityByStateId";
-
-
+  final String EmailExist="/services/kyc/v1/KYCDoc/EmailExist";
+  final String SendOtpOnEmail="/aggregator/LeadAgg/SendOtpOnEmail";
+  final String OTPValidateForEmail="/aggregator/LeadAgg/OTPValidateForEmail";
 
 }

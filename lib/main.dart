@@ -5,6 +5,7 @@ import 'package:scale_up_module/view/aadhaar_screen/aadhaar_screen.dart';
 import 'package:scale_up_module/view/login_screen/login_screen.dart';
 import 'package:scale_up_module/view/otp_screens/OtpScreen.dart';
 import 'package:scale_up_module/view/pancard_screen/PancardScreen.dart';
+import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 
 import 'data_provider/DataProvider.dart';

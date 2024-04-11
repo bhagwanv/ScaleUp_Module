@@ -18,3 +18,4 @@ const String TOKEN = "token";
 const String LEADE_ID = "lead_id";
 const String COMPANY_ID = "COMPANY_ID";
 const String PRODUCT_ID = "PRODUCT_ID";
+const String VERIFYED_EMAIL = "verifay_email";
