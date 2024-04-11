@@ -40,11 +40,14 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
   var isSelfieDelete = false;
   var isAgenSelfieDelete = false;
 
-  void _handlePermissionsAccepted(XFile? picture) {
+  void _handlePermissionsAccepted(File? picture) {
     setState(() {
+/*
       File file = File(picture!.path);
+      print("dsfjskf$picture");
+*/
 
-      uolpadSelfie(context, file);
+     uolpadSelfie(context, picture!);
     });
   }
 
@@ -72,7 +75,6 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
             if (productProvider.getLeadSelfieData!.frontImageUrl != null &&
                 productProvider.getLeadSelfieData!.frontDocumentId != null &&
                 !isSelfieDelete) {
-              print("isSelfieDelete1$isSelfieDelete");
               selfieImage = productProvider.getLeadSelfieData!.frontImageUrl!;
               frontDocumentId =
                   productProvider.getLeadSelfieData!.frontDocumentId!;
