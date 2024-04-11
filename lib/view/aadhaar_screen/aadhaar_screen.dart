@@ -36,30 +36,32 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
   String frontFileUrl = "";
   String backFileUrl = "";
 
-  void _onFontImageSelected(File imageFile) {
-    // Handle the selected image here
-    // For example, you can setState to update UI with the selected image
-    setState(() async {
-      //   widget.image = imageFile;
-      //api call
-      Utils.onLoading(context, "");
+  void _onFontImageSelected(File imageFile) async {
+    Utils.onLoading(context, "");
 
-      await Provider.of<DataProvider>(context, listen: false)
-          .postSingleFile(imageFile, true, "", "");
+    // Perform asynchronous work first
+    await Provider.of<DataProvider>(context, listen: false)
+        .postSingleFile(imageFile, true, "", "");
+
+    // Update the widget state synchronously inside setState
+    setState(() {
+      // Clear loading indicator
       Navigator.pop(context);
       Navigator.of(context, rootNavigator: true).pop();
     });
   }
 
   // Callback function to receive the selected image
-  void _onBackImageSelected(File imageFile) {
-    // Handle the selected image here
-    // For example, you can setState to update UI with the selected image
-    setState(() async {
-      Utils.onLoading(context, "");
+  void _onBackImageSelected(File imageFile) async {
+    Utils.onLoading(context, "");
 
-      await Provider.of<DataProvider>(context, listen: false)
-          .postAadhaarBackSingleFile(imageFile, true, "", "");
+    // Perform asynchronous work first
+    await Provider.of<DataProvider>(context, listen: false)
+        .postAadhaarBackSingleFile(imageFile, true, "", "");
+
+    // Update the widget state synchronously inside setState
+    setState(() {
+      // Clear loading indicator
       Navigator.pop(context);
       Navigator.of(context, rootNavigator: true).pop();
     });
@@ -88,9 +90,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
           if (productProvider.getLeadAadhaar!.documentNumber != null) {
             _aadhaarController.text =
                 productProvider.getLeadAadhaar!.documentNumber!;
-          } else {
-            _aadhaarController.text = "";
           }
+
           if (productProvider.getLeadAadhaar!.frontDocumentId != null) {
             frontDocumentId =
                 productProvider.getLeadAadhaar!.frontDocumentId!.toString();
@@ -208,8 +209,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
                                 child: Image.network(
-                                  productProvider.getPostSingleFileData!
-                                      .filePath!,
+                                  productProvider
+                                      .getPostSingleFileData!.filePath!,
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: 148,
@@ -377,10 +378,15 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                     } else if (backFileUrl == "" || backDocumentId == "") {
                       Utils.showToast("Please select Aadhaar Back Image");
                     } else {
+                      String stringWithSpaces = _aadhaarController.text;
+                      print("normal" + stringWithSpaces);
+                      String stringWithoutSpaces =
+                          stringWithSpaces.replaceAll(RegExp(r'\s+'), '');
+                      print("stringWithSpaces" + stringWithoutSpaces);
                       generateAadhaarOTPAPI(
                           context,
                           productProvider,
-                          _aadhaarController.text,
+                          stringWithoutSpaces,
                           frontFileUrl,
                           frontDocumentId,
                           backFileUrl,
@@ -450,17 +456,25 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
         .leadAadharGenerateOTP(request);
 
     String reqID = "";
-    if (productProvider.getLeadAadharGenerateOTP?.errorCode != 401) {
+    if (productProvider.getLeadAadharGenerateOTP?.errorCode == 500) {
+      Navigator.of(context, rootNavigator: true).pop();
+      Utils.showToast("Server Error");
+    } else if (productProvider.getLeadAadharGenerateOTP?.errorCode != 401) {
       if (productProvider.getLeadAadharGenerateOTP != null) {
         Navigator.of(context, rootNavigator: true).pop();
-        Utils.showToast(" ${productProvider.getLeadAadharGenerateOTP!.data!.message!}");
+        if (productProvider.getLeadAadharGenerateOTP!.data!.message != null) {
+          Utils.showToast(
+              " ${productProvider.getLeadAadharGenerateOTP!.data!.message!}");
+        }
         reqID = productProvider.getLeadAadharGenerateOTP!.requestId!;
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => AadhaarOtpScreen(
                     activityId: widget.activityId,
-                    subActivityId: widget.subActivityId, document: request,requestId: reqID)));
+                    subActivityId: widget.subActivityId,
+                    document: request,
+                    requestId: reqID)));
       } else {
         Navigator.of(context, rootNavigator: true).pop();
       }

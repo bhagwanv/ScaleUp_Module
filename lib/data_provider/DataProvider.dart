@@ -91,7 +91,8 @@ class DataProvider extends ChangeNotifier {
 
   AllStateResponce? get getAllStateData => _getAllStateData;
 
-  List<CityResponce>? _getAllCityData;List<CityResponce> ? get getAllCityData => _getAllCityData;
+  List<CityResponce?>? _getAllCityData;
+  List<CityResponce?>? get getAllCityData => _getAllCityData;
 
 
 

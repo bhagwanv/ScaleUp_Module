@@ -239,12 +239,37 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
       await Provider.of<DataProvider>(context, listen: false)
           .validateAadhaarOtp(req);
 
-      if (!productProvider.getValidateAadhaarOTPData!.isSuccess!) {
+      if (productProvider.getValidateAadhaarOTPData?.statusCode! == 500) {
         Navigator.of(context, rootNavigator: true).pop();
-        Utils.showToast("Something went wrong");
+        Utils.showToast("Server Error");
+      } else if (productProvider.getValidateAadhaarOTPData?.statusCode! !=
+          401) {
+        if (productProvider.getValidateAadhaarOTPData != null) {
+          if (!productProvider.getValidateAadhaarOTPData!.isSuccess!) {
+            Navigator.of(context, rootNavigator: true).pop();
+            if (productProvider.getValidateAadhaarOTPData!.message != null) {
+              Utils.showToast(
+                  productProvider.getValidateAadhaarOTPData!.message!);
+            } else {
+              Utils.showToast("Something went wrong");
+            }
+          } else {
+            Navigator.of(context, rootNavigator: true).pop();
+            fetchData(context);
+          }
+        } else {
+          Utils.showToast("Something went wrong");
+          Navigator.of(context, rootNavigator: true).pop();
+        }
       } else {
-        Navigator.of(context, rootNavigator: true).pop();
-        fetchData(context);
+        Navigator.pushAndRemoveUntil<dynamic>(
+          context,
+          MaterialPageRoute<dynamic>(
+            builder: (BuildContext context) =>
+                LoginScreen(activityId: 1, subActivityId: 0),
+          ),
+          (route) => false, //if you want to disable back feature set to false
+        );
       }
     }
   }
@@ -305,8 +330,10 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
     if (productProvider.getLeadAadharGenerateOTP?.errorCode != 401) {
       if (productProvider.getLeadAadharGenerateOTP != null) {
         Navigator.of(context, rootNavigator: true).pop();
-        Utils.showToast(
-            " ${productProvider.getLeadAadharGenerateOTP!.data!.message!}");
+        if (productProvider.getLeadAadharGenerateOTP!.data!.message != null) {
+          Utils.showToast(
+              " ${productProvider.getLeadAadharGenerateOTP!.data!.message!}");
+        }
         widget.requestId = productProvider.getLeadAadharGenerateOTP!.requestId!;
         Utils.showToast(
             " ${productProvider.getLeadAadharGenerateOTP!.data!.message!}");

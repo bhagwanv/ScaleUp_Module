@@ -34,11 +34,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
   final TextEditingController _emailIDCl = TextEditingController();
   final TextEditingController _genderCl = TextEditingController();
   final TextEditingController _stateNameCl = TextEditingController();
+  final TextEditingController _cityNameCl = TextEditingController();
   final TextEditingController _permanentAddresslineOneCl =
       TextEditingController();
   final TextEditingController _permanentAddresslineTwoCl =
       TextEditingController();
-  final TextEditingController _permanentAddressPinCodeCl = TextEditingController();
+  final TextEditingController _permanentAddressPinCodeCl =
+      TextEditingController();
   final TextEditingController _permanentAddressCity = TextEditingController();
   final TextEditingController _permanentAddressStateCl =
       TextEditingController();
@@ -58,8 +60,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
   String? selectedGenderValue;
   String? selectedMaritalStatusValue;
   bool ischeckCurrentAdress = true;
-  List<CityResponce> citylist = [];
-  List<ReturnObject> filteredStates =[];
+  List<CityResponce?> citylist = [];
+  List<ReturnObject> filteredStates = [];
   var isLoading = true;
   late int selectedStateID;
   var stateId = 0;
@@ -74,12 +76,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
     'Widow',
   ];
 
+  var cityCallInitial = true;
+
   @override
   void initState() {
     super.initState();
     callApi(context);
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -131,25 +134,18 @@ class _PersonalInformationState extends State<PersonalInformation> {
               productProvider.getPersonalDetailsData!.resAddress1!;
           _currentAddressLineTwoCl.text =
               productProvider.getPersonalDetailsData!.resAddress2!;
-          _currentAddressPinCodeCl.text =
-              productProvider.getPersonalDetailsData!.pincode!.toString();
+          // _currentAddressPinCodeCl.text = productProvider.getPersonalDetailsData!.pincode!.toString();
           //_currentAddressCity.text= productProvider.getPersonalDetailsData!.lastName!;
           //_currentAddressStateCl.text= productProvider.getPersonalDetailsData!.lastName!;
           //_currentAddressCountryCl.text= productProvider.getPersonalDetailsData!.lastName!;
 
-          if(productProvider.getPersonalDetailsData!.state != null) {
-            stateId  = productProvider.getPersonalDetailsData!.state!;
+          if (productProvider.getPersonalDetailsData!.state != null) {
+            stateId = productProvider.getPersonalDetailsData!.state!;
             print("stateId ${stateId!}");
-          }
-
-          if (productProvider.getAllStateData != null) {
-            filteredStates = productProvider.getAllStateData!.returnObject! .where((item) => item.id == stateId) .toList();
-            _stateNameCl.text= filteredStates.first.name!;
           }
 
           if (productProvider.getAllCityData != null) {
             citylist = productProvider.getAllCityData!;
-           
           }
 
           return SingleChildScrollView(
@@ -491,140 +487,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             )),
                       ),
                       const SizedBox(height: 15),
-                      productProvider.getPersonalDetailsData!.state==null?
-                      DropdownButtonFormField2<ReturnObject>(
-                        isExpanded: true,
-                        decoration: InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 16),
-                          fillColor: textFiledBackgroundColour,
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                                color: kPrimaryColor, width: 1),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                                color: kPrimaryColor, width: 1),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide:
-                                BorderSide(color: kPrimaryColor, width: 1),
-                          ),
-                        ),
-                        hint: const Text(
-                          'State',
-                          style: TextStyle(
-                            color: blueColor,
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        items: getAllState(productProvider.getAllStateData!.returnObject!),
-                        onChanged: (ReturnObject? value) {
-                          setState(() {
-                            citylist.clear();
-                            Provider.of<DataProvider>(context, listen: false)
-                                .getAllCity(value!.id!);
-                          });
-                        },
-                        buttonStyleData: const ButtonStyleData(
-                          padding: EdgeInsets.only(right: 8),
-                        ),
-                        dropdownStyleData: const DropdownStyleData(
-                          maxHeight: 200,
-                        ),
-                        menuItemStyleData: MenuItemStyleData(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights: _getCustomItemsHeights2(
-                              productProvider.getAllStateData!.returnObject!),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          openMenuIcon: Icon(Icons.arrow_drop_up),
-                        ),
-                      ):TextField(
-                        enabled: false,
-                        controller: _stateNameCl,
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        maxLines: 1,
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: kPrimaryColor,
-                              ),
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(10.0)),
-                            ),
-                            hintText: "State",
-                            labelText: "State",
-                            fillColor: textFiledBackgroundColour,
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderSide:
-                              BorderSide(color: kPrimaryColor, width: 1.0),
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(10.0)),
-                            )),
-                      ),
+                      buildStateField(productProvider),
                       const SizedBox(height: 15),
-                      citylist.isNotEmpty
-                          ? DropdownButtonFormField2<CityResponce>(
-                              isExpanded: true,
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: const BorderSide(
-                                      color: kPrimaryColor, width: 1),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: const BorderSide(
-                                      color: kPrimaryColor, width: 1),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(
-                                      color: kPrimaryColor, width: 1),
-                                ),
-                              ),
-                              hint: const Text(
-                                'City',
-                                style: TextStyle(
-                                  color: blueColor,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              items: getAllCity(citylist),
-                              onChanged: (CityResponce? value) {
-                                /* setState(() {
-                                   });*/
-                              },
-                              buttonStyleData: const ButtonStyleData(
-                                padding: EdgeInsets.only(right: 8),
-                              ),
-                              dropdownStyleData: const DropdownStyleData(
-                                maxHeight: 200,
-                              ),
-                              menuItemStyleData: MenuItemStyleData(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                customHeights:
-                                    _getCustomItemsHeights3(citylist),
-                              ),
-                              iconStyleData: const IconStyleData(
-                                openMenuIcon: Icon(Icons.arrow_drop_up),
-                              ),
-                            )
+                      citylist!.isNotEmpty
+                          ? buildCityField(productProvider)
                           : Container(),
                       const SizedBox(height: 20),
                       Align(
@@ -853,8 +719,93 @@ class _PersonalInformationState extends State<PersonalInformation> {
     final prefsUtil = await SharedPref.getInstance();
     final String? leadId = prefsUtil.getString(USER_ID);
     print("daddd ${leadId}");
-    Provider.of<DataProvider>(context, listen: false).getLeadPersonalDetails(leadId!);
+    Provider.of<DataProvider>(context, listen: false)
+        .getLeadPersonalDetails(leadId!);
     Provider.of<DataProvider>(context, listen: false).getAllState();
+  }
+
+  Widget buildStateField(DataProvider productProvider) {
+    if (productProvider.getPersonalDetailsData!.permanentState != null) {
+      var allStates = productProvider.getAllStateData!.returnObject!;
+      var initialData = allStates.firstWhere(
+          (element) =>
+              element?.id ==
+              productProvider.getPersonalDetailsData!.permanentState,
+          orElse: () => null);
+      _stateNameCl.text = initialData!.name!;
+      if (productProvider.getPersonalDetailsData!.permanentState != null) {
+        if (productProvider.getPersonalDetailsData!.permanentCity != null &&
+            cityCallInitial) {
+          citylist.clear();
+          Provider.of<DataProvider>(context, listen: false).getAllCity(
+              productProvider.getPersonalDetailsData!.permanentState!);
+          cityCallInitial = false;
+        }
+      }
+      return TextField(
+        enabled: false,
+        controller: _stateNameCl,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.next,
+        maxLines: 1,
+        cursorColor: Colors.black,
+        decoration: const InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: kPrimaryColor,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            hintText: "State",
+            labelText: "State",
+            fillColor: textFiledBackgroundColour,
+            filled: true,
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            )),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget buildCityField(DataProvider productProvider) {
+    if (productProvider.getPersonalDetailsData!.permanentCity != null) {
+      var initialData = productProvider.getAllCityData!.firstWhere(
+          (element) =>
+              element?.id ==
+              productProvider.getPersonalDetailsData!.permanentCity,
+          orElse: () => CityResponce());
+
+      _cityNameCl.text = initialData!.name!;
+
+      return TextField(
+        enabled: false,
+        controller: _cityNameCl,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.next,
+        maxLines: 1,
+        cursorColor: Colors.black,
+        decoration: const InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: kPrimaryColor,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            hintText: "State",
+            labelText: "State",
+            fillColor: textFiledBackgroundColour,
+            filled: true,
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            )),
+      );
+    } else {
+      return Container();
+    }
   }
 }
 
@@ -900,7 +851,7 @@ List<double> _getCustomItemsHeights(List<String> items) {
   return itemsHeights;
 }
 
-List<double> _getCustomItemsHeights2(List<ReturnObject> items) {
+List<double> _getCustomItemsHeights2(List<ReturnObject?> items) {
   final List<double> itemsHeights = [];
   for (int i = 0; i < (items.length * 2) - 1; i++) {
     if (i.isEven) {
@@ -914,7 +865,7 @@ List<double> _getCustomItemsHeights2(List<ReturnObject> items) {
   return itemsHeights;
 }
 
-List<double> _getCustomItemsHeights3(List<CityResponce> items) {
+List<double> _getCustomItemsHeights3(List<CityResponce?> items) {
   final List<double> itemsHeights = [];
   for (int i = 0; i < (items.length * 2) - 1; i++) {
     if (i.isEven) {
@@ -928,15 +879,15 @@ List<double> _getCustomItemsHeights3(List<CityResponce> items) {
   return itemsHeights;
 }
 
-List<DropdownMenuItem<ReturnObject>> getAllState(List<ReturnObject> items) {
+List<DropdownMenuItem<ReturnObject>> getAllState(List<ReturnObject?> items) {
   final List<DropdownMenuItem<ReturnObject>> menuItems = [];
-  for (final ReturnObject item in items) {
+  for (final ReturnObject? item in items) {
     menuItems.addAll(
       [
         DropdownMenuItem<ReturnObject>(
           value: item,
           child: Text(
-            item.name!, // Assuming 'name' is the property to display
+            item!.name!, // Assuming 'name' is the property to display
             style: const TextStyle(
               fontSize: 14,
             ),
@@ -956,17 +907,15 @@ List<DropdownMenuItem<ReturnObject>> getAllState(List<ReturnObject> items) {
   return menuItems;
 }
 
-
-
-List<DropdownMenuItem<CityResponce>> getAllCity(List<CityResponce> list) {
+List<DropdownMenuItem<CityResponce>> getAllCity(List<CityResponce?> list) {
   final List<DropdownMenuItem<CityResponce>> menuItems = [];
-  for (final CityResponce item in list) {
+  for (final CityResponce? item in list) {
     menuItems.addAll(
       [
         DropdownMenuItem<CityResponce>(
           value: item,
           child: Text(
-            item.name!, // Assuming 'name' is the property to display
+            item!.name!, // Assuming 'name' is the property to display
             style: const TextStyle(
               fontSize: 14,
             ),
