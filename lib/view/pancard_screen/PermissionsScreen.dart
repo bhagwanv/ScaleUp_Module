@@ -29,8 +29,6 @@ class _PermissionsWidget extends State<PermissionsWidget> {
   Widget build(BuildContext context) {
     var accecptPermissions = false;
 
-    String htmlContent = "";
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(30),

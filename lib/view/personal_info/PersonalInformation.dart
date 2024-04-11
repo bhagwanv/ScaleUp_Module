@@ -40,27 +40,27 @@ class _PersonalInformationState extends State<PersonalInformation> {
   final TextEditingController _stateNameCl = TextEditingController();
   final TextEditingController _cityNameCl = TextEditingController();
   final TextEditingController _permanentAddresslineOneCl =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _permanentAddresslineTwoCl =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _permanentAddressPinCodeCl =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _permanentAddressCity = TextEditingController();
   final TextEditingController _permanentAddressStateCl =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _permanentAddressCountryCl =
-  TextEditingController();
+      TextEditingController();
 
   final TextEditingController _currentAddressLineOneCl =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _currentAddressLineTwoCl =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _currentAddressPinCodeCl =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _currentAddressCity = TextEditingController();
   final TextEditingController _currentAddressStateCl = TextEditingController();
   final TextEditingController _currentAddressCountryCl =
-  TextEditingController();
+      TextEditingController();
   String? selectedGenderValue;
   String? selectedMaritalStatusValue;
   bool ischeckCurrentAdress = true;
@@ -103,19 +103,19 @@ class _PersonalInformationState extends State<PersonalInformation> {
             isLoading = false;
           }
           _firstNameCl.text =
-          productProvider.getPersonalDetailsData!.firstName!;
+              productProvider.getPersonalDetailsData!.firstName!;
           if (productProvider.getPersonalDetailsData!.middleName != null) {
             _middleNameCl.text =
-            productProvider.getPersonalDetailsData!.middleName!;
+                productProvider.getPersonalDetailsData!.middleName!;
           }
           _lastNameCl.text = productProvider.getPersonalDetailsData!.lastName!;
           _alternatePhoneNumberCl.text =
-          productProvider.getPersonalDetailsData!.alternatePhoneNo!;
+              productProvider.getPersonalDetailsData!.alternatePhoneNo!;
 
           if (productProvider.getPersonalDetailsData!.emailId!.isNotEmpty &&
               !isEmailClear) {
             _emailIDCl.text = productProvider.getPersonalDetailsData!.emailId!;
-          } else {
+          } else if(!isValidEmail){
             _emailIDCl.clear();
           }
 
@@ -126,16 +126,16 @@ class _PersonalInformationState extends State<PersonalInformation> {
           }
 
           if (productProvider.getPersonalDetailsData!.permanentAddressLine1 ==
-              productProvider.getPersonalDetailsData!.resAddress1 &&
+                  productProvider.getPersonalDetailsData!.resAddress1 &&
               productProvider.getPersonalDetailsData!.permanentAddressLine2 ==
                   productProvider.getPersonalDetailsData!.resAddress2) {
             isCurrentAddSame = true;
           }
 
           _permanentAddresslineOneCl.text =
-          productProvider.getPersonalDetailsData!.permanentAddressLine1!;
+              productProvider.getPersonalDetailsData!.permanentAddressLine1!;
           _permanentAddresslineTwoCl.text =
-          productProvider.getPersonalDetailsData!.permanentAddressLine2!;
+              productProvider.getPersonalDetailsData!.permanentAddressLine2!;
           _permanentAddressPinCodeCl.text = productProvider
               .getPersonalDetailsData!.permanentPincode!
               .toString();
@@ -161,184 +161,187 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
           return SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 50),
-                    Text(
-                      'Personal Information',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 35, color: Colors.black),
-                    ),
-                    SizedBox(height: 15),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                      child: Column(
-                        children: [
-                          TextField(
-                            enabled: false,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            controller: _firstNameCl,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            canRequestFocus: true,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 50),
+                Text(
+                  'Personal Information',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(fontSize: 35, color: Colors.black),
+                ),
+                SizedBox(height: 15),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                  child: Column(
+                    children: [
+                      TextField(
+                        enabled: false,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        controller: _firstNameCl,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        canRequestFocus: true,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "First Name",
-                                labelText: "First Name",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
+                            ),
+                            hintText: "First Name",
+                            labelText: "First Name",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
                                   BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          SizedBox(height: 15),
-                          TextField(
-                            enabled: false,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            controller: _middleNameCl,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
+                            )),
+                      ),
+                      SizedBox(height: 15),
+                      TextField(
+                        enabled: false,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        controller: _middleNameCl,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Middle Name",
-                                labelText: "Middle Name",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
+                            ),
+                            hintText: "Middle Name",
+                            labelText: "Middle Name",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
                                   BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          const SizedBox(height: 15),
-                          TextField(
-                            enabled: false,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            controller: _lastNameCl,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
+                            )),
+                      ),
+                      const SizedBox(height: 15),
+                      TextField(
+                        enabled: false,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        controller: _lastNameCl,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Last Name",
-                                labelText: "Last Name",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
+                            ),
+                            hintText: "Last Name",
+                            labelText: "Last Name",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
                                   BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          SizedBox(height: 15),
-                          TextField(
-                            enabled: false,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            controller: _genderCl,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
+                            )),
+                      ),
+                      SizedBox(height: 15),
+                      TextField(
+                        enabled: false,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        controller: _genderCl,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Gender",
-                                labelText: "Gender",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
+                            ),
+                            hintText: "Gender",
+                            labelText: "Gender",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
                                   BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          SizedBox(height: 15),
-                          DropdownButtonFormField2<String>(
-                            isExpanded: true,
-                            decoration: InputDecoration(
-                              contentPadding:
+                            )),
+                      ),
+                      SizedBox(height: 15),
+                      DropdownButtonFormField2<String>(
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          contentPadding:
                               const EdgeInsets.symmetric(vertical: 16),
-                              fillColor: textFiledBackgroundColour,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                    color: kPrimaryColor, width: 1),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                    color: kPrimaryColor, width: 1),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide:
+                          fillColor: textFiledBackgroundColour,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide:
                                 BorderSide(color: kPrimaryColor, width: 1),
-                              ),
-                            ),
-                            hint: const Text(
-                              'marital Status',
-                              style: TextStyle(
-                                color: blueColor,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            items: getDropDownOption(maritalList),
-                            value: selectedMaritalStatusValue,
-                            onChanged: (String? value) {
-                              /* setState(() {
+                          ),
+                        ),
+                        hint: const Text(
+                          'marital Status',
+                          style: TextStyle(
+                            color: blueColor,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        items: getDropDownOption(maritalList),
+                        value: selectedMaritalStatusValue,
+                        onChanged: (String? value) {
+                          /* setState(() {
                           selectedAccountTypeValue = value;
                         });*/
-                            },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.only(right: 8),
-                            ),
-                            dropdownStyleData: const DropdownStyleData(
-                              maxHeight: 200,
-                            ),
-                            menuItemStyleData: MenuItemStyleData(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              customHeights: _getCustomItemsHeights(maritalList),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              openMenuIcon: Icon(Icons.arrow_drop_up),
-                            ),
-                          ),
-                          SizedBox(height: 15),
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.only(right: 8),
+                        ),
+                        dropdownStyleData: const DropdownStyleData(
+                          maxHeight: 200,
+                        ),
+                        menuItemStyleData: MenuItemStyleData(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          customHeights: _getCustomItemsHeights(maritalList),
+                        ),
+                        iconStyleData: const IconStyleData(
+                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      Stack(
+                        children: [
                           TextField(
+                            enabled: !isValidEmail,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
                             controller: _emailIDCl,
@@ -350,7 +353,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   color: kPrimaryColor,
                                 ),
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(10.0)),
                               ),
                               hintText: "E-mail ID",
                               labelText: "E-mail ID",
@@ -358,33 +361,44 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               filled: true,
                               border: OutlineInputBorder(
                                 borderSide:
-                                BorderSide(color: kPrimaryColor, width: 1.0),
+                                    BorderSide(color: kPrimaryColor, width: 1.0),
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
+                                    BorderRadius.all(Radius.circular(10.0)),
                               ),
-                              suffixIcon: IconButton(
-                                  onPressed: () => setState(() {
-                                    isEmailClear = true;
-                                    _emailIDCl.clear();
-                                  }),
-                                  icon: SvgPicture.asset(
-                                    'assets/icons/email_cross.svg',
-                                    semanticsLabel: 'My SVG Image',
-                                  )),
                             ),
                           ),
-                          SizedBox(height: 15),
-                          (!isEmailClear && _emailIDCl.text.isNotEmpty)
-                              ? Container(
-                            child: Text(
-                              'Verify',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  decoration: TextDecoration.underline,
-                                  color: Colors.blue),
+                          _emailIDCl.text.isNotEmpty ? Positioned(
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                            child: Container(
+                              child: IconButton(
+                                onPressed: () => setState(() {
+                                  isEmailClear = true;
+                                  isValidEmail = false;
+                                  _emailIDCl.clear();
+                                }),
+                                icon: SvgPicture.asset(
+                                  'assets/icons/email_cross.svg',
+                                  semanticsLabel: 'My SVG Image',
+                                ),
+                              ),
                             ),
-                          )
-                              : Align(
+                          ) : Container(),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      (!isEmailClear && _emailIDCl.text.isNotEmpty)
+                          ? Container(
+                              child: Text(
+                                'Verify',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    decoration: TextDecoration.underline,
+                                    color: Colors.blue),
+                              ),
+                            )
+                          : Align(
                               alignment: Alignment.centerLeft,
                               child: InkWell(
                                 onTap: () async {
@@ -406,123 +420,123 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                       color: Colors.blue),
                                 ),
                               )),
-                          SizedBox(height: 15),
-                          TextField(
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.next,
-                            controller: _alternatePhoneNumberCl,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
+                      SizedBox(height: 15),
+                      TextField(
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        controller: _alternatePhoneNumberCl,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Alternate Phone Number   ",
-                                labelText: "Alternate Phone Number",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          SizedBox(height: 20),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Permanent Address',
-                              style: TextStyle(fontSize: 15, color: Colors.black),
                             ),
-                          ),
-                          SizedBox(height: 15),
-                          TextField(
-                            enabled: false,
-                            controller: _permanentAddresslineOneCl,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Address line 1",
-                                labelText: "Address line 1",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
+                            hintText: "Alternate Phone Number   ",
+                            labelText: "Alternate Phone Number",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
                                   BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          const SizedBox(height: 15),
-                          TextField(
-                            enabled: false,
-                            controller: _permanentAddresslineTwoCl,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
+                            )),
+                      ),
+                      SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Permanent Address',
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      TextField(
+                        enabled: false,
+                        controller: _permanentAddresslineOneCl,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Address line 2",
-                                labelText: "Address line 2",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
+                            ),
+                            hintText: "Address line 1",
+                            labelText: "Address line 1",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
                                   BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          SizedBox(height: 15),
-                          TextField(
-                            enabled: false,
-                            controller: _permanentAddressPinCodeCl,
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.next,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
+                            )),
+                      ),
+                      const SizedBox(height: 15),
+                      TextField(
+                        enabled: false,
+                        controller: _permanentAddresslineTwoCl,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Pin Code*",
-                                labelText: "Pin Code*",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
+                            ),
+                            hintText: "Address line 2",
+                            labelText: "Address line 2",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
                                   BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          const SizedBox(height: 15),
-                          /* productProvider.getPersonalDetailsData!.state == null
+                            )),
+                      ),
+                      SizedBox(height: 15),
+                      TextField(
+                        enabled: false,
+                        controller: _permanentAddressPinCodeCl,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            hintText: "Pin Code*",
+                            labelText: "Pin Code*",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: kPrimaryColor, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            )),
+                      ),
+                      const SizedBox(height: 15),
+                      /* productProvider.getPersonalDetailsData!.state == null
                           ? DropdownButtonFormField2<ReturnObject>(
                               isExpanded: true,
                               decoration: InputDecoration(
@@ -606,307 +620,314 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                         BorderRadius.all(Radius.circular(10.0)),
                                   )),
                             ),*/
-                          buildStateField(productProvider),
-                          const SizedBox(height: 15),
-                          citylist!.isNotEmpty
-                              ? buildCityField(productProvider)
-                              : Container(),
-                          const SizedBox(height: 15),
-                          citylist.isNotEmpty
-                              ? DropdownButtonFormField2<CityResponce>(
-                            isExpanded: true,
-                            decoration: InputDecoration(
-                              contentPadding:
-                              const EdgeInsets.symmetric(vertical: 16),
-                              fillColor: textFiledBackgroundColour,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(
-                                    color: kPrimaryColor, width: 1),
+                      buildStateField(productProvider),
+                      const SizedBox(height: 15),
+                      citylist!.isNotEmpty
+                          ? buildCityField(productProvider)
+                          : Container(),
+                      const SizedBox(height: 15),
+                      citylist.isNotEmpty
+                          ? DropdownButtonFormField2<CityResponce>(
+                              isExpanded: true,
+                              decoration: InputDecoration(
+                                contentPadding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                fillColor: textFiledBackgroundColour,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(
+                                      color: kPrimaryColor, width: 1),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(
+                                      color: kPrimaryColor, width: 1),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                      color: kPrimaryColor, width: 1),
+                                ),
                               ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(
-                                    color: kPrimaryColor, width: 1),
+                              hint: const Text(
+                                'City',
+                                style: TextStyle(
+                                  color: blueColor,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(
-                                    color: kPrimaryColor, width: 1),
-                              ),
-                            ),
-                            hint: const Text(
-                              'City',
-                              style: TextStyle(
-                                color: blueColor,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            items: getAllCity(citylist),
-                            onChanged: (CityResponce? value) {
-                              /* setState(() {
+                              items: getAllCity(citylist),
+                              onChanged: (CityResponce? value) {
+                                /* setState(() {
                                    });*/
-                            },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.only(right: 8),
-                            ),
-                            dropdownStyleData: const DropdownStyleData(
-                              maxHeight: 200,
-                            ),
-                            menuItemStyleData: MenuItemStyleData(
-                              padding:
-                              const EdgeInsets.symmetric(horizontal: 8.0),
-                              customHeights:
-                              _getCustomItemsHeights3(citylist),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              openMenuIcon: Icon(Icons.arrow_drop_up),
-                            ),
-                          )
-                              : Container(),
-                          const SizedBox(height: 20),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Current Address',
-                              style: TextStyle(fontSize: 16, color: Colors.black),
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          CommonCheckBox(
-                            isChecked: isCurrentAddSame,
-                            onChanged: (bool isChecked) {
-                              setState(() {
-                                isCurrentAddSame = isChecked;
-                                if (isChecked) {
-                                  print("Check${isChecked}");
-                                  ischeckCurrentAdress = false;
-                                  _currentAddressLineOneCl.text = productProvider
-                                      .getPersonalDetailsData!
-                                      .permanentAddressLine1!;
-                                  _currentAddressLineTwoCl.text = productProvider
-                                      .getPersonalDetailsData!
-                                      .permanentAddressLine2!;
-                                  _currentAddressPinCodeCl.text = productProvider
-                                      .getPersonalDetailsData!.permanentPincode!
-                                      .toString();
-                                  //_currentAddressCity.text= productProvider.getPersonalDetailsData!.lastName!;
-                                  //_currentAddressStateCl.text= productProvider.getPersonalDetailsData!.lastName!;
-                                  //_currentAddressCountryCl.text= productProvider.getPersonalDetailsData!.lastName!;
-                                } else {
-                                  ischeckCurrentAdress = true;
-                                  _currentAddressLineOneCl.clear();
-                                  _currentAddressLineTwoCl.clear();
-                                  _currentAddressPinCodeCl.clear();
-                                }
-                              });
-                            },
-                            text: "Same as Permanent address",
-                            upperCase: false,
-                          ),
-                          const SizedBox(height: 15),
-                          TextField(
-                            enabled: ischeckCurrentAdress,
-                            controller: _currentAddressLineOneCl,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Address line 1",
-                                labelText: "Address line 1",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          const SizedBox(height: 15),
-                          TextField(
-                            enabled: ischeckCurrentAdress,
-                            controller: _permanentAddresslineTwoCl,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Address line 2",
-                                labelText: "Address line 2",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          const SizedBox(height: 15),
-                          TextField(
-                            enabled: ischeckCurrentAdress,
-                            controller: _currentAddressPinCodeCl,
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.next,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: const InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Pin Code*",
-                                labelText: "Pin Code*",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          const SizedBox(height: 15),
-                          TextField(
-                            enabled: ischeckCurrentAdress,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: const InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "State*",
-                                labelText: "State*",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          const SizedBox(height: 15),
-                          TextField(
-                            enabled: ischeckCurrentAdress,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: const InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "City*",
-                                labelText: "City*",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          SizedBox(height: 15),
-                          TextField(
-                            enabled: ischeckCurrentAdress,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            maxLines: 1,
-                            cursorColor: Colors.black,
-                            decoration: const InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: kPrimaryColor,
-                                  ),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                ),
-                                hintText: "Country",
-                                labelText: "Country",
-                                fillColor: textFiledBackgroundColour,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                  BorderSide(color: kPrimaryColor, width: 1.0),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                                )),
-                          ),
-                          const SizedBox(height: 50),
-                          CommonElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return const BusinessDetails();
-                                  },
-                                ),
-                              );
-                            },
-                            text: "NEXT",
-                            upperCase: true,
-                          ),
-                        ],
+                              },
+                              buttonStyleData: const ButtonStyleData(
+                                padding: EdgeInsets.only(right: 8),
+                              ),
+                              dropdownStyleData: const DropdownStyleData(
+                                maxHeight: 200,
+                              ),
+                              menuItemStyleData: MenuItemStyleData(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                customHeights:
+                                    _getCustomItemsHeights3(citylist),
+                              ),
+                              iconStyleData: const IconStyleData(
+                                openMenuIcon: Icon(Icons.arrow_drop_up),
+                              ),
+                            )
+                          : Container(),
+                      const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Current Address',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 15),
+                      CommonCheckBox(
+                        isChecked: isCurrentAddSame,
+                        onChanged: (bool isChecked) {
+                          setState(() {
+                            isCurrentAddSame = isChecked;
+                            if (isChecked) {
+                              print("Check${isChecked}");
+                              ischeckCurrentAdress = false;
+                              _currentAddressLineOneCl.text = productProvider
+                                  .getPersonalDetailsData!
+                                  .permanentAddressLine1!;
+                              _currentAddressLineTwoCl.text = productProvider
+                                  .getPersonalDetailsData!
+                                  .permanentAddressLine2!;
+                              _currentAddressPinCodeCl.text = productProvider
+                                  .getPersonalDetailsData!.permanentPincode!
+                                  .toString();
+                              //_currentAddressCity.text= productProvider.getPersonalDetailsData!.lastName!;
+                              //_currentAddressStateCl.text= productProvider.getPersonalDetailsData!.lastName!;
+                              //_currentAddressCountryCl.text= productProvider.getPersonalDetailsData!.lastName!;
+                            } else {
+                              ischeckCurrentAdress = true;
+                              _currentAddressLineOneCl.clear();
+                              _currentAddressLineTwoCl.clear();
+                              _currentAddressPinCodeCl.clear();
+                            }
+                          });
+                        },
+                        text: "Same as Permanent address",
+                        upperCase: false,
+                      ),
+                      const SizedBox(height: 15),
+                      TextField(
+                        enabled: ischeckCurrentAdress,
+                        controller: _currentAddressLineOneCl,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            hintText: "Address line 1",
+                            labelText: "Address line 1",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: kPrimaryColor, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            )),
+                      ),
+                      const SizedBox(height: 15),
+                      TextField(
+                        enabled: ischeckCurrentAdress,
+                        controller: _permanentAddresslineTwoCl,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            hintText: "Address line 2",
+                            labelText: "Address line 2",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: kPrimaryColor, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            )),
+                      ),
+                      const SizedBox(height: 15),
+                      TextField(
+                        enabled: ischeckCurrentAdress,
+                        controller: _currentAddressPinCodeCl,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: const InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            hintText: "Pin Code*",
+                            labelText: "Pin Code*",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: kPrimaryColor, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            )),
+                      ),
+                      const SizedBox(height: 15),
+                      TextField(
+                        enabled: ischeckCurrentAdress,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: const InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            hintText: "State*",
+                            labelText: "State*",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: kPrimaryColor, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            )),
+                      ),
+                      const SizedBox(height: 15),
+                      TextField(
+                        enabled: ischeckCurrentAdress,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: const InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            hintText: "City*",
+                            labelText: "City*",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: kPrimaryColor, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            )),
+                      ),
+                      SizedBox(height: 15),
+                      TextField(
+                        enabled: ischeckCurrentAdress,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        maxLines: 1,
+                        cursorColor: Colors.black,
+                        decoration: const InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            hintText: "Country",
+                            labelText: "Country",
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: kPrimaryColor, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            )),
+                      ),
+                      const SizedBox(height: 50),
+                      CommonElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return const BusinessDetails();
+                              },
+                            ),
+                          );
+                        },
+                        text: "NEXT",
+                        upperCase: true,
+                      ),
+                    ],
+                  ),
                 ),
-              ));
+              ],
+            ),
+          ));
         }
       }),
     ));
   }
 
   void callSendOptEmail(BuildContext context, String emailID) async {
-    Utils.hideKeyBored(context);
-    Provider.of<DataProvider>(context, listen: false)
-        .getSendOtpOnEmail(emailID);
-
     SendOtpOnEmailResponce data;
     data = await ApiService().sendOtpOnEmail(emailID) as SendOtpOnEmailResponce;
 
     if (data != null && data.status!) {
       Utils.showToast(data.message!);
-      isValidEmail = await Navigator.push(
+      final result = await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => EmailOtpScreen(
-                emailID: emailID,
-              )));
+                    emailID: emailID,
+                  )));
+
+      if (result != null &&
+          result.containsKey('isValid') &&
+          result.containsKey('Email')) {
+        isValidEmail = result['isValid'];
+        _emailIDCl.text = result['Email'];
+        setState(() {
+        });
+      } else {
+        print('Result is null or does not contain expected keys');
+      }
     } else {
       Utils.showToast(data.message!);
     }
@@ -1056,8 +1077,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
     if (productProvider.getPersonalDetailsData!.permanentState != null) {
       var allStates = productProvider.getAllStateData!.returnObject!;
       var initialData = allStates.firstWhere(
-              (element) =>
-          element?.id ==
+          (element) =>
+              element?.id ==
               productProvider.getPersonalDetailsData!.permanentState,
           orElse: () => null);
       _stateNameCl.text = initialData!.name!;
@@ -1101,8 +1122,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
   Widget buildCityField(DataProvider productProvider) {
     if (productProvider.getPersonalDetailsData!.permanentCity != null) {
       var initialData = productProvider.getAllCityData!.firstWhere(
-              (element) =>
-          element?.id ==
+          (element) =>
+              element?.id ==
               productProvider.getPersonalDetailsData!.permanentCity,
           orElse: () => CityResponce());
 
