@@ -183,18 +183,17 @@ class ApiService {
   Future<AadhaarGenerateOTPResponseModel> getLeadAadharGenerateOTP(
       AadhaarGenerateOTPRequestModel aadhaarGenerateOTPRequestModel) async {
     if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.post(
           Uri.parse('${apiUrls.baseUrl + apiUrls.getLeadAadharGenerateOTP}'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization':
-                'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiIwMjQ3ODViYS1kNjRiLTQ1YmYtODJjOS0yZmNmNWE3ZWFiMWIiLCJ1c2VybmFtZSI6Ijc4MDM5OTQ2NjciLCJsb2dnZWRvbiI6IjA0LzEwLzIwMjQgMTI6NTc6MjkiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI3ODAzOTk0NjY3IiwiZW1haWwiOiJkZnNkQGdtYWlsLmNvbSIsInJvbGVzIjoiIiwiY29tcGFueWlkIjoiMiIsInByb2R1Y3RpZCI6IjIiLCJuYmYiOjE3MTI3NTM4NDksImV4cCI6MTcxMjg0MDI0OSwiaWF0IjoxNzEyNzUzODQ5LCJpc3MiOiJodHRwczovL2lkZW50aXR5LXVhdC5zY2FsZXVwZmluLmNvbSIsImF1ZCI6ImNybUFwaSJ9.cNK1EVTwAxoC06LZYcqv6FQlj5tGgozgRaIbWxiMbD1ep89EMy2VsenKg8xmj6pw8uH11jNo3cWDBmhw2-MMgUAD7iiVWHAVkzUTeJqTWwFtXgJxMNdh0I_x-R9yaDRMBAqD2BeyvxPEaKJxU5I5wQFB4pG7u9O-xF9reV_KUoGQalCyqxOLs29Q-bRKhY-YtXZ0ktGj2vhW21fvJKsI5RELSCP1zdOqCNYGuVfC6oYsADnXd9HM-fBY9y_dYlEQPXrAQjdpA7bClLl4DI80Tal0QF6QH01AYY923m0'
+            'Authorization': 'Bearer $token'
           },
           body: json.encode(aadhaarGenerateOTPRequestModel));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
-        print("ewewewewewee11111");
-        // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final AadhaarGenerateOTPResponseModel responseModel =
             AadhaarGenerateOTPResponseModel.fromJson(jsonData);
@@ -202,7 +201,9 @@ class ApiService {
       } else if (response.statusCode == 401) {
         print("Unauthorized access. Please login again.");
         return AadhaarGenerateOTPResponseModel(errorCode: 401);
-        return AadhaarGenerateOTPResponseModel(statusCode: 401);
+      } else if (response.statusCode == 500) {
+        print("Unauthorized access. Please login again.");
+        return AadhaarGenerateOTPResponseModel(errorCode: 500);
       } else {
         throw Exception('Failed to load products');
       }
@@ -478,21 +479,28 @@ class ApiService {
   Future<ValidateAadhaarOTPResponseModel> validateAadhaarOtp(
       ValidateAadhaarOTPRequestModel verifayOtp) async {
     if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.post(
-          Uri.parse(apiUrls.baseUrl + apiUrls.LeadMobileValidate),
+          Uri.parse(apiUrls.baseUrl + apiUrls.postLeadAadharVerifyOTP),
           headers: {
-            'Content-Type': 'application/json', // Set the content type as JSON
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
           },
           body: json.encode(verifayOtp));
       if (kDebugMode) {
         print(response.body);
       } // Print the response body once here
       if (response.statusCode == 200) {
-        // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final ValidateAadhaarOTPResponseModel responseModel =
             ValidateAadhaarOTPResponseModel.fromJson(jsonData);
         return responseModel;
+      } else if (response.statusCode == 401) {
+        print("Unauthorized access. Please login again.");
+        return ValidateAadhaarOTPResponseModel(statusCode: 401);
+      } else if (response.statusCode == 500) {
+        return ValidateAadhaarOTPResponseModel(statusCode: 500);
       } else {
         throw Exception('Failed to load products');
       }

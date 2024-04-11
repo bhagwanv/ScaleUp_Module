@@ -893,6 +893,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
   void callSendOptEmail(BuildContext context, String emailID) async {
     Utils.hideKeyBored(context);
+    Provider.of<DataProvider>(context, listen: false)
+        .getSendOtpOnEmail(emailID);
 
     SendOtpOnEmailResponce data;
     data = await ApiService().sendOtpOnEmail(emailID) as SendOtpOnEmailResponce;

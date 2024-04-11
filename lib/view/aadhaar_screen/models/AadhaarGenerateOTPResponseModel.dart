@@ -20,7 +20,7 @@ class AadhaarGenerateOTPResponseModel {
     statusCode = json['statusCode'];
     error = json['error'];
     personId = json['personId'];
-    data = json['result'];
+    data = Data.fromJson(json['result']);
   }
 
   Map<String, dynamic> toJson() {
@@ -29,7 +29,7 @@ class AadhaarGenerateOTPResponseModel {
     map['statusCode'] = statusCode;
     map['error'] = error;
     map['personId'] = personId;
-    map['result'] = data;
+    map['result'] = data?.toJson();
     return map;
   }
 }

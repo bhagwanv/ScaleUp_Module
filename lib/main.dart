@@ -32,7 +32,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+
       home: TakeSelfieScreen(activityId: 2, subActivityId: 3),
+
+
      /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
      /*LoginScreen(activityId: 1, subActivityId: 0),*/
       //TakeSelfieScreen(activityId: 2, subActivityId: 1),

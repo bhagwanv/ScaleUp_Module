@@ -8,6 +8,7 @@ class ApiUrls{
   final String getLeadValidPanCard="/services/kyc/v1/KYCDoc/GetLeadValidPanCard";
   final String getLeadAadhar="/aggregator/LeadAgg/GetLeadAadhar";
   final String getLeadAadharGenerateOTP="/services/kyc/v1/KYCDoc/GetLeadAadharGenerateOTP";
+  final String postLeadAadharVerifyOTP="/services/lead/v1/PostLeadAadharVerifyOTP";
   final String getFathersNameByValidPanCard="/services/kyc/v1/KYCDoc/GetFathersNameByValidPanCard";
   final String postSingleFile="/services/media/v1/PostSingleFile";
   final String postLeadPAN="/services/lead/v1/PostLeadPAN";

@@ -12,6 +12,7 @@ import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';
 import '../view/login_screen/login_screen.dart';
 import '../view/profile_screen/ProfileReview.dart';
 
+
 ScreenType? customerSequence(
     BuildContext context,
     GetLeadResponseModel? getLeadData,
@@ -19,10 +20,11 @@ ScreenType? customerSequence(
   if ((getLeadData != null) && (leadCurrentActivityAsyncData != null)) {
     if (getLeadData.sequenceNo! != 0) {
       print("sequence no.  ${getLeadData.sequenceNo.toString()}");
-      var leadCurrentActivity =
-          leadCurrentActivityAsyncData.leadProductActivity!.firstWhere(
-              (product) => product.sequence == getLeadData!.sequenceNo!);
+      var leadCurrentActivity = leadCurrentActivityAsyncData.leadProductActivity!.firstWhere((product) => product.sequence == getLeadData!.sequenceNo!);
+      print("ACTIVITYnAME  ${leadCurrentActivity.activityName}");
+      print("SubActivityName  ${leadCurrentActivity.subActivityName}");
       if (leadCurrentActivity.activityName == "MobileOtp") {
+        print("11111");
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => LoginScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
         );
@@ -40,7 +42,11 @@ ScreenType? customerSequence(
           return ScreenType.aadhar;
         } else if (leadCurrentActivity.subActivityName == "Selfie") {
           Navigator.of(context).pushReplacement(
+
             MaterialPageRoute(builder: (context) => TakeSelfieScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
+
+
+
           );
           return ScreenType.selfie;
         }
