@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -632,7 +633,6 @@ class _PancardScreenState extends State<PancardScreen> {
       recognizer: TapGestureRecognizer()..onTap = onClick,
     );
   }
-}
 
   Future<void> callApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
@@ -666,7 +666,7 @@ class _PancardScreenState extends State<PancardScreen> {
           prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
           prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(PRODUCT_ID)!,
-          0) as GetLeadResponseModel?;
+          prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
       customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
     } catch (error) {
