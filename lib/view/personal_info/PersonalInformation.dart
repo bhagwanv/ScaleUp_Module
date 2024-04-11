@@ -38,6 +38,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   final TextEditingController _emailIDCl = TextEditingController();
   final TextEditingController _genderCl = TextEditingController();
   final TextEditingController _stateNameCl = TextEditingController();
+  final TextEditingController _cityNameCl = TextEditingController();
   final TextEditingController _permanentAddresslineOneCl =
       TextEditingController();
   final TextEditingController _permanentAddresslineTwoCl =
@@ -63,7 +64,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   String? selectedGenderValue;
   String? selectedMaritalStatusValue;
   bool ischeckCurrentAdress = true;
-  List<CityResponce> citylist = [];
+  List<CityResponce?> citylist = [];
   List<ReturnObject> filteredStates = [];
   var isLoading = true;
   late int selectedStateID;
@@ -80,6 +81,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
     'UnMarried',
     'Widow',
   ];
+  var cityCallInitial = true;
+  var isCurrentAddSame = false;
 
   @override
   void initState() {
@@ -108,8 +111,12 @@ class _PersonalInformationState extends State<PersonalInformation> {
           _lastNameCl.text = productProvider.getPersonalDetailsData!.lastName!;
           _alternatePhoneNumberCl.text =
               productProvider.getPersonalDetailsData!.alternatePhoneNo!;
-          if (!isEmailClear) {
+
+          if (productProvider.getPersonalDetailsData!.emailId!.isNotEmpty &&
+              !isEmailClear) {
             _emailIDCl.text = productProvider.getPersonalDetailsData!.emailId!;
+          } else {
+            _emailIDCl.clear();
           }
 
           if (productProvider.getPersonalDetailsData!.gender == "M") {
@@ -122,7 +129,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   productProvider.getPersonalDetailsData!.resAddress1 &&
               productProvider.getPersonalDetailsData!.permanentAddressLine2 ==
                   productProvider.getPersonalDetailsData!.resAddress2) {
-          } else {}
+            isCurrentAddSame = true;
+          }
 
           _permanentAddresslineOneCl.text =
               productProvider.getPersonalDetailsData!.permanentAddressLine1!;
@@ -135,12 +143,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
           // _permanentAddressStateCl.text= productProvider.getPersonalDetailsData!.lastName!;
           // _permanentAddressCountryCl.text= productProvider.getPersonalDetailsData!.c!;
 
-          _currentAddressLineOneCl.text =
-              productProvider.getPersonalDetailsData!.resAddress1!;
-          _currentAddressLineTwoCl.text =
-              productProvider.getPersonalDetailsData!.resAddress2!;
-          _currentAddressPinCodeCl.text =
-              productProvider.getPersonalDetailsData!.pincode!.toString();
+          // _currentAddressLineOneCl.text =productProvider.getPersonalDetailsData!.resAddress1!;
+          // _currentAddressLineTwoCl.text =productProvider.getPersonalDetailsData!.resAddress2!;
+          // _currentAddressPinCodeCl.text =productProvider.getPersonalDetailsData!.pincode!.toString();
           //_currentAddressCity.text= productProvider.getPersonalDetailsData!.lastName!;
           //_currentAddressStateCl.text= productProvider.getPersonalDetailsData!.lastName!;
           //_currentAddressCountryCl.text= productProvider.getPersonalDetailsData!.lastName!;
@@ -148,13 +153,6 @@ class _PersonalInformationState extends State<PersonalInformation> {
           if (productProvider.getPersonalDetailsData!.state != null) {
             stateId = productProvider.getPersonalDetailsData!.state!;
             print("stateId ${stateId!}");
-          }
-
-          if (productProvider.getAllStateData != null) {
-            filteredStates = productProvider.getAllStateData!.returnObject!
-                .where((item) => item.id == stateId)
-                .toList();
-            _stateNameCl.text = filteredStates.first.name!;
           }
 
           if (productProvider.getAllCityData != null) {
@@ -376,7 +374,17 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         ),
                       ),
                       SizedBox(height: 15),
-                      isEmailClear ?  Align(
+                      (!isEmailClear && _emailIDCl.text.isNotEmpty)
+                          ? Container(
+                              child: Text(
+                                'Verify',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    decoration: TextDecoration.underline,
+                                    color: Colors.blue),
+                              ),
+                            )
+                          : Align(
                               alignment: Alignment.centerLeft,
                               child: InkWell(
                                 onTap: () async {
@@ -388,7 +396,6 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                         "Please Enter Valid Email ID");
                                   } else {
                                     callEmailIDExist(context, _emailIDCl.text);
-
                                   }
                                 },
                                 child: Text(
@@ -398,13 +405,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                       decoration: TextDecoration.underline,
                                       color: Colors.blue),
                                 ),
-                              )) : Container(child: Text(
-                                'Verify',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    decoration: TextDecoration.underline,
-                                    color: Colors.blue),
-                              ), ),
+                              )),
                       SizedBox(height: 15),
                       TextField(
                         keyboardType: TextInputType.number,
@@ -521,7 +522,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             )),
                       ),
                       const SizedBox(height: 15),
-                      productProvider.getPersonalDetailsData!.state == null
+                      /* productProvider.getPersonalDetailsData!.state == null
                           ? DropdownButtonFormField2<ReturnObject>(
                               isExpanded: true,
                               decoration: InputDecoration(
@@ -553,8 +554,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              items: getAllState(productProvider
-                                  .getAllStateData!.returnObject!),
+                              items: getAllState(productProvider.getAllStateData?.returnObject?),
                               onChanged: (ReturnObject? value) {
                                 setState(() {
                                   citylist.clear();
@@ -605,7 +605,12 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10.0)),
                                   )),
-                            ),
+                            ),*/
+                      buildStateField(productProvider),
+                      const SizedBox(height: 15),
+                      citylist!.isNotEmpty
+                          ? buildCityField(productProvider)
+                          : Container(),
                       const SizedBox(height: 15),
                       citylist.isNotEmpty
                           ? DropdownButtonFormField2<CityResponce>(
@@ -671,8 +676,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       ),
                       const SizedBox(height: 15),
                       CommonCheckBox(
+                        isChecked: isCurrentAddSame,
                         onChanged: (bool isChecked) {
                           setState(() {
+                            isCurrentAddSame = isChecked;
                             if (isChecked) {
                               print("Check${isChecked}");
                               ischeckCurrentAdress = false;
@@ -761,7 +768,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         textInputAction: TextInputAction.next,
                         maxLines: 1,
                         cursorColor: Colors.black,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: kPrimaryColor,
@@ -787,7 +794,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         textInputAction: TextInputAction.next,
                         maxLines: 1,
                         cursorColor: Colors.black,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: kPrimaryColor,
@@ -813,7 +820,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         textInputAction: TextInputAction.next,
                         maxLines: 1,
                         cursorColor: Colors.black,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: kPrimaryColor,
@@ -839,7 +846,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         textInputAction: TextInputAction.next,
                         maxLines: 1,
                         cursorColor: Colors.black,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: kPrimaryColor,
@@ -884,9 +891,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
     ));
   }
 
-  void callSendOptEmail(BuildContext context,String emailID)async {
+  void callSendOptEmail(BuildContext context, String emailID) async {
     Utils.hideKeyBored(context);
-    Provider.of<DataProvider>(context, listen: false).getSendOtpOnEmail(emailID);
+    Provider.of<DataProvider>(context, listen: false)
+        .getSendOtpOnEmail(emailID);
 
     SendOtpOnEmailResponce data;
     data = await ApiService().sendOtpOnEmail(emailID) as SendOtpOnEmailResponce;
@@ -896,19 +904,22 @@ class _PersonalInformationState extends State<PersonalInformation> {
       isValidEmail = await Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => EmailOtpScreen(emailID: _emailIDCl.text,)));
+              builder: (context) => EmailOtpScreen(
+                    emailID: emailID,
+                  )));
     } else {
-      Utils.showToast(
-          data.message!);
+      Utils.showToast(data.message!);
     }
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   void callEmailIDExist(BuildContext context, String emailID) async {
+    Utils.onLoading(context, "");
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     EmailExistRespoce data;
     data = await ApiService().emailExist(userId!, emailID) as EmailExistRespoce;
-    if(data.isSuccess!){
+    if (data.isSuccess!) {
       Utils.showToast(data.message!);
     } else {
       callSendOptEmail(context, _emailIDCl.text);
@@ -957,7 +968,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     return itemsHeights;
   }
 
-  List<double> _getCustomItemsHeights2(List<ReturnObject> items) {
+  List<double> _getCustomItemsHeights2(List<ReturnObject?> items) {
     final List<double> itemsHeights = [];
     for (int i = 0; i < (items.length * 2) - 1; i++) {
       if (i.isEven) {
@@ -971,7 +982,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     return itemsHeights;
   }
 
-  List<double> _getCustomItemsHeights3(List<CityResponce> items) {
+  List<double> _getCustomItemsHeights3(List<CityResponce?> items) {
     final List<double> itemsHeights = [];
     for (int i = 0; i < (items.length * 2) - 1; i++) {
       if (i.isEven) {
@@ -985,15 +996,15 @@ class _PersonalInformationState extends State<PersonalInformation> {
     return itemsHeights;
   }
 
-  List<DropdownMenuItem<ReturnObject>> getAllState(List<ReturnObject> items) {
+  List<DropdownMenuItem<ReturnObject>> getAllState(List<ReturnObject?> items) {
     final List<DropdownMenuItem<ReturnObject>> menuItems = [];
-    for (final ReturnObject item in items) {
+    for (final ReturnObject? item in items) {
       menuItems.addAll(
         [
           DropdownMenuItem<ReturnObject>(
             value: item,
             child: Text(
-              item.name!, // Assuming 'name' is the property to display
+              item!.name!, // Assuming 'name' is the property to display
               style: const TextStyle(
                 fontSize: 14,
               ),
@@ -1013,15 +1024,15 @@ class _PersonalInformationState extends State<PersonalInformation> {
     return menuItems;
   }
 
-  List<DropdownMenuItem<CityResponce>> getAllCity(List<CityResponce> list) {
+  List<DropdownMenuItem<CityResponce>> getAllCity(List<CityResponce?> list) {
     final List<DropdownMenuItem<CityResponce>> menuItems = [];
-    for (final CityResponce item in list) {
+    for (final CityResponce? item in list) {
       menuItems.addAll(
         [
           DropdownMenuItem<CityResponce>(
             value: item,
             child: Text(
-              item.name!, // Assuming 'name' is the property to display
+              item!.name!, // Assuming 'name' is the property to display
               style: const TextStyle(
                 fontSize: 14,
               ),
@@ -1041,11 +1052,93 @@ class _PersonalInformationState extends State<PersonalInformation> {
     return menuItems;
   }
 
+  Widget buildStateField(DataProvider productProvider) {
+    if (productProvider.getPersonalDetailsData!.permanentState != null) {
+      var allStates = productProvider.getAllStateData!.returnObject!;
+      var initialData = allStates.firstWhere(
+          (element) =>
+              element?.id ==
+              productProvider.getPersonalDetailsData!.permanentState,
+          orElse: () => null);
+      _stateNameCl.text = initialData!.name!;
+      if (productProvider.getPersonalDetailsData!.permanentState != null) {
+        if (productProvider.getPersonalDetailsData!.permanentCity != null &&
+            cityCallInitial) {
+          citylist.clear();
+          Provider.of<DataProvider>(context, listen: false).getAllCity(
+              productProvider.getPersonalDetailsData!.permanentState!);
+          cityCallInitial = false;
+        }
+      }
+      return TextField(
+        enabled: false,
+        controller: _stateNameCl,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.next,
+        maxLines: 1,
+        cursorColor: Colors.black,
+        decoration: const InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: kPrimaryColor,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            hintText: "State",
+            labelText: "State",
+            fillColor: textFiledBackgroundColour,
+            filled: true,
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            )),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget buildCityField(DataProvider productProvider) {
+    if (productProvider.getPersonalDetailsData!.permanentCity != null) {
+      var initialData = productProvider.getAllCityData!.firstWhere(
+          (element) =>
+              element?.id ==
+              productProvider.getPersonalDetailsData!.permanentCity,
+          orElse: () => CityResponce());
+
+      _cityNameCl.text = initialData!.name!;
+
+      return TextField(
+        enabled: false,
+        controller: _cityNameCl,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.next,
+        maxLines: 1,
+        cursorColor: Colors.black,
+        decoration: const InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: kPrimaryColor,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            hintText: "City",
+            labelText: "City",
+            fillColor: textFiledBackgroundColour,
+            filled: true,
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            )),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   Future<void> callApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? leadId = prefsUtil.getString(USER_ID);
-    isValidEmail= prefsUtil.getBool(VERIFYED_EMAIL)!;
-    print("daddd ${leadId}");
     Provider.of<DataProvider>(context, listen: false)
         .getLeadPersonalDetails(leadId!);
     Provider.of<DataProvider>(context, listen: false).getAllState();
