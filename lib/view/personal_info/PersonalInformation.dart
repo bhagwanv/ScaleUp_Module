@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/api/ApiService.dart';
@@ -115,7 +116,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           if (productProvider.getPersonalDetailsData!.emailId!.isNotEmpty &&
               !isEmailClear) {
             _emailIDCl.text = productProvider.getPersonalDetailsData!.emailId!;
-          } else {
+          } else if(!isValidEmail){
             _emailIDCl.clear();
           }
 
@@ -338,40 +339,54 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         ),
                       ),
                       SizedBox(height: 15),
-                      TextField(
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        controller: _emailIDCl,
-                        maxLines: 1,
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: kPrimaryColor,
+                      Stack(
+                        children: [
+                          TextField(
+                            enabled: !isValidEmail,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            controller: _emailIDCl,
+                            maxLines: 1,
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: kPrimaryColor,
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                              ),
+                              hintText: "E-mail ID",
+                              labelText: "E-mail ID",
+                              fillColor: textFiledBackgroundColour,
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: kPrimaryColor, width: 1.0),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                              ),
                             ),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
                           ),
-                          hintText: "E-mail ID",
-                          labelText: "E-mail ID",
-                          fillColor: textFiledBackgroundColour,
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: kPrimaryColor, width: 1.0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          suffixIcon: IconButton(
-                              onPressed: () => setState(() {
-                                    isEmailClear = true;
-                                    _emailIDCl.clear();
-                                  }),
-                              icon: SvgPicture.asset(
-                                'assets/icons/email_cross.svg',
-                                semanticsLabel: 'My SVG Image',
-                              )),
-                        ),
+                          _emailIDCl.text.isNotEmpty ? Positioned(
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                            child: Container(
+                              child: IconButton(
+                                onPressed: () => setState(() {
+                                  isEmailClear = true;
+                                  isValidEmail = false;
+                                  _emailIDCl.clear();
+                                }),
+                                icon: SvgPicture.asset(
+                                  'assets/icons/email_cross.svg',
+                                  semanticsLabel: 'My SVG Image',
+                                ),
+                              ),
+                            ),
+                          ) : Container(),
+                        ],
                       ),
                       SizedBox(height: 15),
                       (!isEmailClear && _emailIDCl.text.isNotEmpty)
@@ -892,21 +907,28 @@ class _PersonalInformationState extends State<PersonalInformation> {
   }
 
   void callSendOptEmail(BuildContext context, String emailID) async {
-    Utils.hideKeyBored(context);
-    Provider.of<DataProvider>(context, listen: false)
-        .getSendOtpOnEmail(emailID);
-
     SendOtpOnEmailResponce data;
     data = await ApiService().sendOtpOnEmail(emailID) as SendOtpOnEmailResponce;
 
     if (data != null && data.status!) {
       Utils.showToast(data.message!);
-      isValidEmail = await Navigator.push(
+      final result = await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => EmailOtpScreen(
                     emailID: emailID,
                   )));
+
+      if (result != null &&
+          result.containsKey('isValid') &&
+          result.containsKey('Email')) {
+        isValidEmail = result['isValid'];
+        _emailIDCl.text = result['Email'];
+        setState(() {
+        });
+      } else {
+        print('Result is null or does not contain expected keys');
+      }
     } else {
       Utils.showToast(data.message!);
     }

@@ -20,8 +20,8 @@ import '../splash_screen/model/GetLeadResponseModel.dart';
 import '../splash_screen/model/LeadCurrentRequestModel.dart';
 import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'model/OTPValidateForEmailRequest.dart';
-class EmailOtpScreen extends StatefulWidget {
 
+class EmailOtpScreen extends StatefulWidget {
   String? emailID;
 
   EmailOtpScreen({required this.emailID, super.key});
@@ -30,7 +30,7 @@ class EmailOtpScreen extends StatefulWidget {
   State<EmailOtpScreen> createState() => _OtpScreenState();
 }
 
-class _OtpScreenState extends State<EmailOtpScreen> with CodeAutoFill {
+class _OtpScreenState extends State<EmailOtpScreen> {
   String? appSignature;
   String? otpCode;
   DataProvider? productProvider;
@@ -41,25 +41,9 @@ class _OtpScreenState extends State<EmailOtpScreen> with CodeAutoFill {
   final CountdownController _controller = CountdownController(autoStart: true);
 
   @override
-  void codeUpdated() {
-    setState(() {
-      otpCode = code;
-      print("Code ######## " + otpCode!);
-    });
-  }
-
-  @override
   void initState() {
     super.initState();
-    listenOtp();
     _start = 60;
-    // startTimer();
-    SmsAutoFill().getAppSignature.then((signature) {
-      setState(() {
-        appSignature = signature;
-        print("MUkesh " + appSignature!);
-      });
-    });
   }
 
   Widget buildCountdown() {
@@ -84,16 +68,8 @@ class _OtpScreenState extends State<EmailOtpScreen> with CodeAutoFill {
     );
   }
 
-  void listenOtp() async {
-    final prefsUtil = await SharedPref.getInstance();
-    userLoginMobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
-    await SmsAutoFill().listenForCode();
-    print("OTP listen  Called");
-  }
-
   @override
   void dispose() {
-    SmsAutoFill().unregisterListener();
     super.dispose();
   }
 
@@ -209,7 +185,6 @@ class _OtpScreenState extends State<EmailOtpScreen> with CodeAutoFill {
                                           fontWeight: FontWeight.normal),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () async {
-                                          listenOtp();
                                           reSendOpt(context, productProvider,
                                               userLoginMobile!, _controller);
                                           isReSendDisable = true;
@@ -217,7 +192,9 @@ class _OtpScreenState extends State<EmailOtpScreen> with CodeAutoFill {
                             ]),
                       ),
                     )),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Center(
                   child: Text(
                     'Back',
@@ -230,11 +207,8 @@ class _OtpScreenState extends State<EmailOtpScreen> with CodeAutoFill {
                 ),
                 CommonElevatedButton(
                   onPressed: () {
-                    callVerifyOtpApi(
-                        context,
-                        pinController.text,
-                        widget.emailID!,
-                        productProvider);
+                    callVerifyOtpApi(context, pinController.text,
+                        widget.emailID!, productProvider);
                   },
                   text: "Verify Code",
                   upperCase: true,
@@ -246,83 +220,52 @@ class _OtpScreenState extends State<EmailOtpScreen> with CodeAutoFill {
       }),
     ));
   }
-}
 
-void callVerifyOtpApi(BuildContext context, String otpText,String email,DataProvider productProvider) async {
-  if (otpText.isEmpty) {
-    Utils.showToast("Please Enter Opt");
-  } else if (otpText.length < 6) {
-    Utils.showToast("PLease Enter Valid Otp");
-  } else {
+  void callVerifyOtpApi(BuildContext context, String otpText, String email,
+      DataProvider productProvider) async {
+    var isValid = false;
+    if (otpText.isEmpty) {
+      Utils.showToast("Please Enter Opt");
+    } else if (otpText.length < 6) {
+      Utils.showToast("PLease Enter Valid Otp");
+    } else {
+      Utils.onLoading(context, "Loading....");
+      try {
+        await productProvider.otpValidateForEmail(
+            OtpValidateForEmailRequest(email: email, otp: otpText));
+        if (productProvider.getValidOtpEmailData != null &&
+            productProvider.getValidOtpEmailData!.status != null &&
+            !productProvider.getValidOtpEmailData!.status!) {
+          Utils.showToast(productProvider.getValidOtpEmailData!.message!);
+        } else {
+          isValid = true;
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+      } catch (error) {
+        // Handle any errors that occur during the API call
+        Utils.showToast("An error occurred: $error");
+      } finally {
+        Navigator.of(context, rootNavigator: true).pop({
+          'isValid': isValid,
+          'Email': email,
+        });
+      }
+    }
+  }
+
+  void reSendOpt(BuildContext context, DataProvider productProvider,
+      String userLoginMobile, CountdownController controller) async {
     Utils.onLoading(context, "Loading....");
     final prefsUtil = await SharedPref.getInstance();
-    await Provider.of<DataProvider>(context, listen: false).otpValidateForEmail(
-        OtpValidateForEmailRequest(email: email,otp: otpText));
-    if (!productProvider.getValidOtpEmailData!.status!) {
+
+    await Provider.of<DataProvider>(context, listen: false)
+        .genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
+    if (!productProvider.genrateOptData!.status!) {
       Navigator.of(context, rootNavigator: true).pop();
-      Utils.showToast(productProvider.getValidOtpEmailData!.message!);
+      Utils.showToast("Something went wrong");
     } else {
-      Navigator.of(context, rootNavigator: true).pop(true);
-      //Navigator.of(context).pop(true);
+      Navigator.of(context, rootNavigator: true).pop();
+      controller.restart();
     }
   }
-}
-
-Future<void> fetchData(BuildContext context, String userLoginMobile) async {
-  final prefsUtil = await SharedPref.getInstance();
-  try {
-    LeadCurrentResponseModel? leadCurrentActivityAsyncData;
-    var leadCurrentRequestModel = LeadCurrentRequestModel(
-      companyId: prefsUtil.getInt(COMPANY_ID),
-      productId: prefsUtil.getInt(PRODUCT_ID),
-      leadId: 0,
-      mobileNo: userLoginMobile,
-      activityId: 0,
-      subActivityId: 0,
-      userId: "",
-      monthlyAvgBuying: 0,
-      vintageDays: 0,
-      isEditable: true,
-    );
-    leadCurrentActivityAsyncData =
-        await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-            as LeadCurrentResponseModel?;
-
-    GetLeadResponseModel? getLeadData;
-    getLeadData = await ApiService().getLeads(
-        userLoginMobile,
-        prefsUtil.getInt(COMPANY_ID)!,
-        prefsUtil.getInt(PRODUCT_ID)!,
-        0) as GetLeadResponseModel?;
-
-    customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
-  } catch (error) {
-    if (kDebugMode) {
-      print('Error occurred during API call: $error');
-    }
-  }
-}
-
-void reSendOpt(BuildContext context, DataProvider productProvider,
-    String userLoginMobile, CountdownController controller) async {
-  Utils.onLoading(context, "Loading....");
-  final prefsUtil = await SharedPref.getInstance();
-
-  await Provider.of<DataProvider>(context, listen: false)
-      .genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
-  if (!productProvider.genrateOptData!.status!) {
-    Navigator.of(context, rootNavigator: true).pop();
-    Utils.showToast("Something went wrong");
-  } else {
-    Navigator.of(context, rootNavigator: true).pop();
-    controller.restart();
-  }
-}
-
-void bottomSheetMenu(BuildContext context) {
-  showModalBottomSheet(
-      context: context,
-      builder: (builder) {
-        return const KycFailedWidgets();
-      });
 }
