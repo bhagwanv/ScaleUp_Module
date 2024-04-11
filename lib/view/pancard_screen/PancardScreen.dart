@@ -31,9 +31,7 @@ class PancardScreen extends StatefulWidget {
   final int subActivityId;
 
   PancardScreen(
-      {super.key,
-      required this.activityId,
-      required this.subActivityId});
+      {super.key, required this.activityId, required this.subActivityId});
 
   @override
   State<PancardScreen> createState() => _PancardScreenState();
@@ -54,6 +52,7 @@ class _PancardScreenState extends State<PancardScreen> {
   String dobAsPan = "";
   String fatherNameAsPan = "";
   String panImageUrl = "";
+  int documentId = 0;
 
   @override
   void initState() {
@@ -89,7 +88,8 @@ class _PancardScreenState extends State<PancardScreen> {
         top: true,
         bottom: true,
         child: Scaffold(
-          body: Consumer<DataProvider>(builder: (context, productProvider, child) {
+          body: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
             if (productProvider.getLeadPANData == null && isLoading) {
               return Loader();
             } else {
@@ -104,10 +104,11 @@ class _PancardScreenState extends State<PancardScreen> {
                 isEnabledPanNumber = false;
                 _panNumberCl.text = LeadPANData.panCard!;
                 _nameAsPanCl.text = LeadPANData.nameOnCard!;
-              //  var formateDob=Utils.dateFormate(context,LeadPANData.dob!);
-                _dOBAsPanCl.text =LeadPANData.dob!;
+                //  var formateDob=Utils.dateFormate(context,LeadPANData.dob!);
+                _dOBAsPanCl.text = LeadPANData.dob!;
                 _fatherNameAsPanCl.text = LeadPANData.fatherName!;
                 widget.image = LeadPANData.panImagePath!;
+                documentId = LeadPANData.documentId!;
               }
 
               return Center(
@@ -204,7 +205,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                             isVerifyPanNumber = true;
                                             Utils.showToast(productProvider
                                                 .getLeadValidPanCardData!
-                                                .message!!);
+                                                .message!);
                                             Utils.onLoading(context, "");
                                             await Provider.of<DataProvider>(
                                                     context,
@@ -222,7 +223,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                                     .getFathersNameByValidPanCardData!
                                                     .dob !=
                                                 Null) {
-                                             /* var formateDob=Utils.dateFormate(context,productProvider
+                                              /* var formateDob=Utils.dateFormate(context,productProvider
                                                   .getFathersNameByValidPanCardData!
                                                   .dob);*/
                                               _dOBAsPanCl.text = productProvider
@@ -410,8 +411,8 @@ class _PancardScreenState extends State<PancardScreen> {
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                         child: Image.network(
-                                          productProvider.getPostSingleFileData!
-                                              .filePath! as String,
+                                          productProvider
+                                              .getPostSingleFileData!.filePath!,
                                           fit: BoxFit.cover,
                                           width: double.infinity,
                                           height: 148,
@@ -467,11 +468,13 @@ class _PancardScreenState extends State<PancardScreen> {
                             }
                           },
                           isChecked: _acceptPermissions,
-                          text: "By proceeding, I provide consent on the following",
+                          text:
+                              "By proceeding, I provide consent on the following",
                           upperCase: true,
                         ),
                         SizedBox(height: 20),
-                        Text("I hereby accept Scaleup T&C & Privacy Policy . Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners"),
+                        Text(
+                            "I hereby accept Scaleup T&C & Privacy Policy . Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners"),
                         SizedBox(height: 30),
                         CommonElevatedButton(
                           onPressed: () async {
@@ -480,13 +483,18 @@ class _PancardScreenState extends State<PancardScreen> {
                             final int? companyId = prefsUtil.getInt(COMPANY_ID);
 
                             if (productProvider.getPostSingleFileData != null) {
-                              if (productProvider.getPostSingleFileData!.filePath != null) {
-                                widget.image = productProvider.getPostSingleFileData!.filePath!;
+                              if (productProvider
+                                      .getPostSingleFileData!.filePath !=
+                                  null) {
+                                widget.image = productProvider
+                                    .getPostSingleFileData!.filePath!;
+                                documentId = productProvider
+                                    .getPostSingleFileData!.docId!;
                               }
                             }
 
                             if (_panNumberCl.text.isEmpty) {
-                                  Utils.showToast("Please Enter Pan Number");
+                              Utils.showToast("Please Enter Pan Number");
                             } else if (_nameAsPanCl.text.isEmpty) {
                               Utils.showToast(
                                   "Please Enter Name (As Per Pan))");
@@ -501,13 +509,13 @@ class _PancardScreenState extends State<PancardScreen> {
                             } else if (!_acceptPermissions) {
                               Utils.showToast(
                                   "Please Check Terms And Conditions");
-                            }else{
+                            } else {
                               var postLeadPanRequestModel =
-                              PostLeadPanRequestModel(
-                                leadId: 1,
+                                  PostLeadPanRequestModel(
+                                leadId: prefsUtil.getInt(LEADE_ID),
                                 userId: userId,
-                                activityId: 1,
-                                subActivityId: 0,
+                                activityId: widget.activityId,
+                                subActivityId: widget.subActivityId,
                                 uniqueId: _panNumberCl.text,
                                 imagePath: widget.image,
                                 documentId: 31,
@@ -519,25 +527,24 @@ class _PancardScreenState extends State<PancardScreen> {
 
                               Utils.onLoading(context, "Loading...");
                               await Provider.of<DataProvider>(context,
-                                  listen: false)
+                                      listen: false)
                                   .postLeadPAN(postLeadPanRequestModel);
 
-                              if (productProvider.getPostLeadPaneData?.statusCode != 401) {
+                              if (productProvider
+                                      .getPostLeadPaneData?.statusCode !=
+                                  401) {
                                 if (productProvider.getPostLeadPaneData !=
                                     null) {
                                   Navigator.of(context, rootNavigator: true)
                                       .pop();
-                                  Utils.showToast(
-                                      productProvider.getPostLeadPaneData!
-                                          .message!);
-                                  if (productProvider.getPostLeadPaneData!
-                                      .isSuccess!) {
-                                    // call sequence api
-                                    print("sdfksadfkj;saf");
+                                  Utils.showToast(productProvider
+                                      .getPostLeadPaneData!.message!);
+                                  if (productProvider
+                                      .getPostLeadPaneData!.isSuccess!) {
                                     fetchData(context);
                                   }
                                 }
-                              }else{
+                              } else {
                                 Navigator.pushAndRemoveUntil<dynamic>(
                                   context,
                                   MaterialPageRoute<dynamic>(
@@ -545,8 +552,8 @@ class _PancardScreenState extends State<PancardScreen> {
                                         LoginScreen(
                                             activityId: 1, subActivityId: 0),
                                   ),
-                                      (route) =>
-                                  false, //if you want to disable back feature set to false
+                                  (route) =>
+                                      false, //if you want to disable back feature set to false
                                 );
                               }
                             }
@@ -582,46 +589,46 @@ class _PancardScreenState extends State<PancardScreen> {
           return ImagePickerWidgets(onImageSelected: _onImageSelected);
         });
   }
-}
 
-Future<void> callApi(BuildContext context) async {
-  final prefsUtil = await SharedPref.getInstance();
-  final String? userId = prefsUtil.getString(USER_ID);
+  Future<void> callApi(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final String? userId = prefsUtil.getString(USER_ID);
 
-  Provider.of<DataProvider>(context, listen: false).getLeadPAN(userId!);
-}
+    Provider.of<DataProvider>(context, listen: false).getLeadPAN(userId!);
+  }
 
-Future<void> fetchData(BuildContext context) async {
-  final prefsUtil = await SharedPref.getInstance();
-  try {
-    LeadCurrentResponseModel? leadCurrentActivityAsyncData;
-    var leadCurrentRequestModel = LeadCurrentRequestModel(
-      companyId: prefsUtil.getInt(COMPANY_ID),
-      productId: prefsUtil.getInt(PRODUCT_ID),
-      leadId: 0,
-      mobileNo: prefsUtil.getString(LOGIN_MOBILE_NUMBER),
-      activityId: 1,
-      subActivityId: 0,
-      userId: prefsUtil.getString(USER_ID),
-      monthlyAvgBuying: 0,
-      vintageDays: 0,
-      isEditable: true,
-    );
-    leadCurrentActivityAsyncData =
-    await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-    as LeadCurrentResponseModel?;
+  Future<void> fetchData(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    try {
+      LeadCurrentResponseModel? leadCurrentActivityAsyncData;
+      var leadCurrentRequestModel = LeadCurrentRequestModel(
+        companyId: prefsUtil.getInt(COMPANY_ID),
+        productId: prefsUtil.getInt(PRODUCT_ID),
+        leadId: prefsUtil.getInt(LEADE_ID),
+        mobileNo: prefsUtil.getString(LOGIN_MOBILE_NUMBER),
+        activityId: widget.activityId,
+        subActivityId: widget.subActivityId,
+        userId: prefsUtil.getString(USER_ID),
+        monthlyAvgBuying: 0,
+        vintageDays: 0,
+        isEditable: true,
+      );
+      leadCurrentActivityAsyncData =
+          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+              as LeadCurrentResponseModel?;
 
-    GetLeadResponseModel? getLeadData;
-    getLeadData = await ApiService().getLeads(
-        prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
-        prefsUtil.getInt(COMPANY_ID)!,
-        prefsUtil.getInt(PRODUCT_ID)!,
-        0) as GetLeadResponseModel?;
+      GetLeadResponseModel? getLeadData;
+      getLeadData = await ApiService().getLeads(
+          prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
+          prefsUtil.getInt(COMPANY_ID)!,
+          prefsUtil.getInt(PRODUCT_ID)!,
+          0) as GetLeadResponseModel?;
 
-    customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
-  } catch (error) {
-    if (kDebugMode) {
-      print('Error occurred during API call: $error');
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error occurred during API call: $error');
+      }
     }
   }
 }
