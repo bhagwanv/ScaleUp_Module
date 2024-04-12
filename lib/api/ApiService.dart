@@ -28,7 +28,9 @@ import '../view/personal_info/model/AllStateResponce.dart';
 import '../view/personal_info/model/CityResponce.dart';
 import '../view/personal_info/model/EmailExistRespoce.dart';
 import '../view/personal_info/model/OTPValidateForEmailRequest.dart';
+import '../view/personal_info/model/PersonalDetailsRequestModel.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
+import '../view/personal_info/model/PostPersonalDetailsResponseModel.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
@@ -627,6 +629,36 @@ class ApiService {
       }
       if (response.statusCode == 401) {
         return PostLeadSelfieResponseModel(statusCode: 401);
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+  Future<PostPersonalDetailsResponseModel> postLeadPersonalDetail(
+      PersonalDetailsRequestModel personalDetailsRequestModel) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = prefsUtil.getString(TOKEN);
+      final response = await interceptor.post(
+          Uri.parse(apiUrls.baseUrl + apiUrls.postLeadSelfie),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+          body: json.encode(personalDetailsRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        final dynamic jsonData = json.decode(response.body);
+        final PostPersonalDetailsResponseModel responseModel =
+        PostPersonalDetailsResponseModel.fromJson(jsonData);
+        return responseModel;
+      }
+      if (response.statusCode == 401) {
+        return PostPersonalDetailsResponseModel(statusCode: 401);
       } else {
         throw Exception('Failed to load products');
       }

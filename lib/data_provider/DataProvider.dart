@@ -6,6 +6,7 @@ import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPReq
 import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
 import 'package:scale_up_module/view/pancard_screen/model/PostLeadPANRequestModel.dart';
 import 'package:scale_up_module/view/pancard_screen/model/PostSingleFileResponseModel.dart';
+import 'package:scale_up_module/view/personal_info/model/PostPersonalDetailsResponseModel.dart';
 
 import '../api/ApiService.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
@@ -23,6 +24,7 @@ import '../view/personal_info/model/AllStateResponce.dart';
 import '../view/personal_info/model/CityResponce.dart';
 import '../view/personal_info/model/EmailExistRespoce.dart';
 import '../view/personal_info/model/OTPValidateForEmailRequest.dart';
+import '../view/personal_info/model/PersonalDetailsRequestModel.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
@@ -101,6 +103,8 @@ class DataProvider extends ChangeNotifier {
   List<CityResponce?>? _getAllCityData;
   List<CityResponce?>? get getAllCityData => _getAllCityData;
 
+  List<CityResponce?>? _getCurrentAllCityData;
+  List<CityResponce?>? get getCurrentAllCityData => _getCurrentAllCityData;
 
   LeadSelfieResponseModel? _getLeadSelfieData;
 
@@ -126,6 +130,11 @@ class DataProvider extends ChangeNotifier {
   ValidEmResponce? _getValidOtpEmailData;
 
   ValidEmResponce? get getValidOtpEmailData => _getValidOtpEmailData;
+
+  PostPersonalDetailsResponseModel? _getPostPersonalDetailsResponseModel;
+
+  PostPersonalDetailsResponseModel? get getPostPersonalDetailsResponseModel =>
+      _getPostPersonalDetailsResponseModel;
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -218,6 +227,11 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getCurrentAllCity(int stateID) async {
+    _getCurrentAllCityData = await apiService.GetCityByStateId(stateID);
+    notifyListeners();
+  }
+
   Future<void> postAadhaarBackSingleFile(File imageFile, bool isValidForLifeTime,
       String validityInDays, String subFolderName) async {
     _getPostBackAadhaarSingleFileData = await apiService.postSingleFile(
@@ -254,6 +268,13 @@ class DataProvider extends ChangeNotifier {
       PostLeadSelfieRequestModel postLeadSelfieRequestModel) async {
     _getPostLeadSelfieData =
     await apiService.postLeadSelfie(postLeadSelfieRequestModel);
+
+  }
+
+  Future<void> postLeadPersonalDetail(
+      PersonalDetailsRequestModel personalDetailsRequestModel) async {
+    _getPostPersonalDetailsResponseModel =
+    await apiService.postLeadPersonalDetail(personalDetailsRequestModel);
 
   }
 }
