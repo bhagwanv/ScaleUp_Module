@@ -13,6 +13,10 @@ import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
+import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseModel.dart';
+import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
+import '../view/business_details_screen/model/PostLeadBuisnessDetailRequestModel.dart';
+import '../view/business_details_screen/model/PostLeadBuisnessDetailResponsModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
@@ -126,6 +130,15 @@ class DataProvider extends ChangeNotifier {
   ValidEmResponce? _getValidOtpEmailData;
 
   ValidEmResponce? get getValidOtpEmailData => _getValidOtpEmailData;
+
+  LeadBusinessDetailResponseModel? _getLeadBusinessDetailData;
+  LeadBusinessDetailResponseModel? get getLeadBusinessDetailData => _getLeadBusinessDetailData;
+
+  CustomerDetailUsingGstResponseModel? _getCustomerDetailUsingGSTData;
+  CustomerDetailUsingGstResponseModel? get getCustomerDetailUsingGSTData => _getCustomerDetailUsingGSTData;
+
+  PostLeadBuisnessDetailResponsModel? _getPostLeadBuisnessDetailData;
+  PostLeadBuisnessDetailResponsModel? get getPostLeadBuisnessDetailData => _getPostLeadBuisnessDetailData;
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -255,6 +268,21 @@ class DataProvider extends ChangeNotifier {
     _getPostLeadSelfieData =
     await apiService.postLeadSelfie(postLeadSelfieRequestModel);
 
+  }
+
+  Future<void> getLeadBusinessDetail(String userId) async {
+    _getLeadBusinessDetailData = await apiService.getLeadBusinessDetail(userId);
+    notifyListeners();
+  }
+
+  Future<void> getCustomerDetailUsingGST(String GSTNumber) async {
+    _getCustomerDetailUsingGSTData = await apiService.getCustomerDetailUsingGST(GSTNumber);
+    notifyListeners();
+  }
+
+  Future<void> postLeadBuisnessDetail(PostLeadBuisnessDetailRequestModel postLeadBuisnessDetailRequestModel) async {
+    _getPostLeadBuisnessDetailData = await apiService.postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
+    notifyListeners();
   }
 }
 
