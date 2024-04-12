@@ -98,14 +98,6 @@ class _CameraPageState extends State<CameraPage> {
       //   Navigator.of(context).pop(croppedFile);
       // }
 
-
-
-     /* Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => TakeSelfieScreen(
-                    picture: picture,
-                  )));*/
     } on CameraException catch (e) {
       debugPrint('Error occured while taking picture: $e');
       return null;

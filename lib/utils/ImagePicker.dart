@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 enum ImageSourceType { gallery, camera }
@@ -31,8 +32,50 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
         preferredCameraDevice: CameraDevice.front);
     if (image != null) {
       // Call the callback function with the selected image
-      widget.onImageSelected(File(image.path));
+    //  widget.onImageSelected(File(image.path));
+
+
+
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+        sourcePath: image.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              toolbarColor: Colors.deepOrange,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+          WebUiSettings(
+            context: context,
+          ),
+        ],
+      );
+
+      if (croppedFile != null) {
+        // Handle the cropped image file (convert CroppedFile to File if needed)
+        File? croppedImageFile = croppedFileToFile(croppedFile);
+        if (croppedImageFile != null) {
+          // Use the cropped image file (e.g., display or upload)
+          print('Cropped image path: ${croppedImageFile.path}');
+        //  Navigator.of(context).pop(croppedImageFile);
+          widget.onImageSelected(croppedImageFile);
+        }
+      } else {
+        // Crop operation was canceled
+        print('Crop operation canceled');
+      }
     }
+
   }
 
   @override
@@ -93,6 +136,8 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
         ),
       ),
     );
+
+
   }
 
   @override
@@ -100,4 +145,10 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
     super.initState();
     imagePicker = ImagePicker();
   }
+  File? croppedFileToFile(CroppedFile? croppedFile) {
+    if (croppedFile == null) {
+      return null;
+    }
+    return File(croppedFile.path!);
+}
 }
