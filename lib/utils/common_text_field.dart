@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'constants.dart';
 
@@ -20,6 +21,8 @@ class CommonTextField extends StatefulWidget {
   final Color? accentColor;
   final Color fillColor;
   final TextCapitalization? textCapitalization;
+  final List<TextInputFormatter>? inputFormatter;
+  final bool? enabled;
 
 
   const CommonTextField({
@@ -41,6 +44,8 @@ class CommonTextField extends StatefulWidget {
     this.accentColor,
     this.fillColor = textFiledBackgroundColour,
     this.textCapitalization =  TextCapitalization.none,
+    this.inputFormatter,
+    this.enabled=true,
   }) : super(key: key);
 
   @override
@@ -110,6 +115,8 @@ class _CommonTextFieldState extends State<CommonTextField> {
         // You can add more customization to the decoration as needed
         // For example, adding icons, labels, etc.
       ),
+      inputFormatters: widget.inputFormatter != null ? widget.inputFormatter : null,
+      enabled: widget.enabled ,
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scale_up_module/utils/screen_type.dart';
 import 'package:scale_up_module/view/Bank_details_screen/BankDetailsScreen.dart';
 import 'package:scale_up_module/view/aadhaar_screen/aadhaar_screen.dart';
-import 'package:scale_up_module/view/business_details/business_details.dart';
+import 'package:scale_up_module/view/business_details_screen/business_details_screen.dart';
 import 'package:scale_up_module/view/pancard_screen/PancardScreen.dart';
 import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
@@ -61,7 +61,7 @@ ScreenType? customerSequence(
         return ScreenType.personalInfo;
       } else if (leadCurrentActivity.activityName == "BusinessInfo") {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => BusinessDetails()),
+          MaterialPageRoute(builder: (context) => BusinessDetailsScreen()),
         );
         return ScreenType.businessInfo;
       } else if (leadCurrentActivity.activityName == "Inprogress") {
