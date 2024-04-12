@@ -9,7 +9,6 @@ import 'package:scale_up_module/api/ApiService.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/utils/common_elevted_button.dart';
 import 'package:scale_up_module/utils/constants.dart';
-import 'package:scale_up_module/view/business_details/business_details.dart';
 import 'package:scale_up_module/view/personal_info/EmailOtpScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
