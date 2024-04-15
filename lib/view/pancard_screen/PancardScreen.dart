@@ -27,7 +27,6 @@ import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'PermissionsScreen.dart';
 
 class PancardScreen extends StatefulWidget {
-  String image = "";
   final int activityId;
   final int subActivityId;
 
@@ -43,6 +42,7 @@ class _PancardScreenState extends State<PancardScreen> {
   final TextEditingController _nameAsPanCl = TextEditingController();
   final TextEditingController _dOBAsPanCl = TextEditingController();
   final TextEditingController _fatherNameAsPanCl = TextEditingController();
+  String image = "";
   var isLoading = true;
   var isEnabledPanNumber = true;
   var isVerifyPanNumber = false;
@@ -50,6 +50,7 @@ class _PancardScreenState extends State<PancardScreen> {
   var _acceptPermissions = false;
   String dobAsPan = "";
   int documentId = 0;
+  var isImageDelete = false;
 
   @override
   void initState() {
@@ -59,16 +60,16 @@ class _PancardScreenState extends State<PancardScreen> {
   }
 
   // Callback function to receive the selected image
-  void _onImageSelected(File imageFile) {
+  void _onImageSelected(File imageFile) async{
     // Handle the selected image here
     // For example, you can setState to update UI with the selected image
-    setState(() async {
+      isImageDelete=false;
       Utils.onLoading(context, "");
       await Provider.of<DataProvider>(context, listen: false)
           .postSingleFile(imageFile, true, "", "");
-      Navigator.pop(context);
+     // Navigator.pop(context);
       Navigator.of(context, rootNavigator: true).pop();
-    });
+
   }
 
   void _handlePermissionsAccepted(bool accept) {
@@ -96,7 +97,7 @@ class _PancardScreenState extends State<PancardScreen> {
               }
               var LeadPANData = productProvider.getLeadPANData!;
 
-              if (LeadPANData.panCard != null && !isDataClear) {
+              if (LeadPANData.panCard != null && !isDataClear&& !isImageDelete) {
                 isVerifyPanNumber = true;
                 isEnabledPanNumber = false;
                 _panNumberCl.text = LeadPANData.panCard!;
@@ -105,8 +106,19 @@ class _PancardScreenState extends State<PancardScreen> {
                 dobAsPan=LeadPANData.dob!;
                 _dOBAsPanCl.text =formateDob;
                 _fatherNameAsPanCl.text = LeadPANData.fatherName!;
-                widget.image = LeadPANData.panImagePath!;
+               image = LeadPANData.panImagePath!;
                 documentId = LeadPANData.documentId!;
+              }
+
+              if (productProvider.getPostSingleFileData != null && !isImageDelete) {
+                if (productProvider
+                    .getPostSingleFileData!.filePath !=
+                    null) {
+                  image = productProvider
+                      .getPostSingleFileData!.filePath!;
+                  documentId = productProvider
+                      .getPostSingleFileData!.docId!;
+                }
               }
 
               return Center(
@@ -203,7 +215,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                             isVerifyPanNumber = true;
                                             Utils.showToast(productProvider
                                                 .getLeadValidPanCardData!
-                                                .message!!);
+                                                .message!);
                                             Utils.onLoading(context, "");
                                             await Provider.of<DataProvider>(
                                                     context,
@@ -232,7 +244,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                           } else {
                                             Utils.showToast(productProvider
                                                 .getLeadValidPanCardData!
-                                                .message!!);
+                                                .message!);
                                           }
                                         } else {
                                           Navigator.pushAndRemoveUntil<dynamic>(
@@ -267,6 +279,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
+                                              isImageDelete=true;
                                               isEnabledPanNumber = true;
                                               isVerifyPanNumber = false;
                                               isDataClear = true;
@@ -275,7 +288,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                               dobAsPan="";
                                               _dOBAsPanCl.text = "";
                                               _fatherNameAsPanCl.text = "";
-                                              widget.image = "";
+                                              image = "";
                                               _acceptPermissions = false;
 
                                               LeadPANData.panCard = "";
@@ -389,69 +402,84 @@ class _PancardScreenState extends State<PancardScreen> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Color(0xff0196CE))),
-                            width: double.infinity,
-                            child: GestureDetector(
-                              onTap: () {
-                                bottomSheetMenu(context);
-                              },
-                              child: Container(
-                                height: 148,
-                                width: double.infinity,
+                        Stack(
+                          children: [
+                            Container(
                                 decoration: BoxDecoration(
-                                  color: Color(0xffEFFAFF),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: (productProvider.getPostSingleFileData !=
-                                        null)
-                                    ? ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        child: Image.network(
-                                          productProvider
-                                              .getPostSingleFileData!.filePath!,
-                                          fit: BoxFit.cover,
-                                          width: double.infinity,
-                                          height: 148,
-                                        ),
-                                      )
-                                    : (widget.image.isNotEmpty)
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: Color(0xff0196CE))),
+                                width: double.infinity,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    bottomSheetMenu(context);
+                                  },
+                                  child: Container(
+                                    height: 148,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffEFFAFF),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: (!image.isEmpty)
                                         ? ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             child: Image.network(
-                                              widget.image!,
+                                              image,
                                               fit: BoxFit.cover,
                                               width: double.infinity,
                                               height: 148,
                                             ),
                                           )
-                                        : Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SvgPicture.asset(
-                                                  'assets/images/gallery.svg'),
-                                              const Text(
-                                                'Upload PAN Image',
-                                                style: TextStyle(
-                                                    color: Color(0xff0196CE),
-                                                    fontSize: 12),
+                                        : (image.isNotEmpty)
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: Image.network(
+                                                  image,
+                                                  fit: BoxFit.cover,
+                                                  width: double.infinity,
+                                                  height: 148,
+                                                ),
+                                              )
+                                            : Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                      'assets/images/gallery.svg'),
+                                                  const Text(
+                                                    'Upload PAN Image',
+                                                    style: TextStyle(
+                                                        color: Color(0xff0196CE),
+                                                        fontSize: 12),
+                                                  ),
+                                                  const Text('Supports : JPEG, PNG',
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color:
+                                                              Color(0xffCACACA))),
+                                                ],
                                               ),
-                                              const Text('Supports : JPEG, PNG',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color:
-                                                          Color(0xffCACACA))),
-                                            ],
-                                          ),
-                              ),
-                            )),
+                                  ),
+                                )),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isImageDelete = true;
+                                  image = "";
+                                });
+                              },
+                              child: !image.isEmpty?Container(
+                                padding: EdgeInsets.all(4),
+                                alignment: Alignment.topRight,
+                                child: SvgPicture.asset(
+                                    'assets/icons/delete_icon.svg'),
+                              ):Container(),)
+                          ],
+                        ),
                         SizedBox(height: 20),
                         CommonCheckBox(
                           onChanged: (bool isChecked) async {
@@ -513,16 +541,7 @@ class _PancardScreenState extends State<PancardScreen> {
                             final String? userId = prefsUtil.getString(USER_ID);
                             final int? companyId = prefsUtil.getInt(COMPANY_ID);
 
-                            if (productProvider.getPostSingleFileData != null) {
-                              if (productProvider
-                                      .getPostSingleFileData!.filePath !=
-                                  null) {
-                                widget.image = productProvider
-                                    .getPostSingleFileData!.filePath!;
-                                documentId = productProvider
-                                    .getPostSingleFileData!.docId!;
-                              }
-                            }
+
 
                             if (_panNumberCl.text.isEmpty) {
                               Utils.showToast("Please Enter Pan Number");
@@ -535,7 +554,7 @@ class _PancardScreenState extends State<PancardScreen> {
                             } else if (_fatherNameAsPanCl.text.isEmpty) {
                               Utils.showToast(
                                   "Please Enter Father Name (As Per Pan))");
-                            } else if (widget.image == "") {
+                            } else if (image.isEmpty) {
                               Utils.showToast("Please Upload Pan Image ");
                             } else if (!_acceptPermissions) {
                               Utils.showToast(
@@ -548,7 +567,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                 activityId: widget.activityId,
                                 subActivityId: widget.subActivityId,
                                 uniqueId: _panNumberCl.text,
-                                imagePath: widget.image,
+                                imagePath: image,
                                 documentId: 31,
                                 companyId: companyId,
                                 fathersName: _fatherNameAsPanCl.text,
