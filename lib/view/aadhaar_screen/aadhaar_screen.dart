@@ -45,13 +45,9 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
     // Perform asynchronous work first
     await Provider.of<DataProvider>(context, listen: false)
         .postSingleFile(imageFile, true, "", "");
-
+    Navigator.of(context, rootNavigator: true).pop();
     // Update the widget state synchronously inside setState
-    setState(() {
-      // Clear loading indicator
-      Navigator.pop(context);
-      Navigator.of(context, rootNavigator: true).pop();
-    });
+
   }
 
   // Callback function to receive the selected image
@@ -63,12 +59,9 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
     await Provider.of<DataProvider>(context, listen: false)
         .postAadhaarBackSingleFile(imageFile, true, "", "");
 
+    Navigator.of(context, rootNavigator: true).pop();
     // Update the widget state synchronously inside setState
-    setState(() {
-      // Clear loading indicator
-      Navigator.pop(context);
-      Navigator.of(context, rootNavigator: true).pop();
-    });
+
   }
 
   void bottomSheetMenu(BuildContext context, String frontImage) {

@@ -91,6 +91,7 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
             Container(
               child: GestureDetector(
                 onTap: () {
+                  Navigator.pop(context);
                   print("click Camera");
                   _handleURLButtonPress(context, ImageSourceType.camera);
                 },
@@ -113,6 +114,7 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
             Container(
               child: GestureDetector(
                 onTap: () {
+                  Navigator.pop(context);
                   print("Click Gallery");
                   _handleURLButtonPress(context, ImageSourceType.gallery);
                 },

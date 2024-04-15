@@ -178,8 +178,6 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postSingleFile(imageFile, true, "", "");
-
-    Navigator.pop(context);
     Navigator.of(context, rootNavigator: true).pop();
 
   }
