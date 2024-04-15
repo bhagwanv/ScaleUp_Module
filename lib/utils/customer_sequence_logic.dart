@@ -56,7 +56,7 @@ ScreenType? customerSequence(
         return ScreenType.bankDetail;
       } else if (leadCurrentActivity.activityName == "PersonalInfo") {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => PersonalInformation()),
+          MaterialPageRoute(builder: (context) => PersonalInformation(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
         );
         return ScreenType.personalInfo;
       } else if (leadCurrentActivity.activityName == "BusinessInfo") {
