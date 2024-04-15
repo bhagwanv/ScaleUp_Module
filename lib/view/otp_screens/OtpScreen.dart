@@ -248,106 +248,106 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       }),
     ));
   }
-}
+  void callVerifyOtpApi(
+      BuildContext context,
+      String otpText,
+      DataProvider productProvider,
+      int activityId,
+      int subActivityId,
+      String userLoginMobile) async {
+    if (otpText.isEmpty) {
+      Utils.showToast("Please Enter Opt");
+    } else if (otpText.length < 6) {
+      Utils.showToast("PLease Enter Valid Otp");
+    } else {
+      Utils.onLoading(context, "Loading....");
+      final prefsUtil = await SharedPref.getInstance();
+      await Provider.of<DataProvider>(context, listen: false).verifyOtp(
+          VarifayOtpRequest(
+              activityId: activityId,
+              companyId: prefsUtil.getInt(COMPANY_ID),
+              mobileNo: userLoginMobile,
+              otp: otpText,
+              productId: prefsUtil.getInt(PRODUCT_ID),
+              subActivityId: subActivityId,
+              vintageDays: 0,
+              monthlyAvgBuying: 0,
+              screen: "MobileOtp"));
 
-void callVerifyOtpApi(
-    BuildContext context,
-    String otpText,
-    DataProvider productProvider,
-    int activityId,
-    int subActivityId,
-    String userLoginMobile) async {
-  if (otpText.isEmpty) {
-    Utils.showToast("Please Enter Opt");
-  } else if (otpText.length < 6) {
-    Utils.showToast("PLease Enter Valid Otp");
-  } else {
+      if (!productProvider.getVerifyData!.status!) {
+        Navigator.of(context, rootNavigator: true).pop();
+        Utils.showToast("Something went wrong");
+      } else {
+        Navigator.of(context, rootNavigator: true).pop();
+        await prefsUtil.saveString(
+            USER_ID, productProvider.getVerifyData!.userId.toString());
+        await prefsUtil.saveString(
+            TOKEN, productProvider.getVerifyData!.userTokan.toString());
+        await prefsUtil.saveInt(
+            LEADE_ID, productProvider.getVerifyData!.leadId!);
+
+        fetchData(context, userLoginMobile);
+      }
+    }
+  }
+
+  Future<void> fetchData(BuildContext context, String userLoginMobile) async {
+    final prefsUtil = await SharedPref.getInstance();
+    try {
+      LeadCurrentResponseModel? leadCurrentActivityAsyncData;
+      var leadCurrentRequestModel = LeadCurrentRequestModel(
+        companyId: prefsUtil.getInt(COMPANY_ID),
+        productId: prefsUtil.getInt(PRODUCT_ID),
+        leadId: prefsUtil.getInt(LEADE_ID),
+        mobileNo: userLoginMobile,
+        activityId:widget.activityId,
+        subActivityId: widget.subActivityId,
+        userId:  prefsUtil.getString(USER_ID),
+        monthlyAvgBuying: 0,
+        vintageDays: 0,
+        isEditable: true,
+      );
+      leadCurrentActivityAsyncData =
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      as LeadCurrentResponseModel?;
+
+      GetLeadResponseModel? getLeadData;
+      getLeadData = await ApiService().getLeads(
+          userLoginMobile,
+          prefsUtil.getInt(COMPANY_ID)!,
+          prefsUtil.getInt(PRODUCT_ID)!,
+          prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
+
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error occurred during API call: $error');
+      }
+    }
+  }
+
+  void reSendOpt(BuildContext context, DataProvider productProvider,
+      String userLoginMobile, CountdownController controller) async {
     Utils.onLoading(context, "Loading....");
     final prefsUtil = await SharedPref.getInstance();
-    await Provider.of<DataProvider>(context, listen: false).verifyOtp(
-        VarifayOtpRequest(
-            activityId: activityId,
-            companyId: prefsUtil.getInt(COMPANY_ID),
-            mobileNo: userLoginMobile,
-            otp: otpText,
-            productId: prefsUtil.getInt(PRODUCT_ID),
-            subActivityId: subActivityId,
-            vintageDays: 0,
-            monthlyAvgBuying: 0,
-            screen: "MobileOtp"));
 
-    if (!productProvider.getVerifyData!.status!) {
+    await Provider.of<DataProvider>(context, listen: false)
+        .genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
+    if (!productProvider.genrateOptData!.status!) {
       Navigator.of(context, rootNavigator: true).pop();
       Utils.showToast("Something went wrong");
     } else {
       Navigator.of(context, rootNavigator: true).pop();
-      await prefsUtil.saveString(
-          USER_ID, productProvider.getVerifyData!.userId.toString());
-      await prefsUtil.saveString(
-          TOKEN, productProvider.getVerifyData!.userTokan.toString());
-      await prefsUtil.saveInt(
-          LEADE_ID, productProvider.getVerifyData!.leadId!);
-
-      fetchData(context, userLoginMobile);
+      controller.restart();
     }
   }
-}
 
-Future<void> fetchData(BuildContext context, String userLoginMobile) async {
-  final prefsUtil = await SharedPref.getInstance();
-  try {
-    LeadCurrentResponseModel? leadCurrentActivityAsyncData;
-    var leadCurrentRequestModel = LeadCurrentRequestModel(
-      companyId: prefsUtil.getInt(COMPANY_ID),
-      productId: prefsUtil.getInt(PRODUCT_ID),
-      leadId: 0,
-      mobileNo: userLoginMobile,
-      activityId: 0,
-      subActivityId: 0,
-      userId: "",
-      monthlyAvgBuying: 0,
-      vintageDays: 0,
-      isEditable: true,
-    );
-    leadCurrentActivityAsyncData =
-        await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-            as LeadCurrentResponseModel?;
-
-    GetLeadResponseModel? getLeadData;
-    getLeadData = await ApiService().getLeads(
-        userLoginMobile,
-        prefsUtil.getInt(COMPANY_ID)!,
-        prefsUtil.getInt(PRODUCT_ID)!,
-        0) as GetLeadResponseModel?;
-
-    customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
-  } catch (error) {
-    if (kDebugMode) {
-      print('Error occurred during API call: $error');
-    }
+  void bottomSheetMenu(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          return const KycFailedWidgets();
+        });
   }
-}
 
-void reSendOpt(BuildContext context, DataProvider productProvider,
-    String userLoginMobile, CountdownController controller) async {
-  Utils.onLoading(context, "Loading....");
-  final prefsUtil = await SharedPref.getInstance();
-
-  await Provider.of<DataProvider>(context, listen: false)
-      .genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
-  if (!productProvider.genrateOptData!.status!) {
-    Navigator.of(context, rootNavigator: true).pop();
-    Utils.showToast("Something went wrong");
-  } else {
-    Navigator.of(context, rootNavigator: true).pop();
-    controller.restart();
-  }
-}
-
-void bottomSheetMenu(BuildContext context) {
-  showModalBottomSheet(
-      context: context,
-      builder: (builder) {
-        return const KycFailedWidgets();
-      });
 }
