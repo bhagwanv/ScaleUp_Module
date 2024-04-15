@@ -15,8 +15,6 @@ import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
-import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
-import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
 import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailRequestModel.dart';
@@ -514,6 +512,8 @@ class ApiService {
       } else if (response.statusCode == 401) {
         print("Unauthorized access. Please login again.");
         return ValidateAadhaarOTPResponseModel(statusCode: 401);
+      } else if (response.statusCode == 500) {
+        return ValidateAadhaarOTPResponseModel(statusCode: 500);
       } else {
         throw Exception('Failed to load products');
       }

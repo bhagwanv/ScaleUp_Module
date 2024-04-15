@@ -32,7 +32,7 @@ class PersonalDetailsRequestModel {
   String? ownershipTypeProof;
   int? electricityBillDocumentId;
   String? ownershipTypeName;
-  int? ownershipTypeResponseId;
+  String? ownershipTypeResponseId;
 
   PersonalDetailsRequestModel(
       {this.firstName,

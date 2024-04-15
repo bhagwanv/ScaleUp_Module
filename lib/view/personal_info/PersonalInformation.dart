@@ -10,7 +10,6 @@ import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/utils/common_elevted_button.dart';
 import 'package:scale_up_module/utils/constants.dart';
 import 'package:scale_up_module/view/personal_info/EmailOtpScreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
@@ -22,7 +21,6 @@ import '../login_screen/login_screen.dart';
 import '../splash_screen/model/GetLeadResponseModel.dart';
 import '../splash_screen/model/LeadCurrentRequestModel.dart';
 import '../splash_screen/model/LeadCurrentResponseModel.dart';
-import 'model/AllStateResponce.dart';
 import 'model/CityResponce.dart';
 import 'model/EmailExistRespoce.dart';
 import 'model/PersonalDetailsRequestModel.dart';
@@ -295,7 +293,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide:
-                                  BorderSide(color: kPrimaryColor, width: 1),
+                                  const BorderSide(color: kPrimaryColor, width: 1),
                             ),
                           ),
                           hint: const Text(
@@ -1008,7 +1006,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           maxLines: 1,
           cursorColor: Colors.black,
           canRequestFocus: true,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: kPrimaryColor,
@@ -1024,7 +1022,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
               )),
         ),
-        SizedBox(height: 15),
+        const SizedBox(height: 15),
         TextField(
           enabled: false,
           keyboardType: TextInputType.text,
@@ -1032,7 +1030,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           controller: _middleNameCl,
           maxLines: 1,
           cursorColor: Colors.black,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: kPrimaryColor,
@@ -1056,7 +1054,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           controller: _lastNameCl,
           maxLines: 1,
           cursorColor: Colors.black,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: kPrimaryColor,
@@ -1072,7 +1070,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
               )),
         ),
-        SizedBox(height: 15),
+        const SizedBox(height: 15),
         TextField(
           enabled: false,
           keyboardType: TextInputType.text,
@@ -1080,7 +1078,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           controller: _genderCl,
           maxLines: 1,
           cursorColor: Colors.black,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: kPrimaryColor,
@@ -1096,15 +1094,15 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
               )),
         ),
-        SizedBox(height: 15),
-        Padding(
-          padding: const EdgeInsets.only(left: 4.0),
+        const SizedBox(height: 15),
+        const Padding(
+          padding: EdgeInsets.only(left: 4.0),
           child: Text(
             "Martial Status",
             style: TextStyle(color: Colors.grey),
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         DropdownButtonFormField2<String>(
           isExpanded: true,
           decoration: InputDecoration(
@@ -1121,7 +1119,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: kPrimaryColor, width: 1),
+              borderSide: const BorderSide(color: kPrimaryColor, width: 1),
             ),
           ),
           hint: const Text(
@@ -1568,7 +1566,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
         dOB: "",
         alternatePhoneNo: _alternatePhoneNumberCl.text.toString(),
         emailId: _emailIDCl.text.toString(),
-        typeOfAddress: "",
+        typeOfAddress: "Permanent",
         permanentAddressLine1:
             productProvider.getPersonalDetailsData!.permanentAddressLine1!,
         permanentAddressLine2:
@@ -1596,7 +1594,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
         ownershipTypeProof: selectOwnershipProofValue,
         electricityBillDocumentId: billDocId,
         ownershipTypeName: "",
-        ownershipTypeResponseId: 0);
+        ownershipTypeResponseId: "");
 
     bool isValid = false;
     String errorMessage = "";

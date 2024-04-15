@@ -158,7 +158,6 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                                           GestureDetector(
                                               onTap: () {
                                                 setState(() {
-                                                  print("sdfsdfsf");
                                                   isSelfieDelete = true;
                                                   isAgenSelfieDelete = true;
                                                   selfieImage = "";
