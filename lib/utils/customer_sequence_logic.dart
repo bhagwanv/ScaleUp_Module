@@ -61,7 +61,7 @@ ScreenType? customerSequence(
         return ScreenType.personalInfo;
       } else if (leadCurrentActivity.activityName == "BusinessInfo") {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => BusinessDetailsScreen()),
+          MaterialPageRoute(builder: (context) => BusinessDetailsScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
         );
         return ScreenType.businessInfo;
       } else if (leadCurrentActivity.activityName == "Inprogress") {
