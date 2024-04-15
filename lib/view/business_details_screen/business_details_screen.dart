@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -49,13 +50,9 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   var gstNumber = "";
   var image = "";
-  var dio="";
-  var busName="";
-  var busAddCorrLine1="";
-  var busAddCorrLine2="";
+
   var busAddCorrCity="";
   var busAddCorrState="";
-  var busAddCorrPincode="";
   var buisnessMonthlySalary=0;
   var incomeSlab="";
   var buisnessDocumentNo="";
@@ -76,6 +73,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   var isEnabledBusEntityType = true;
   var isEnabledPinCode = true;
   var isClearData=false;
+
+  var isImageDelete = false;
 
 
 
@@ -174,16 +173,15 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     callApi(context);
   }
 
-  void _onImageSelected(File imageFile) {
-    // Handle the selected image here
-    // For example, you can setState to update UI with the selected image
-    setState(() async {
-      Utils.onLoading(context, "");
-      await Provider.of<DataProvider>(context, listen: false)
-          .postSingleFile(imageFile, true, "", "");
-      Navigator.pop(context);
-      Navigator.of(context, rootNavigator: true).pop();
-    });
+  void _onImageSelected(File imageFile) async {
+    isImageDelete=false;
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .postSingleFile(imageFile, true, "", "");
+
+    Navigator.pop(context);
+    Navigator.of(context, rootNavigator: true).pop();
+
   }
 
   final List<String> businessTypeList = [
@@ -329,7 +327,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
               isLoading = false;
             }
             if (productProvider.getLeadBusinessDetailData != null) {
-              if (productProvider.getLeadBusinessDetailData?.businessName != null && productProvider.getLeadBusinessDetailData?.doi != null && !isClearData) {
+              if (productProvider.getLeadBusinessDetailData?.businessName != null && productProvider.getLeadBusinessDetailData?.doi != null && !isClearData&&!isImageDelete) {
                 _gstController.text = productProvider.getLeadBusinessDetailData!.busGSTNO!;
                 _businessNameController.text = productProvider.getLeadBusinessDetailData!.businessName!;
                 _addressLineController.text = productProvider.getLeadBusinessDetailData!.addressLineOne!;
@@ -339,6 +337,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                 _BusinessDocumentNumberController.text = productProvider.getLeadBusinessDetailData!.buisnessDocumentNo!;
                 image = productProvider.getLeadBusinessDetailData!.buisnessProofUrl!;
 
+                print("sdfsf");
                  isEnabledGST = false;
                  isEnabledDio = false;
                  isEnabledBusName = false;
@@ -362,7 +361,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
             }
 
             if (productProvider.getPostSingleFileData != null) {
-              if (productProvider.getPostSingleFileData!.filePath != null) {
+              if (productProvider.getPostSingleFileData!.filePath != null && !isImageDelete) {
+                print("sdfgsf");
                 image = productProvider.getPostSingleFileData!.filePath!;
               }
             }
@@ -452,8 +452,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                             onTap: () {
                              // print('Edit icon tapped');
                               setState(() {
-                                print("dksfklsf");
 
+                                isImageDelete=true;
                                 _gstController.text="";
                                 _businessNameController.text="";
                                 _addressLineController.text="";
@@ -465,13 +465,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 isClearData=true;
                                 gstNumber = "";
                                 image = "";
-                                dio="";
-                                busName="";
-                                busAddCorrLine1="";
-                                busAddCorrLine2="";
                                 busAddCorrCity="";
                                 busAddCorrState="";
-                                busAddCorrPincode="";
                                 buisnessMonthlySalary=0;
                                 incomeSlab="";
                                 buisnessDocumentNo="";
@@ -784,65 +779,84 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                     SizedBox(
                       height: 36.0,
                     ),
-                    Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Color(0xff0196CE))),
-                        width: double.infinity,
-                        child: GestureDetector(
-                          onTap: () {
-                            bottomSheetMenu(context);
-                          },
-                          child: Container(
-                            height: 148,
-                            width: double.infinity,
+                    Stack(
+                      children: [
+                        Container(
                             decoration: BoxDecoration(
-                              color: Color(0xffEFFAFF),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: (!image.isEmpty)
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      image,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: 148,
-                                    ),
-                                  )
-                                : (image.isNotEmpty)
-                                    ? ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        child: Image.network(
-                                          image,
-                                          fit: BoxFit.cover,
-                                          width: double.infinity,
-                                          height: 148,
-                                        ),
-                                      )
-                                    : Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SvgPicture.asset(
-                                              'assets/images/gallery.svg'),
-                                          const Text(
-                                            'Upload Business Proof',
-                                            style: TextStyle(
-                                                color: Color(0xff0196CE),
-                                                fontSize: 12),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Color(0xff0196CE))),
+                            width: double.infinity,
+                            child: GestureDetector(
+                              onTap: () {
+                                bottomSheetMenu(context);
+                              },
+                              child: Container(
+                                height: 148,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Color(0xffEFFAFF),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Container(
+                                  child: (!image.isEmpty)
+                                      ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(8.0),
+                                          child: Image.network(
+                                            image,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: 148,
                                           ),
-                                          const Text('Supports : JPEG, PNG',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Color(0xffCACACA))),
-                                        ],
-                                      ),
-                          ),
-                        )),
+                                        )
+                                      : (image.isNotEmpty)
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              child: Image.network(
+                                                image,
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: 148,
+                                              ),
+                                            )
+                                          : Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                    'assets/images/gallery.svg'),
+                                                const Text(
+                                                  'Upload Business Proof',
+                                                  style: TextStyle(
+                                                      color: Color(0xff0196CE),
+                                                      fontSize: 12),
+                                                ),
+                                                const Text('Supports : JPEG, PNG',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Color(0xffCACACA))),
+                                              ],
+                                            ),
+                                ),
+                              ),
+                            )),
+                        GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isImageDelete = true;
+                                image = "";
+                              });
+                            },
+                            child: !image.isEmpty?Container(
+                              padding: EdgeInsets.all(4),
+                              alignment: Alignment.topRight,
+                              child: SvgPicture.asset(
+                                  'assets/icons/delete_icon.svg'),
+                            ):Container(),),
+                      ],
+                    ),
                     const SizedBox(height: 54.0),
                     CommonElevatedButton(
                       onPressed: ()async {
@@ -855,7 +869,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           Utils.showToast("Please Enter Address Line 2");
                         }else if(_pinCodeController.text.isEmpty){
                           Utils.showToast("Please Enter Pin Code");
-                        }else if(dio.isEmpty){
+                        }else if(slectedDate!.isEmpty){
                           Utils.showToast("Please Enter Business Incorporation Date");
                         }else if(_BusinessDocumentNumberController.text.isEmpty){
                           Utils.showToast("Please Enter Business Document Number");
@@ -1049,15 +1063,15 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
             userId: prefsUtil.getString(USER_ID),
             activityId: widget.activityId,
           subActivityId:widget.subActivityId,
-          busName: busName,
-          doi: dio,
+          busName: _businessNameController.text,
+          doi: slectedDate,
           busGSTNO: gstNumber,
           busEntityType: busEntityType,
-          busAddCorrLine1: busAddCorrLine1,
-          busAddCorrLine2: busAddCorrLine2,
+          busAddCorrLine1: _addressLineController.text,
+          busAddCorrLine2: _addressLine2Controller.text,
           busAddCorrCity: busAddCorrCity,
           busAddCorrState: busAddCorrState,
-          busAddCorrPincode: busAddCorrPincode,
+          busAddCorrPincode: _pinCodeController.text,
           buisnessMonthlySalary: buisnessMonthlySalary,
           incomeSlab: incomeSlab,
           companyId: prefsUtil.getInt(COMPANY_ID),

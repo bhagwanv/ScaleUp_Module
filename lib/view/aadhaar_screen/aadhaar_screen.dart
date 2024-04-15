@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -35,8 +36,10 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
   String backDocumentId = "";
   String frontFileUrl = "";
   String backFileUrl = "";
+  var isFrontImageDelete = false;
 
   void _onFontImageSelected(File imageFile) async {
+    isFrontImageDelete=false;
     Utils.onLoading(context, "");
 
     // Perform asynchronous work first
@@ -53,6 +56,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
   // Callback function to receive the selected image
   void _onBackImageSelected(File imageFile) async {
+    isFrontImageDelete=false;
     Utils.onLoading(context, "");
 
     // Perform asynchronous work first
@@ -107,7 +111,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                 productProvider.getLeadAadhaar!.frontImageUrl!.toString();
           }
 
-          if (productProvider.getLeadAadhaar!.backImageUrl != null) {
+          if (productProvider.getLeadAadhaar!.backImageUrl != null&&!isFrontImageDelete) {
             backFileUrl =
                 productProvider.getLeadAadhaar!.backImageUrl!.toString();
           }
@@ -197,149 +201,183 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   height: 148,
-                  child: Padding(
-                    padding: const EdgeInsets.all(1),
-                    child: InkWell(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: textFiledBackgroundColour,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: (productProvider.getPostSingleFileData != null)
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  productProvider
-                                      .getPostSingleFileData!.filePath!,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: 148,
-                                ),
-                              )
-                            : (frontFileUrl.isNotEmpty)
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(1),
+                        child: InkWell(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: textFiledBackgroundColour,
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: (productProvider.getPostSingleFileData != null)
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: Image.network(
-                                      frontFileUrl,
+                                      productProvider
+                                          .getPostSingleFileData!.filePath!,
                                       fit: BoxFit.cover,
                                       width: double.infinity,
                                       height: 148,
                                     ),
                                   )
-                                : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Center(
-                                          child: SvgPicture.asset(
-                                              "assets/icons/gallery.svg",
-                                              colorFilter:
-                                                  const ColorFilter.mode(
-                                                      kPrimaryColor,
-                                                      BlendMode.srcIn))),
-                                      const Text(
-                                        'Upload Aadhar Front Image',
-                                        style: TextStyle(
-                                          color: kPrimaryColor,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
+                                : (frontFileUrl.isNotEmpty)
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        child: Image.network(
+                                          frontFileUrl,
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: 148,
                                         ),
+                                      )
+                                    : Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                              child: SvgPicture.asset(
+                                                  "assets/icons/gallery.svg",
+                                                  colorFilter:
+                                                      const ColorFilter.mode(
+                                                          kPrimaryColor,
+                                                          BlendMode.srcIn))),
+                                          const Text(
+                                            'Upload Aadhar Front Image',
+                                            style: TextStyle(
+                                              color: kPrimaryColor,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          const Text(
+                                            'Supports : JPEG, PNG',
+                                            style: TextStyle(
+                                              color: blackSmall,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      const Text(
-                                        'Supports : JPEG, PNG',
-                                        style: TextStyle(
-                                          color: blackSmall,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                          ),
+                          onTap: () {
+                            bottomSheetMenu(context, "AADHAAR_FRONT_IMAGE");
+                          },
+                        ),
                       ),
-                      onTap: () {
-                        bottomSheetMenu(context, "AADHAAR_FRONT_IMAGE");
-                      },
-                    ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isFrontImageDelete = true;
+                            frontFileUrl = "";
+                          });
+                        },
+                        child: !frontFileUrl.isEmpty?Container(
+                          padding: EdgeInsets.all(4),
+                          alignment: Alignment.topRight,
+                          child: SvgPicture.asset(
+                              'assets/icons/delete_icon.svg'),
+                        ):Container(),)
+                    ],
                   ),
                 ),
                 const SizedBox(height: 16),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [kPrimaryColor, kPrimaryColor],
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  height: 148,
-                  child: Padding(
-                    padding: const EdgeInsets.all(1),
-                    child: InkWell(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: textFiledBackgroundColour,
-                          borderRadius: BorderRadius.circular(8.0),
+                Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [kPrimaryColor, kPrimaryColor],
                         ),
-                        child: (productProvider
-                                    .getPostBackAadhaarSingleFileData !=
-                                null)
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  productProvider
-                                      .getPostBackAadhaarSingleFileData!
-                                      .filePath! as String,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: 148,
-                                ),
-                              )
-                            : (backFileUrl.isNotEmpty)
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      height: 148,
+                      child: Padding(
+                        padding: const EdgeInsets.all(1),
+                        child: InkWell(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: textFiledBackgroundColour,
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: (productProvider
+                                        .getPostBackAadhaarSingleFileData !=
+                                    null)
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: Image.network(
-                                      backFileUrl,
+                                      productProvider
+                                          .getPostBackAadhaarSingleFileData!
+                                          .filePath! as String,
                                       fit: BoxFit.cover,
                                       width: double.infinity,
                                       height: 148,
                                     ),
                                   )
-                                : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Center(
-                                          child: SvgPicture.asset(
-                                              "assets/icons/gallery.svg",
-                                              colorFilter:
-                                                  const ColorFilter.mode(
-                                                      kPrimaryColor,
-                                                      BlendMode.srcIn))),
-                                      const Text(
-                                        'Upload Aadhar Front Image',
-                                        style: TextStyle(
-                                          color: kPrimaryColor,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
+                                : (backFileUrl.isNotEmpty)
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        child: Image.network(
+                                          backFileUrl,
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: 148,
                                         ),
+                                      )
+                                    : Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                              child: SvgPicture.asset(
+                                                  "assets/icons/gallery.svg",
+                                                  colorFilter:
+                                                      const ColorFilter.mode(
+                                                          kPrimaryColor,
+                                                          BlendMode.srcIn))),
+                                          const Text(
+                                            'Upload Aadhar Front Image',
+                                            style: TextStyle(
+                                              color: kPrimaryColor,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          const Text(
+                                            'Supports : JPEG, PNG',
+                                            style: TextStyle(
+                                              color: blackSmall,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      const Text(
-                                        'Supports : JPEG, PNG',
-                                        style: TextStyle(
-                                          color: blackSmall,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                          ),
+                          onTap: () {
+                            bottomSheetMenu(context, "AADHAAR_BACK_IMAGE");
+                          },
+                        ),
                       ),
-                      onTap: () {
-                        bottomSheetMenu(context, "AADHAAR_BACK_IMAGE");
-                      },
                     ),
-                  ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isFrontImageDelete = true;
+                          backFileUrl = "";
+                        });
+                      },
+                      child: !backFileUrl.isEmpty?Container(
+                        padding: EdgeInsets.all(4),
+                        alignment: Alignment.topRight,
+                        child: SvgPicture.asset(
+                            'assets/icons/delete_icon.svg'),
+                      ):Container(),)
+                  ],
                 ),
                 const SizedBox(height: 20),
                 const CheckboxTerm(),
