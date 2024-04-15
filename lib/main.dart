@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
 
-      home: TakeSelfieScreen(activityId: 2, subActivityId: 3),
+      home: SplashScreen(),
 
 
      /*AadhaarScreen(activityId: 2, subActivityId: 1)*/

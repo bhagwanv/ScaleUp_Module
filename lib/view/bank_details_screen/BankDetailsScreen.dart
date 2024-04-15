@@ -13,6 +13,7 @@ import '../../utils/common_elevted_button.dart';
 import '../../utils/common_text_field.dart';
 import '../../utils/constants.dart';
 import '../../utils/loader.dart';
+import 'model/BankDetailsResponceModel.dart';
 import 'model/BankListResponceModel.dart';
 
 class BankDetailsScreen extends StatefulWidget {
@@ -24,7 +25,9 @@ class BankDetailsScreen extends StatefulWidget {
 
 class _BankDetailsScreenState extends State<BankDetailsScreen> {
   final TextEditingController _accountHolderController = TextEditingController();
+  final TextEditingController _bankNameController = TextEditingController();
   final TextEditingController _bankAccountNumberCl = TextEditingController();
+  final TextEditingController _accountTypeCl = TextEditingController();
   final TextEditingController _ifsccodeCl = TextEditingController();
 
   @override
@@ -32,8 +35,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     super.initState();
     callAPI(context);
   }
-
+  var personalDetailsData;
   var isLoading = true;
+  List<LiveBankList>? liveBankList = [];
 
   final List<String> accountTypeList = [
     'Saving',
@@ -133,22 +137,20 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         top: true,
         bottom: true,
         child: Scaffold(
-          body: Consumer<DataProvider>(builder: (context, productProvider, child) {
-            if (productProvider.getBankListData != null && productProvider.getBankDetailsData != null && isLoading) {
+          body: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
+            if (productProvider.getBankListData == null &&
+                isLoading) {
+              return Center(child: Loader());
+            } else {
               Navigator.of(context, rootNavigator: true).pop();
               isLoading = false;
-              if (productProvider.getBankDetailsData != null &&
-                  productProvider.getBankDetailsData!.isSuccess!) {
-                _accountHolderController.text = productProvider
-                    .getBankDetailsData!.result!.accountHolderName!;
-                _bankAccountNumberCl.text =
-                    productProvider.getBankDetailsData!.result!.accountNumber!;
-                _ifsccodeCl.text =
-                    productProvider.getBankDetailsData!.result!.ifscCode!;
-              } else {
-                Utils.showToast(productProvider.getBankDetailsData!.message!);
-              }
 
+              if (productProvider.getBankListData != null) {
+                if (productProvider.getBankListData!.liveBankList != null) {
+                  liveBankList = productProvider.getBankListData!.liveBankList!;
+                }
+              }
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
@@ -186,7 +188,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         isExpanded: true,
                         decoration: InputDecoration(
                           contentPadding:
-                              const EdgeInsets.symmetric(vertical: 16),
+                          const EdgeInsets.symmetric(vertical: 16),
                           fillColor: textFiledBackgroundColour,
                           filled: true,
                           border: OutlineInputBorder(
@@ -202,7 +204,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide:
-                                BorderSide(color: kPrimaryColor, width: 1),
+                            BorderSide(color: kPrimaryColor, width: 1),
                           ),
                         ),
                         hint: const Text(
@@ -213,9 +215,21 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        items: _addDividersAfterItems1(
-                            productProvider.getBankListData!.liveBankList!),
+                        //items: _addDividersAfterItems1(liveBankList!),
+                        items: liveBankList!.map((LiveBankList value) {
+                          return DropdownMenuItem<LiveBankList>(
+                            value: value,
+                            child: Text(value.bankName!),
+                          );
+                        }).toList(),
                         onChanged: (LiveBankList? value) {
+                          if (value!.bankName !=  personalDetailsData.result!.bankName!) {
+                            print('Selected: $value.');
+                          } else {
+                            print('Same value selected: $value');
+                          }
+
+
                           /*setState(() {
                           selectedBankNameValue = value!;
                         });*/
@@ -228,8 +242,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         ),
                         menuItemStyleData: MenuItemStyleData(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights: _getCustomItemsHeights1(
-                              productProvider.getBankListData!.liveBankList!),
+                          //customHeights: _getCustomItemsHeights1(liveBankList!),
                         ),
                         iconStyleData: const IconStyleData(
                           openMenuIcon: Icon(Icons.arrow_drop_up),
@@ -339,8 +352,6 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                   ),
                 ),
               );
-            } else {
-              return Center(child: Loader());
             }
           }),
         ));
@@ -349,13 +360,28 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   Future<void> callAPI(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    print("daddd ${leadId}");
     Provider.of<DataProvider>(context, listen: false).getBankList();
 
-    if(leadId != null) {
-      Provider.of<DataProvider>(context, listen: false).getBankDetails(leadId!);
+    personalDetailsData = await ApiService().GetLeadBankDetail(leadId!);
+
+    if (personalDetailsData != null && personalDetailsData.isSuccess!) {
+      _accountHolderController.text = personalDetailsData.result!.accountHolderName!;
+      _bankAccountNumberCl.text = personalDetailsData.result!.accountNumber!;
+      _ifsccodeCl.text = personalDetailsData.result!.ifscCode!;
+      _bankNameController.text = personalDetailsData.result!.bankName!;
+      _accountTypeCl.text = personalDetailsData.result!.accountType!;
+
+    } else {
+       Utils.showToast(personalDetailsData.message!);
+    }
+
+
+   /* if (leadId != null) {
+      Utils.onLoading(context,"");
+      await Provider.of<DataProvider>(context, listen: false).getBankDetails(leadId);
+      Navigator.of(context, rootNavigator: true).pop();
     } else {
       Utils.showToast("Lead Id should not be null or 0");
-    }
+    }*/
   }
 }

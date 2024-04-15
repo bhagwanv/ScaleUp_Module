@@ -381,7 +381,7 @@ class ApiService {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(
         Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.GetLeadBankDetail}?PanNumber=$leadID'),
+            '${apiUrls.baseUrl + apiUrls.GetLeadBankDetail}?LeadId=$leadID'),
         headers: {
           'Content-Type': 'application/json', // Set the content type as JSON
         },

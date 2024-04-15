@@ -63,9 +63,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
       TextEditingController();
   String? selectedGenderValue;
   String? selectedMaritalStatusValue;
+  String? selectedOwnerProfValue;
+  String? selectedOwnershipValue;
   bool ischeckCurrentAdress = true;
   List<CityResponce?> citylist = [];
-  List<ReturnObject> filteredStates = [];
   var isLoading = true;
   late int selectedStateID;
   var stateId = 0;
@@ -80,6 +81,17 @@ class _PersonalInformationState extends State<PersonalInformation> {
     'Married',
     'UnMarried',
     'Widow',
+  ];
+
+  final List<String> OwnershipList = [
+    'Owned',
+    'Owned by parents',
+    'Owned by Spouse',
+    'Rented',
+  ];
+
+  final List<String> OwnerProfList = [
+    'Electricity Manual Bill Upload',
   ];
   var cityCallInitial = true;
   var isCurrentAddSame = false;
@@ -879,6 +891,176 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   BorderRadius.all(Radius.circular(10.0)),
                             )),
                       ),
+                      const SizedBox(height: 15),
+                      DropdownButtonFormField2<String>(
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          contentPadding:
+                          const EdgeInsets.symmetric(vertical: 16),
+                          fillColor: textFiledBackgroundColour,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide:
+                            BorderSide(color: kPrimaryColor, width: 1),
+                          ),
+                        ),
+                        hint: const Text(
+                          'Ownership Proof',
+                          style: TextStyle(
+                            color: blueColor,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        items: getDropDownOption(OwnershipList),
+                        value: selectedOwnershipValue,
+                        onChanged: (String? value) {
+                          /* setState(() {
+                          selectedAccountTypeValue = value;
+                        });*/
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.only(right: 8),
+                        ),
+                        dropdownStyleData: const DropdownStyleData(
+                          maxHeight: 200,
+                        ),
+                        menuItemStyleData: MenuItemStyleData(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          customHeights: _getCustomItemsHeights(OwnershipList),
+                        ),
+                        iconStyleData: const IconStyleData(
+                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      DropdownButtonFormField2<String>(
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          contentPadding:
+                          const EdgeInsets.symmetric(vertical: 16),
+                          fillColor: textFiledBackgroundColour,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide:
+                            BorderSide(color: kPrimaryColor, width: 1),
+                          ),
+                        ),
+                        hint: const Text(
+                          'Select Ownership Proof',
+                          style: TextStyle(
+                            color: blueColor,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        items: getDropDownOption(OwnerProfList),
+                        value: selectedOwnerProfValue,
+                        onChanged: (String? value) {
+                          /* setState(() {
+                          selectedAccountTypeValue = value;
+                        });*/
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.only(right: 8),
+                        ),
+                        dropdownStyleData: const DropdownStyleData(
+                          maxHeight: 200,
+                        ),
+                        menuItemStyleData: MenuItemStyleData(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          customHeights: _getCustomItemsHeights(OwnerProfList),
+                        ),
+                        iconStyleData: const IconStyleData(
+                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                     /* Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Color(0xff0196CE))),
+                          width: double.infinity,
+                          child: GestureDetector(
+                            onTap: () {
+                              bottomSheetMenu(context);
+                            },
+                            child: Container(
+                              height: 148,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Color(0xffEFFAFF),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: (productProvider.getPostSingleFileData !=
+                                  null)
+                                  ? ClipRRect(
+                                borderRadius:
+                                BorderRadius.circular(8.0),
+                                child: Image.network(
+                                  productProvider
+                                      .getPostSingleFileData!.filePath!,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: 148,
+                                ),
+                              )
+                                  : (widget.image.isNotEmpty)
+                                  ? ClipRRect(
+                                borderRadius:
+                                BorderRadius.circular(8.0),
+                                child: Image.network(
+                                  widget.image!,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: 148,
+                                ),
+                              )
+                                  : Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                      'assets/images/gallery.svg'),
+                                  const Text(
+                                    'Upload PAN Image',
+                                    style: TextStyle(
+                                        color: Color(0xff0196CE),
+                                        fontSize: 12),
+                                  ),
+                                  const Text('Supports : JPEG, PNG',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color:
+                                          Color(0xffCACACA))),
+                                ],
+                              ),
+                            ),
+                          )),*/
                       const SizedBox(height: 50),
                       CommonElevatedButton(
                         onPressed: () {
@@ -904,6 +1086,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
       }),
     ));
   }
+
 
   void callSendOptEmail(BuildContext context, String emailID) async {
     SendOtpOnEmailResponce data;
