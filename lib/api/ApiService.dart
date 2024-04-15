@@ -409,12 +409,15 @@ class ApiService {
   }
 
   Future<PersonalDetailsResponce> getLeadPersnalDetails(String leadID) async {
+    final prefsUtil = await SharedPref.getInstance();
+    var token = await prefsUtil.getString(TOKEN);
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(
         Uri.parse(
             '${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=$leadID'),
         headers: {
           'Content-Type': 'application/json', // Set the content type as JSON
+          'Authorization': 'Bearer $token', // Set the content type as JSON
         },
       );
       //print(json.encode(leadCurrentRequestModel));
