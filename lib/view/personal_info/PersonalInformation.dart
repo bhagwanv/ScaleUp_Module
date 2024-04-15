@@ -1,7 +1,7 @@
-import 'dart:convert';
-
+import 'dart:io';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +14,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
+import '../../utils/ImagePicker.dart';
 import '../../utils/common_check_box.dart';
+import '../../utils/customer_sequence_logic.dart';
 import '../../utils/loader.dart';
+import '../login_screen/login_screen.dart';
+import '../splash_screen/model/GetLeadResponseModel.dart';
+import '../splash_screen/model/LeadCurrentRequestModel.dart';
+import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'model/AllStateResponce.dart';
 import 'model/CityResponce.dart';
 import 'model/EmailExistRespoce.dart';
@@ -24,7 +30,12 @@ import 'model/ReturnObject.dart';
 import 'model/SendOtpOnEmailResponce.dart';
 
 class PersonalInformation extends StatefulWidget {
-  const PersonalInformation({super.key});
+  int? activityId;
+  int? subActivityId;
+  String image = "";
+
+  PersonalInformation(
+      {required this.activityId, required this.subActivityId, super.key});
 
   @override
   State<PersonalInformation> createState() => _PersonalInformationState();
@@ -38,6 +49,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   final TextEditingController _genderCl = TextEditingController();
   final TextEditingController _emailIDCl = TextEditingController();
   final TextEditingController _alternatePhoneNumberCl = TextEditingController();
+  final TextEditingController _countryCl = TextEditingController();
   String? selectedGenderValue;
   String? selectedMaritalStatusValue;
   final List<String> genderList = [
@@ -69,6 +81,22 @@ class _PersonalInformationState extends State<PersonalInformation> {
   final TextEditingController _currentAddressPinCodeCl =
       TextEditingController();
   List<CityResponce?> citylist = [];
+  ReturnObject? selectedCurrentState;
+  CityResponce? selectedCurrentCity;
+
+  //ownership type
+  String? selectedOwnershipTypeValue = "";
+  final List<String> ownershipTypeList = [
+    'Owned',
+    'Owned by parents',
+    'Owned by Spouse',
+    'Rented',
+  ];
+
+  String? selectOwnershipProofValue;
+  final List<String> ownershipProofList = [
+    'Electricity Manual Bill Upload ',
+  ];
 
   bool ischeckCurrentAdress = true;
   var isLoading = true;
@@ -78,6 +106,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   var isValidEmail = false;
   var cityCallInitial = true;
   var isCurrentAddSame = false;
+  var updateData = false;
 
   @override
   void initState() {
@@ -88,158 +117,483 @@ class _PersonalInformationState extends State<PersonalInformation> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return SafeArea(child: Scaffold(
-      body: Consumer<DataProvider>(builder: (context, productProvider, child) {
-        if (productProvider.getPersonalDetailsData == null && isLoading) {
-          return Center(child: Loader());
-        } else {
-          if (productProvider.getPersonalDetailsData != null && isLoading) {
-            Navigator.of(context, rootNavigator: true).pop();
-            isLoading = false;
-          }
-
-          _firstNameCl.text =
-              productProvider.getPersonalDetailsData!.firstName!;
-          if (productProvider.getPersonalDetailsData!.middleName != null) {
-            _middleNameCl.text =
-                productProvider.getPersonalDetailsData!.middleName!;
-          }
-          _lastNameCl.text = productProvider.getPersonalDetailsData!.lastName!;
-          _alternatePhoneNumberCl.text =
-              productProvider.getPersonalDetailsData!.alternatePhoneNo!;
-          if (productProvider.getPersonalDetailsData!.emailId!.isNotEmpty &&
-              !isEmailClear) {
-            _emailIDCl.text = productProvider.getPersonalDetailsData!.emailId!;
-          } else if (!isValidEmail) {
-            _emailIDCl.clear();
-          }
-
-          if (productProvider.getPersonalDetailsData!.gender == "M") {
-            _genderCl.text = "Male";
-          } else if (productProvider.getPersonalDetailsData!.gender == "F") {
-            _genderCl.text = "Female";
+    return Scaffold(
+      body: SafeArea(
+        child:
+            Consumer<DataProvider>(builder: (context, productProvider, child) {
+          if (productProvider.getPersonalDetailsData == null && isLoading) {
+            return Center(child: Loader());
           } else {
-            _genderCl.text = "Other";
-          }
-
-          if (productProvider.getPersonalDetailsData!.marital!.isNotEmpty) {
-            if (productProvider.getPersonalDetailsData!.marital == "M") {
-              selectedMaritalStatusValue = "Married";
-            } else if (productProvider.getPersonalDetailsData!.gender == "UM") {
-              selectedMaritalStatusValue = "UnMarried";
-            } else {
-              selectedMaritalStatusValue = "Widow";
+            if (productProvider.getPersonalDetailsData != null && isLoading) {
+              Navigator.of(context, rootNavigator: true).pop();
+              isLoading = false;
             }
-          }
 
-          //set permanent Address
-          if (productProvider
-              .getPersonalDetailsData!.permanentAddressLine1!.isNotEmpty) {
-            _permanentAddresslineOneCl.text =
-                productProvider.getPersonalDetailsData!.permanentAddressLine1!;
-          }
+            if (!updateData) {
+              _countryCl.text = "India";
 
-          if (productProvider
-              .getPersonalDetailsData!.permanentAddressLine2!.isNotEmpty) {
-            _permanentAddresslineTwoCl.text =
-                productProvider.getPersonalDetailsData!.permanentAddressLine2!;
-          }
+              _firstNameCl.text =
+                  productProvider.getPersonalDetailsData!.firstName!;
+              if (productProvider.getPersonalDetailsData!.middleName != null) {
+                _middleNameCl.text =
+                    productProvider.getPersonalDetailsData!.middleName!;
+              }
+              _lastNameCl.text =
+                  productProvider.getPersonalDetailsData!.lastName!;
 
-          if (productProvider.getPersonalDetailsData!.permanentPincode !=
-              null) {
-            _permanentAddressPinCodeCl.text = productProvider
-                .getPersonalDetailsData!.permanentPincode!
-                .toString();
-          }
+              if (productProvider.getPersonalDetailsData!.emailId!.isNotEmpty) {
+                _emailIDCl.text =
+                    productProvider.getPersonalDetailsData!.emailId!;
+              }
 
-          if (productProvider.getPersonalDetailsData!.permanentAddressLine1 ==
-                  productProvider.getPersonalDetailsData!.resAddress1 &&
-              productProvider.getPersonalDetailsData!.permanentAddressLine2 ==
-                  productProvider.getPersonalDetailsData!.resAddress2) {
-            isCurrentAddSame = true;
-          }
+              if (productProvider.getPersonalDetailsData!.gender == "M") {
+                _genderCl.text = "Male";
+              } else if (productProvider.getPersonalDetailsData!.gender ==
+                  "F") {
+                _genderCl.text = "Female";
+              } else {
+                _genderCl.text = "Other";
+              }
 
-          //set Current Address
-          if (productProvider.getPersonalDetailsData!.resAddress1!.isNotEmpty) {
-            _currentAddressLineOneCl.text =
-                productProvider.getPersonalDetailsData!.resAddress1!;
-          }
-          if (productProvider.getPersonalDetailsData!.resAddress2!.isNotEmpty) {
-            _currentAddressLineTwoCl.text =
-                productProvider.getPersonalDetailsData!.resAddress2!;
-          }
-          if (productProvider.getPersonalDetailsData!.pincode != null) {
-            _currentAddressPinCodeCl.text =
-                productProvider.getPersonalDetailsData!.pincode!.toString();
-          }
+              if (productProvider.getPersonalDetailsData!.marital!.isNotEmpty) {
+                if (productProvider.getPersonalDetailsData!.marital == "M") {
+                  selectedMaritalStatusValue = "Married";
+                } else if (productProvider.getPersonalDetailsData!.gender ==
+                    "UM") {
+                  selectedMaritalStatusValue = "UnMarried";
+                } else {
+                  selectedMaritalStatusValue = "Widow";
+                }
+              }
 
-          if (productProvider.getPersonalDetailsData!.state != null) {
-            stateId = productProvider.getPersonalDetailsData!.state!;
-          }
+              //set permanent Address
+              if (productProvider
+                  .getPersonalDetailsData!.permanentAddressLine1!.isNotEmpty) {
+                _permanentAddresslineOneCl.text = productProvider
+                    .getPersonalDetailsData!.permanentAddressLine1!;
+              }
 
-          if (productProvider.getAllCityData != null) {
-            permanentCitylist = productProvider.getAllCityData!;
-          }
+              if (productProvider
+                  .getPersonalDetailsData!.permanentAddressLine2!.isNotEmpty) {
+                _permanentAddresslineTwoCl.text = productProvider
+                    .getPersonalDetailsData!.permanentAddressLine2!;
+              }
 
-          if (productProvider.getCurrentAllCityData != null) {
-            citylist = productProvider.getCurrentAllCityData!;
-          }
+              if (productProvider.getPersonalDetailsData!.permanentPincode !=
+                  null) {
+                _permanentAddressPinCodeCl.text = productProvider
+                    .getPersonalDetailsData!.permanentPincode!
+                    .toString();
+              }
 
-          return SingleChildScrollView(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 50),
-                const Text(
-                  'Personal Information',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(fontSize: 35, color: Colors.black),
-                ),
-                const SizedBox(height: 15),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                  child: Column(
-                    children: [
-                      basicDetailsFields(productProvider),
-                      const SizedBox(height: 20),
-                      permanentAddressField(productProvider),
-                      currentAddressField(productProvider),
-                      const SizedBox(height: 50),
-                      CommonElevatedButton(
-                        onPressed: () {
-                          // Call the validateData function
-                          ValidationResult result =
-                              validateData(context, productProvider);
-                          // Access the returned values
-                          PersonalDetailsRequestModel postData =
-                              result.postData;
-                          bool isValid = result.isValid;
-                          if (isValid) {
-                            productProvider.postLeadPersonalDetail(postData);
-                          } else {
-                            print("unValid");
-                          }
-                        },
-                        text: "NEXT",
-                        upperCase: true,
-                      ),
-                    ],
+              if (productProvider
+                          .getPersonalDetailsData!.permanentAddressLine1 ==
+                      productProvider.getPersonalDetailsData!.resAddress1 &&
+                  productProvider
+                          .getPersonalDetailsData!.permanentAddressLine2 ==
+                      productProvider.getPersonalDetailsData!.resAddress2) {
+                isCurrentAddSame = true;
+              }
+
+              //set Current Address
+              if (productProvider
+                  .getPersonalDetailsData!.resAddress1!.isNotEmpty) {
+                _currentAddressLineOneCl.text =
+                    productProvider.getPersonalDetailsData!.resAddress1!;
+              }
+              if (productProvider
+                  .getPersonalDetailsData!.resAddress2!.isNotEmpty) {
+                _currentAddressLineTwoCl.text =
+                    productProvider.getPersonalDetailsData!.resAddress2!;
+              }
+              if (productProvider.getPersonalDetailsData!.pincode != null) {
+                _currentAddressPinCodeCl.text =
+                    productProvider.getPersonalDetailsData!.pincode!.toString();
+              }
+
+              if (productProvider.getPersonalDetailsData!.state != null) {
+                stateId = productProvider.getPersonalDetailsData!.state!;
+              }
+
+              if (productProvider.getAllCityData != null) {
+                permanentCitylist = productProvider.getAllCityData!;
+              }
+
+              if (productProvider.getCurrentAllCityData != null) {
+                citylist = productProvider.getCurrentAllCityData!;
+              }
+            } else {
+              if (!isEmailClear && !isValidEmail) {
+                _emailIDCl.text =
+                    productProvider.getPersonalDetailsData!.emailId!;
+              } else if (!isValidEmail) {
+                _emailIDCl.clear();
+              }
+
+              if (productProvider.getAllCityData != null) {
+                permanentCitylist = productProvider.getAllCityData!;
+              }
+
+              if (productProvider.getCurrentAllCityData != null) {
+                citylist = productProvider.getCurrentAllCityData!;
+              }
+              if (citylist.isNotEmpty) {
+                selectedCurrentCity = citylist.first;
+                print("dsds" + selectedCurrentCity!.name!);
+              }
+            }
+
+            return SingleChildScrollView(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 50),
+                  const Text(
+                    'Personal Information',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 35, color: Colors.black),
                   ),
-                ),
-              ],
-            ),
-          ));
+                  const SizedBox(height: 15),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        basicDetailsFields(productProvider),
+                        const SizedBox(height: 20),
+                        permanentAddressField(productProvider),
+                        currentAddressFields(productProvider),
+                        const SizedBox(height: 15),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: Text(
+                            "Ownership Type",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        DropdownButtonFormField2<String>(
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 16),
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide:
+                                  BorderSide(color: kPrimaryColor, width: 1),
+                            ),
+                          ),
+                          hint: const Text(
+                            'Ownership Type',
+                            style: TextStyle(
+                              color: blueColor,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          items: getDropDownOption(ownershipTypeList),
+                          value: selectedOwnershipTypeValue!.isNotEmpty
+                              ? selectedOwnershipTypeValue
+                              : null,
+                          onChanged: (String? value) {
+                            setState(() {
+                              selectedOwnershipTypeValue = value;
+                            });
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.only(right: 8),
+                          ),
+                          dropdownStyleData: const DropdownStyleData(
+                            maxHeight: 200,
+                          ),
+                          menuItemStyleData: MenuItemStyleData(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            customHeights:
+                                _getCustomItemsHeights(ownershipTypeList),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            openMenuIcon: Icon(Icons.arrow_drop_up),
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        (selectedOwnershipTypeValue!.isNotEmpty &&
+                                selectedOwnershipTypeValue == "Rented")
+                            ? Container()
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 4.0),
+                                    child: Text(
+                                      "Ownership Proof",
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  DropdownButtonFormField2<String>(
+                                    isExpanded: true,
+                                    decoration: InputDecoration(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 16),
+                                      fillColor: textFiledBackgroundColour,
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color: kPrimaryColor, width: 1),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color: kPrimaryColor, width: 1),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                            color: kPrimaryColor, width: 1),
+                                      ),
+                                    ),
+                                    hint: const Text(
+                                      'Select Ownership Proof',
+                                      style: TextStyle(
+                                        color: blueColor,
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    items:
+                                        getDropDownOption(ownershipProofList),
+                                    value: selectOwnershipProofValue,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        selectOwnershipProofValue = value;
+                                      });
+                                    },
+                                    buttonStyleData: const ButtonStyleData(
+                                      padding: EdgeInsets.only(right: 8),
+                                    ),
+                                    dropdownStyleData: const DropdownStyleData(
+                                      maxHeight: 200,
+                                    ),
+                                    menuItemStyleData: MenuItemStyleData(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      customHeights: _getCustomItemsHeights(
+                                          ownershipProofList),
+                                    ),
+                                    iconStyleData: const IconStyleData(
+                                      openMenuIcon: Icon(Icons.arrow_drop_up),
+                                    ),
+                                  ),
+                                  SizedBox(height: 15),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [kPrimaryColor, kPrimaryColor],
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    height: 148,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(1),
+                                      child: InkWell(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: textFiledBackgroundColour,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          child: (productProvider
+                                                      .getPostSingleFileData !=
+                                                  null)
+                                              ? ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                  child: Image.network(
+                                                    productProvider
+                                                        .getPostSingleFileData!
+                                                        .filePath!,
+                                                    fit: BoxFit.cover,
+                                                    width: double.infinity,
+                                                    height: 148,
+                                                  ),
+                                                )
+                                              : (widget.image.isNotEmpty)
+                                                  ? ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
+                                                      child: Image.network(
+                                                        widget.image,
+                                                        fit: BoxFit.cover,
+                                                        width: double.infinity,
+                                                        height: 148,
+                                                      ),
+                                                    )
+                                                  : Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Center(
+                                                            child: SvgPicture.asset(
+                                                                "assets/icons/gallery.svg",
+                                                                colorFilter: const ColorFilter
+                                                                    .mode(
+                                                                    kPrimaryColor,
+                                                                    BlendMode
+                                                                        .srcIn))),
+                                                        const Text(
+                                                          'Upload Bill',
+                                                          style: TextStyle(
+                                                            color:
+                                                                kPrimaryColor,
+                                                            fontSize: 12.0,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                        const Text(
+                                                          'Supports : JPEG, PNG',
+                                                          style: TextStyle(
+                                                            color: blackSmall,
+                                                            fontSize: 12.0,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                        ),
+                                        onTap: () {
+                                          bottomSheetMenu(context);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                        const SizedBox(height: 50),
+                        CommonElevatedButton(
+                          onPressed: () async {
+                            ValidationResult result =
+                                await validateData(context, productProvider);
+                            PersonalDetailsRequestModel postData =
+                                result.postData;
+                            bool isValid = result.isValid;
+                            if (isValid) {
+                              submitPersonalInformationApi(
+                                  context, productProvider, postData);
+                            } else {
+                              print("unValid");
+                            }
+                          },
+                          text: "NEXT",
+                          upperCase: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ));
+          }
+        }),
+      ),
+    );
+  }
+
+  void submitPersonalInformationApi(
+      BuildContext context,
+      DataProvider productProvider,
+      PersonalDetailsRequestModel postData) async {
+    Utils.onLoading(context, "Wait...");
+    await productProvider.postLeadPersonalDetail(postData);
+    if (productProvider.getPostPersonalDetailsResponseModel?.statusCode != 401) {
+      if (productProvider.getPostPersonalDetailsResponseModel != null) {
+        Navigator.of(context, rootNavigator: true).pop();
+        if(productProvider.getPostPersonalDetailsResponseModel!.isSuccess!) {
+          if (productProvider.getPostPersonalDetailsResponseModel!.message != null) {
+            Utils.showToast(
+                " ${productProvider.getPostPersonalDetailsResponseModel!.message!}");
+          }
+          fetchData(context);
         }
-      }),
-    ));
+      } else {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    } else {
+      Navigator.pushAndRemoveUntil<dynamic>(
+        context,
+        MaterialPageRoute<dynamic>(
+          builder: (BuildContext context) =>
+              const LoginScreen(activityId: 1, subActivityId: 0),
+        ),
+        (route) => false, //if you want to disable back feature set to false
+      );
+    }
+  }
+
+  Future<void> fetchData(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    try {
+      LeadCurrentResponseModel? leadCurrentActivityAsyncData;
+      var leadCurrentRequestModel = LeadCurrentRequestModel(
+        companyId: prefsUtil.getInt(COMPANY_ID),
+        productId: prefsUtil.getInt(PRODUCT_ID),
+        leadId: prefsUtil.getInt(LEADE_ID),
+        mobileNo: prefsUtil.getString(LOGIN_MOBILE_NUMBER),
+        activityId:widget.activityId,
+        subActivityId: widget.subActivityId,
+        userId:  prefsUtil.getString(USER_ID),
+        monthlyAvgBuying: 0,
+        vintageDays: 0,
+        isEditable: true,
+      );
+      leadCurrentActivityAsyncData =
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      as LeadCurrentResponseModel?;
+
+      GetLeadResponseModel? getLeadData;
+      getLeadData = await ApiService().getLeads(
+          prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
+          prefsUtil.getInt(COMPANY_ID)!,
+          prefsUtil.getInt(PRODUCT_ID)!,
+          prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
+
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error occurred during API call: $error');
+      }
+    }
   }
 
   void callSendOptEmail(BuildContext context, String emailID) async {
+    updateData = true;
     SendOtpOnEmailResponce data;
-    data = await ApiService().sendOtpOnEmail(emailID) as SendOtpOnEmailResponce;
+    data = await ApiService().sendOtpOnEmail(emailID);
 
     if (data != null && data.status!) {
       Utils.showToast(data.message!);
@@ -253,9 +607,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
       if (result != null &&
           result.containsKey('isValid') &&
           result.containsKey('Email')) {
-        isValidEmail = result['isValid'];
-        _emailIDCl.text = result['Email'];
-        setState(() {});
+        setState(() {
+          isValidEmail = result['isValid'];
+          _emailIDCl.text = result['Email'];
+        });
       } else {
         print('Result is null or does not contain expected keys');
       }
@@ -614,12 +969,37 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ? buildCityField(productProvider)
             : Container(),
         const SizedBox(height: 15),
+        TextField(
+          enabled: false,
+          controller: _countryCl,
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.next,
+          maxLines: 1,
+          cursorColor: Colors.black,
+          decoration: const InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: kPrimaryColor,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              hintText: "Country",
+              labelText: "Country",
+              fillColor: textFiledBackgroundColour,
+              filled: true,
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              )),
+        ),
+        const SizedBox(height: 15),
       ],
     );
   }
 
   Widget basicDetailsFields(DataProvider productProvider) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextField(
           enabled: false,
@@ -718,6 +1098,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
               )),
         ),
         SizedBox(height: 15),
+        Padding(
+          padding: const EdgeInsets.only(left: 4.0),
+          child: Text(
+            "Martial Status",
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
+        SizedBox(height: 8),
         DropdownButtonFormField2<String>(
           isExpanded: true,
           decoration: InputDecoration(
@@ -748,9 +1136,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
           items: getDropDownOption(maritalList),
           value: selectedMaritalStatusValue,
           onChanged: (String? value) {
-            /* setState(() {
-                          selectedAccountTypeValue = value;
-                        });*/
+            setState(() {
+              selectedMaritalStatusValue = value;
+            });
           },
           buttonStyleData: const ButtonStyleData(
             padding: EdgeInsets.only(right: 8),
@@ -852,6 +1240,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           textInputAction: TextInputAction.next,
           controller: _alternatePhoneNumberCl,
           maxLines: 1,
+          maxLength: 10,
           cursorColor: Colors.black,
           decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
@@ -860,7 +1249,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
               ),
-              hintText: "Alternate Phone Number   ",
+              hintText: "Alternate Phone Number",
               labelText: "Alternate Phone Number",
               fillColor: textFiledBackgroundColour,
               filled: true,
@@ -873,8 +1262,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
     );
   }
 
-  Widget currentAddressField(DataProvider productProvider) {
+  Widget currentAddressFields(DataProvider productProvider) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Align(
           alignment: Alignment.centerLeft,
@@ -889,6 +1279,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           onChanged: (bool isChecked) {
             setState(() {
               isCurrentAddSame = isChecked;
+              updateData = true;
               if (isChecked) {
                 print("Check${isChecked}");
                 ischeckCurrentAdress = false;
@@ -899,9 +1290,6 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 _currentAddressPinCodeCl.text = productProvider
                     .getPersonalDetailsData!.permanentPincode!
                     .toString();
-                //_currentAddressCity.text= productProvider.getPersonalDetailsData!.lastName!;
-                //_currentAddressStateCl.text= productProvider.getPersonalDetailsData!.lastName!;
-                //_currentAddressCountryCl.text= productProvider.getPersonalDetailsData!.lastName!;
               } else {
                 ischeckCurrentAdress = true;
                 _currentAddressLineOneCl.clear();
@@ -986,106 +1374,137 @@ class _PersonalInformationState extends State<PersonalInformation> {
               )),
         ),
         const SizedBox(height: 15),
-        DropdownButtonFormField2<ReturnObject>(
-          isExpanded: true,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-            fillColor: textFiledBackgroundColour,
-            filled: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: kPrimaryColor, width: 1),
-            ),
-          ),
-          hint: const Text(
-            'State',
-            style: TextStyle(
-              color: blueColor,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          items: getAllState(productProvider.getAllStateData!.returnObject!),
-          onChanged: (ReturnObject? value) {
-            setState(() {
-              citylist.clear();
-              Provider.of<DataProvider>(context, listen: false)
-                  .getCurrentAllCity(value!.id!);
-            });
-          },
-          buttonStyleData: const ButtonStyleData(
-            padding: EdgeInsets.only(right: 8),
-          ),
-          dropdownStyleData: const DropdownStyleData(
-            maxHeight: 200,
-          ),
-          menuItemStyleData: MenuItemStyleData(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            customHeights: _getCustomItemsHeights2(
-                productProvider.getAllStateData!.returnObject!),
-          ),
-          iconStyleData: const IconStyleData(
-            openMenuIcon: Icon(Icons.arrow_drop_up),
-          ),
-        ),
-        const SizedBox(height: 15),
-        DropdownButtonFormField2<CityResponce>(
-          value: citylist.isNotEmpty ? citylist[0] : null,
-          isExpanded: true,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-            fillColor: textFiledBackgroundColour,
-            filled: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: kPrimaryColor, width: 1),
-            ),
-          ),
-          hint: const Text(
-            'City',
-            style: TextStyle(
-              color: blueColor,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          items: getCurrentAllCity(citylist),
-          onChanged: (CityResponce? value) {
-            setState(() {});
-          },
-          buttonStyleData: const ButtonStyleData(
-            padding: EdgeInsets.only(right: 8),
-          ),
-          dropdownStyleData: const DropdownStyleData(
-            maxHeight: 200,
-          ),
-          menuItemStyleData: MenuItemStyleData(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            customHeights: _getCustomItemsHeights3(citylist),
-          ),
-          iconStyleData: const IconStyleData(
-            openMenuIcon: Icon(Icons.arrow_drop_up),
-          ),
-        ),
+        isCurrentAddSame
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildStateField(productProvider),
+                  const SizedBox(height: 15),
+                  permanentCitylist.isNotEmpty
+                      ? buildCityField(productProvider)
+                      : Container(),
+                  const SizedBox(height: 15),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DropdownButtonFormField2<ReturnObject>(
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                      fillColor: textFiledBackgroundColour,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            const BorderSide(color: kPrimaryColor, width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            const BorderSide(color: kPrimaryColor, width: 1),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: kPrimaryColor, width: 1),
+                      ),
+                    ),
+                    hint: const Text(
+                      'State',
+                      style: TextStyle(
+                        color: blueColor,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    items: getAllState(
+                        productProvider.getAllStateData!.returnObject!),
+                    onChanged: (ReturnObject? value) {
+                      setState(() {
+                        selectedCurrentCity = null;
+                        selectedCurrentState = value;
+                        citylist.clear();
+                        Provider.of<DataProvider>(context, listen: false)
+                            .getCurrentAllCity(value!.id!);
+                      });
+                    },
+                    buttonStyleData: const ButtonStyleData(
+                      padding: EdgeInsets.only(right: 8),
+                    ),
+                    dropdownStyleData: const DropdownStyleData(
+                      maxHeight: 200,
+                    ),
+                    menuItemStyleData: MenuItemStyleData(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      customHeights: _getCustomItemsHeights2(
+                          productProvider.getAllStateData!.returnObject!),
+                    ),
+                    iconStyleData: const IconStyleData(
+                      openMenuIcon: Icon(Icons.arrow_drop_up),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  citylist.isNotEmpty
+                      ? DropdownButtonFormField2<CityResponce>(
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 16),
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide:
+                                  BorderSide(color: kPrimaryColor, width: 1),
+                            ),
+                          ),
+                          hint: const Text(
+                            'City',
+                            style: TextStyle(
+                              color: blueColor,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          items: getCurrentAllCity(citylist),
+                          onChanged: (CityResponce? value) {
+                            setState(() {
+                              selectedCurrentCity = value;
+                            });
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.only(right: 8),
+                          ),
+                          dropdownStyleData: const DropdownStyleData(
+                            maxHeight: 200,
+                          ),
+                          menuItemStyleData: MenuItemStyleData(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            customHeights: _getCustomItemsHeights3(citylist),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            openMenuIcon: Icon(Icons.arrow_drop_up),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
         const SizedBox(height: 15),
         TextField(
-          enabled: ischeckCurrentAdress,
+          enabled: false,
+          controller: _countryCl,
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.next,
           maxLines: 1,
@@ -1110,40 +1529,142 @@ class _PersonalInformationState extends State<PersonalInformation> {
     );
   }
 
-  ValidationResult validateData(
-      BuildContext context, DataProvider productProvider) {
-      PersonalDetailsRequestModel postData = PersonalDetailsRequestModel(
-        firstName: "",
-        lastName: "",
-        fatherName: "",
-        fatherLastName: "",
+  Future<ValidationResult> validateData(
+      BuildContext context, DataProvider productProvider) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final String? userId = prefsUtil.getString(USER_ID);
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+    final int? companyId = prefsUtil.getInt(COMPANY_ID);
+
+    var currentStateId = "";
+    var currentCityId = "";
+
+    //address
+    if (isCurrentAddSame) {
+      currentStateId =
+          productProvider.getPersonalDetailsData!.permanentState!.toString();
+      currentCityId =
+          productProvider.getPersonalDetailsData!.permanentCity!.toString();
+    } else {
+      if (selectedCurrentState != null) {
+        currentStateId = selectedCurrentState!.id.toString();
+      }
+      if (selectedCurrentCity != null) {
+        currentCityId = selectedCurrentCity!.id.toString();
+      }
+    }
+
+    //bill
+    int? billDocId;
+
+    if (productProvider.getPostSingleFileData != null) {
+      billDocId = productProvider.getPostSingleFileData!.docId!;
+    }
+
+    PersonalDetailsRequestModel postData = PersonalDetailsRequestModel(
+        firstName: _firstNameCl.text.toString(),
+        lastName: _lastNameCl.text.toString(),
+        fatherName: productProvider.getPersonalDetailsData!.fatherName!,
+        fatherLastName: productProvider.getPersonalDetailsData!.fatherLastName!,
         dOB: "",
-        alternatePhoneNo: "",
-        emailId: "",
+        alternatePhoneNo: _alternatePhoneNumberCl.text.toString(),
+        emailId: _emailIDCl.text.toString(),
         typeOfAddress: "",
-        permanentAddressLine1: "",
-        permanentAddressLine2: "",
-        permanentPincode: "",
-        permanentCity: "",
-        permanentState: "",
+        permanentAddressLine1:
+            productProvider.getPersonalDetailsData!.permanentAddressLine1!,
+        permanentAddressLine2:
+            productProvider.getPersonalDetailsData!.permanentAddressLine2!,
+        permanentPincode: productProvider
+            .getPersonalDetailsData!.permanentPincode!
+            .toString(),
+        permanentCity:
+            productProvider.getPersonalDetailsData!.permanentCity!.toString(),
+        permanentState:
+            productProvider.getPersonalDetailsData!.permanentState!.toString(),
+        pincode: _currentAddressPinCodeCl.text.toString(),
+        state: currentStateId,
+        city: currentCityId,
         residenceStatus: "",
-        leadId: 0,
-        userId: "",
-        activityId: 0,
-        subActivityId: 0,
-        middleName: "",
-        companyId: 0,
-        mobileNo: "",
-        ownershipType: "",
+        leadId: leadId,
+        userId: userId,
+        activityId: widget.activityId!,
+        subActivityId: widget.subActivityId!,
+        middleName: _middleNameCl.text.toString(),
+        companyId: companyId,
+        mobileNo: productProvider.getPersonalDetailsData!.mobileNo!.toString(),
+        ownershipType: selectedOwnershipTypeValue,
         ownershipTypeAddress: "",
-        ownershipTypeProof: "",
-        electricityBillDocumentId: 0,
+        ownershipTypeProof: selectOwnershipProofValue,
+        electricityBillDocumentId: billDocId,
         ownershipTypeName: "",
         ownershipTypeResponseId: 0);
 
-    bool isValid = postData.firstName!.isNotEmpty;
+    bool isValid = false;
+    String errorMessage = "";
 
+    if (_firstNameCl.text.toString().isEmpty) {
+      errorMessage = "First name should not be empty";
+      isValid = false;
+    } else if (_lastNameCl.text.toString().isEmpty) {
+      errorMessage = "Last name should not be empty";
+      isValid = false;
+    } else if (_alternatePhoneNumberCl.text.toString().isEmpty) {
+      errorMessage = "Alternate Mobile Number should not be empty";
+      isValid = false;
+    } else if (_emailIDCl.text.toString().isEmpty) {
+      errorMessage = "Email should not be empty";
+      isValid = false;
+    } else if (userId!.isEmpty) {
+      errorMessage = "User Id should not be empty";
+      isValid = false;
+    } else if (selectedMaritalStatusValue == null) {
+      errorMessage = "Martial Status should not be empty";
+      isValid = false;
+    } else if (currentStateId.isEmpty) {
+      errorMessage = "Current State is required";
+      isValid = false;
+    } else if (currentStateId.isEmpty) {
+      errorMessage = "Current City is required";
+      isValid = false;
+    } else if (selectedOwnershipTypeValue != "Rented" && billDocId == null) {
+      errorMessage = "Add Electricity Bill Document";
+      isValid = false;
+    } else if (!isValidEmail) {
+      errorMessage = "Verify Email ";
+      isValid = false;
+    } else {
+      isValid = true;
+    }
+
+    if (errorMessage.isNotEmpty) {
+      Utils.showToast(errorMessage.toString());
+    }
+
+    print("postData::: " + postData.toString());
     return ValidationResult(postData, isValid);
+  }
+
+  void bottomSheetMenu(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          return ImagePickerWidgets(onImageSelected: _onImageSelected);
+        });
+  }
+
+  // Callback function to receive the selected image
+  void _onImageSelected(File imageFile) async {
+    Utils.onLoading(context, "");
+    // Perform asynchronous work first
+    await Provider.of<DataProvider>(context, listen: false)
+        .postSingleFile(imageFile, true, "", "");
+
+    // Update the widget state synchronously inside setState
+    setState(() {
+      // Clear loading indicator
+      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
+    });
   }
 }
 
