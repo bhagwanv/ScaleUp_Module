@@ -290,9 +290,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-              as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel) as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(

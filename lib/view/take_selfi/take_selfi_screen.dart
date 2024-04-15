@@ -26,8 +26,7 @@ class TakeSelfieScreen extends StatefulWidget {
   final int activityId;
   final int subActivityId;
 
-  TakeSelfieScreen(
-      {super.key, required this.activityId, required this.subActivityId});
+  TakeSelfieScreen({super.key, required this.activityId, required this.subActivityId});
 
   @override
   State<TakeSelfieScreen> createState() => _TakeSelfieScreenState();

@@ -14,6 +14,7 @@ import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
+import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
 import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailRequestModel.dart';
@@ -305,5 +306,6 @@ class DataProvider extends ChangeNotifier {
     _getPostLeadBuisnessDetailData = await apiService.postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
     notifyListeners();
   }
+
 }
 

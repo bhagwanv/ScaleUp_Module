@@ -85,14 +85,14 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
               const SizedBox(height: 30),
               CommonElevatedButton(
                 onPressed: () {
-                  Navigator.push(
+                 /* Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) {
                         return const BankDetailsScreen();
                       },
                     ),
-                  );
+                  );*/
                 },
                 text: "Proceed to e-mandate",
                 upperCase: true,

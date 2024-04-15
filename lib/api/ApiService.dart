@@ -15,6 +15,8 @@ import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
+import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
+import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
 import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailRequestModel.dart';
@@ -737,6 +739,36 @@ class ApiService {
       }
       if (response.statusCode == 401) {
         return PostPersonalDetailsResponseModel(statusCode: 401);
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+  Future<SaveBankDetailResponce> saveLeadBankDetail(
+      SaveBankDetailsRequestModel model) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = prefsUtil.getString(TOKEN);
+      final response = await interceptor.post(
+          Uri.parse(apiUrls.baseUrl + apiUrls.saveLeadBankDetail),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+          body: json.encode(model));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        final dynamic jsonData = json.decode(response.body);
+        final SaveBankDetailResponce responseModel =
+        SaveBankDetailResponce.fromJson(jsonData);
+        return responseModel;
+      }
+      if (response.statusCode == 401) {
+        return SaveBankDetailResponce(statusCode: 401);
       } else {
         throw Exception('Failed to load products');
       }

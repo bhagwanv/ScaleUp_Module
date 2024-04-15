@@ -27,5 +27,6 @@ class ApiUrls{
   final String getLeadBusinessDetail="/aggregator/LeadAgg/GetLeadBusinessDetail";
   final String getCustomerDetailUsingGST="/aggregator/LeadAgg/GetCustomerDetailUsingGST";
   final String postLeadBuisnessDetail="/services/lead/v1/PostLeadBuisnessDetail";
+  final String saveLeadBankDetail="/services/lead/v1/api/LeadBankDetail/SaveLeadBankDetail";
 
 }

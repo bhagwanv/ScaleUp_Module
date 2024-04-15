@@ -31,8 +31,7 @@ class PancardScreen extends StatefulWidget {
   final int activityId;
   final int subActivityId;
 
-  PancardScreen(
-      {super.key, required this.activityId, required this.subActivityId});
+  PancardScreen({super.key, required this.activityId, required this.subActivityId});
 
   @override
   State<PancardScreen> createState() => _PancardScreenState();
