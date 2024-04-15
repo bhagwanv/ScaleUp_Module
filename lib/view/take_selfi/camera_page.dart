@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:scale_up_module/utils/constants.dart';
-import 'package:scale_up_module/view/take_selfi/preview_page.dart';
 import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';
 
 class CameraPage extends StatefulWidget {
@@ -18,6 +22,7 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   late CameraController _cameraController;
   bool _isRearCameraSelected = false;
+  File? _imageFile;
 
   @override
   void dispose() {
@@ -31,6 +36,12 @@ class _CameraPageState extends State<CameraPage> {
     initCamera(widget.cameras![1]);
   }
 
+  Future<void> _pickImage(File pickedImage) async {
+
+  }
+
+
+
   Future takePicture() async {
     if (!_cameraController.value.isInitialized) {
       return null;
@@ -41,19 +52,58 @@ class _CameraPageState extends State<CameraPage> {
     try {
       await _cameraController.setFlashMode(FlashMode.off);
       XFile picture = await _cameraController.takePicture();
+     //  File file = File(picture!.path);
+     // // Navigator.of(context).pop(picture);
+     //
+     //  _pickImage(file);
 
-      Navigator.of(context).pop(picture);
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+        sourcePath: picture.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              toolbarColor: Colors.deepOrange,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+          WebUiSettings(
+            context: context,
+          ),
+        ],
+      );
 
-     /* Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => TakeSelfieScreen(
-                    picture: picture,
-                  )));*/
+      if (croppedFile != null) {
+        // Handle the cropped image file (convert CroppedFile to File if needed)
+        File? croppedImageFile = croppedFileToFile(croppedFile);
+        if (croppedImageFile != null) {
+          // Use the cropped image file (e.g., display or upload)
+          print('Cropped image path: ${croppedImageFile.path}');
+          Navigator.of(context).pop(croppedImageFile);
+        }
+      } else {
+        // Crop operation was canceled
+        print('Crop operation canceled');
+      }
+      // if(croppedFile!=null){
+      //   Navigator.of(context).pop(croppedFile);
+      // }
+
     } on CameraException catch (e) {
       debugPrint('Error occured while taking picture: $e');
       return null;
     }
+
+
   }
 
   Future initCamera(CameraDescription cameraDescription) async {
@@ -144,4 +194,10 @@ class _CameraPageState extends State<CameraPage> {
       ]),
     ));
   }
+  File? croppedFileToFile(CroppedFile? croppedFile) {
+    if (croppedFile == null) {
+      return null;
+    }
+    return File(croppedFile.path!);
+}
 }

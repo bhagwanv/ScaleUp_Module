@@ -23,5 +23,9 @@ class ApiUrls{
   final String EmailExist="/services/kyc/v1/KYCDoc/EmailExist";
   final String SendOtpOnEmail="/aggregator/LeadAgg/SendOtpOnEmail";
   final String OTPValidateForEmail="/aggregator/LeadAgg/OTPValidateForEmail";
+  final String PostLeadPersonalDetail="/services/lead/v1/PostLeadPersonalDetail";
+  final String getLeadBusinessDetail="/aggregator/LeadAgg/GetLeadBusinessDetail";
+  final String getCustomerDetailUsingGST="/aggregator/LeadAgg/GetCustomerDetailUsingGST";
+  final String postLeadBuisnessDetail="/services/lead/v1/PostLeadBuisnessDetail";
 
 }

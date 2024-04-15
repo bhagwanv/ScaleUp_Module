@@ -15,6 +15,10 @@ import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
+import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseModel.dart';
+import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
+import '../view/business_details_screen/model/PostLeadBuisnessDetailRequestModel.dart';
+import '../view/business_details_screen/model/PostLeadBuisnessDetailResponsModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
@@ -28,7 +32,9 @@ import '../view/personal_info/model/AllStateResponce.dart';
 import '../view/personal_info/model/CityResponce.dart';
 import '../view/personal_info/model/EmailExistRespoce.dart';
 import '../view/personal_info/model/OTPValidateForEmailRequest.dart';
+import '../view/personal_info/model/PersonalDetailsRequestModel.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
+import '../view/personal_info/model/PostPersonalDetailsResponseModel.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
@@ -627,6 +633,110 @@ class ApiService {
       }
       if (response.statusCode == 401) {
         return PostLeadSelfieResponseModel(statusCode: 401);
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+
+  Future<LeadBusinessDetailResponseModel> getLeadBusinessDetail(String userId) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.get(Uri.parse(
+          '${apiUrls.baseUrl + apiUrls.getLeadBusinessDetail}?UserId=$userId'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+
+        final LeadBusinessDetailResponseModel responseModel =
+        LeadBusinessDetailResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+  Future<CustomerDetailUsingGstResponseModel> getCustomerDetailUsingGST(String GSTNumber ) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.get(Uri.parse(
+          '${apiUrls.baseUrl + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+
+        final CustomerDetailUsingGstResponseModel responseModel =
+        CustomerDetailUsingGstResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+
+  Future<PostLeadBuisnessDetailResponsModel> postLeadBuisnessDetail(
+      PostLeadBuisnessDetailRequestModel postLeadBuisnessDetailRequestModel) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = await prefsUtil.getString(TOKEN);
+      final response = await interceptor.post(
+          Uri.parse('${apiUrls.baseUrl + apiUrls.postLeadBuisnessDetail}'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+          body: json.encode(postLeadBuisnessDetailRequestModel));
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final PostLeadBuisnessDetailResponsModel responseModel =
+        PostLeadBuisnessDetailResponsModel.fromJson(jsonData);
+        return responseModel;
+      }
+      if (response.statusCode == 401) {
+        return PostLeadBuisnessDetailResponsModel(statusCode: 401);
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+  Future<PostPersonalDetailsResponseModel> postLeadPersonalDetail(
+      PersonalDetailsRequestModel personalDetailsRequestModel) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = prefsUtil.getString(TOKEN);
+      final response = await interceptor.post(
+          Uri.parse(apiUrls.baseUrl + apiUrls.postLeadSelfie),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+          body: json.encode(personalDetailsRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        final dynamic jsonData = json.decode(response.body);
+        final PostPersonalDetailsResponseModel responseModel =
+        PostPersonalDetailsResponseModel.fromJson(jsonData);
+        return responseModel;
+      }
+      if (response.statusCode == 401) {
+        return PostPersonalDetailsResponseModel(statusCode: 401);
       } else {
         throw Exception('Failed to load products');
       }
