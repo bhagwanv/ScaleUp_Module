@@ -874,9 +874,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
   Future<void> getPersonalDetailAndStateApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    final String? leadId = prefsUtil.getString(USER_ID);
-    Provider.of<DataProvider>(context, listen: false)
-        .getLeadPersonalDetails(leadId!);
+    final String? userId = prefsUtil.getString(USER_ID);
+    Provider.of<DataProvider>(context, listen: false).getLeadPersonalDetails(userId!);
     Provider.of<DataProvider>(context, listen: false).getAllState();
   }
 

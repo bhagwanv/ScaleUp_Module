@@ -94,6 +94,7 @@ class _PancardScreenState extends State<PancardScreen> {
                 isLoading = false;
               }
               var LeadPANData = productProvider.getLeadPANData!;
+              print("Call Pan card");
 
               if (LeadPANData.panCard != null && !isDataClear) {
                 isVerifyPanNumber = true;

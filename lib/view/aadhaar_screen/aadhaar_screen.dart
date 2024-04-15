@@ -205,12 +205,12 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                           color: textFiledBackgroundColour,
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child: (productProvider.getPostSingleFileData != null)
+                        child: (productProvider.getPostForntAdharFileData != null)
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
                                 child: Image.network(
                                   productProvider
-                                      .getPostSingleFileData!.filePath!,
+                                      .getPostForntAdharFileData!.filePath!,
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: 148,
@@ -347,13 +347,13 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                 CommonElevatedButton(
                   onPressed: () {
                     //validate data
-                    if (productProvider.getPostSingleFileData != null) {
-                      if (productProvider.getPostSingleFileData!.filePath !=
+                    if (productProvider.getPostForntAdharFileData != null) {
+                      if (productProvider.getPostForntAdharFileData!.filePath !=
                           null) {
                         frontFileUrl =
-                            productProvider.getPostSingleFileData!.filePath!;
+                            productProvider.getPostForntAdharFileData!.filePath!;
                         frontDocumentId = productProvider
-                            .getPostSingleFileData!.docId!
+                            .getPostForntAdharFileData!.docId!
                             .toString();
                       }
                     }

@@ -78,6 +78,9 @@ class DataProvider extends ChangeNotifier {
   PostSingleFileResponseModel? _getPostSingleFileData;
   PostSingleFileResponseModel? get getPostSingleFileData => _getPostSingleFileData;
 
+  PostSingleFileResponseModel? _getPostForntAdharFileData;
+  PostSingleFileResponseModel? get getPostForntAdharFileData => _getPostForntAdharFileData;
+
   PostSingleFileResponseModel? _getPostBackAadhaarSingleFileData;
   PostSingleFileResponseModel? get getPostBackAadhaarSingleFileData => _getPostBackAadhaarSingleFileData;
 
@@ -204,6 +207,13 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> postSingleFile(File imageFile, bool isValidForLifeTime,
       String validityInDays, String subFolderName) async {
+    _getPostForntAdharFileData = await apiService.postSingleFile(
+        imageFile, isValidForLifeTime, validityInDays, subFolderName);
+    notifyListeners();
+  }
+
+  Future<void> postForntAdharFile(File imageFile, bool isValidForLifeTime,
+      String validityInDays, String subFolderName) async {
     _getPostSingleFileData = await apiService.postSingleFile(
         imageFile, isValidForLifeTime, validityInDays, subFolderName);
     notifyListeners();
@@ -226,8 +236,8 @@ class DataProvider extends ChangeNotifier {
   }
 
 
-  Future<void> getLeadPersonalDetails(String leadID) async {
-    _getPersonalDetailsData = await apiService.getLeadPersnalDetails(leadID);
+  Future<void> getLeadPersonalDetails(String userId) async {
+    _getPersonalDetailsData = await apiService.getLeadPersnalDetails(userId);
     notifyListeners();
   }
 

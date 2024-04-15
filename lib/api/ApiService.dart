@@ -140,13 +140,15 @@ class ApiService {
 
   Future<ValidPanCardResponsModel> getLeadValidPanCard(String panNumber) async {
     if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
         Uri.parse(
             '${apiUrls.baseUrl + apiUrls.getLeadValidPanCard}?PanNumber=$panNumber'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization':
-              'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJlNzM3MTVmYS1kMmUxLTQ4OGItYTBiZi0xZWNmZDRlNWQwNDIiLCJ1c2VybmFtZSI6Ijk1MjIzOTI4MDEiLCJsb2dnZWRvbiI6IjA0LzA5LzIwMjQgMDY6NDc6NTkiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTIyMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIyIiwibmJmIjoxNzEyNjQ1Mjc5LCJleHAiOjE3MTI3MzE2NzksImlhdCI6MTcxMjY0NTI3OSwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.Os-9IT2eM_jkCPuzaLhfep_W5ggvZ-Hg7CRkox3uv_26uXpqrZxpwDO0iBz30oSw13RweSM9CCJlNp2Yt_Cw-0amzo488JtRogjG0aOmJ7lwzc6ed6z396BRGSBi1u3tLpeMJxrgLYBj8eOK-kyaUk9moV4JktjGYP-0T1ixP3U5Jr4-mT_voGLUXdscQTG8Mvkjd2jfLGsxnwP2HNrV0sIlgJN7cO0mXddUt9bm1Hgzd7PgwkyXZTOnYh46CNBszY7XEX6ZSdptGzrJe1upeZg2kSYVBTp2YwPRCvx7ZKA3xlkXdrK4F9WUOF5oHturar4nptgianOFQO0WFdBKRA'
+              'Bearer $token'
           // Set the content type as JSON
         },
       );
@@ -223,13 +225,15 @@ class ApiService {
   Future<ValidPanCardResponsModel> getFathersNameByValidPanCard(
       String panNumber) async {
     if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
         Uri.parse(
             '${apiUrls.baseUrl + apiUrls.getFathersNameByValidPanCard}?PanNumber=$panNumber'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization':
-              'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJlNzM3MTVmYS1kMmUxLTQ4OGItYTBiZi0xZWNmZDRlNWQwNDIiLCJ1c2VybmFtZSI6Ijk1MjIzOTI4MDEiLCJsb2dnZWRvbiI6IjA0LzA5LzIwMjQgMDY6NDc6NTkiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTIyMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIyIiwibmJmIjoxNzEyNjQ1Mjc5LCJleHAiOjE3MTI3MzE2NzksImlhdCI6MTcxMjY0NTI3OSwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.Os-9IT2eM_jkCPuzaLhfep_W5ggvZ-Hg7CRkox3uv_26uXpqrZxpwDO0iBz30oSw13RweSM9CCJlNp2Yt_Cw-0amzo488JtRogjG0aOmJ7lwzc6ed6z396BRGSBi1u3tLpeMJxrgLYBj8eOK-kyaUk9moV4JktjGYP-0T1ixP3U5Jr4-mT_voGLUXdscQTG8Mvkjd2jfLGsxnwP2HNrV0sIlgJN7cO0mXddUt9bm1Hgzd7PgwkyXZTOnYh46CNBszY7XEX6ZSdptGzrJe1upeZg2kSYVBTp2YwPRCvx7ZKA3xlkXdrK4F9WUOF5oHturar4nptgianOFQO0WFdBKRA'
+              'Bearer $token'
           // Set the content type as JSON
         },
       );
@@ -410,14 +414,17 @@ class ApiService {
     }
   }
 
-  Future<PersonalDetailsResponce> getLeadPersnalDetails(String leadID) async {
+  Future<PersonalDetailsResponce> getLeadPersnalDetails(String userId) async {
     if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
         Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=$leadID'),
+            '${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=${userId}'),
         headers: {
-          'Content-Type': 'application/json', // Set the content type as JSON
-        },
+          'Content-Type': 'application/json',
+         // 'Authorization': 'Bearer $token'// Set the content type as JSON
+          'Authorization': '$token'},
       );
       //print(json.encode(leadCurrentRequestModel));
       print(response.body); // Print the response body once here
@@ -507,8 +514,6 @@ class ApiService {
       } else if (response.statusCode == 401) {
         print("Unauthorized access. Please login again.");
         return ValidateAadhaarOTPResponseModel(statusCode: 401);
-      } else if (response.statusCode == 500) {
-        return ValidateAadhaarOTPResponseModel(statusCode: 500);
       } else {
         throw Exception('Failed to load products');
       }

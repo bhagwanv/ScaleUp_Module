@@ -238,39 +238,39 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
 
       await Provider.of<DataProvider>(context, listen: false)
           .validateAadhaarOtp(req);
-
-      if (productProvider.getValidateAadhaarOTPData?.statusCode! == 500) {
-        Navigator.of(context, rootNavigator: true).pop();
-        Utils.showToast("Server Error");
-      } else if (productProvider.getValidateAadhaarOTPData?.statusCode! !=
-          401) {
+      print("Print 0");
+      print("Print ${productProvider.getValidateAadhaarOTPData!.message!}");
+        print("Print 2");
         if (productProvider.getValidateAadhaarOTPData != null) {
+          print("Print 3");
           if (!productProvider.getValidateAadhaarOTPData!.isSuccess!) {
+            print("Print 4");
             Navigator.of(context, rootNavigator: true).pop();
             if (productProvider.getValidateAadhaarOTPData!.message != null) {
-              Utils.showToast(
-                  productProvider.getValidateAadhaarOTPData!.message!);
+              print("Print 5");
+              Utils.showToast(productProvider.getValidateAadhaarOTPData!.message!);
             } else {
+              print("Print 6");
               Utils.showToast("Something went wrong");
             }
           } else {
+            print("Print 7");
             Navigator.of(context, rootNavigator: true).pop();
             fetchData(context);
           }
         } else {
+          print("Print 8");
           Utils.showToast("Something went wrong");
           Navigator.of(context, rootNavigator: true).pop();
         }
-      } else {
-        Navigator.pushAndRemoveUntil<dynamic>(
+
+        /*Navigator.pushAndRemoveUntil<dynamic>(
           context,
           MaterialPageRoute<dynamic>(
             builder: (BuildContext context) =>
                 LoginScreen(activityId: 1, subActivityId: 0),
           ),
-          (route) => false, //if you want to disable back feature set to false
-        );
-      }
+          (route) => false,*/
     }
   }
 
