@@ -9,6 +9,7 @@ import 'package:scale_up_module/view/pancard_screen/model/PostSingleFileResponse
 import 'package:scale_up_module/view/personal_info/model/PostPersonalDetailsResponseModel.dart';
 
 import '../api/ApiService.dart';
+import '../api/ExceptionHandling.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
 import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
@@ -21,6 +22,7 @@ import '../view/business_details_screen/model/PostLeadBuisnessDetailResponsModel
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
+import '../view/pancard_screen/model/FathersNameByValidPanCardResponseModel.dart';
 import '../view/pancard_screen/model/LeadPanResponseModel.dart';
 import '../view/pancard_screen/model/PostLeadPANResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
@@ -42,6 +44,7 @@ import '../view/take_selfi/model/PostLeadSelfieResponseModel.dart';
 class DataProvider extends ChangeNotifier {
   final ApiService apiService = ApiService();
 
+
   GetLeadResponseModel? _getLeadData;
 
   GetLeadResponseModel? get getLeadData => _getLeadData;
@@ -54,13 +57,11 @@ class DataProvider extends ChangeNotifier {
 
   GenrateOptResponceModel? get genrateOptData => _genrateOptData;
 
-  LeadPanResponseModel? _getLeadPANData;
+  Result< LeadPanResponseModel, Exception>? _getLeadPANData;
+  Result< LeadPanResponseModel, Exception>? get getLeadPANData => _getLeadPANData;
 
-  LeadPanResponseModel? get getLeadPANData => _getLeadPANData;
-
-  ValidPanCardResponsModel? _getLeadValidPanCardData;
-
-  ValidPanCardResponsModel? get getLeadValidPanCardData =>
+  Result<ValidPanCardResponsModel,Exception>? _getLeadValidPanCardData;
+  Result<ValidPanCardResponsModel,Exception>? get getLeadValidPanCardData =>
       _getLeadValidPanCardData;
 
   LeadAadhaarResponse? _getLeadAadhaar;
@@ -71,8 +72,8 @@ class DataProvider extends ChangeNotifier {
 
   AadhaarGenerateOTPResponseModel? get getLeadAadharGenerateOTP => _getLeadAadharGenerateOTP;
 
-  ValidPanCardResponsModel? _getFathersNameByValidPanCardData;
-  ValidPanCardResponsModel? get getFathersNameByValidPanCardData => _getFathersNameByValidPanCardData;
+  Result<FathersNameByValidPanCardResponseModel,Exception>? _getFathersNameByValidPanCardData;
+  Result<FathersNameByValidPanCardResponseModel,Exception>? get getFathersNameByValidPanCardData => _getFathersNameByValidPanCardData;
 
   PostSingleFileResponseModel? _getPostSingleFileData;
   PostSingleFileResponseModel? get getPostSingleFileData => _getPostSingleFileData;
@@ -89,8 +90,8 @@ class DataProvider extends ChangeNotifier {
   PostSingleFileResponseModel? _getPostFrontAadhaarSingleFileData;
   PostSingleFileResponseModel? get getPostFrontAadhaarSingleFileData => _getPostFrontAadhaarSingleFileData;
 
-  PostLeadPanResponseModel? _getPostLeadPanData;
-  PostLeadPanResponseModel? get getPostLeadPaneData => _getPostLeadPanData;
+  Result<PostLeadPanResponseModel,Exception>? _getPostLeadPanData;
+  Result<PostLeadPanResponseModel,Exception>? get getPostLeadPaneData => _getPostLeadPanData;
 
 
   VerifyOtpResponce? _getVerifyData;

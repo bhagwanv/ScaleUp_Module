@@ -25,6 +25,10 @@ import '../splash_screen/model/GetLeadResponseModel.dart';
 import '../splash_screen/model/LeadCurrentRequestModel.dart';
 import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'PermissionsScreen.dart';
+import 'model/FathersNameByValidPanCardResponseModel.dart';
+import 'model/LeadPanResponseModel.dart';
+import 'model/PostLeadPANResponseModel.dart';
+import 'model/ValidPanCardResponsModel.dart';
 
 class PancardScreen extends StatefulWidget {
   final int activityId;
@@ -51,25 +55,29 @@ class _PancardScreenState extends State<PancardScreen> {
   String dobAsPan = "";
   int documentId = 0;
   var isImageDelete = false;
+  late LeadPanResponseModel LeadPANData;
+  late ValidPanCardResponsModel validPanCardResponsModel;
+  late FathersNameByValidPanCardResponseModel
+      fathersNameByValidPanCardResponseModel;
+  late PostLeadPanResponseModel postLeadPanResponseModel;
 
   @override
   void initState() {
     super.initState();
     //Api Call
-    callApi(context);
+    LeadPANApi(context);
   }
 
   // Callback function to receive the selected image
-  void _onImageSelected(File imageFile) async{
+  void _onImageSelected(File imageFile) async {
     // Handle the selected image here
     // For example, you can setState to update UI with the selected image
-      isImageDelete=false;
-      Utils.onLoading(context, "");
-      await Provider.of<DataProvider>(context, listen: false)
-          .postSingleFile(imageFile, true, "", "");
-     // Navigator.pop(context);
-      Navigator.of(context, rootNavigator: true).pop();
-
+    isImageDelete = false;
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .postSingleFile(imageFile, true, "", "");
+    // Navigator.pop(context);
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   void _handlePermissionsAccepted(bool accept) {
@@ -95,29 +103,42 @@ class _PancardScreenState extends State<PancardScreen> {
                 Navigator.of(context, rootNavigator: true).pop();
                 isLoading = false;
               }
-              var LeadPANData = productProvider.getLeadPANData!;
 
-              if (LeadPANData.panCard != null && !isDataClear&& !isImageDelete) {
-                isVerifyPanNumber = true;
-                isEnabledPanNumber = false;
-                _panNumberCl.text = LeadPANData.panCard!;
-                _nameAsPanCl.text = LeadPANData.nameOnCard!;
-                  var formateDob=Utils.dateFormate(context,LeadPANData.dob!);
-                dobAsPan=LeadPANData.dob!;
-                _dOBAsPanCl.text =formateDob;
-                _fatherNameAsPanCl.text = LeadPANData.fatherName!;
-               image = LeadPANData.panImagePath!;
-                documentId = LeadPANData.documentId!;
+              if (productProvider.getLeadPANData != null) {
+                productProvider.getLeadPANData!.when(
+                  success: (LeadPanResponseModel) {
+                    // Handle successful response
+                    LeadPANData = LeadPanResponseModel;
+
+                    if (LeadPANData.panCard != null &&
+                        !isDataClear &&
+                        !isImageDelete) {
+                      isVerifyPanNumber = true;
+                      isEnabledPanNumber = false;
+                      _panNumberCl.text = LeadPANData.panCard!;
+                      _nameAsPanCl.text = LeadPANData.nameOnCard!;
+                      var formateDob =
+                          Utils.dateFormate(context, LeadPANData.dob!);
+                      dobAsPan = LeadPANData.dob!;
+                      _dOBAsPanCl.text = formateDob;
+                      _fatherNameAsPanCl.text = LeadPANData.fatherName!;
+                      image = LeadPANData.panImagePath!;
+                      documentId = LeadPANData.documentId!;
+                    }
+                  },
+                  failure: (exception) {
+                    // Handle failure
+                    print("dfjsf2");
+                    //print('Failure! Error: ${exception.message}');
+                  },
+                );
               }
 
-              if (productProvider.getPostSingleFileData != null && !isImageDelete) {
-                if (productProvider
-                    .getPostSingleFileData!.filePath !=
-                    null) {
-                  image = productProvider
-                      .getPostSingleFileData!.filePath!;
-                  documentId = productProvider
-                      .getPostSingleFileData!.docId!;
+              if (productProvider.getPostSingleFileData != null &&
+                  !isImageDelete) {
+                if (productProvider.getPostSingleFileData!.filePath != null) {
+                  image = productProvider.getPostSingleFileData!.filePath!;
+                  documentId = productProvider.getPostSingleFileData!.docId!;
                 }
               }
 
@@ -191,78 +212,9 @@ class _PancardScreenState extends State<PancardScreen> {
                                     print(
                                         'TextField value: $text (${text.length})');
                                     if (text.length == 10) {
-                                      try {
-                                        // Make API Call to validate PAN card
-                                        Utils.onLoading(context, "Loading...");
-                                        await Provider.of<DataProvider>(context,
-                                                listen: false)
-                                            .getLeadValidPanCard(
-                                                _panNumberCl.text);
-                                        if (productProvider
-                                                .getLeadValidPanCardData
-                                                ?.statusCode !=
-                                            401) {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop();
-                                          if (productProvider
-                                                  .getLeadValidPanCardData!
-                                                  .nameOnPancard !=
-                                              null) {
-                                            _nameAsPanCl.text = productProvider
-                                                .getLeadValidPanCardData!
-                                                .nameOnPancard!;
-                                            isVerifyPanNumber = true;
-                                            Utils.showToast(productProvider
-                                                .getLeadValidPanCardData!
-                                                .message!);
-                                            Utils.onLoading(context, "");
-                                            await Provider.of<DataProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .getFathersNameByValidPanCard(
-                                                    _panNumberCl.text);
-                                            if (productProvider
-                                                    .getFathersNameByValidPanCardData !=
-                                                null) {
-                                              Navigator.of(context,
-                                                      rootNavigator: true)
-                                                  .pop();
-                                            }
-                                            if (productProvider
-                                                    .getFathersNameByValidPanCardData!
-                                                    .dob !=
-                                                Null) {
-                                               var formateDob=Utils.dateFormate(context,productProvider
-                                                  .getFathersNameByValidPanCardData!
-                                                  .dob);
-                                              dobAsPan=productProvider
-                                                  .getFathersNameByValidPanCardData!
-                                                  .dob;
-                                              _dOBAsPanCl.text = formateDob;
-                                            }
-                                          } else {
-                                            Utils.showToast(productProvider
-                                                .getLeadValidPanCardData!
-                                                .message!);
-                                          }
-                                        } else {
-                                          Navigator.pushAndRemoveUntil<dynamic>(
-                                            context,
-                                            MaterialPageRoute<dynamic>(
-                                              builder: (BuildContext context) =>
-                                                  LoginScreen(
-                                                      activityId: 1,
-                                                      subActivityId: 0),
-                                            ),
-                                            (route) =>
-                                                false, //if you want to disable back feature set to false
-                                          );
-                                        }
-                                      } catch (error) {
-                                        // Handle any errors that occur during the API call
-                                        print('Error: $error');
-                                      }
+                                      // Make API Call to validate PAN card
+                                      await getLeadValidPanCard(context,
+                                          _panNumberCl.text, productProvider);
                                     }
                                   },
                                 ),
@@ -279,13 +231,13 @@ class _PancardScreenState extends State<PancardScreen> {
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                              isImageDelete=true;
+                                              isImageDelete = true;
                                               isEnabledPanNumber = true;
                                               isVerifyPanNumber = false;
                                               isDataClear = true;
                                               _panNumberCl.text = "";
                                               _nameAsPanCl.text = "";
-                                              dobAsPan="";
+                                              dobAsPan = "";
                                               _dOBAsPanCl.text = "";
                                               _fatherNameAsPanCl.text = "";
                                               image = "";
@@ -407,7 +359,8 @@ class _PancardScreenState extends State<PancardScreen> {
                             Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(color: Color(0xff0196CE))),
+                                    border:
+                                        Border.all(color: Color(0xff0196CE))),
                                 width: double.infinity,
                                 child: GestureDetector(
                                   onTap: () {
@@ -453,14 +406,16 @@ class _PancardScreenState extends State<PancardScreen> {
                                                   const Text(
                                                     'Upload PAN Image',
                                                     style: TextStyle(
-                                                        color: Color(0xff0196CE),
+                                                        color:
+                                                            Color(0xff0196CE),
                                                         fontSize: 12),
                                                   ),
-                                                  const Text('Supports : JPEG, PNG',
+                                                  const Text(
+                                                      'Supports : JPEG, PNG',
                                                       style: TextStyle(
                                                           fontSize: 12,
-                                                          color:
-                                                              Color(0xffCACACA))),
+                                                          color: Color(
+                                                              0xffCACACA))),
                                                 ],
                                               ),
                                   ),
@@ -472,12 +427,15 @@ class _PancardScreenState extends State<PancardScreen> {
                                   image = "";
                                 });
                               },
-                              child: !image.isEmpty?Container(
-                                padding: EdgeInsets.all(4),
-                                alignment: Alignment.topRight,
-                                child: SvgPicture.asset(
-                                    'assets/icons/delete_icon.svg'),
-                              ):Container(),)
+                              child: !image.isEmpty
+                                  ? Container(
+                                      padding: EdgeInsets.all(4),
+                                      alignment: Alignment.topRight,
+                                      child: SvgPicture.asset(
+                                          'assets/icons/delete_icon.svg'),
+                                    )
+                                  : Container(),
+                            )
                           ],
                         ),
                         SizedBox(height: 20),
@@ -541,14 +499,13 @@ class _PancardScreenState extends State<PancardScreen> {
                             final String? userId = prefsUtil.getString(USER_ID);
                             final int? companyId = prefsUtil.getInt(COMPANY_ID);
 
-
-
                             if (_panNumberCl.text.isEmpty) {
                               Utils.showToast("Please Enter Pan Number");
                             } else if (_nameAsPanCl.text.isEmpty) {
                               Utils.showToast(
                                   "Please Enter Name (As Per Pan))");
-                            } else if (_dOBAsPanCl.text.isEmpty || dobAsPan.isEmpty) {
+                            } else if (_dOBAsPanCl.text.isEmpty ||
+                                dobAsPan.isEmpty) {
                               Utils.showToast(
                                   "Please Enter Name (As Per Pan))");
                             } else if (_fatherNameAsPanCl.text.isEmpty) {
@@ -574,38 +531,8 @@ class _PancardScreenState extends State<PancardScreen> {
                                 dob: dobAsPan,
                                 name: _nameAsPanCl.text,
                               );
-
-                              Utils.onLoading(context, "Loading...");
-                              await Provider.of<DataProvider>(context,
-                                      listen: false)
-                                  .postLeadPAN(postLeadPanRequestModel);
-
-                              if (productProvider
-                                      .getPostLeadPaneData?.statusCode !=
-                                  401) {
-                                if (productProvider.getPostLeadPaneData !=
-                                    null) {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
-                                  Utils.showToast(productProvider
-                                      .getPostLeadPaneData!.message!);
-                                  if (productProvider
-                                      .getPostLeadPaneData!.isSuccess!) {
-                                    fetchData(context);
-                                  }
-                                }
-                              } else {
-                                Navigator.pushAndRemoveUntil<dynamic>(
-                                  context,
-                                  MaterialPageRoute<dynamic>(
-                                    builder: (BuildContext context) =>
-                                        LoginScreen(
-                                            activityId: 1, subActivityId: 0),
-                                  ),
-                                  (route) =>
-                                      false, //if you want to disable back feature set to false
-                                );
-                              }
+                              await postLeadPAN(context, productProvider,
+                                  postLeadPanRequestModel);
                             }
                           },
                           text: "next",
@@ -645,15 +572,15 @@ class _PancardScreenState extends State<PancardScreen> {
     return TextSpan(
       text: text,
       style: TextStyle(
-        color: Colors.black, // Set text color to blue for clickable text
-        decoration: TextDecoration.underline,
-          fontWeight:FontWeight.bold// Underline clickable text
-      ),
+          color: Colors.black, // Set text color to blue for clickable text
+          decoration: TextDecoration.underline,
+          fontWeight: FontWeight.bold // Underline clickable text
+          ),
       recognizer: TapGestureRecognizer()..onTap = onClick,
     );
   }
 
-  Future<void> callApi(BuildContext context) async {
+  Future<void> LeadPANApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
 
@@ -692,6 +619,109 @@ class _PancardScreenState extends State<PancardScreen> {
       if (kDebugMode) {
         print('Error occurred during API call: $error');
       }
+    }
+  }
+
+  Future<void> getLeadValidPanCard(BuildContext context, String pancardNumber,
+      DataProvider productProvider) async {
+    Utils.onLoading(context, "Loading...");
+    await Provider.of<DataProvider>(context, listen: false)
+        .getLeadValidPanCard(pancardNumber);
+    Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.getLeadValidPanCardData != null) {
+      productProvider.getLeadValidPanCardData!.when(
+        success: (ValidPanCardResponsModel) async {
+          // Handle successful response
+          validPanCardResponsModel = ValidPanCardResponsModel;
+          if (validPanCardResponsModel.nameOnPancard != null) {
+            _nameAsPanCl.text = validPanCardResponsModel.nameOnPancard!;
+            isVerifyPanNumber = true;
+            Utils.showToast(validPanCardResponsModel.message!);
+
+            await getFathersNameByValidPanCard(
+                context, pancardNumber, productProvider);
+          }
+        },
+        failure: (exception) {
+          // Handle failure
+          //print('Failure! Error: ${exception.message}');
+          Navigator.pushAndRemoveUntil<dynamic>(
+            context,
+            MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) =>
+                  LoginScreen(activityId: 1, subActivityId: 0),
+            ),
+            (route) => false, //if you want to disable back feature set to false
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> getFathersNameByValidPanCard(BuildContext context,
+      String pancardNumber, DataProvider productProvider) async {
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .getFathersNameByValidPanCard(pancardNumber);
+    Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.getFathersNameByValidPanCardData != null) {
+      productProvider.getFathersNameByValidPanCardData!.when(
+        success: (FathersNameByValidPanCardResponseModel) {
+          // Handle successful response
+          fathersNameByValidPanCardResponseModel =
+              FathersNameByValidPanCardResponseModel;
+          if (fathersNameByValidPanCardResponseModel.dob != Null) {
+            var formateDob = Utils.dateFormate(
+                context, fathersNameByValidPanCardResponseModel.dob);
+            dobAsPan = fathersNameByValidPanCardResponseModel.dob;
+            _dOBAsPanCl.text = formateDob;
+          }
+        },
+        failure: (exception) {
+          // Handle failure
+          Navigator.pushAndRemoveUntil<dynamic>(
+            context,
+            MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) =>
+                  LoginScreen(activityId: 1, subActivityId: 0),
+            ),
+            (route) => false, //if you want to disable back feature set to false
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> postLeadPAN(BuildContext context, DataProvider productProvider,
+      PostLeadPanRequestModel postLeadPanRequestModel) async {
+    Utils.onLoading(context, "Loading...");
+    await Provider.of<DataProvider>(context, listen: false)
+        .postLeadPAN(postLeadPanRequestModel);
+    Navigator.of(context, rootNavigator: true).pop();
+    if (productProvider.getPostLeadPaneData != null) {
+      productProvider.getPostLeadPaneData!.when(
+        success: (PostLeadPanResponseModel) {
+          // Handle successful response
+          postLeadPanResponseModel = PostLeadPanResponseModel;
+          Utils.showToast(postLeadPanResponseModel.message!);
+          if (postLeadPanResponseModel.isSuccess!) {
+            fetchData(context);
+          }
+        },
+        failure: (exception) {
+          // Handle failure
+          Navigator.pushAndRemoveUntil<dynamic>(
+            context,
+            MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) =>
+                  LoginScreen(activityId: 1, subActivityId: 0),
+            ),
+            (route) => false, //if you want to disable back feature set to false
+          );
+        },
+      );
     }
   }
 }
