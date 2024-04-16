@@ -43,13 +43,14 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   final TextEditingController _addressLineController = TextEditingController();
   final TextEditingController _addressLine2Controller = TextEditingController();
   final TextEditingController _pinCodeController = TextEditingController();
-  final TextEditingController _BusinessDocumentNumberController = TextEditingController();
+  final TextEditingController _businessDocumentNumberController =
+      TextEditingController();
   String? selectedStateValue;
   String? selectedCityValue;
 
   var gstNumber = "";
   var image = "";
-  int? buisnessProofDocId;
+  int? businessProofDocId;
 
   var isClearData = false;
   var isImageDelete = false;
@@ -198,19 +199,15 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     return itemsHeights;
   }
 
-  DateTime date = DateTime.now().subtract(Duration(days: 1));
+  DateTime date = DateTime.now().subtract(const Duration(days: 1));
 
   String minDateTime = '2010-05-12';
   String maxDateTime = '2030-11-25';
   String initDateTime = '2021-08-31';
 
-  bool _showTitle = true;
-
-  DateTimePickerLocale? _locale = DateTimePickerLocale.en_us;
-  final List<DateTimePickerLocale> _locales = DateTimePickerLocale.values;
-
-  String _format = 'yyyy-MMMM-dd';
-  final TextEditingController _formatCtrl = TextEditingController();
+  final bool _showTitle = true;
+  final DateTimePickerLocale _locale = DateTimePickerLocale.en_us;
+  final String _format = 'yyyy-MMMM-dd';
 
   DateTime? _dateTime;
   String? slectedDate = "";
@@ -225,7 +222,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           color: Colors.black38,
         ),
         title: 'Business Incorporation Date',
-        titleTextStyle: TextStyle(fontSize: 14),
+        titleTextStyle: const TextStyle(fontSize: 14),
         showTitle: _showTitle,
         selectionOverlayColor: Colors.blue,
         // showTitle: false,
@@ -236,7 +233,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       maxDateTime: DateTime.parse(maxDateTime),
       initialDateTime: _dateTime,
       dateFormat: _format,
-      locale: _locale!,
+      locale: _locale,
       onClose: () => debugPrint("----- onClose -----"),
       onCancel: () => debugPrint('onCancel'),
       onChange: (dateTime, List<int> index) {
@@ -266,532 +263,552 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        top: true,
-        bottom: true,
-        child:
-            Consumer<DataProvider>(builder: (context, productProvider, child) {
-          if (productProvider.getLeadBusinessDetailData == null && isLoading) {
-            return Loader();
-          } else {
-            if (productProvider.getLeadBusinessDetailData != null &&
-                isLoading) {
-              Navigator.of(context, rootNavigator: true).pop();
-              isLoading = false;
-            }
-            if (productProvider.getLeadBusinessDetailData != null) {
-              if (productProvider.getLeadBusinessDetailData?.businessName !=
-                      null &&
-                  productProvider.getLeadBusinessDetailData?.doi != null &&
-                  !isClearData &&
-                  !isImageDelete) {
-                _gstController.text =
-                    productProvider.getLeadBusinessDetailData!.busGSTNO!;
-                gstNumber =
-                    productProvider.getLeadBusinessDetailData!.busGSTNO!;
-                _businessNameController.text =
-                    productProvider.getLeadBusinessDetailData!.businessName!;
-                _addressLineController.text =
-                    productProvider.getLeadBusinessDetailData!.addressLineOne!;
-                slectedDate = Utils.dateFormate(
-                    context, productProvider.getLeadBusinessDetailData!.doi!);
-                _addressLine2Controller.text =
-                    productProvider.getLeadBusinessDetailData!.addressLineTwo!;
-                _pinCodeController.text = productProvider
-                    .getLeadBusinessDetailData!.zipCode!
-                    .toString();
-                _BusinessDocumentNumberController.text = productProvider
-                    .getLeadBusinessDetailData!.buisnessDocumentNo!;
-                image = productProvider
-                    .getLeadBusinessDetailData!.buisnessProofUrl!;
-                selectedBusinessTypeValue = productProvider.getLeadBusinessDetailData!.busEntityType!;
-                selectedStateValue = productProvider.getLeadBusinessDetailData!.stateId!.toString();
-                selectedCityValue = productProvider.getLeadBusinessDetailData!.cityId!.toString();
-                selectedMonthlySalesTurnoverValue = productProvider.getLeadBusinessDetailData!.buisnessMonthlySalary!.toString();
-                buisnessProofDocId = productProvider.getLeadBusinessDetailData!.buisnessProofDocId!;
+          body: SafeArea(
+            top: true,
+            bottom: true,
+            child: Consumer<DataProvider>(
+                builder: (context, productProvider, child) {
+              if (productProvider.getLeadBusinessDetailData == null &&
+                  isLoading) {
+                return const Loader();
               } else {
-                updateData = true;
-              }
-            }
-
-            if (productProvider.getCustomerDetailUsingGSTData != null) {
-              if (productProvider.getCustomerDetailUsingGSTData!.busGSTNO != null  && !gstUpdate) {
-                if(productProvider.getCustomerDetailUsingGSTData!.busGSTNO!
-                    .isNotEmpty) {
-                  slectedDate = Utils.dateFormate(context, productProvider.getCustomerDetailUsingGSTData!.doi!);
-                  updateData = false;
+                if (productProvider.getLeadBusinessDetailData != null &&
+                    isLoading) {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  isLoading = false;
                 }
-              }
-            }
+                if (productProvider.getLeadBusinessDetailData != null) {
+                  if (productProvider.getLeadBusinessDetailData?.businessName !=
+                          null &&
+                      productProvider.getLeadBusinessDetailData?.doi != null &&
+                      !isClearData &&
+                      !isImageDelete) {
+                    if (productProvider.getLeadBusinessDetailData!.busGSTNO !=
+                        null) {
+                      _gstController.text =
+                          productProvider.getLeadBusinessDetailData!.busGSTNO!;
+                      gstNumber =
+                          productProvider.getLeadBusinessDetailData!.busGSTNO!;
+                    }
 
-            if (productProvider.getAllCityData != null) {
-              citylist = productProvider.getAllCityData!;
-            }
+                    _businessNameController.text = productProvider
+                        .getLeadBusinessDetailData!.businessName!;
+                    _addressLineController.text = productProvider
+                        .getLeadBusinessDetailData!.addressLineOne!;
+                    slectedDate = Utils.dateFormate(context,
+                        productProvider.getLeadBusinessDetailData!.doi!);
+                    _addressLine2Controller.text = productProvider
+                        .getLeadBusinessDetailData!.addressLineTwo!;
+                    _pinCodeController.text = productProvider
+                        .getLeadBusinessDetailData!.zipCode!
+                        .toString();
+                    _businessDocumentNumberController.text = productProvider
+                        .getLeadBusinessDetailData!.buisnessDocumentNo!;
+                    image = productProvider
+                        .getLeadBusinessDetailData!.buisnessProofUrl!;
+                    selectedBusinessTypeValue = productProvider
+                        .getLeadBusinessDetailData!.busEntityType!;
+                    selectedStateValue = productProvider
+                        .getLeadBusinessDetailData!.stateId!
+                        .toString();
+                    selectedCityValue = productProvider
+                        .getLeadBusinessDetailData!.cityId!
+                        .toString();
+                    selectedMonthlySalesTurnoverValue = productProvider
+                        .getLeadBusinessDetailData!.incomeSlab!
+                        .toString();
+                    businessProofDocId = productProvider
+                        .getLeadBusinessDetailData!.buisnessProofDocId!;
+                  } else {
+                    updateData = true;
+                  }
+                }
 
-            if (productProvider.getpostBusineesDoumentSingleFileData != null &&
-                !isImageDelete) {
-              if (productProvider
-                      .getpostBusineesDoumentSingleFileData!.filePath !=
-                  null) {
-                image = productProvider.getpostBusineesDoumentSingleFileData!.filePath!;
-                buisnessProofDocId = productProvider.getpostBusineesDoumentSingleFileData!.docId!;
-              }
-            }
+                if (productProvider.getCustomerDetailUsingGSTData != null) {
+                  if (productProvider.getCustomerDetailUsingGSTData!.busGSTNO !=
+                          null &&
+                      !gstUpdate) {
+                    if (productProvider
+                        .getCustomerDetailUsingGSTData!.busGSTNO!.isNotEmpty) {
+                      slectedDate = Utils.dateFormate(context,
+                          productProvider.getCustomerDetailUsingGSTData!.doi!);
+                      updateData = false;
+                    }
+                  }
+                }
 
-            return Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30.0),
-                      child: SvgPicture.asset(
-                          "assets/icons/back_arrow_icon.svg",
-                          colorFilter: const ColorFilter.mode(
-                              kPrimaryColor, BlendMode.srcIn)),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20, bottom: 0),
-                      child: Text(
-                        "Step 1",
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                    const Text(
-                      "Business Details",
-                      style: TextStyle(
-                        fontSize: 40.0,
-                        color: blackSmall,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 28.0,
-                    ),
-                    Stack(
+                if (productProvider.getAllCityData != null) {
+                  citylist = productProvider.getAllCityData!;
+                }
+
+                if (productProvider.getpostBusineesDoumentSingleFileData !=
+                        null &&
+                    !isImageDelete) {
+                  if (productProvider
+                          .getpostBusineesDoumentSingleFileData!.filePath !=
+                      null) {
+                    image = productProvider
+                        .getpostBusineesDoumentSingleFileData!.filePath!;
+                    businessProofDocId = productProvider
+                        .getpostBusineesDoumentSingleFileData!.docId!;
+                  }
+                }
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 30.0, vertical: 0.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CommonTextField(
-                            controller: _gstController,
-                            hintText: "07AACDW15215NF",
-                            keyboardType: TextInputType.text,
-                            enabled: updateData,
-                            labelText: "GST Number(Optional)",
-                            textCapitalization: TextCapitalization.characters,
-                            inputFormatter: [
-                              LengthLimitingTextInputFormatter(15)
-                            ],
-                            onChanged: (text) async {
-                              print('TextField value: $text (${text.length})');
-                              if (text.length == 15) {
-                                print(
-                                    'TextField value11: $text (${text.length})');
-                                try {
-                                  Utils.hideKeyBored(context);
-                                  await getCustomerDetailUsingGST(
-                                      context, _gstController.text);
-                                  if (productProvider
-                                          .getCustomerDetailUsingGSTData !=
-                                      null) {
-                                    if (productProvider.getCustomerDetailUsingGSTData!.busGSTNO != null) {
-                                      Utils.showToast(productProvider
-                                          .getCustomerDetailUsingGSTData!
-                                          .message!);
-                                      updateData = false;
-                                      gstUpdate = false;
-                                      cityCallInitial = true;
-                                      _gstController.text = productProvider
-                                          .getCustomerDetailUsingGSTData!
-                                          .busGSTNO!;
-                                      gstNumber = productProvider
-                                          .getCustomerDetailUsingGSTData!
-                                          .busGSTNO!;
-                                      _businessNameController.text =
-                                          productProvider
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30.0),
+                          child: SvgPicture.asset(
+                              "assets/icons/back_arrow_icon.svg",
+                              colorFilter: const ColorFilter.mode(
+                                  kPrimaryColor, BlendMode.srcIn)),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 20, bottom: 0),
+                          child: Text(
+                            "Step 1",
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                        const Text(
+                          "Business Details",
+                          style: TextStyle(
+                            fontSize: 40.0,
+                            color: blackSmall,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 28.0,
+                        ),
+                        Stack(
+                          children: [
+                            CommonTextField(
+                                controller: _gstController,
+                                hintText: "07AACDW15215NF",
+                                keyboardType: TextInputType.text,
+                                enabled: updateData,
+                                labelText: "GST Number(Optional)",
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                inputFormatter: [
+                                  LengthLimitingTextInputFormatter(15)
+                                ],
+                                onChanged: (text) async {
+                                  if (text.length == 15) {
+                                    try {
+                                      Utils.hideKeyBored(context);
+                                      await getCustomerDetailUsingGST(
+                                          context, _gstController.text);
+                                      if (productProvider
+                                              .getCustomerDetailUsingGSTData !=
+                                          null) {
+                                        if (productProvider
+                                                .getCustomerDetailUsingGSTData!
+                                                .busGSTNO !=
+                                            null) {
+                                          Utils.showToast(productProvider
                                               .getCustomerDetailUsingGSTData!
-                                              .businessName!;
-                                      _addressLineController.text =
-                                          productProvider
+                                              .message!);
+                                          updateData = false;
+                                          gstUpdate = false;
+                                          cityCallInitial = true;
+                                          _gstController.text = productProvider
                                               .getCustomerDetailUsingGSTData!
-                                              .addressLineOne!;
-                                      _addressLine2Controller.text =
-                                          productProvider
+                                              .busGSTNO!;
+                                          gstNumber = productProvider
                                               .getCustomerDetailUsingGSTData!
-                                              .addressLineTwo!;
-                                      _pinCodeController.text = productProvider
-                                          .getCustomerDetailUsingGSTData!
-                                          .zipCode!
-                                          .toString();
+                                              .busGSTNO!;
+                                          _businessNameController.text =
+                                              productProvider
+                                                  .getCustomerDetailUsingGSTData!
+                                                  .businessName!;
+                                          _addressLineController.text =
+                                              productProvider
+                                                  .getCustomerDetailUsingGSTData!
+                                                  .addressLineOne!;
+                                          _addressLine2Controller.text =
+                                              productProvider
+                                                  .getCustomerDetailUsingGSTData!
+                                                  .addressLineTwo!;
+                                          _pinCodeController.text =
+                                              productProvider
+                                                  .getCustomerDetailUsingGSTData!
+                                                  .zipCode!
+                                                  .toString();
 
-                                      _BusinessDocumentNumberController.text =
-                                          productProvider
+                                          _businessDocumentNumberController
+                                                  .text =
+                                              productProvider
+                                                  .getCustomerDetailUsingGSTData!
+                                                  .buisnessDocumentNo!;
+                                        } else {
+                                          Utils.showToast(productProvider
                                               .getCustomerDetailUsingGSTData!
-                                              .buisnessDocumentNo!;
-                                    } else {
-                                      Utils.showToast(productProvider
-                                          .getCustomerDetailUsingGSTData!
-                                          .message!);
+                                              .message!);
+                                        }
+                                      }
+                                    } catch (error) {
+                                      debugPrint('Error: $error');
                                     }
                                   }
-                                } catch (error) {
-                                  print('Error: $error');
-                                }
-                              }
-                            }),
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: GestureDetector(
-                            onTap: () {
-                              // print('Edit icon tapped');
-                              setState(() {
-                                updateData = true;
-                                isImageDelete = true;
-                                gstUpdate = true;
-                                setCityListFirstTime = false;
-                                _gstController.text = "";
-                                _businessNameController.text = "";
-                                _addressLineController.text = "";
-                                _addressLine2Controller.text = "";
-                                _pinCodeController.text = "";
-                                _BusinessDocumentNumberController.text = "";
-                                slectedDate = "";
-                                selectedBusinessTypeValue = null;
-                                selectedStateValue = null;
-                                selectedCityValue = null;
-                                selectedMonthlySalesTurnoverValue = null;
+                                }),
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  // print('Edit icon tapped');
+                                  setState(() {
+                                    updateData = true;
+                                    isImageDelete = true;
+                                    gstUpdate = true;
+                                    setCityListFirstTime = false;
+                                    _gstController.text = "";
+                                    _businessNameController.text = "";
+                                    _addressLineController.text = "";
+                                    _addressLine2Controller.text = "";
+                                    _pinCodeController.text = "";
+                                    _businessDocumentNumberController.text = "";
+                                    slectedDate = "";
+                                    selectedBusinessTypeValue = null;
+                                    selectedStateValue = null;
+                                    selectedCityValue = null;
+                                    selectedMonthlySalesTurnoverValue = null;
 
-                                isClearData = true;
-                                gstNumber = "";
-                                image = "";
-                                buisnessProofDocId = null;
-                              });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              child: SvgPicture.asset(
-                                'assets/icons/edit_icon.svg',
-                                semanticsLabel: 'Edit Icon SVG',
+                                    isClearData = true;
+                                    gstNumber = "";
+                                    image = "";
+                                    businessProofDocId = null;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/edit_icon.svg',
+                                    semanticsLabel: 'Edit Icon SVG',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _businessNameController,
+                          enabled: updateData,
+                          hintText: "Shree Balaji Traders ",
+                          labelText: "Business Name(As Per Doc)",
+                        ),
+                        const SizedBox(
+                          height: 22.0,
+                        ),
+                        const Text(
+                          "Business Address ",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: gryColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _addressLineController,
+                          enabled: updateData,
+                          hintText: "Address Line 1",
+                          labelText: "Address Line 1",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _addressLine2Controller,
+                          enabled: updateData,
+                          hintText: "Address Line 2",
+                          labelText: "Address Line 2",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        CommonTextField(
+                          controller: _pinCodeController,
+                          enabled: updateData,
+                          hintText: "Pin Code",
+                          labelText: "Pin Code",
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        buildStateField(productProvider),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        buildCityField(productProvider),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        DropdownButtonFormField2<String>(
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 8),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                          ),
+                          hint: const Text(
+                            'Business Type',
+                            style: TextStyle(
+                              color: blueColor,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          items: _addDividersAfterItems(businessTypeList),
+                          value: selectedBusinessTypeValue,
+                          onChanged: (String? value) {
+                            selectedBusinessTypeValue = value;
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.only(right: 8),
+                          ),
+                          dropdownStyleData: const DropdownStyleData(
+                            maxHeight: 200,
+                          ),
+                          menuItemStyleData: MenuItemStyleData(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            customHeights:
+                                _getCustomItemsHeights(businessTypeList),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            openMenuIcon: Icon(Icons.arrow_drop_up),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        DropdownButtonFormField2<String>(
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 8),
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                          ),
+                          hint: const Text(
+                            'Monthly Sales Turnover',
+                            style: TextStyle(
+                              color: blueColor,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          items:
+                              _addDividersAfterItems(monthlySalesTurnoverList),
+                          value: selectedMonthlySalesTurnoverValue,
+                          onChanged: (String? value) {
+                            selectedMonthlySalesTurnoverValue = value;
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.only(right: 8),
+                          ),
+                          dropdownStyleData: const DropdownStyleData(
+                            maxHeight: 200,
+                          ),
+                          menuItemStyleData: MenuItemStyleData(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            customHeights: _getCustomItemsHeights(
+                                monthlySalesTurnoverList),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            openMenuIcon: Icon(Icons.arrow_drop_up),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15.0,
+                        ),
+                        InkWell(
+                          onTap: updateData
+                              ? () {
+                                  _showDatePicker(context);
+                                }
+                              : null,
+                          // Set onTap to null when field is disabled
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: textFiledBackgroundColour,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: kPrimaryColor),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 16),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    slectedDate!.isNotEmpty
+                                        ? '$slectedDate'
+                                        : 'Business Incorporation Date',
+                                    style: const TextStyle(fontSize: 16.0),
+                                  ),
+                                  const Icon(Icons.date_range),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _businessNameController,
-                      enabled: updateData,
-                      hintText: "Shree Balaji Traders ",
-                      labelText: "Business Name(As Per Doc)",
-                    ),
-                    const SizedBox(
-                      height: 22.0,
-                    ),
-                    const Text(
-                      "Business Address ",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: gryColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.start,
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _addressLineController,
-                      enabled: updateData,
-                      hintText: "Address Line 1",
-                      labelText: "Address Line 1",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _addressLine2Controller,
-                      enabled: updateData,
-                      hintText: "Address Line 2",
-                      labelText: "Address Line 2",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    CommonTextField(
-                      controller: _pinCodeController,
-                      enabled: updateData,
-                      hintText: "Pin Code",
-                      labelText: "Pin Code",
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    buildStateField(productProvider),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    buildCityField(productProvider),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    DropdownButtonFormField2<String>(
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        fillColor: textFiledBackgroundColour,
-                        filled: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 8),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
+                        const SizedBox(
+                          height: 22.0,
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
+                        const Text(
+                          "Business Address ",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: gryColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.start,
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
+                        const SizedBox(
+                          height: 15.0,
                         ),
-                      ),
-                      hint: const Text(
-                        'Business Type',
-                        style: TextStyle(
-                          color: blueColor,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      items: _addDividersAfterItems(businessTypeList),
-                      value: selectedBusinessTypeValue,
-                      onChanged: (String? value) {
-                        selectedBusinessTypeValue = value;
-                      },
-                      buttonStyleData: const ButtonStyleData(
-                        padding: EdgeInsets.only(right: 8),
-                      ),
-                      dropdownStyleData: const DropdownStyleData(
-                        maxHeight: 200,
-                      ),
-                      menuItemStyleData: MenuItemStyleData(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        customHeights: _getCustomItemsHeights(businessTypeList),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        openMenuIcon: Icon(Icons.arrow_drop_up),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    DropdownButtonFormField2<String>(
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 8),
-                        fillColor: textFiledBackgroundColour,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
-                        ),
-                      ),
-                      hint: const Text(
-                        'Monthly Sales Turnover',
-                        style: TextStyle(
-                          color: blueColor,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      items: _addDividersAfterItems(monthlySalesTurnoverList),
-                      value: selectedMonthlySalesTurnoverValue,
-                      onChanged: (String? value) {
-                        selectedMonthlySalesTurnoverValue = value;
-                      },
-                      buttonStyleData: const ButtonStyleData(
-                        padding: EdgeInsets.only(right: 8),
-                      ),
-                      dropdownStyleData: const DropdownStyleData(
-                        maxHeight: 200,
-                      ),
-                      menuItemStyleData: MenuItemStyleData(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        customHeights:
-                            _getCustomItemsHeights(monthlySalesTurnoverList),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        openMenuIcon: Icon(Icons.arrow_drop_up),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-                    InkWell(
-                      onTap: updateData
-                          ? () {
-                              _showDatePicker(context);
-                            }
-                          : null, // Set onTap to null when field is disabled
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: textFiledBackgroundColour,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: kPrimaryColor),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                slectedDate!.isNotEmpty
-                                    ? '$slectedDate'
-                                    : 'Business Incorporation Date',
-                                style: const TextStyle(fontSize: 16.0),
-                              ),
-                              const Icon(Icons.date_range),
-                            ],
+                        DropdownButtonFormField2<String>(
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 8),
+                            fillColor: textFiledBackgroundColour,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
+                            ),
+                          ),
+                          hint: const Text(
+                            'Choose Business Proof',
+                            style: TextStyle(
+                              color: blueColor,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          items:
+                              _addDividersAfterItems(chooseBusinessProofList),
+                          value: selectedChooseBusinessProofValue,
+                          onChanged: (String? value) {
+                            setState(() {
+                              selectedChooseBusinessProofValue = value;
+                            });
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.only(right: 8),
+                          ),
+                          dropdownStyleData: const DropdownStyleData(
+                            maxHeight: 200,
+                          ),
+                          menuItemStyleData: MenuItemStyleData(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            customHeights:
+                                _getCustomItemsHeights(chooseBusinessProofList),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            openMenuIcon: Icon(Icons.arrow_drop_up),
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 22.0,
-                    ),
-                    const Text(
-                      "Business Address ",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: gryColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.start,
-                    ),
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-                    DropdownButtonFormField2<String>(
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 8),
-                        fillColor: textFiledBackgroundColour,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
+                        const SizedBox(
+                          height: 15.0,
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
+                        CommonTextField(
+                          controller: _businessDocumentNumberController,
+                          hintText: "Business Document Number",
+                          labelText: "Business Document Number",
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              const BorderSide(color: kPrimaryColor, width: 1),
+                        const SizedBox(
+                          height: 36.0,
                         ),
-                      ),
-                      hint: const Text(
-                        'Choose Business Proof',
-                        style: TextStyle(
-                          color: blueColor,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      items: _addDividersAfterItems(chooseBusinessProofList),
-                      value: selectedChooseBusinessProofValue,
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedChooseBusinessProofValue = value;
-                        });
-                      },
-                      buttonStyleData: const ButtonStyleData(
-                        padding: EdgeInsets.only(right: 8),
-                      ),
-                      dropdownStyleData: const DropdownStyleData(
-                        maxHeight: 200,
-                      ),
-                      menuItemStyleData: MenuItemStyleData(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        customHeights:
-                            _getCustomItemsHeights(chooseBusinessProofList),
-                      ),
-                      iconStyleData: const IconStyleData(
-                        openMenuIcon: Icon(Icons.arrow_drop_up),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-                    CommonTextField(
-                      controller: _BusinessDocumentNumberController,
-                      hintText: "Business Document Number",
-                      labelText: "Business Document Number",
-                    ),
-                    const SizedBox(
-                      height: 36.0,
-                    ),
-                    Stack(
-                      children: [
-                        Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Color(0xff0196CE))),
-                            width: double.infinity,
-                            child: GestureDetector(
-                              onTap: () {
-                                bottomSheetMenu(context);
-                              },
-                              child: Container(
-                                height: 148,
-                                width: double.infinity,
+                        Stack(
+                          children: [
+                            Container(
                                 decoration: BoxDecoration(
-                                  color: Color(0xffEFFAFF),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Container(
-                                  child: (!image.isEmpty)
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          child: Image.network(
-                                            image,
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                            height: 148,
-                                          ),
-                                        )
-                                      : (image.isNotEmpty)
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: const Color(0xff0196CE))),
+                                width: double.infinity,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    bottomSheetMenu(context);
+                                  },
+                                  child: Container(
+                                    height: 148,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffEFFAFF),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Container(
+                                      child: (image.isNotEmpty)
                                           ? ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(8.0),
@@ -802,101 +819,114 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                                 height: 148,
                                               ),
                                             )
-                                          : Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SvgPicture.asset(
-                                                    'assets/images/gallery.svg'),
-                                                const Text(
-                                                  'Upload Business Proof',
-                                                  style: TextStyle(
-                                                      color: Color(0xff0196CE),
-                                                      fontSize: 12),
+                                          : (image.isNotEmpty)
+                                              ? ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                  child: Image.network(
+                                                    image,
+                                                    fit: BoxFit.cover,
+                                                    width: double.infinity,
+                                                    height: 148,
+                                                  ),
+                                                )
+                                              : Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                        'assets/images/gallery.svg'),
+                                                    const Text(
+                                                      'Upload Business Proof',
+                                                      style: TextStyle(
+                                                          color:
+                                                              Color(0xff0196CE),
+                                                          fontSize: 12),
+                                                    ),
+                                                    const Text(
+                                                        'Supports : JPEG, PNG',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Color(
+                                                                0xffCACACA))),
+                                                  ],
                                                 ),
-                                                const Text(
-                                                    'Supports : JPEG, PNG',
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color:
-                                                            Color(0xffCACACA))),
-                                              ],
-                                            ),
-                                ),
-                              ),
-                            )),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isImageDelete = true;
-                              image = "";
-                            });
-                          },
-                          child: !image.isEmpty
-                              ? Container(
-                                  padding: EdgeInsets.all(4),
-                                  alignment: Alignment.topRight,
-                                  child: SvgPicture.asset(
-                                      'assets/icons/delete_icon.svg'),
-                                )
-                              : Container(),
+                                    ),
+                                  ),
+                                )),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isImageDelete = true;
+                                  image = "";
+                                });
+                              },
+                              child: image.isNotEmpty
+                                  ? Container(
+                                      padding: const EdgeInsets.all(4),
+                                      alignment: Alignment.topRight,
+                                      child: SvgPicture.asset(
+                                          'assets/icons/delete_icon.svg'),
+                                    )
+                                  : Container(),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 54.0),
+                        CommonElevatedButton(
+                          onPressed: () async {
+                            if (_businessNameController.text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Business Name (As Per Doc)");
+                            } else if (_addressLineController.text.isEmpty) {
+                              Utils.showToast("Please Enter Address Line 1");
+                            } else if (_addressLine2Controller.text.isEmpty) {
+                              Utils.showToast("Please Enter Address Line 2");
+                            } else if (_pinCodeController.text.isEmpty) {
+                              Utils.showToast("Please Enter Pin Code");
+                            } else if (selectedBusinessTypeValue == null) {
+                              Utils.showToast("Please Select Business Type");
+                            } else if (selectedMonthlySalesTurnoverValue ==
+                                null) {
+                              Utils.showToast("Please Select Income Slab");
+                            } else if (_businessDocumentNumberController
+                                .text.isEmpty) {
+                              Utils.showToast(
+                                  "Please Enter Business Document Number");
+                            } else if (businessProofDocId == null) {
+                              Utils.showToast("Please Select Proof");
+                            } else if (slectedDate!.isEmpty) {
+                              Utils.showToast(
+                                  "Please Select Incorporation Date");
+                            } else {
+                              await postLeadBuisnessDetail(context);
+
+                              if (productProvider
+                                      .getPostLeadBuisnessDetailData !=
+                                  null) {
+                                if (productProvider
+                                    .getPostLeadBuisnessDetailData!
+                                    .isSuccess!) {
+                                  fetchData(context);
+                                }
+                              }
+                            }
+                          },
+                          text: 'Next',
+                          upperCase: true,
+                        ),
+                        const SizedBox(height: 16),
                       ],
                     ),
-                    const SizedBox(height: 54.0),
-                    CommonElevatedButton(
-                      onPressed: () async {
-                        if (_businessNameController.text.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter Business Name (As Per Doc)");
-                        } else if (_addressLineController.text.isEmpty) {
-                          Utils.showToast("Please Enter Address Line 1");
-                        } else if (_addressLine2Controller.text.isEmpty) {
-                          Utils.showToast("Please Enter Address Line 2");
-                        } else if (_pinCodeController.text.isEmpty) {
-                          Utils.showToast("Please Enter Pin Code");
-                        } else if (selectedBusinessTypeValue == null) {
-                          Utils.showToast(
-                              "Please Select Business Type");
-                        } else if (selectedMonthlySalesTurnoverValue == null) {
-                          Utils.showToast(
-                              "Please Select Income Slab");
-                        } else if (_BusinessDocumentNumberController
-                            .text.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter Business Document Number");
-                        } else if (buisnessProofDocId == null) {
-                          Utils.showToast(
-                              "Please Select Proof");
-                        }  else if (slectedDate!.isEmpty) {
-                          Utils.showToast(
-                              "Please Select Incorporation Date");
-                        } else {
-                          await postLeadBuisnessDetail(context);
-
-                          if (productProvider.getPostLeadBuisnessDetailData !=
-                              null) {
-                            if (productProvider
-                                .getPostLeadBuisnessDetailData!.isSuccess!) {
-                              fetchData(context);
-                            }
-                          }
-                        }
-                      },
-                      text: 'Next',
-                      upperCase: true,
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                ),
-              ),
-            );
-          }
-        }),
-      ),
-    );
+                  ),
+                );
+              }
+            }),
+          ),
+        );
   }
 
   Widget buildStateField(DataProvider productProvider) {
@@ -912,17 +942,19 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           var allStates = productProvider.getAllStateData!.returnObject!;
           if (setStateListFirstTime) {
             initialData = allStates.firstWhere(
-                    (element) =>
-                element?.id ==
+                (element) =>
+                    element?.id ==
                     productProvider.getCustomerDetailUsingGSTData!.stateId,
                 orElse: () => null);
-            selectedStateValue = productProvider.getCustomerDetailUsingGSTData!.stateId!.toString();
+            selectedStateValue = productProvider
+                .getCustomerDetailUsingGSTData!.stateId!
+                .toString();
           }
 
           if (cityCallInitial) {
             citylist.clear();
-            Provider.of<DataProvider>(context, listen: false)
-                .getAllCity(productProvider.getCustomerDetailUsingGSTData!.stateId!);
+            Provider.of<DataProvider>(context, listen: false).getAllCity(
+                productProvider.getCustomerDetailUsingGSTData!.stateId!);
             cityCallInitial = false;
           }
         }
@@ -934,11 +966,12 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           var allStates = productProvider.getAllStateData!.returnObject!;
           if (setStateListFirstTime) {
             initialData = allStates.firstWhere(
-                    (element) =>
-                element?.id ==
+                (element) =>
+                    element?.id ==
                     productProvider.getLeadBusinessDetailData!.stateId,
                 orElse: () => null);
-            selectedStateValue = productProvider.getLeadBusinessDetailData!.stateId!.toString();
+            selectedStateValue =
+                productProvider.getLeadBusinessDetailData!.stateId!.toString();
           }
         }
         if (cityCallInitial) {
@@ -969,7 +1002,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: kPrimaryColor, width: 1),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
         hint: const Text(
@@ -1016,16 +1049,17 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       CityResponce? initialData;
       if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
         if (productProvider.getCustomerDetailUsingGSTData!.cityId != null &&
-            productProvider.getCustomerDetailUsingGSTData!.cityId !=
-                0) {
+            productProvider.getCustomerDetailUsingGSTData!.cityId != 0) {
           setCityListFirstTime = true;
           if (setCityListFirstTime) {
             initialData = citylist.firstWhere(
-                    (element) =>
-                element?.id ==
+                (element) =>
+                    element?.id ==
                     productProvider.getCustomerDetailUsingGSTData!.cityId,
                 orElse: () => CityResponce());
-            selectedCityValue = productProvider.getCustomerDetailUsingGSTData!.cityId!.toString();
+            selectedCityValue = productProvider
+                .getCustomerDetailUsingGSTData!.cityId!
+                .toString();
           }
         }
       } else {
@@ -1035,7 +1069,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   element?.id ==
                   productProvider.getLeadBusinessDetailData!.cityId,
               orElse: () => CityResponce());
-          selectedCityValue = productProvider.getLeadBusinessDetailData!.cityId!.toString();
+          selectedCityValue =
+              productProvider.getLeadBusinessDetailData!.cityId!.toString();
         }
       }
       return DropdownButtonFormField2<CityResponce>(
@@ -1055,7 +1090,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: kPrimaryColor, width: 1),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
         hint: const Text(
@@ -1070,11 +1105,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
         onChanged: setCityListFirstTime
             ? null
             : (CityResponce? value) {
-          selectedCityValue = value!.id.toString();
-          setState(() {
-            setCityListFirstTime = false;
-          });
-        },
+                selectedCityValue = value!.id.toString();
+                setState(() {
+                  setCityListFirstTime = false;
+                });
+              },
         buttonStyleData: const ButtonStyleData(
           padding: EdgeInsets.only(right: 8),
         ),
@@ -1123,10 +1158,10 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   }
 
   Future<void> getCustomerDetailUsingGST(
-      BuildContext context, String GSTnumber) async {
+      BuildContext context, String gstNumber) async {
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
-        .getCustomerDetailUsingGST(GSTnumber);
+        .getCustomerDetailUsingGST(gstNumber);
     Navigator.of(context, rootNavigator: true).pop();
   }
 
@@ -1140,18 +1175,17 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     'Above 25 Lacs */
 
     var monthelySlaesValue = 0;
-    if(selectedMonthlySalesTurnoverValue == "Upto 3 Lacs") {
+    if (selectedMonthlySalesTurnoverValue == "Upto 3 Lacs") {
       monthelySlaesValue = 0;
-    } else if(selectedMonthlySalesTurnoverValue == "3 Lacs - 10 Lacs") {
+    } else if (selectedMonthlySalesTurnoverValue == "3 Lacs - 10 Lacs") {
       monthelySlaesValue = 3;
-    } else if(selectedMonthlySalesTurnoverValue == "10 Lacs - 25 Lacs") {
+    } else if (selectedMonthlySalesTurnoverValue == "10 Lacs - 25 Lacs") {
       monthelySlaesValue = 10;
-    } else if(selectedMonthlySalesTurnoverValue == "Above 25 Lacs") {
+    } else if (selectedMonthlySalesTurnoverValue == "Above 25 Lacs") {
       monthelySlaesValue = 25;
     } else {
       monthelySlaesValue = 0;
     }
-
 
     var postLeadBuisnessDetailRequestModel = PostLeadBuisnessDetailRequestModel(
       leadId: prefsUtil.getInt(LEADE_ID),
@@ -1170,11 +1204,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       buisnessMonthlySalary: monthelySlaesValue,
       incomeSlab: selectedMonthlySalesTurnoverValue,
       companyId: prefsUtil.getInt(COMPANY_ID),
-      buisnessDocumentNo: _BusinessDocumentNumberController.text.toString(),
-      buisnessProofDocId: buisnessProofDocId,
+      buisnessDocumentNo: _businessDocumentNumberController.text.toString(),
+      buisnessProofDocId: businessProofDocId,
       buisnessProof: image,
     );
-    print("Post DATA:: ${postLeadBuisnessDetailRequestModel.toJson()}");
+    debugPrint("Post DATA:: ${postLeadBuisnessDetailRequestModel.toJson()}");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
@@ -1200,30 +1234,33 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   Future<void> fetchData(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
+    final activityId = widget.activityId;
+    final subActivityId = widget.subActivityId;
+
     try {
-      LeadCurrentResponseModel? leadCurrentActivityAsyncData;
-      var leadCurrentRequestModel = LeadCurrentRequestModel(
+      final leadCurrentRequestModel = LeadCurrentRequestModel(
         companyId: prefsUtil.getInt(COMPANY_ID),
         productId: prefsUtil.getInt(PRODUCT_ID),
         leadId: prefsUtil.getInt(LEADE_ID),
         mobileNo: prefsUtil.getString(LOGIN_MOBILE_NUMBER),
-        activityId: widget.activityId,
-        subActivityId: widget.subActivityId,
+        activityId: activityId,
+        subActivityId: subActivityId,
         userId: prefsUtil.getString(USER_ID),
         monthlyAvgBuying: 0,
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData =
+
+      final leadCurrentActivityAsyncData =
           await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
               as LeadCurrentResponseModel?;
 
-      GetLeadResponseModel? getLeadData;
-      getLeadData = await ApiService().getLeads(
-          prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
-          prefsUtil.getInt(COMPANY_ID)!,
-          prefsUtil.getInt(PRODUCT_ID)!,
-          prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
+      final getLeadData = await ApiService().getLeads(
+        prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
+        prefsUtil.getInt(COMPANY_ID)!,
+        prefsUtil.getInt(PRODUCT_ID)!,
+        prefsUtil.getInt(LEADE_ID)!,
+      ) as GetLeadResponseModel?;
 
       customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
     } catch (error) {

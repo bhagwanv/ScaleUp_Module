@@ -10,6 +10,7 @@ import 'package:scale_up_module/view/splash_screen/model/LeadCurrentResponseMode
 import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';
 import '../view/login_screen/login_screen.dart';
 import '../view/profile_screen/ProfileReview.dart';
+import '../view/rejected/rejected_screen.dart';
 
 
 ScreenType? customerSequence(
@@ -74,13 +75,16 @@ ScreenType? customerSequence(
           MaterialPageRoute(builder: (context) => LoginScreen()),
         );*/
         return ScreenType.login;
+      } else if (leadCurrentActivity.activityName == "Rejected") {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => RejectedScreen()),
+        );
+        return ScreenType.login;
       }
     } else {
-      print("2222");
       return null;
     }
   } else {
-    print("333333");
     return null;
   }
 }
