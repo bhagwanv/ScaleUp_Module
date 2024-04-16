@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart';
 import 'package:scale_up_module/api/ApiUrls.dart';
@@ -28,6 +29,7 @@ import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
 import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
+import '../view/pancard_screen/model/FathersNameByValidPanCardResponseModel.dart';
 import '../view/pancard_screen/model/LeadPanResponseModel.dart';
 import '../view/pancard_screen/model/PostLeadPANRequestModel.dart';
 import '../view/pancard_screen/model/PostLeadPANResponseModel.dart';
@@ -48,6 +50,7 @@ import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/take_selfi/model/LeadSelfieResponseModel.dart';
 import '../view/take_selfi/model/PostLeadSelfieRequestModel.dart';
 import '../view/take_selfi/model/PostLeadSelfieResponseModel.dart';
+import 'ExceptionHandling.dart';
 import 'Interceptor.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
 import 'package:http/http.dart' as http;
@@ -102,23 +105,29 @@ class ApiService {
     }
   }
 
-  Future<LeadPanResponseModel> getLeadPAN(String userId) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final response = await interceptor.get(
-          Uri.parse('${apiUrls.baseUrl + apiUrls.getLeadPAN}?UserId=$userId'));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
+  Future<Result<LeadPanResponseModel, Exception>> getLeadPAN(
+      String userId) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.getLeadPAN}?UserId=$userId'));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final LeadPanResponseModel responseModel =
+                LeadPanResponseModel.fromJson(jsonData);
+            return Success(responseModel);
 
-        final LeadPanResponseModel responseModel =
-            LeadPanResponseModel.fromJson(jsonData);
-        return responseModel;
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+    } on Exception catch (e) {
+      return Failure(e);
     }
   }
 
@@ -143,35 +152,39 @@ class ApiService {
     }
   }
 
-  Future<ValidPanCardResponsModel> getLeadValidPanCard(String panNumber) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var token = await prefsUtil.getString(TOKEN);
-      final response = await interceptor.get(
-        Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.getLeadValidPanCard}?PanNumber=$panNumber'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer $token'
-          // Set the content type as JSON
-        },
-      );
+  Future<Result<ValidPanCardResponsModel, Exception>> getLeadValidPanCard(
+      String panNumber) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(
+          Uri.parse(
+              '${apiUrls.baseUrl + apiUrls.getLeadValidPanCard}?PanNumber=$panNumber'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON
+          },
+        );
 
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-        final ValidPanCardResponsModel responseModel =
-            ValidPanCardResponsModel.fromJson(jsonData);
-        return responseModel;
-      } else if (response.statusCode == 401) {
-        return ValidPanCardResponsModel(statusCode: 401);
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          // Parse the JSON response
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final ValidPanCardResponsModel responseModel =
+                ValidPanCardResponsModel.fromJson(jsonData);
+            return Success(responseModel);
+          default:
+            // 3. return Failure with the desired exception
+            return Failure(Exception(response.reasonPhrase));
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+    } on Exception catch (e) {
+      return Failure(e);
     }
   }
 
@@ -227,36 +240,41 @@ class ApiService {
     }
   }
 
-  Future<ValidPanCardResponsModel> getFathersNameByValidPanCard(
+  Future<Result<FathersNameByValidPanCardResponseModel,Exception>> getFathersNameByValidPanCard(
       String panNumber) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var token = await prefsUtil.getString(TOKEN);
-      final response = await interceptor.get(
-        Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.getFathersNameByValidPanCard}?PanNumber=$panNumber'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer $token'
-          // Set the content type as JSON
-        },
-      );
-      //   headers: {"eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiJlNzM3MTVmYS1kMmUxLTQ4OGItYTBiZi0xZWNmZDRlNWQwNDIiLCJ1c2VybmFtZSI6Ijk1MjIzOTI4MDEiLCJsb2dnZWRvbiI6IjA0LzA1LzIwMjQgMTE6MTE6MzUiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI5NTIyMzkyODAxIiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIyIiwibmJmIjoxNzEyMzE1NDk1LCJleHAiOjE3MTI0MDE4OTUsImlhdCI6MTcxMjMxNTQ5NSwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.mTi2DTiQi5-OINhBrdOprmrebkR2oZGVTtweDSvY6xNvL27SbE0f9-A-E8j2CPeBvOYXLeDABVMy15h3ZY7NngjEV3LW_ISx0-NVdpUtv5jRtbjmy-QA4j0qBiszz-UebAGpZFWoyYB5VuyOKv5nI6nDkAb4gPveI6FvCTJx7nmLrJBz8JnNWv2tSVziSWncyl5R4OvQpYtq6NWR1MEzCqATjeTQqEYrjF85bhzOEFU-mrihgupy7Smho-9Mtz58g0vHIQXexHg_lllvHVvBwmwHGdyzeYHyXscmjvageOZTyo5n6fsIGadrm1xGZpas43TL5zmWoU8y0EcbeMhy5w");}
-
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-        final ValidPanCardResponsModel responseModel =
-            ValidPanCardResponsModel.fromJson(jsonData);
-        return responseModel;
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(
+          Uri.parse(
+              '${apiUrls.baseUrl + apiUrls.getFathersNameByValidPanCard}?PanNumber=$panNumber'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer $token'
+            // Set the content type as JSON
+          },
+        );
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+          final dynamic jsonData = json.decode(response.body);
+          final FathersNameByValidPanCardResponseModel responseModel =
+          FathersNameByValidPanCardResponseModel.fromJson(jsonData);
+          return Success(responseModel);
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+
+    }on Exception catch (e) {
+      return Failure(e);
     }
+
+
   }
 
   Future<VerifyOtpResponce> verifyOtp(VarifayOtpRequest verifayOtp) async {
@@ -338,36 +356,46 @@ class ApiService {
     }
   }
 
-  Future<PostLeadPanResponseModel> postLeadPAN(
+  Future<Result<PostLeadPanResponseModel,Exception>> postLeadPAN(
       PostLeadPanRequestModel postLeadPanRequestModel) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var token = await prefsUtil.getString(TOKEN);
-      final response = await interceptor.post(
-          Uri.parse('${apiUrls.baseUrl + apiUrls.postLeadPAN}'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token'
-            // Set the content type as JSON// Set the content type as JSON
-          },
-          body: json.encode(postLeadPanRequestModel));
-      //print(json.encode(leadCurrentRequestModel));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-        final PostLeadPanResponseModel responseModel =
-            PostLeadPanResponseModel.fromJson(jsonData);
-        return responseModel;
-      }
-      if (response.statusCode == 401) {
-        return PostLeadPanResponseModel(statusCode: 401);
+
+    try{
+
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse('${apiUrls.baseUrl + apiUrls.postLeadPAN}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(postLeadPanRequestModel));
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+          final dynamic jsonData = json.decode(response.body);
+          final PostLeadPanResponseModel responseModel =
+          PostLeadPanResponseModel.fromJson(jsonData);
+          return Success(responseModel);
+
+          default:
+            return Failure(Exception(response.reasonPhrase));
+
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+
+    }on Exception catch (e) {
+      return Failure(e);
     }
+
+
+
   }
 
   Future<BankListResponceModel> getBankList() async {
@@ -516,11 +544,6 @@ class ApiService {
         final ValidateAadhaarOTPResponseModel responseModel =
             ValidateAadhaarOTPResponseModel.fromJson(jsonData);
         return responseModel;
-      } else if (response.statusCode == 401) {
-        print("Unauthorized access. Please login again.");
-        return ValidateAadhaarOTPResponseModel(statusCode: 401);
-      } else if (response.statusCode == 500) {
-        return ValidateAadhaarOTPResponseModel(statusCode: 500);
       } else {
         throw Exception('Failed to load products');
       }
@@ -529,11 +552,11 @@ class ApiService {
     }
   }
 
-
-  Future<EmailExistRespoce> emailExist(String userID,String EmailId) async {
+  Future<EmailExistRespoce> emailExist(String userID, String EmailId) async {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(
-        Uri.parse('${apiUrls.baseUrl + apiUrls.EmailExist}?UserId=$userID&EmailId=$EmailId'),
+        Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.EmailExist}?UserId=$userID&EmailId=$EmailId'),
         headers: {
           'Content-Type': 'application/json', // Set the content type as JSON
         },
@@ -544,7 +567,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final EmailExistRespoce responseModel =
-        EmailExistRespoce.fromJson(jsonData);
+            EmailExistRespoce.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -553,6 +576,7 @@ class ApiService {
       throw Exception('No internet connection');
     }
   }
+
   Future<SendOtpOnEmailResponce> sendOtpOnEmail(String EmailId) async {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(
@@ -567,7 +591,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final SendOtpOnEmailResponce responseModel =
-        SendOtpOnEmailResponce.fromJson(jsonData);
+            SendOtpOnEmailResponce.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -577,23 +601,22 @@ class ApiService {
     }
   }
 
-  Future<ValidEmResponce> otpValidateForEmail(OtpValidateForEmailRequest model) async {
+  Future<ValidEmResponce> otpValidateForEmail(
+      OtpValidateForEmailRequest model) async {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.post(
-        Uri.parse('${apiUrls.baseUrl + apiUrls.OTPValidateForEmail}'),
-        headers: {
-          'Content-Type': 'application/json', // Set the content type as JSON
-        },
-          body: json.encode(model)
-
-      );
+          Uri.parse('${apiUrls.baseUrl + apiUrls.OTPValidateForEmail}'),
+          headers: {
+            'Content-Type': 'application/json', // Set the content type as JSON
+          },
+          body: json.encode(model));
       //print(json.encode(leadCurrentRequestModel));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final ValidEmResponce responseModel =
-        ValidEmResponce.fromJson(jsonData);
+            ValidEmResponce.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -613,7 +636,7 @@ class ApiService {
         final dynamic jsonData = json.decode(response.body);
 
         final LeadSelfieResponseModel responseModel =
-        LeadSelfieResponseModel.fromJson(jsonData);
+            LeadSelfieResponseModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -642,7 +665,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final PostLeadSelfieResponseModel responseModel =
-        PostLeadSelfieResponseModel.fromJson(jsonData);
+            PostLeadSelfieResponseModel.fromJson(jsonData);
         return responseModel;
       }
       if (response.statusCode == 401) {
@@ -655,17 +678,18 @@ class ApiService {
     }
   }
 
-
-  Future<LeadBusinessDetailResponseModel> getLeadBusinessDetail(String userId) async {
+  Future<LeadBusinessDetailResponseModel> getLeadBusinessDetail(
+      String userId) async {
     if (await internetConnectivity.networkConnectivity()) {
-      final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.getLeadBusinessDetail}?UserId=$userId'));
+      final response = await interceptor.get(Uri.parse(
+          '${apiUrls.baseUrl + apiUrls.getLeadBusinessDetail}?UserId=$userId'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
 
         final LeadBusinessDetailResponseModel responseModel =
-        LeadBusinessDetailResponseModel.fromJson(jsonData);
+            LeadBusinessDetailResponseModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -675,16 +699,18 @@ class ApiService {
     }
   }
 
-  Future<CustomerDetailUsingGstResponseModel> getCustomerDetailUsingGST(String GSTNumber ) async {
+  Future<CustomerDetailUsingGstResponseModel> getCustomerDetailUsingGST(
+      String GSTNumber) async {
     if (await internetConnectivity.networkConnectivity()) {
-      final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
+      final response = await interceptor.get(Uri.parse(
+          '${apiUrls.baseUrl + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
 
         final CustomerDetailUsingGstResponseModel responseModel =
-        CustomerDetailUsingGstResponseModel.fromJson(jsonData);
+            CustomerDetailUsingGstResponseModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -694,9 +720,9 @@ class ApiService {
     }
   }
 
-
   Future<PostLeadBuisnessDetailResponsModel> postLeadBuisnessDetail(
-      PostLeadBuisnessDetailRequestModel postLeadBuisnessDetailRequestModel) async {
+      PostLeadBuisnessDetailRequestModel
+          postLeadBuisnessDetailRequestModel) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var token = await prefsUtil.getString(TOKEN);
@@ -714,7 +740,7 @@ class ApiService {
         // Parse the JSON response
         final dynamic jsonData = json.decode(response.body);
         final PostLeadBuisnessDetailResponsModel responseModel =
-        PostLeadBuisnessDetailResponsModel.fromJson(jsonData);
+            PostLeadBuisnessDetailResponsModel.fromJson(jsonData);
         return responseModel;
       }
       if (response.statusCode == 401) {
@@ -744,7 +770,7 @@ class ApiService {
       if (response.statusCode == 200) {
         final dynamic jsonData = json.decode(response.body);
         final PostPersonalDetailsResponseModel responseModel =
-        PostPersonalDetailsResponseModel.fromJson(jsonData);
+            PostPersonalDetailsResponseModel.fromJson(jsonData);
         return responseModel;
       }
       if (response.statusCode == 401) {
@@ -888,6 +914,65 @@ class ApiService {
       }
     } else {
       throw Exception('No internet connection');
+    }
+  }
+
+  Future<Result<CustomerDetailUsingGstResponseModel, Exception>>
+      getCustomerDetailUsingGST11(String GSTNumber) async {
+    try {
+      final response = await interceptor.get(Uri.parse(
+          '${apiUrls.baseUrl + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
+      print(response.body); //
+      // Print the response body once here
+      switch (response.statusCode) {
+        case 200:
+          final data = json.decode(response.body);
+          // 2. return Success with the desired value
+          return Success(CustomerDetailUsingGstResponseModel.fromJson(data));
+        default:
+          // 3. return Failure with the desired exception
+          return Failure(Exception(response.reasonPhrase));
+      }
+    } on Exception catch (e) {
+      // 4. return Failure here too
+      return Failure(e);
+    }
+  }
+
+  Future<Result<PostLeadBuisnessDetailResponsModel, Exception>>
+      postLeadBuisnessDetail1(
+          PostLeadBuisnessDetailRequestModel
+              postLeadBuisnessDetailRequestModel) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse('${apiUrls.baseUrl + apiUrls.postLeadBuisnessDetail}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(postLeadBuisnessDetailRequestModel));
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final PostLeadBuisnessDetailResponsModel responseModel =
+                PostLeadBuisnessDetailResponsModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
     }
   }
 }

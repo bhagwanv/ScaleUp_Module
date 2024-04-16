@@ -39,6 +39,8 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
   var isSelfieDelete = false;
   var isAgenSelfieDelete = false;
 
+
+
   void _handlePermissionsAccepted(File? picture) {
     setState(() {
 /*
@@ -55,6 +57,12 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
     super.initState();
     //Api Call
     getLeadSelfie(context);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override

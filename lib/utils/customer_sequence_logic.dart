@@ -12,6 +12,7 @@ import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';
 import '../view/agreement_screen/Agreementscreen.dart';
 import '../view/login_screen/login_screen.dart';
 import '../view/profile_screen/ProfileReview.dart';
+import '../view/rejected/rejected_screen.dart';
 
 
 ScreenType? customerSequence(
@@ -77,6 +78,11 @@ ScreenType? customerSequence(
           MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
         );
         return ScreenType.login;
+      } else if (leadCurrentActivity.activityName == "Rejected") {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => RejectedScreen()),
+        );
+        return ScreenType.login;
       }else if (leadCurrentActivity.activityName == "Agreement") {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => ProfileReview()),
@@ -95,11 +101,9 @@ ScreenType? customerSequence(
         return ScreenType.AgreementEsign;
       }
     } else {
-      print("2222");
       return null;
     }
   } else {
-    print("333333");
     return null;
   }
 }

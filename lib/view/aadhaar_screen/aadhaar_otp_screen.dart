@@ -238,39 +238,26 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
 
       await Provider.of<DataProvider>(context, listen: false)
           .validateAadhaarOtp(req);
-      print("Print 0");
-      print("Print ${productProvider.getValidateAadhaarOTPData!.message!}");
-        print("Print 2");
-        if (productProvider.getValidateAadhaarOTPData != null) {
-          print("Print 3");
-          if (!productProvider.getValidateAadhaarOTPData!.isSuccess!) {
-            print("Print 4");
-            Navigator.of(context, rootNavigator: true).pop();
-            if (productProvider.getValidateAadhaarOTPData!.message != null) {
-              print("Print 5");
-              Utils.showToast(productProvider.getValidateAadhaarOTPData!.message!);
+
+      if(productProvider.getValidateAadhaarOTPData != null) {
+          if (productProvider.getValidateAadhaarOTPData != null) {
+            if (!productProvider.getValidateAadhaarOTPData!.isSuccess!) {
+              Navigator.of(context, rootNavigator: true).pop();
+              if (productProvider.getValidateAadhaarOTPData!.message != null) {
+                Utils.showToast(
+                    productProvider.getValidateAadhaarOTPData!.message!);
+              } else {
+                Utils.showToast("Something went wrong");
+              }
             } else {
-              print("Print 6");
-              Utils.showToast("Something went wrong");
+              Navigator.of(context, rootNavigator: true).pop();
+              fetchData(context);
             }
           } else {
-            print("Print 7");
+            Utils.showToast("Something went wrong");
             Navigator.of(context, rootNavigator: true).pop();
-            fetchData(context);
           }
-        } else {
-          print("Print 8");
-          Utils.showToast("Something went wrong");
-          Navigator.of(context, rootNavigator: true).pop();
-        }
-
-        /*Navigator.pushAndRemoveUntil<dynamic>(
-          context,
-          MaterialPageRoute<dynamic>(
-            builder: (BuildContext context) =>
-                LoginScreen(activityId: 1, subActivityId: 0),
-          ),
-          (route) => false,*/
+      }
     }
   }
 
@@ -290,7 +277,9 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel) as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData =
+          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+              as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(

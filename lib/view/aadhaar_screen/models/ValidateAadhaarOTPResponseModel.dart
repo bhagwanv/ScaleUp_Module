@@ -2,9 +2,9 @@ class ValidateAadhaarOTPResponseModel {
   int? result;
   bool? isSuccess;
   String? message;
-  int? statusCode;
 
-  ValidateAadhaarOTPResponseModel({this.result, this.isSuccess, this.message, this.statusCode});
+
+  ValidateAadhaarOTPResponseModel({this.result, this.isSuccess, this.message});
 
   ValidateAadhaarOTPResponseModel.fromJson(Map<String, dynamic> json) {
     result = json['result'];
