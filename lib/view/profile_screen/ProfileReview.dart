@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scale_up_module/view/profile_screen/components/credit_line_approved.dart';
 
@@ -56,14 +57,7 @@ class _ProfileReviewState extends State<ProfileReview> {
                 const SizedBox(height: 80),
                 CommonElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return const CreditLineApproved();
-                        },
-                      ),
-                    );
+                    SystemNavigator.pop();
                   },
                   text: "Back to home",
                   upperCase: true,
