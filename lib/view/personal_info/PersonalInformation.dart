@@ -419,7 +419,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                                 BorderRadius.circular(8.0),
                                           ),
                                           child: (productProvider
-                                                      .getPostSingleFileData !=
+                                                      .getpostElectricityBillDocumentSingleFileData !=
                                                   null)
                                               ? ClipRRect(
                                                   borderRadius:
@@ -427,7 +427,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                                           8.0),
                                                   child: Image.network(
                                                     productProvider
-                                                        .getPostSingleFileData!
+                                                        .getpostElectricityBillDocumentSingleFileData!
                                                         .filePath!,
                                                     fit: BoxFit.cover,
                                                     width: double.infinity,
@@ -1555,8 +1555,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
     //bill
     int? billDocId;
 
-    if (productProvider.getPostSingleFileData != null) {
-      billDocId = productProvider.getPostSingleFileData!.docId!;
+    if (productProvider.getpostElectricityBillDocumentSingleFileData != null) {
+      billDocId = productProvider.getpostElectricityBillDocumentSingleFileData!.docId!;
     }
 
     PersonalDetailsRequestModel postData = PersonalDetailsRequestModel(
@@ -1653,16 +1653,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
   // Callback function to receive the selected image
   void _onImageSelected(File imageFile) async {
     Utils.onLoading(context, "");
+
     // Perform asynchronous work first
     await Provider.of<DataProvider>(context, listen: false)
-        .postSingleFile(imageFile, true, "", "");
-
-    // Update the widget state synchronously inside setState
-    setState(() {
-      // Clear loading indicator
-      Navigator.pop(context);
-      Navigator.of(context, rootNavigator: true).pop();
-    });
+        .postElectricityBillDocumentSingleFile(imageFile, true, "", "");
+    Navigator.of(context, rootNavigator: true).pop();
   }
 }
 

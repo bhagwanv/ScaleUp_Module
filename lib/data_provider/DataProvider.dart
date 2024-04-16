@@ -77,8 +77,17 @@ class DataProvider extends ChangeNotifier {
   PostSingleFileResponseModel? _getPostSingleFileData;
   PostSingleFileResponseModel? get getPostSingleFileData => _getPostSingleFileData;
 
+  PostSingleFileResponseModel? _getpostElectricityBillDocumentSingleFileData;
+  PostSingleFileResponseModel? get getpostElectricityBillDocumentSingleFileData => _getpostElectricityBillDocumentSingleFileData;
+
+  PostSingleFileResponseModel? _getpostBusineesDoumentSingleFileData;
+  PostSingleFileResponseModel? get getpostBusineesDoumentSingleFileData => _getpostBusineesDoumentSingleFileData;
+
   PostSingleFileResponseModel? _getPostBackAadhaarSingleFileData;
   PostSingleFileResponseModel? get getPostBackAadhaarSingleFileData => _getPostBackAadhaarSingleFileData;
+
+  PostSingleFileResponseModel? _getPostFrontAadhaarSingleFileData;
+  PostSingleFileResponseModel? get getPostFrontAadhaarSingleFileData => _getPostFrontAadhaarSingleFileData;
 
   PostLeadPanResponseModel? _getPostLeadPanData;
   PostLeadPanResponseModel? get getPostLeadPaneData => _getPostLeadPanData;
@@ -204,6 +213,27 @@ class DataProvider extends ChangeNotifier {
   Future<void> postSingleFile(File imageFile, bool isValidForLifeTime,
       String validityInDays, String subFolderName) async {
     _getPostSingleFileData = await apiService.postSingleFile(
+        imageFile, isValidForLifeTime, validityInDays, subFolderName);
+    notifyListeners();
+  }
+
+  Future<void> postElectricityBillDocumentSingleFile(File imageFile, bool isValidForLifeTime,
+      String validityInDays, String subFolderName) async {
+    _getpostElectricityBillDocumentSingleFileData = await apiService.postSingleFile(
+        imageFile, isValidForLifeTime, validityInDays, subFolderName);
+    notifyListeners();
+  }
+
+  Future<void> PostFrontAadhaarSingleFileData(File imageFile, bool isValidForLifeTime,
+      String validityInDays, String subFolderName) async {
+    _getPostFrontAadhaarSingleFileData = await apiService.postSingleFile(
+        imageFile, isValidForLifeTime, validityInDays, subFolderName);
+    notifyListeners();
+  }
+
+  Future<void> postBusineesDoumentSingleFile(File imageFile, bool isValidForLifeTime,
+      String validityInDays, String subFolderName) async {
+    _getpostBusineesDoumentSingleFileData = await apiService.postSingleFile(
         imageFile, isValidForLifeTime, validityInDays, subFolderName);
     notifyListeners();
   }

@@ -78,6 +78,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   var isEnabledBusEntityType = true;
   var isEnabledPinCode = true;
   var isClearData = false;
+  var isImageDelete = false;
 
   List<CityResponce?> citylist = [];
   var cityCallInitial = true;
@@ -145,12 +146,13 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   }
 
   void _onImageSelected(File imageFile) async {
+    isImageDelete=false;
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
-        .postSingleFile(imageFile, true, "", "");
+        .postBusineesDoumentSingleFile(imageFile, true, "", "");
+
     setState(() {
       Navigator.pop(context);
-      //  Navigator.of(context, rootNavigator: true).pop();
     });
   }
 
@@ -300,7 +302,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
               if (productProvider.getLeadBusinessDetailData?.businessName !=
                       null &&
                   productProvider.getLeadBusinessDetailData?.doi != null &&
-                  !isClearData) {
+                  !isClearData && !isImageDelete) {
                 _gstController.text =
                     productProvider.getLeadBusinessDetailData!.busGSTNO!;
                 gstNumber =
@@ -341,9 +343,9 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
               citylist = productProvider.getAllCityData!;
             }
 
-            if (productProvider.getPostSingleFileData != null) {
-              if (productProvider.getPostSingleFileData!.filePath != null) {
-                image = productProvider.getPostSingleFileData!.filePath!;
+            if (productProvider.getpostBusineesDoumentSingleFileData != null && !isImageDelete) {
+              if (productProvider.getpostBusineesDoumentSingleFileData!.filePath != null) {
+                image = productProvider.getpostBusineesDoumentSingleFileData!.filePath!;
               }
             }
 
@@ -459,7 +461,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                               // print('Edit icon tapped');
                               setState(() {
                                 print("dksfklsf");
-
+                                isImageDelete=true;
                                 _gstController.text = "";
                                 _businessNameController.text = "";
                                 _addressLineController.text = "";
@@ -791,24 +793,27 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                     SizedBox(
                       height: 36.0,
                     ),
-                    Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Color(0xff0196CE))),
-                        width: double.infinity,
-                        child: GestureDetector(
-                          onTap: () {
-                            bottomSheetMenu(context);
-                          },
-                          child: Container(
-                            height: 148,
-                            width: double.infinity,
+                    Stack(
+                      children: [
+                        Container(
                             decoration: BoxDecoration(
-                              color: Color(0xffEFFAFF),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: (!image.isEmpty)
-                                ? ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Color(0xff0196CE))),
+                            width: double.infinity,
+                            child: GestureDetector(
+                              onTap: () {
+                                bottomSheetMenu(context);
+                              },
+                              child: Container(
+                                height: 148,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Color(0xffEFFAFF),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Container(
+                                  child: (!image.isEmpty)
+                                      ? ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: Image.network(
                                       image,
@@ -817,39 +822,55 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                       height: 148,
                                     ),
                                   )
-                                : (image.isNotEmpty)
-                                    ? ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        child: Image.network(
-                                          image,
-                                          fit: BoxFit.cover,
-                                          width: double.infinity,
-                                          height: 148,
-                                        ),
-                                      )
-                                    : Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SvgPicture.asset(
-                                              'assets/images/gallery.svg'),
-                                          const Text(
-                                            'Upload Business Proof',
-                                            style: TextStyle(
-                                                color: Color(0xff0196CE),
-                                                fontSize: 12),
-                                          ),
-                                          const Text('Supports : JPEG, PNG',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Color(0xffCACACA))),
-                                        ],
+                                      : (image.isNotEmpty)
+                                      ? ClipRRect(
+                                    borderRadius:
+                                    BorderRadius.circular(8.0),
+                                    child: Image.network(
+                                      image,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: 148,
+                                    ),
+                                  )
+                                      : Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                          'assets/images/gallery.svg'),
+                                      const Text(
+                                        'Upload Business Proof',
+                                        style: TextStyle(
+                                            color: Color(0xff0196CE),
+                                            fontSize: 12),
                                       ),
-                          ),
-                        )),
+                                      const Text('Supports : JPEG, PNG',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0xffCACACA))),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isImageDelete = true;
+                              image = "";
+                            });
+                          },
+                          child: !image.isEmpty?Container(
+                            padding: EdgeInsets.all(4),
+                            alignment: Alignment.topRight,
+                            child: SvgPicture.asset(
+                                'assets/icons/delete_icon.svg'),
+                          ):Container(),),
+                      ],
+                    ),
                     const SizedBox(height: 54.0),
                     CommonElevatedButton(
                       onPressed: () async {
@@ -862,9 +883,6 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           Utils.showToast("Please Enter Address Line 2");
                         } else if (_pinCodeController.text.isEmpty) {
                           Utils.showToast("Please Enter Pin Code");
-                        } else if (dio.isEmpty) {
-                          Utils.showToast(
-                              "Please Enter Business Incorporation Date");
                         } else if (_BusinessDocumentNumberController
                             .text.isEmpty) {
                           Utils.showToast(
@@ -1077,7 +1095,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   Future<void> postLeadBuisnessDetail(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     // final String? userId = prefsUtil.getString(USER_ID);
-
+    Utils.onLoading(context, "");
     var postLeadBuisnessDetailRequestModel = PostLeadBuisnessDetailRequestModel(
       leadId: prefsUtil.getInt(LEADE_ID),
       userId: prefsUtil.getString(USER_ID),
@@ -1099,7 +1117,6 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       buisnessProofDocId: buisnessProofDocId,
       buisnessProof: image,
     );
-    Utils.onLoading(context, "");
     Provider.of<DataProvider>(context, listen: false)
         .postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
     Navigator.of(context, rootNavigator: true).pop();

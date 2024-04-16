@@ -37,14 +37,14 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
   String frontFileUrl = "";
   String backFileUrl = "";
   var isFrontImageDelete = false;
+  var isBackImageDelete = false;
 
   void _onFontImageSelected(File imageFile) async {
-    isFrontImageDelete=false;
     Utils.onLoading(context, "");
-
+    isFrontImageDelete = false;
     // Perform asynchronous work first
     await Provider.of<DataProvider>(context, listen: false)
-        .postSingleFile(imageFile, true, "", "");
+        .PostFrontAadhaarSingleFileData(imageFile, true, "", "");
     Navigator.of(context, rootNavigator: true).pop();
     // Update the widget state synchronously inside setState
 
@@ -52,7 +52,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
   // Callback function to receive the selected image
   void _onBackImageSelected(File imageFile) async {
-    isFrontImageDelete=false;
+    isBackImageDelete=false;
     Utils.onLoading(context, "");
 
     // Perform asynchronous work first
@@ -99,14 +99,37 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                 productProvider.getLeadAadhaar!.backDocumentId!.toString();
           }
 
-          if (productProvider.getLeadAadhaar!.frontImageUrl != null) {
-            frontFileUrl =
-                productProvider.getLeadAadhaar!.frontImageUrl!.toString();
+          if(productProvider.getLeadAadhaar!.frontImageUrl != null && !isFrontImageDelete) {
+            frontFileUrl = productProvider.getLeadAadhaar!.frontImageUrl!.toString();
           }
 
-          if (productProvider.getLeadAadhaar!.backImageUrl != null&&!isFrontImageDelete) {
+          if(productProvider.getLeadAadhaar!.backImageUrl != null && !isBackImageDelete) {
             backFileUrl =
                 productProvider.getLeadAadhaar!.backImageUrl!.toString();
+          }
+
+
+          if (productProvider.getPostFrontAadhaarSingleFileData != null && !isFrontImageDelete) {
+            if (productProvider.getPostFrontAadhaarSingleFileData!.filePath !=
+                null) {
+              frontFileUrl =
+              productProvider.getPostFrontAadhaarSingleFileData!.filePath!;
+              frontDocumentId = productProvider
+                  .getPostFrontAadhaarSingleFileData!.docId!
+                  .toString();
+            }
+          }
+          if (productProvider.getPostBackAadhaarSingleFileData !=
+              null && !isBackImageDelete) {
+            if (productProvider
+                .getPostBackAadhaarSingleFileData!.filePath !=
+                null) {
+              backFileUrl = productProvider
+                  .getPostBackAadhaarSingleFileData!.filePath!;
+              backDocumentId = productProvider
+                  .getPostBackAadhaarSingleFileData!.docId!
+                  .toString();
+            }
           }
 
           return Padding(
@@ -204,18 +227,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                               color: textFiledBackgroundColour,
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            child: (productProvider.getPostSingleFileData != null)
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      productProvider
-                                          .getPostSingleFileData!.filePath!,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: 148,
-                                    ),
-                                  )
-                                : (frontFileUrl.isNotEmpty)
+                            child: (frontFileUrl.isNotEmpty)
                                     ? ClipRRect(
                                         borderRadius: BorderRadius.circular(8.0),
                                         child: Image.network(
@@ -296,21 +308,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                               color: textFiledBackgroundColour,
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            child: (productProvider
-                                        .getPostBackAadhaarSingleFileData !=
-                                    null)
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      productProvider
-                                          .getPostBackAadhaarSingleFileData!
-                                          .filePath! as String,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: 148,
-                                    ),
-                                  )
-                                : (backFileUrl.isNotEmpty)
+                            child: (backFileUrl.isNotEmpty)
                                     ? ClipRRect(
                                         borderRadius: BorderRadius.circular(8.0),
                                         child: Image.network(
@@ -360,7 +358,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          isFrontImageDelete = true;
+                          isBackImageDelete = true;
                           backFileUrl = "";
                         });
                       },
@@ -378,13 +376,13 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                 CommonElevatedButton(
                   onPressed: () {
                     //validate data
-                    if (productProvider.getPostSingleFileData != null) {
-                      if (productProvider.getPostSingleFileData!.filePath !=
+                    if (productProvider.getPostFrontAadhaarSingleFileData != null) {
+                      if (productProvider.getPostFrontAadhaarSingleFileData!.filePath !=
                           null) {
                         frontFileUrl =
-                            productProvider.getPostSingleFileData!.filePath!;
+                            productProvider.getPostFrontAadhaarSingleFileData!.filePath!;
                         frontDocumentId = productProvider
-                            .getPostSingleFileData!.docId!
+                            .getPostFrontAadhaarSingleFileData!.docId!
                             .toString();
                       }
                     }

@@ -505,12 +505,7 @@ class ApiService {
         final ValidateAadhaarOTPResponseModel responseModel =
             ValidateAadhaarOTPResponseModel.fromJson(jsonData);
         return responseModel;
-      } else if (response.statusCode == 401) {
-        print("Unauthorized access. Please login again.");
-        return ValidateAadhaarOTPResponseModel(statusCode: 401);
-      } else if (response.statusCode == 500) {
-        return ValidateAadhaarOTPResponseModel(statusCode: 500);
-      } else {
+      }  else {
         throw Exception('Failed to load products');
       }
     } else {
@@ -731,7 +726,7 @@ class ApiService {
             // Set the content type as JSON// Set the content type as JSON
           },
           body: json.encode(personalDetailsRequestModel));
-      print(response.body); // Print the response body once here
+        print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         final dynamic jsonData = json.decode(response.body);
         final PostPersonalDetailsResponseModel responseModel =
