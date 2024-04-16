@@ -25,6 +25,13 @@ class Utils {
     return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
   }
 
+
+  static bool isValidIFSCCode(String? ifscCode) {
+    if (ifscCode == null) return false;
+    final regExp = RegExp(r"^[A-Za-z]{4}[a-zA-Z0-9]{7}$");
+    return regExp.hasMatch(ifscCode);
+  }
+
   static void showMsgDialog(BuildContext context, String title, String msg,) {
     showDialog(
       context: context,

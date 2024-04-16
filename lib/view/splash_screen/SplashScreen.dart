@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> fetchData() async {
     final prefsUtil = await SharedPref.getInstance();
-    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, '7803994667');
+    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, '9981810106');
     await prefsUtil.saveInt(COMPANY_ID, 2);
     await prefsUtil.saveInt(PRODUCT_ID, 2);
     final String? mobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
@@ -69,16 +69,22 @@ class _SplashScreenState extends State<SplashScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel) as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData =
+      await ApiService().leadCurrentActivityAsync(
+          leadCurrentRequestModel) as LeadCurrentResponseModel?;
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
           mobile!,
           prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(PRODUCT_ID)!,
           leadId) as GetLeadResponseModel?;
-
-      prefsUtil.saveString(USER_ID, getLeadData!.userId!);
+      if (getLeadData!.userId != null){
+        prefsUtil.saveString(USER_ID, getLeadData.userId!);
+    }else{
+        prefsUtil.saveString(USER_ID, "");
+    }
       prefsUtil.saveInt(LEADE_ID, getLeadData!.leadId!);
+
       customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
     } catch (error) {
       if (kDebugMode) {

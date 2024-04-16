@@ -276,7 +276,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
       if (!productProvider.getVerifyData!.status!) {
         Navigator.of(context, rootNavigator: true).pop();
-        Utils.showToast("Something went wrong");
+        Utils.showToast(productProvider.getVerifyData!.message!);
       } else {
         Navigator.of(context, rootNavigator: true).pop();
         await prefsUtil.saveString(
@@ -335,7 +335,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
         .genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
     if (!productProvider.genrateOptData!.status!) {
       Navigator.of(context, rootNavigator: true).pop();
-      Utils.showToast("Something went wrong");
+      Utils.showToast(productProvider.genrateOptData!.message!);
     } else {
       Navigator.of(context, rootNavigator: true).pop();
       controller.restart();

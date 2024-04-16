@@ -23,6 +23,7 @@ class CommonTextField extends StatefulWidget {
   final TextCapitalization? textCapitalization;
   final List<TextInputFormatter>? inputFormatter;
   final bool? enabled;
+  final int? maxLength;
 
 
   const CommonTextField({
@@ -46,6 +47,7 @@ class CommonTextField extends StatefulWidget {
     this.textCapitalization =  TextCapitalization.none,
     this.inputFormatter,
     this.enabled=true,
+    this.maxLength,
   }) : super(key: key);
 
   @override
@@ -54,6 +56,7 @@ class CommonTextField extends StatefulWidget {
 
 class _CommonTextFieldState extends State<CommonTextField> {
   bool _isObscure = false;
+  bool _isMaxLength = false;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +69,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
       onChanged: widget.onChanged,
       textInputAction: widget.textInputAction,
       maxLines: !_isObscure ? widget.maxLines : 1,
+      maxLength: !_isMaxLength ? widget.maxLength : 1,
       style: TextStyle(
         fontSize: 16.0,
         fontWeight: FontWeight.w500,

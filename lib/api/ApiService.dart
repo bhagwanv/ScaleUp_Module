@@ -10,12 +10,17 @@ import 'package:scale_up_module/utils/InternetConnectivity.dart';
 import 'package:scale_up_module/utils/constants.dart';
 import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
 import 'package:scale_up_module/view/login_screen/model/GenrateOptResponceModel.dart';
+import 'package:scale_up_module/view/profile_screen/model/OfferPersonNameResponceModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
 import '../shared_preferences/SharedPref.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
+import '../view/agreement_screen/model/AggrementDetailsResponce.dart';
+import '../view/agreement_screen/model/CheckSignResponceModel.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
+import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
+import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
 import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailRequestModel.dart';
@@ -39,6 +44,8 @@ import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/personal_info/model/PostPersonalDetailsResponseModel.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
+import '../view/profile_screen/model/AcceptedResponceModel.dart';
+import '../view/profile_screen/model/OfferResponceModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/take_selfi/model/LeadSelfieResponseModel.dart';
 import '../view/take_selfi/model/PostLeadSelfieRequestModel.dart';
@@ -419,7 +426,7 @@ class ApiService {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(
         Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.GetLeadBankDetail}?PanNumber=$leadID'),
+            '${apiUrls.baseUrl + apiUrls.GetLeadBankDetail}?LeadId=$leadID'),
         headers: {
           'Content-Type': 'application/json', // Set the content type as JSON
         },
@@ -440,17 +447,17 @@ class ApiService {
     }
   }
 
-  Future<PersonalDetailsResponce> getLeadPersnalDetails(String leadID) async {
-    final prefsUtil = await SharedPref.getInstance();
-    var token = await prefsUtil.getString(TOKEN);
+  Future<PersonalDetailsResponce> getLeadPersnalDetails(String userId) async {
     if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
         Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=$leadID'),
+            '${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=${userId}'),
         headers: {
-          'Content-Type': 'application/json', // Set the content type as JSON
-          'Authorization': 'Bearer $token', // Set the content type as JSON
-        },
+          'Content-Type': 'application/json',
+         // 'Authorization': 'Bearer $token'// Set the content type as JSON
+          'Authorization': '$token'},
       );
       //print(json.encode(leadCurrentRequestModel));
       print(response.body); // Print the response body once here
@@ -768,6 +775,140 @@ class ApiService {
       }
       if (response.statusCode == 401) {
         return PostPersonalDetailsResponseModel(statusCode: 401);
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
+  Future<SaveBankDetailResponce> saveLeadBankDetail(SaveBankDetailsRequestModel model) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = prefsUtil.getString(TOKEN);
+      final response = await interceptor.post(
+          Uri.parse(apiUrls.baseUrl + apiUrls.saveLeadBankDetail),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+          body: json.encode(model));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        final dynamic jsonData = json.decode(response.body);
+        final SaveBankDetailResponce responseModel =
+        SaveBankDetailResponce.fromJson(jsonData);
+        return responseModel;
+      }
+      if (response.statusCode == 401) {
+        return SaveBankDetailResponce(statusCode: 401);
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+  Future<OfferResponceModel> GetLeadOffer(int leadId ,int companyID) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = prefsUtil.getString(TOKEN);
+      final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadOffer}?LeadId=$leadId&companyId=$companyID'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        final dynamic jsonData = json.decode(response.body);
+        final OfferResponceModel responseModel =
+        OfferResponceModel.fromJson(jsonData);
+        return responseModel;
+      }
+      if (response.statusCode == 401) {
+        throw Exception('Failed to load products');
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+  Future<OfferPersonNameResponceModel> GetLeadName(String UserId) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = prefsUtil.getString(TOKEN);
+      final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadName}?UserId=$UserId'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        final dynamic jsonData = json.decode(response.body);
+        final OfferPersonNameResponceModel responseModel =
+        OfferPersonNameResponceModel.fromJson(jsonData);
+        return responseModel;
+      }
+      if (response.statusCode == 401) {
+        throw Exception('Failed to load products');
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+  Future<AcceptedResponceModel> getAcceptOffer(int leadId) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = prefsUtil.getString(TOKEN);
+      final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.AcceptOffer}?leadId=$leadId'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        final dynamic jsonData = json.decode(response.body);
+        final AcceptedResponceModel responseModel =
+        AcceptedResponceModel.fromJson(jsonData);
+        return responseModel;
+      }
+      if (response.statusCode == 401) {
+        throw Exception('Failed to load products');
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+  Future<CheckSignResponceModel> checkEsignStatus(int leadId) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = prefsUtil.getString(TOKEN);
+      final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.CheckEsignStatus}?leadId=$leadId'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        final dynamic jsonData = json.decode(response.body);
+        final CheckSignResponceModel responseModel =
+        CheckSignResponceModel.fromJson(jsonData);
+        return responseModel;
+      }
+      if (response.statusCode == 401) {
+        throw Exception('Failed to load products');
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+  Future<AggrementDetailsResponce> GetAgreemetDetail(int leadId,bool accept,int companyID) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = prefsUtil.getString(TOKEN);
+      final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.GetAgreemetDetail}?leadId=$leadId&IsAccept=$accept&companyId=$companyID'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        final dynamic jsonData = json.decode(response.body);
+        final AggrementDetailsResponce responseModel =
+        AggrementDetailsResponce.fromJson(jsonData);
+        return responseModel;
+      }
+      if (response.statusCode == 401) {
+        throw Exception('Failed to load products');
       } else {
         throw Exception('Failed to load products');
       }

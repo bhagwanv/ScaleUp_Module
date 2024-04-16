@@ -6,4 +6,7 @@ enum ScreenType {
   bankDetail,
   personalInfo,
   businessInfo,
+  aggrement,
+  Disbursement,
+  AgreementEsign
 }

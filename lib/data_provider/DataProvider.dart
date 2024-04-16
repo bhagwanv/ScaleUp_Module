@@ -15,6 +15,7 @@ import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
+import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
 import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailRequestModel.dart';
@@ -34,6 +35,7 @@ import '../view/personal_info/model/PersonalDetailsRequestModel.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
+import '../view/profile_screen/model/OfferResponceModel.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
@@ -159,6 +161,10 @@ class DataProvider extends ChangeNotifier {
   PostLeadBuisnessDetailResponsModel? _getPostLeadBuisnessDetailData;
   PostLeadBuisnessDetailResponsModel? get getPostLeadBuisnessDetailData => _getPostLeadBuisnessDetailData;
 
+
+  OfferResponceModel? _getOfferResponceata;
+  OfferResponceModel? get getOfferResponceata => _getOfferResponceata;
+
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
     _getLeadData =
@@ -256,8 +262,8 @@ class DataProvider extends ChangeNotifier {
   }
 
 
-  Future<void> getLeadPersonalDetails(String leadID) async {
-    _getPersonalDetailsData = await apiService.getLeadPersnalDetails(leadID);
+  Future<void> getLeadPersonalDetails(String userId) async {
+    _getPersonalDetailsData = await apiService.getLeadPersnalDetails(userId);
     notifyListeners();
   }
 
@@ -336,5 +342,11 @@ class DataProvider extends ChangeNotifier {
     _getPostLeadBuisnessDetailData = await apiService.postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
     notifyListeners();
   }
+
+  Future<void> GetLeadOffer(int leadId ,int companyID) async {
+    _getOfferResponceata = await apiService.GetLeadOffer(leadId,companyID);
+    notifyListeners();
+  }
+
 }
 

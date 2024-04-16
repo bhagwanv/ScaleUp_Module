@@ -117,8 +117,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     // TODO: implement build
     return Scaffold(
       body: SafeArea(
-        child:
-            Consumer<DataProvider>(builder: (context, productProvider, child) {
+        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
           if (productProvider.getPersonalDetailsData == null && isLoading) {
             return Center(child: Loader());
           } else {
@@ -872,9 +871,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
   Future<void> getPersonalDetailAndStateApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    final String? leadId = prefsUtil.getString(USER_ID);
-    Provider.of<DataProvider>(context, listen: false)
-        .getLeadPersonalDetails(leadId!);
+    final String? userId = prefsUtil.getString(USER_ID);
+    Provider.of<DataProvider>(context, listen: false).getLeadPersonalDetails(userId!);
     Provider.of<DataProvider>(context, listen: false).getAllState();
   }
 

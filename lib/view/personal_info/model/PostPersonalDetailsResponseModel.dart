@@ -4,6 +4,7 @@ class PostPersonalDetailsResponseModel {
   String? message;
   int? statusCode;
 
+
   PostPersonalDetailsResponseModel({this.result, this.isSuccess, this.message, this.statusCode});
 
   PostPersonalDetailsResponseModel.fromJson(Map<String, dynamic> json) {
