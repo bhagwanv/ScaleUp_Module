@@ -2,16 +2,13 @@ import 'dart:io';
 
 import 'package:cupertino_date_time_picker_loki/cupertino_date_time_picker_loki.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/utils/common_text_field.dart';
-import 'package:scale_up_module/view/profile_screen/ProfileReview.dart';
 
 import '../../api/ApiService.dart';
 import '../../data_provider/DataProvider.dart';
@@ -46,39 +43,18 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   final TextEditingController _addressLineController = TextEditingController();
   final TextEditingController _addressLine2Controller = TextEditingController();
   final TextEditingController _pinCodeController = TextEditingController();
-  final TextEditingController _BusinessDocumentNumberController =
-      TextEditingController();
+  final TextEditingController _BusinessDocumentNumberController = TextEditingController();
+  String? selectedStateValue;
+  String? selectedCityValue;
 
   var gstNumber = "";
   var image = "";
-  var dio = "";
-  var busName = "";
-  var busAddCorrLine1 = "";
-  var busAddCorrLine2 = "";
-  var busAddCorrCity = "";
-  var busAddCorrState = "";
-  var busAddCorrPincode = "";
-  var buisnessMonthlySalary = 0;
-  var incomeSlab = "";
-  var buisnessDocumentNo = "";
-  var buisnessProofDocId = 0;
-  var busEntityType = "";
+  int? buisnessProofDocId;
 
-  var isEnabledGST = true;
-  var isEnabledDio = true;
-  var isEnabledBusName = true;
-  var isEnabledBusAddCorrLine1 = true;
-  var isEnabledBusAddCorrLine2 = true;
-  var isEnabledBusAddCorrCity = true;
-  var isEnabledBusAddCorrState = true;
-  var isEnabledBuisnessMonthlySalary = true;
-  var isEnabledIncomeSlab = true;
-  var isEnabledBuisnessDocumentNo = true;
-  var isEnabledBuisnessProofDocId = true;
-  var isEnabledBusEntityType = true;
-  var isEnabledPinCode = true;
   var isClearData = false;
   var isImageDelete = false;
+
+  var updateData = false;
 
   List<CityResponce?> citylist = [];
   var cityCallInitial = true;
@@ -138,15 +114,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     return itemsHeights;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    //Api Call
-    getPersonalDetailAndStateApi(context);
-  }
-
   void _onImageSelected(File imageFile) async {
-    isImageDelete=false;
+    isImageDelete = false;
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postBusineesDoumentSingleFile(imageFile, true, "", "");
@@ -169,7 +138,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     'Upto 3 Lacs',
     '3 Lacs - 10 Lacs',
     '10 Lacs - 25 Lacs',
-    'Above 25 Lacs '
+    'Above 25 Lacs'
   ];
   String? selectedMonthlySalesTurnoverValue;
 
@@ -181,6 +150,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     'Others'
   ];
   String? selectedChooseBusinessProofValue;
+
+  var gstUpdate = false;
+
+  var setStateListFirstTime = true;
+  var setCityListFirstTime = true;
 
   List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> items) {
     final List<DropdownMenuItem<String>> menuItems = [];
@@ -283,6 +257,13 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    //Api Call
+    getPersonalDetailAndStateApi(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -302,7 +283,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
               if (productProvider.getLeadBusinessDetailData?.businessName !=
                       null &&
                   productProvider.getLeadBusinessDetailData?.doi != null &&
-                  !isClearData && !isImageDelete) {
+                  !isClearData &&
+                  !isImageDelete) {
                 _gstController.text =
                     productProvider.getLeadBusinessDetailData!.busGSTNO!;
                 gstNumber =
@@ -322,20 +304,23 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                     .getLeadBusinessDetailData!.buisnessDocumentNo!;
                 image = productProvider
                     .getLeadBusinessDetailData!.buisnessProofUrl!;
+                selectedBusinessTypeValue = productProvider.getLeadBusinessDetailData!.busEntityType!;
+                selectedStateValue = productProvider.getLeadBusinessDetailData!.stateId!.toString();
+                selectedCityValue = productProvider.getLeadBusinessDetailData!.cityId!.toString();
+                selectedMonthlySalesTurnoverValue = productProvider.getLeadBusinessDetailData!.buisnessMonthlySalary!.toString();
+                buisnessProofDocId = productProvider.getLeadBusinessDetailData!.buisnessProofDocId!;
+              } else {
+                updateData = true;
+              }
+            }
 
-                isEnabledGST = false;
-                isEnabledDio = false;
-                isEnabledBusName = false;
-                isEnabledBusAddCorrLine1 = false;
-                isEnabledBusAddCorrLine2 = false;
-                isEnabledBusAddCorrCity = false;
-                isEnabledBusAddCorrState = false;
-                isEnabledBuisnessMonthlySalary = false;
-                isEnabledIncomeSlab = false;
-                isEnabledBuisnessDocumentNo = false;
-                isEnabledBuisnessProofDocId = false;
-                isEnabledBusEntityType = false;
-                isEnabledPinCode = false;
+            if (productProvider.getCustomerDetailUsingGSTData != null) {
+              if (productProvider.getCustomerDetailUsingGSTData!.busGSTNO != null  && !gstUpdate) {
+                if(productProvider.getCustomerDetailUsingGSTData!.busGSTNO!
+                    .isNotEmpty) {
+                  slectedDate = Utils.dateFormate(context, productProvider.getCustomerDetailUsingGSTData!.doi!);
+                  updateData = false;
+                }
               }
             }
 
@@ -343,9 +328,13 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
               citylist = productProvider.getAllCityData!;
             }
 
-            if (productProvider.getpostBusineesDoumentSingleFileData != null && !isImageDelete) {
-              if (productProvider.getpostBusineesDoumentSingleFileData!.filePath != null) {
+            if (productProvider.getpostBusineesDoumentSingleFileData != null &&
+                !isImageDelete) {
+              if (productProvider
+                      .getpostBusineesDoumentSingleFileData!.filePath !=
+                  null) {
                 image = productProvider.getpostBusineesDoumentSingleFileData!.filePath!;
+                buisnessProofDocId = productProvider.getpostBusineesDoumentSingleFileData!.docId!;
               }
             }
 
@@ -392,9 +381,9 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                             controller: _gstController,
                             hintText: "07AACDW15215NF",
                             keyboardType: TextInputType.text,
-                            enabled: isEnabledGST,
+                            enabled: updateData,
                             labelText: "GST Number(Optional)",
-                            textCapitalization: TextCapitalization.words,
+                            textCapitalization: TextCapitalization.characters,
                             inputFormatter: [
                               LengthLimitingTextInputFormatter(15)
                             ],
@@ -404,15 +393,19 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 print(
                                     'TextField value11: $text (${text.length})');
                                 try {
-                                  await getCustomerDetailUsingGST(context, _gstController.text);
-                                  if (productProvider.getCustomerDetailUsingGSTData != null) {
-                                    if (productProvider.getCustomerDetailUsingGSTData!.busGSTNO!.isEmpty ||
-                                        productProvider.getCustomerDetailUsingGSTData!
-                                                .busGSTNO !=
-                                            null) {
+                                  Utils.hideKeyBored(context);
+                                  await getCustomerDetailUsingGST(
+                                      context, _gstController.text);
+                                  if (productProvider
+                                          .getCustomerDetailUsingGSTData !=
+                                      null) {
+                                    if (productProvider.getCustomerDetailUsingGSTData!.busGSTNO != null) {
                                       Utils.showToast(productProvider
                                           .getCustomerDetailUsingGSTData!
                                           .message!);
+                                      updateData = false;
+                                      gstUpdate = false;
+                                      cityCallInitial = true;
                                       _gstController.text = productProvider
                                           .getCustomerDetailUsingGSTData!
                                           .busGSTNO!;
@@ -440,7 +433,6 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                           productProvider
                                               .getCustomerDetailUsingGSTData!
                                               .buisnessDocumentNo!;
-                                      isEnabledGST = false;
                                     } else {
                                       Utils.showToast(productProvider
                                           .getCustomerDetailUsingGSTData!
@@ -460,8 +452,10 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                             onTap: () {
                               // print('Edit icon tapped');
                               setState(() {
-                                print("dksfklsf");
-                                isImageDelete=true;
+                                updateData = true;
+                                isImageDelete = true;
+                                gstUpdate = true;
+                                setCityListFirstTime = false;
                                 _gstController.text = "";
                                 _businessNameController.text = "";
                                 _addressLineController.text = "";
@@ -469,36 +463,15 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 _pinCodeController.text = "";
                                 _BusinessDocumentNumberController.text = "";
                                 slectedDate = "";
+                                selectedBusinessTypeValue = null;
+                                selectedStateValue = null;
+                                selectedCityValue = null;
+                                selectedMonthlySalesTurnoverValue = null;
 
                                 isClearData = true;
                                 gstNumber = "";
                                 image = "";
-                                dio = "";
-                                busName = "";
-                                busAddCorrLine1 = "";
-                                busAddCorrLine2 = "";
-                                busAddCorrCity = "";
-                                busAddCorrState = "";
-                                busAddCorrPincode = "";
-                                buisnessMonthlySalary = 0;
-                                incomeSlab = "";
-                                buisnessDocumentNo = "";
-                                buisnessProofDocId = 0;
-                                busEntityType = "";
-
-                                isEnabledGST = true;
-                                isEnabledDio = true;
-                                isEnabledBusName = true;
-                                isEnabledBusAddCorrLine1 = true;
-                                isEnabledBusAddCorrLine2 = true;
-                                isEnabledBusAddCorrCity = true;
-                                isEnabledBusAddCorrState = true;
-                                isEnabledBuisnessMonthlySalary = true;
-                                isEnabledIncomeSlab = true;
-                                isEnabledBuisnessDocumentNo = true;
-                                isEnabledBuisnessProofDocId = true;
-                                isEnabledBusEntityType = true;
-                                isEnabledPinCode = true;
+                                buisnessProofDocId = null;
                               });
                             },
                             child: Container(
@@ -517,14 +490,14 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                     ),
                     CommonTextField(
                       controller: _businessNameController,
-                      enabled: isEnabledBusName,
+                      enabled: updateData,
                       hintText: "Shree Balaji Traders ",
                       labelText: "Business Name(As Per Doc)",
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 22.0,
                     ),
-                    Text(
+                    const Text(
                       "Business Address ",
                       style: TextStyle(
                         fontSize: 14.0,
@@ -533,42 +506,42 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       ),
                       textAlign: TextAlign.start,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16.0,
                     ),
                     CommonTextField(
                       controller: _addressLineController,
-                      enabled: isEnabledBusAddCorrLine1,
+                      enabled: updateData,
                       hintText: "Address Line 1",
                       labelText: "Address Line 1",
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16.0,
                     ),
                     CommonTextField(
                       controller: _addressLine2Controller,
-                      enabled: isEnabledBusAddCorrLine2,
+                      enabled: updateData,
                       hintText: "Address Line 2",
                       labelText: "Address Line 2",
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16.0,
                     ),
                     CommonTextField(
                       controller: _pinCodeController,
-                      enabled: isEnabledPinCode,
+                      enabled: updateData,
                       hintText: "Pin Code",
                       labelText: "Pin Code",
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16.0,
                     ),
                     buildStateField(productProvider),
-                    SizedBox(
+                    const SizedBox(
                       height: 16.0,
                     ),
                     buildCityField(productProvider),
-                    SizedBox(
+                    const SizedBox(
                       height: 16.0,
                     ),
                     DropdownButtonFormField2<String>(
@@ -591,7 +564,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide:
-                              BorderSide(color: kPrimaryColor, width: 1),
+                              const BorderSide(color: kPrimaryColor, width: 1),
                         ),
                       ),
                       hint: const Text(
@@ -605,9 +578,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       items: _addDividersAfterItems(businessTypeList),
                       value: selectedBusinessTypeValue,
                       onChanged: (String? value) {
-                        setState(() {
-                          selectedBusinessTypeValue = value;
-                        });
+                        selectedBusinessTypeValue = value;
                       },
                       buttonStyleData: const ButtonStyleData(
                         padding: EdgeInsets.only(right: 8),
@@ -623,7 +594,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         openMenuIcon: Icon(Icons.arrow_drop_up),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16.0,
                     ),
                     DropdownButtonFormField2<String>(
@@ -646,7 +617,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide:
-                              BorderSide(color: kPrimaryColor, width: 1),
+                              const BorderSide(color: kPrimaryColor, width: 1),
                         ),
                       ),
                       hint: const Text(
@@ -660,9 +631,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       items: _addDividersAfterItems(monthlySalesTurnoverList),
                       value: selectedMonthlySalesTurnoverValue,
                       onChanged: (String? value) {
-                        setState(() {
-                          selectedMonthlySalesTurnoverValue = value;
-                        });
+                        selectedMonthlySalesTurnoverValue = value;
                       },
                       buttonStyleData: const ButtonStyleData(
                         padding: EdgeInsets.only(right: 8),
@@ -679,11 +648,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         openMenuIcon: Icon(Icons.arrow_drop_up),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15.0,
                     ),
                     InkWell(
-                      onTap: isEnabledDio
+                      onTap: updateData
                           ? () {
                               _showDatePicker(context);
                             }
@@ -705,18 +674,18 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 slectedDate!.isNotEmpty
                                     ? '$slectedDate'
                                     : 'Business Incorporation Date',
-                                style: TextStyle(fontSize: 16.0),
+                                style: const TextStyle(fontSize: 16.0),
                               ),
-                              Icon(Icons.date_range),
+                              const Icon(Icons.date_range),
                             ],
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 22.0,
                     ),
-                    Text(
+                    const Text(
                       "Business Address ",
                       style: TextStyle(
                         fontSize: 14.0,
@@ -725,7 +694,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       ),
                       textAlign: TextAlign.start,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15.0,
                     ),
                     DropdownButtonFormField2<String>(
@@ -748,7 +717,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide:
-                              BorderSide(color: kPrimaryColor, width: 1),
+                              const BorderSide(color: kPrimaryColor, width: 1),
                         ),
                       ),
                       hint: const Text(
@@ -781,16 +750,15 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         openMenuIcon: Icon(Icons.arrow_drop_up),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15.0,
                     ),
                     CommonTextField(
                       controller: _BusinessDocumentNumberController,
-                      enabled: isEnabledBuisnessDocumentNo,
                       hintText: "Business Document Number",
                       labelText: "Business Document Number",
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 36.0,
                     ),
                     Stack(
@@ -814,45 +782,48 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 child: Container(
                                   child: (!image.isEmpty)
                                       ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      image,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: 148,
-                                    ),
-                                  )
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          child: Image.network(
+                                            image,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: 148,
+                                          ),
+                                        )
                                       : (image.isNotEmpty)
-                                      ? ClipRRect(
-                                    borderRadius:
-                                    BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      image,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: 148,
-                                    ),
-                                  )
-                                      : Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                          'assets/images/gallery.svg'),
-                                      const Text(
-                                        'Upload Business Proof',
-                                        style: TextStyle(
-                                            color: Color(0xff0196CE),
-                                            fontSize: 12),
-                                      ),
-                                      const Text('Supports : JPEG, PNG',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xffCACACA))),
-                                    ],
-                                  ),
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              child: Image.network(
+                                                image,
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: 148,
+                                              ),
+                                            )
+                                          : Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                    'assets/images/gallery.svg'),
+                                                const Text(
+                                                  'Upload Business Proof',
+                                                  style: TextStyle(
+                                                      color: Color(0xff0196CE),
+                                                      fontSize: 12),
+                                                ),
+                                                const Text(
+                                                    'Supports : JPEG, PNG',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Color(0xffCACACA))),
+                                              ],
+                                            ),
                                 ),
                               ),
                             )),
@@ -863,12 +834,15 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                               image = "";
                             });
                           },
-                          child: !image.isEmpty?Container(
-                            padding: EdgeInsets.all(4),
-                            alignment: Alignment.topRight,
-                            child: SvgPicture.asset(
-                                'assets/icons/delete_icon.svg'),
-                          ):Container(),),
+                          child: !image.isEmpty
+                              ? Container(
+                                  padding: EdgeInsets.all(4),
+                                  alignment: Alignment.topRight,
+                                  child: SvgPicture.asset(
+                                      'assets/icons/delete_icon.svg'),
+                                )
+                              : Container(),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 54.0),
@@ -883,10 +857,22 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           Utils.showToast("Please Enter Address Line 2");
                         } else if (_pinCodeController.text.isEmpty) {
                           Utils.showToast("Please Enter Pin Code");
+                        } else if (selectedBusinessTypeValue == null) {
+                          Utils.showToast(
+                              "Please Select Business Type");
+                        } else if (selectedMonthlySalesTurnoverValue == null) {
+                          Utils.showToast(
+                              "Please Select Income Slab");
                         } else if (_BusinessDocumentNumberController
                             .text.isEmpty) {
                           Utils.showToast(
                               "Please Enter Business Document Number");
+                        } else if (buisnessProofDocId == null) {
+                          Utils.showToast(
+                              "Please Select Proof");
+                        }  else if (slectedDate!.isEmpty) {
+                          Utils.showToast(
+                              "Please Select Incorporation Date");
                         } else {
                           await postLeadBuisnessDetail(context);
 
@@ -915,27 +901,57 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   Widget buildStateField(DataProvider productProvider) {
     ReturnObject? initialData;
-    if (productProvider.getLeadBusinessDetailData!.stateId != null && productProvider.getLeadBusinessDetailData!.stateId! != 0) {
-    if(productProvider.getAllStateData != null) {
-      var allStates = productProvider.getAllStateData!.returnObject!;
-      initialData = allStates.firstWhere(
-              (element) =>
-          element?.id == productProvider.getLeadBusinessDetailData!.stateId,
-          orElse: () => null);
 
-      if (productProvider.getLeadBusinessDetailData!.cityId != null && productProvider.getLeadBusinessDetailData!.cityId != 0 && !cityCallInitial) {
-        citylist.clear();
-        Provider.of<DataProvider>(context, listen: false)
-            .getAllCity(productProvider.getLeadBusinessDetailData!.stateId!);
-        cityCallInitial = false;
+    if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
+      if (productProvider.getCustomerDetailUsingGSTData!.stateId != null &&
+          productProvider.getCustomerDetailUsingGSTData!.stateId != 0 &&
+          productProvider.getCustomerDetailUsingGSTData!.cityId != null &&
+          productProvider.getCustomerDetailUsingGSTData!.cityId != 0) {
+        setStateListFirstTime = true;
+        if (productProvider.getAllStateData != null) {
+          var allStates = productProvider.getAllStateData!.returnObject!;
+          if (setStateListFirstTime) {
+            initialData = allStates.firstWhere(
+                    (element) =>
+                element?.id ==
+                    productProvider.getCustomerDetailUsingGSTData!.stateId,
+                orElse: () => null);
+            selectedStateValue = productProvider.getCustomerDetailUsingGSTData!.stateId!.toString();
+          }
+
+          if (cityCallInitial) {
+            citylist.clear();
+            Provider.of<DataProvider>(context, listen: false)
+                .getAllCity(productProvider.getCustomerDetailUsingGSTData!.stateId!);
+            cityCallInitial = false;
+          }
+        }
+      }
+    } else {
+      if (productProvider.getLeadBusinessDetailData!.stateId != null &&
+          productProvider.getLeadBusinessDetailData!.stateId! != 0) {
+        if (productProvider.getAllStateData != null) {
+          var allStates = productProvider.getAllStateData!.returnObject!;
+          if (setStateListFirstTime) {
+            initialData = allStates.firstWhere(
+                    (element) =>
+                element?.id ==
+                    productProvider.getLeadBusinessDetailData!.stateId,
+                orElse: () => null);
+            selectedStateValue = productProvider.getLeadBusinessDetailData!.stateId!.toString();
+          }
+        }
+        if (cityCallInitial) {
+          citylist.clear();
+          Provider.of<DataProvider>(context, listen: false)
+              .getAllCity(productProvider.getLeadBusinessDetailData!.stateId!);
+          cityCallInitial = false;
+        }
+      } else {
+        setStateListFirstTime = false;
       }
     }
-
-      /*if (initialData!.isNotEmpty) {
-        // selectedBankValue =initialData!.first!.bankName!.toString();
-      }*/
-    }
-    if(productProvider.getAllStateData != null) {
+    if (productProvider.getAllStateData != null) {
       return DropdownButtonFormField2<ReturnObject?>(
         isExpanded: true,
         value: initialData,
@@ -965,16 +981,16 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           ),
         ),
         items: getAllState(productProvider.getAllStateData!.returnObject!),
-        onChanged: isEnabledBusAddCorrState
-            ? (ReturnObject? value) {
-          citylist.clear();
-          Provider.of<DataProvider>(context, listen: false)
-              .getAllCity(value!.id!);
-          setState(() {
-            //selectedBankValue = value!.bankName!;
-          });
-        }
-            : null,
+        onChanged: setStateListFirstTime
+            ? null
+            : (ReturnObject? value) {
+                citylist.clear();
+                setStateListFirstTime = false;
+                setCityListFirstTime = false;
+                Provider.of<DataProvider>(context, listen: false)
+                    .getAllCity(value!.id!);
+                selectedStateValue = value.id!.toString();
+              },
         buttonStyleData: const ButtonStyleData(
           padding: EdgeInsets.only(right: 8),
         ),
@@ -996,65 +1012,87 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   }
 
   Widget buildCityField(DataProvider productProvider) {
-    print("City......................111111111111");
-      if (productProvider.getAllCityData != null) {
-        print("City......................2222222222");
-        CityResponce? initialData;
-        /*initialData = productProvider.getAllCityData!.firstWhere(
-            (element) =>
+    if (productProvider.getAllCityData != null) {
+      CityResponce? initialData;
+      if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
+        if (productProvider.getCustomerDetailUsingGSTData!.cityId != null &&
+            productProvider.getCustomerDetailUsingGSTData!.cityId !=
+                0) {
+          setCityListFirstTime = true;
+          if (setCityListFirstTime) {
+            initialData = citylist.firstWhere(
+                    (element) =>
                 element?.id ==
-                productProvider.getLeadBusinessDetailData!.cityId,
-            orElse: () => CityResponce());*/
-        print("dsdsds"+citylist.length.toString());
-        return DropdownButtonFormField2<CityResponce>(
-          isExpanded: true,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-            fillColor: textFiledBackgroundColour,
-            filled: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: kPrimaryColor, width: 1),
-            ),
-          ),
-          hint: const Text(
-            'City',
-            style: TextStyle(
-              color: blueColor,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          items: getAllCity(citylist),
-          onChanged: (CityResponce? value) {
-            setState(() {});
-          },
-          buttonStyleData: const ButtonStyleData(
-            padding: EdgeInsets.only(right: 8),
-          ),
-          dropdownStyleData: const DropdownStyleData(
-            maxHeight: 200,
-          ),
-          menuItemStyleData: MenuItemStyleData(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            customHeights: _getCustomItemsHeights3(citylist),
-          ),
-          iconStyleData: const IconStyleData(
-            openMenuIcon: Icon(Icons.arrow_drop_up),
-          ),
-        );
+                    productProvider.getCustomerDetailUsingGSTData!.cityId,
+                orElse: () => CityResponce());
+            selectedCityValue = productProvider.getCustomerDetailUsingGSTData!.cityId!.toString();
+          }
+        }
       } else {
-        return Container();
+        if (setCityListFirstTime) {
+          initialData = citylist.firstWhere(
+              (element) =>
+                  element?.id ==
+                  productProvider.getLeadBusinessDetailData!.cityId,
+              orElse: () => CityResponce());
+          selectedCityValue = productProvider.getLeadBusinessDetailData!.cityId!.toString();
+        }
       }
+      return DropdownButtonFormField2<CityResponce>(
+        isExpanded: true,
+        value: initialData,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 16),
+          fillColor: textFiledBackgroundColour,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: kPrimaryColor, width: 1),
+          ),
+        ),
+        hint: const Text(
+          'City',
+          style: TextStyle(
+            color: blueColor,
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        items: getAllCity(citylist),
+        onChanged: setCityListFirstTime
+            ? null
+            : (CityResponce? value) {
+          selectedCityValue = value!.id.toString();
+          setState(() {
+            setCityListFirstTime = false;
+          });
+        },
+        buttonStyleData: const ButtonStyleData(
+          padding: EdgeInsets.only(right: 8),
+        ),
+        dropdownStyleData: const DropdownStyleData(
+          maxHeight: 200,
+        ),
+        menuItemStyleData: MenuItemStyleData(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          customHeights: _getCustomItemsHeights3(citylist),
+        ),
+        iconStyleData: const IconStyleData(
+          openMenuIcon: Icon(Icons.arrow_drop_up),
+        ),
+      );
+    } else {
+      return Container();
     }
+  }
 
   List<DropdownMenuItem<CityResponce>> getAllCity(List<CityResponce?> list) {
     final List<DropdownMenuItem<CityResponce>> menuItems = [];
@@ -1094,30 +1132,50 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   Future<void> postLeadBuisnessDetail(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    // final String? userId = prefsUtil.getString(USER_ID);
     Utils.onLoading(context, "");
+
+    /*'Upto 3 Lacs',
+    '3 Lacs - 10 Lacs',
+    '10 Lacs - 25 Lacs',
+    'Above 25 Lacs */
+
+    var monthelySlaesValue = 0;
+    if(selectedMonthlySalesTurnoverValue == "Upto 3 Lacs") {
+      monthelySlaesValue = 0;
+    } else if(selectedMonthlySalesTurnoverValue == "3 Lacs - 10 Lacs") {
+      monthelySlaesValue = 3;
+    } else if(selectedMonthlySalesTurnoverValue == "10 Lacs - 25 Lacs") {
+      monthelySlaesValue = 10;
+    } else if(selectedMonthlySalesTurnoverValue == "Above 25 Lacs") {
+      monthelySlaesValue = 25;
+    } else {
+      monthelySlaesValue = 0;
+    }
+
+
     var postLeadBuisnessDetailRequestModel = PostLeadBuisnessDetailRequestModel(
       leadId: prefsUtil.getInt(LEADE_ID),
       userId: prefsUtil.getString(USER_ID),
       activityId: widget.activityId,
       subActivityId: widget.subActivityId,
-      busName: busName,
-      doi: dio,
+      busName: _businessNameController.text.toString(),
+      doi: slectedDate.toString(),
       busGSTNO: gstNumber,
-      busEntityType: busEntityType,
-      busAddCorrLine1: busAddCorrLine1,
-      busAddCorrLine2: busAddCorrLine2,
-      busAddCorrCity: busAddCorrCity,
-      busAddCorrState: busAddCorrState,
-      busAddCorrPincode: busAddCorrPincode,
-      buisnessMonthlySalary: buisnessMonthlySalary,
-      incomeSlab: incomeSlab,
+      busEntityType: selectedBusinessTypeValue,
+      busAddCorrLine1: _addressLineController.text.toString(),
+      busAddCorrLine2: _addressLine2Controller.text.toString(),
+      busAddCorrCity: selectedCityValue,
+      busAddCorrState: selectedStateValue,
+      busAddCorrPincode: _pinCodeController.text.toString(),
+      buisnessMonthlySalary: monthelySlaesValue,
+      incomeSlab: selectedMonthlySalesTurnoverValue,
       companyId: prefsUtil.getInt(COMPANY_ID),
-      buisnessDocumentNo: buisnessDocumentNo,
+      buisnessDocumentNo: _BusinessDocumentNumberController.text.toString(),
       buisnessProofDocId: buisnessProofDocId,
       buisnessProof: image,
     );
-    Provider.of<DataProvider>(context, listen: false)
+    print("Post DATA:: ${postLeadBuisnessDetailRequestModel.toJson()}");
+    await Provider.of<DataProvider>(context, listen: false)
         .postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
   }
@@ -1132,7 +1190,6 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   Future<void> getPersonalDetailAndStateApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    final String? leadId = prefsUtil.getString(USER_ID);
     final String? userId = prefsUtil.getString(USER_ID);
 
     await Provider.of<DataProvider>(context, listen: false)
