@@ -278,12 +278,16 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     }
   }
   Widget bankListWidget(DataProvider productProvider) {
-    if (personalDetailsData.result!.bankName! != null) {
-      var initialData = liveBankList!.where((element) => element?.bankName ==personalDetailsData!.result!.bankName!).toList();
-      if(initialData.isNotEmpty){
-        selectedBankValue =initialData.first!.bankName!.toString();
-      }
-
+    var initialData;
+    if(personalDetailsData.result!=null){
+      if (personalDetailsData.result!.bankName! != null) {
+         initialData = liveBankList!.where((element) => element?.bankName ==personalDetailsData!.result!.bankName!).toList();
+        if(initialData.isNotEmpty){
+          selectedBankValue =initialData.first!.bankName!.toString();
+        }
+    }else {
+     initialData=null;
+    }
     return DropdownButtonFormField2<LiveBankList>(
       value: initialData.isNotEmpty?initialData.first:null,
         isExpanded: true,
@@ -335,22 +339,174 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         ),
       );
     } else {
-      return Container();
+      return DropdownButtonFormField2<LiveBankList>(
+        isExpanded: true,
+        decoration: InputDecoration(
+          contentPadding:
+          const EdgeInsets.symmetric(vertical: 16),
+          fillColor: textFiledBackgroundColour,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(
+                color: kPrimaryColor, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(
+                color: kPrimaryColor, width: 1),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide:
+            BorderSide(color: kPrimaryColor, width: 1),
+          ),
+        ),
+        hint: const Text(
+          'Bank Name',
+          style: TextStyle(
+            color: blueColor,
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        items: _addDividersAfterItems1(liveBankList!),
+        onChanged: (LiveBankList? value) {
+          selectedBankValue = value!.bankName!;
+        },
+        buttonStyleData: const ButtonStyleData(
+          padding: EdgeInsets.only(right: 8),
+        ),
+        dropdownStyleData: const DropdownStyleData(
+          maxHeight: 200,
+        ),
+        menuItemStyleData: MenuItemStyleData(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          customHeights: _getCustomItemsHeights1(liveBankList!),
+        ),
+        iconStyleData: const IconStyleData(
+          openMenuIcon: Icon(Icons.arrow_drop_up),
+        ),
+      );
     }
   }
 
   Widget accountTypeWidget(DataProvider productProvider) {
-    if (personalDetailsData.result!.accountType! != null) {
-      //var initialData = accountTypeList.where((element) => element ==personalDetailsData!.result!.accountType!).toList();
-      //List<String> initialData = accountTypeList.where((element) => element.contains(personalDetailsData!.result!.accountType!)).toList();
-      List<String> initialData = accountTypeList.where((element) => element.contains(personalDetailsData?.result?.accountType ?? '')).toList();
-      if(initialData.isNotEmpty){
-        selectedAccountTypeValue =initialData.first;
-      }
+    if(personalDetailsData.result!=null){
+      if (personalDetailsData.result!.accountType! != null) {
+        //var initialData = accountTypeList.where((element) => element ==personalDetailsData!.result!.accountType!).toList();
+        //List<String> initialData = accountTypeList.where((element) => element.contains(personalDetailsData!.result!.accountType!)).toList();
+        List<String> initialData = accountTypeList.where((element) => element.contains(personalDetailsData?.result?.accountType ?? '')).toList();
+        if(initialData.isNotEmpty){
+          selectedAccountTypeValue =initialData.first;
+        }
 
-      print("Bhagwan ${initialData}");
-      return  DropdownButtonFormField2<String>(
-        value: initialData.isNotEmpty?initialData.first:null,
+        print("Bhagwan ${initialData}");
+        return  DropdownButtonFormField2<String>(
+          value: initialData.isNotEmpty?initialData.first:null,
+          isExpanded: true,
+          decoration: InputDecoration(
+            contentPadding:
+            const EdgeInsets.symmetric(vertical: 16),
+            fillColor: textFiledBackgroundColour,
+            filled: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                  color: kPrimaryColor, width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                  color: kPrimaryColor, width: 1),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide:
+              BorderSide(color: kPrimaryColor, width: 1),
+            ),
+          ),
+          hint: const Text(
+            'Account Type',
+            style: TextStyle(
+              color: blueColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          items: _addDividersAfterItems(accountTypeList),
+          onChanged: (String? value) {
+            selectedAccountTypeValue = value!;
+          },
+          buttonStyleData: const ButtonStyleData(
+            padding: EdgeInsets.only(right: 8),
+          ),
+          dropdownStyleData: const DropdownStyleData(
+            maxHeight: 200,
+          ),
+          menuItemStyleData: MenuItemStyleData(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            customHeights:
+            _getCustomItemsHeights(accountTypeList),
+          ),
+          iconStyleData: const IconStyleData(
+            openMenuIcon: Icon(Icons.arrow_drop_up),
+          ),
+        );
+      } else {
+        return DropdownButtonFormField2<String>(
+          isExpanded: true,
+          decoration: InputDecoration(
+            contentPadding:
+            const EdgeInsets.symmetric(vertical: 16),
+            fillColor: textFiledBackgroundColour,
+            filled: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                  color: kPrimaryColor, width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                  color: kPrimaryColor, width: 1),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide:
+              BorderSide(color: kPrimaryColor, width: 1),
+            ),
+          ),
+          hint: const Text(
+            'Account Type',
+            style: TextStyle(
+              color: blueColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          items: _addDividersAfterItems(accountTypeList),
+          onChanged: (String? value) {
+            selectedAccountTypeValue = value!;
+          },
+          buttonStyleData: const ButtonStyleData(
+            padding: EdgeInsets.only(right: 8),
+          ),
+          dropdownStyleData: const DropdownStyleData(
+            maxHeight: 200,
+          ),
+          menuItemStyleData: MenuItemStyleData(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            customHeights:
+            _getCustomItemsHeights(accountTypeList),
+          ),
+          iconStyleData: const IconStyleData(
+            openMenuIcon: Icon(Icons.arrow_drop_up),
+          ),
+        );
+      }
+    }else{
+      return DropdownButtonFormField2<String>(
         isExpanded: true,
         decoration: InputDecoration(
           contentPadding:
@@ -400,9 +556,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           openMenuIcon: Icon(Icons.arrow_drop_up),
         ),
       );
-    } else {
-      return Container();
     }
+
   }
 
   void submitBankDetailsApi(BuildContext contextz)async {

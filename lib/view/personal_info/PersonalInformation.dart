@@ -787,13 +787,15 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
   Widget buildStateField(DataProvider productProvider) {
     if (productProvider.getPersonalDetailsData!.permanentState != null) {
-      var allStates = productProvider.getAllStateData!.returnObject!;
-      var initialData = allStates.firstWhere(
-          (element) =>
-              element?.id ==
-              productProvider.getPersonalDetailsData!.permanentState,
-          orElse: () => null);
-      _permanentStateNameCl.text = initialData!.name!;
+      if(productProvider.getAllStateData != null) {
+        var allStates = productProvider.getAllStateData!.returnObject!;
+        var initialData = allStates.firstWhere(
+                (element) =>
+            element?.id ==
+                productProvider.getPersonalDetailsData!.permanentState,
+            orElse: () => null);
+        _permanentStateNameCl.text = initialData!.name!;
+      }
       if (productProvider.getPersonalDetailsData!.permanentState != null) {
         if (productProvider.getPersonalDetailsData!.permanentCity != null &&
             cityCallInitial) {

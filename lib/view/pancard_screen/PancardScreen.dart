@@ -359,8 +359,7 @@ class _PancardScreenState extends State<PancardScreen> {
                             Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    border:
-                                        Border.all(color: Color(0xff0196CE))),
+                                    border: Border.all(color: Color(0xff0196CE))),
                                 width: double.infinity,
                                 child: GestureDetector(
                                   onTap: () {
