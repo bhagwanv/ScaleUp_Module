@@ -143,6 +143,16 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     productProvider.getPersonalDetailsData!.emailId!;
               }
 
+              if (productProvider.getPersonalDetailsData!.alternatePhoneNo != null) {
+                _alternatePhoneNumberCl.text =
+                productProvider.getPersonalDetailsData!.alternatePhoneNo!;
+              }
+
+              if (productProvider.getPersonalDetailsData!.manulaElectrictyBillImage != null) {
+                widget.image =
+                productProvider.getPersonalDetailsData!.manulaElectrictyBillImage!;
+              }
+
               if (productProvider.getPersonalDetailsData!.gender == "M") {
                 _genderCl.text = "Male";
               } else if (productProvider.getPersonalDetailsData!.gender ==
@@ -1595,7 +1605,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
         ownershipTypeProof: selectOwnershipProofValue,
         electricityBillDocumentId: billDocId,
         ownershipTypeName: "",
-        ownershipTypeResponseId: "");
+        ownershipTypeResponseId: "",
+    gender: _genderCl.text.toString(),
+    marital: selectedMaritalStatusValue,
+    resAddress1: _currentAddressLineOneCl.text.toString(),
+    resAddress2: _currentAddressLineTwoCl.text.toString());
 
     bool isValid = false;
     String errorMessage = "";

@@ -759,7 +759,7 @@ class ApiService {
       final prefsUtil = await SharedPref.getInstance();
       var token = prefsUtil.getString(TOKEN);
       final response = await interceptor.post(
-          Uri.parse(apiUrls.baseUrl + apiUrls.postLeadSelfie),
+          Uri.parse(apiUrls.baseUrl + apiUrls.PostLeadPersonalDetail),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
