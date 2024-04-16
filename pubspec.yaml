@@ -1,3 +1,4 @@
+
 name: scale_up_module
 description: "A new Flutter project."
 
@@ -57,6 +58,8 @@ dependencies:
   flutter_widget_from_html: ^0.14.11
 
   image_cropper: ^4.0.1
+  webview_flutter: ^4.7.0
+
 
 dev_dependencies:
   flutter_test:

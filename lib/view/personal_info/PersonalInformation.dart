@@ -117,8 +117,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     // TODO: implement build
     return Scaffold(
       body: SafeArea(
-        child:
-            Consumer<DataProvider>(builder: (context, productProvider, child) {
+        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
           if (productProvider.getPersonalDetailsData == null && isLoading) {
             return Center(child: Loader());
           } else {

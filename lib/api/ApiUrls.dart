@@ -28,5 +28,10 @@ class ApiUrls{
   final String getCustomerDetailUsingGST="/aggregator/LeadAgg/GetCustomerDetailUsingGST";
   final String postLeadBuisnessDetail="/services/lead/v1/PostLeadBuisnessDetail";
   final String saveLeadBankDetail="/services/lead/v1/api/LeadBankDetail/SaveLeadBankDetail";
+  final String GetLeadOffer="/aggregator/LeadAgg/GetLeadOffer";
+  final String GetLeadName="/aggregator/LeadAgg/GetLeadName";
+  final String AcceptOffer="/aggregator/LeadAgg/AcceptOffer";
+  final String CheckEsignStatus="/services/lead/v1/NBFCSchedular/CheckEsignStatus";
+  final String GetAgreemetDetail="/aggregator/LeadAgg/GetAgreemetDetail";
 
 }

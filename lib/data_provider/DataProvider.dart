@@ -33,6 +33,7 @@ import '../view/personal_info/model/PersonalDetailsRequestModel.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
+import '../view/profile_screen/model/OfferResponceModel.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
@@ -152,6 +153,10 @@ class DataProvider extends ChangeNotifier {
 
   PostLeadBuisnessDetailResponsModel? _getPostLeadBuisnessDetailData;
   PostLeadBuisnessDetailResponsModel? get getPostLeadBuisnessDetailData => _getPostLeadBuisnessDetailData;
+
+
+  OfferResponceModel? _getOfferResponceata;
+  OfferResponceModel? get getOfferResponceata => _getOfferResponceata;
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -314,6 +319,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> postLeadBuisnessDetail(PostLeadBuisnessDetailRequestModel postLeadBuisnessDetailRequestModel) async {
     _getPostLeadBuisnessDetailData = await apiService.postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
+    notifyListeners();
+  }
+
+  Future<void> GetLeadOffer(int leadId ,int companyID) async {
+    _getOfferResponceata = await apiService.GetLeadOffer(leadId,companyID);
     notifyListeners();
   }
 

@@ -27,10 +27,12 @@ import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'PermissionsScreen.dart';
 
 class PancardScreen extends StatefulWidget {
+  String image = "";
   final int activityId;
   final int subActivityId;
 
-  PancardScreen({super.key, required this.activityId, required this.subActivityId});
+  PancardScreen(
+      {super.key, required this.activityId, required this.subActivityId});
 
   @override
   State<PancardScreen> createState() => _PancardScreenState();
@@ -41,7 +43,6 @@ class _PancardScreenState extends State<PancardScreen> {
   final TextEditingController _nameAsPanCl = TextEditingController();
   final TextEditingController _dOBAsPanCl = TextEditingController();
   final TextEditingController _fatherNameAsPanCl = TextEditingController();
-  String image = "";
   var isLoading = true;
   var isEnabledPanNumber = true;
   var isVerifyPanNumber = false;
@@ -49,7 +50,6 @@ class _PancardScreenState extends State<PancardScreen> {
   var _acceptPermissions = false;
   String dobAsPan = "";
   int documentId = 0;
-  var isImageDelete = false;
 
   @override
   void initState() {
@@ -59,16 +59,11 @@ class _PancardScreenState extends State<PancardScreen> {
   }
 
   // Callback function to receive the selected image
-  void _onImageSelected(File imageFile) async{
-    // Handle the selected image here
-    // For example, you can setState to update UI with the selected image
-      isImageDelete=false;
-      Utils.onLoading(context, "");
-      await Provider.of<DataProvider>(context, listen: false)
-          .postSingleFile(imageFile, true, "", "");
-     // Navigator.pop(context);
-      Navigator.of(context, rootNavigator: true).pop();
-
+  void _onImageSelected(File imageFile)async {
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false).postSingleFile(imageFile, true, "", "");
+    Navigator.pop(context);
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   void _handlePermissionsAccepted(bool accept) {
@@ -87,323 +82,308 @@ class _PancardScreenState extends State<PancardScreen> {
         child: Scaffold(
           body: Consumer<DataProvider>(
               builder: (context, productProvider, child) {
-            if (productProvider.getLeadPANData == null && isLoading) {
-              return Loader();
-            } else {
-              if (productProvider.getLeadPANData != null && isLoading) {
-                Navigator.of(context, rootNavigator: true).pop();
-                isLoading = false;
-              }
-              var LeadPANData = productProvider.getLeadPANData!;
-              print("Call Pan card");
+                if (productProvider.getLeadPANData == null && isLoading) {
+                  return Loader();
+                } else {
+                  if (productProvider.getLeadPANData != null && isLoading) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    isLoading = false;
+                  }
+                  var LeadPANData = productProvider.getLeadPANData!;
 
-              if (LeadPANData.panCard != null && !isDataClear&& !isImageDelete) {
-                isVerifyPanNumber = true;
-                isEnabledPanNumber = false;
-                _panNumberCl.text = LeadPANData.panCard!;
-                _nameAsPanCl.text = LeadPANData.nameOnCard!;
-                  var formateDob=Utils.dateFormate(context,LeadPANData.dob!);
-                dobAsPan=LeadPANData.dob!;
-                _dOBAsPanCl.text =formateDob;
-                _fatherNameAsPanCl.text = LeadPANData.fatherName!;
-               image = LeadPANData.panImagePath!;
-                documentId = LeadPANData.documentId!;
-              }
+                  if (LeadPANData.panCard != null && !isDataClear) {
+                    isVerifyPanNumber = true;
+                    isEnabledPanNumber = false;
+                    _panNumberCl.text = LeadPANData.panCard!;
+                    _nameAsPanCl.text = LeadPANData.nameOnCard!;
+                    var formateDob=Utils.dateFormate(context,LeadPANData.dob!);
+                    dobAsPan=LeadPANData.dob!;
+                    _dOBAsPanCl.text =formateDob;
+                    _fatherNameAsPanCl.text = LeadPANData.fatherName!;
+                    widget.image = LeadPANData.panImagePath!;
+                    documentId = LeadPANData.documentId!;
+                  }
 
-              if (productProvider.getPostSingleFileData != null && !isImageDelete) {
-                if (productProvider
-                    .getPostSingleFileData!.filePath !=
-                    null) {
-                  image = productProvider
-                      .getPostSingleFileData!.filePath!;
-                  documentId = productProvider
-                      .getPostSingleFileData!.docId!;
-                }
-              }
-
-              return Center(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                            height: 100,
-                            width: 100,
-                            alignment: Alignment.topLeft,
-                            child: Image.asset('assets/images/scale.png')),
-                        const Text(
-                          'Enter Your PAN',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 40, color: Colors.black),
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'Verify the PAN number',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 15, color: Colors.black),
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'PAN Number',
-                          textAlign: TextAlign.start,
-                          style:
+                  return Center(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                height: 100,
+                                width: 100,
+                                alignment: Alignment.topLeft,
+                                child: Image.asset('assets/images/scale.png')),
+                            const Text(
+                              'Enter Your PAN',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 40, color: Colors.black),
+                            ),
+                            const SizedBox(height: 20),
+                            const Text(
+                              'Verify the PAN number',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(fontSize: 15, color: Colors.black),
+                            ),
+                            const SizedBox(height: 20),
+                            const Text(
+                              'PAN Number',
+                              textAlign: TextAlign.start,
+                              style:
                               TextStyle(fontSize: 14, color: Color(0xff858585)),
-                        ),
-                        const SizedBox(height: 5),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2.0, horizontal: 16.0),
-                          decoration: BoxDecoration(
-                            color: textFiledBackgroundColour,
-                            border: Border.all(color: kPrimaryColor),
-                            // Set background color
-                            borderRadius: BorderRadius.circular(
-                                10.0), // Set border radius
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: _panNumberCl,
-                                  keyboardType: TextInputType.text,
-                                  cursorColor: Colors.blue,
-                                  textCapitalization:
+                            ),
+                            const SizedBox(height: 5),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 2.0, horizontal: 16.0),
+                              decoration: BoxDecoration(
+                                color: textFiledBackgroundColour,
+                                border: Border.all(color: kPrimaryColor),
+                                // Set background color
+                                borderRadius: BorderRadius.circular(
+                                    10.0), // Set border radius
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _panNumberCl,
+                                      keyboardType: TextInputType.text,
+                                      cursorColor: Colors.blue,
+                                      textCapitalization:
                                       TextCapitalization.characters,
-                                  maxLines: 1,
-                                  enabled: isEnabledPanNumber,
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(10),
-                                    // Limit to 10 characters
-                                  ],
-                                  decoration: const InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 0.0, horizontal: 0.0),
-                                    hintText: "Enter PAN Number",
-                                    fillColor: textFiledBackgroundColour,
-                                    filled: true,
-                                    border: InputBorder
-                                        .none, // Remove underline border
-                                  ),
-                                  onChanged: (text) async {
-                                    print(
-                                        'TextField value: $text (${text.length})');
-                                    if (text.length == 10) {
-                                      try {
-                                        // Make API Call to validate PAN card
-                                        Utils.onLoading(context, "Loading...");
-                                        await Provider.of<DataProvider>(context,
+                                      maxLines: 1,
+                                      enabled: isEnabledPanNumber,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(10),
+                                        // Limit to 10 characters
+                                      ],
+                                      decoration: const InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 0.0, horizontal: 0.0),
+                                        hintText: "Enter PAN Number",
+                                        fillColor: textFiledBackgroundColour,
+                                        filled: true,
+                                        border: InputBorder
+                                            .none, // Remove underline border
+                                      ),
+                                      onChanged: (text) async {
+                                        print(
+                                            'TextField value: $text (${text.length})');
+                                        if (text.length == 10) {
+                                          try {
+                                            // Make API Call to validate PAN card
+                                            Utils.onLoading(context, "Loading...");
+                                            await Provider.of<DataProvider>(context,
                                                 listen: false)
-                                            .getLeadValidPanCard(
+                                                .getLeadValidPanCard(
                                                 _panNumberCl.text);
-                                        if (productProvider
+                                            if (productProvider
                                                 .getLeadValidPanCardData
                                                 ?.statusCode !=
-                                            401) {
-                                          Navigator.of(context,
+                                                401) {
+                                              Navigator.of(context,
                                                   rootNavigator: true)
-                                              .pop();
-                                          if (productProvider
+                                                  .pop();
+                                              if (productProvider
                                                   .getLeadValidPanCardData!
                                                   .nameOnPancard !=
-                                              null) {
-                                            _nameAsPanCl.text = productProvider
-                                                .getLeadValidPanCardData!
-                                                .nameOnPancard!;
-                                            isVerifyPanNumber = true;
-                                            Utils.showToast(productProvider
-                                                .getLeadValidPanCardData!
-                                                .message!);
-                                            Utils.onLoading(context, "");
-                                            await Provider.of<DataProvider>(
+                                                  null) {
+                                                _nameAsPanCl.text = productProvider
+                                                    .getLeadValidPanCardData!
+                                                    .nameOnPancard!;
+                                                isVerifyPanNumber = true;
+                                                Utils.showToast(productProvider
+                                                    .getLeadValidPanCardData!
+                                                    .message!!);
+                                                Utils.onLoading(context, "");
+                                                await Provider.of<DataProvider>(
                                                     context,
                                                     listen: false)
-                                                .getFathersNameByValidPanCard(
+                                                    .getFathersNameByValidPanCard(
                                                     _panNumberCl.text);
-                                            if (productProvider
+                                                if (productProvider
                                                     .getFathersNameByValidPanCardData !=
-                                                null) {
-                                              Navigator.of(context,
+                                                    null) {
+                                                  Navigator.of(context,
                                                       rootNavigator: true)
-                                                  .pop();
-                                            }
-                                            if (productProvider
+                                                      .pop();
+                                                }
+                                                if (productProvider
                                                     .getFathersNameByValidPanCardData!
                                                     .dob !=
-                                                Null) {
-                                               var formateDob=Utils.dateFormate(context,productProvider
-                                                  .getFathersNameByValidPanCardData!
-                                                  .dob);
-                                              dobAsPan=productProvider
-                                                  .getFathersNameByValidPanCardData!
-                                                  .dob;
-                                              _dOBAsPanCl.text = formateDob;
-                                            }
-                                          } else {
-                                            Utils.showToast(productProvider
-                                                .getLeadValidPanCardData!
-                                                .message!);
-                                          }
-                                        } else {
-                                          Navigator.pushAndRemoveUntil<dynamic>(
-                                            context,
-                                            MaterialPageRoute<dynamic>(
-                                              builder: (BuildContext context) =>
-                                                  LoginScreen(
-                                                      activityId: 1,
-                                                      subActivityId: 0),
-                                            ),
-                                            (route) =>
+                                                    Null) {
+                                                  var formateDob=Utils.dateFormate(context,productProvider
+                                                      .getFathersNameByValidPanCardData!
+                                                      .dob);
+                                                  dobAsPan=productProvider
+                                                      .getFathersNameByValidPanCardData!
+                                                      .dob;
+                                                  _dOBAsPanCl.text = formateDob;
+                                                }
+                                              } else {
+                                                Utils.showToast(productProvider
+                                                    .getLeadValidPanCardData!
+                                                    .message!!);
+                                              }
+                                            } else {
+                                              Navigator.pushAndRemoveUntil<dynamic>(
+                                                context,
+                                                MaterialPageRoute<dynamic>(
+                                                  builder: (BuildContext context) =>
+                                                      LoginScreen(
+                                                          activityId: 1,
+                                                          subActivityId: 0),
+                                                ),
+                                                    (route) =>
                                                 false, //if you want to disable back feature set to false
-                                          );
+                                              );
+                                            }
+                                          } catch (error) {
+                                            // Handle any errors that occur during the API call
+                                            print('Error: $error');
+                                          }
                                         }
-                                      } catch (error) {
-                                        // Handle any errors that occur during the API call
-                                        print('Error: $error');
-                                      }
-                                    }
-                                  },
+                                      },
+                                    ),
+                                  ),
+                                  isVerifyPanNumber
+                                      ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/images/verify_pan.svg',
+                                        semanticsLabel: 'Verify PAN SVG',
+                                      ),
+                                      SizedBox(width: 10),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isEnabledPanNumber = true;
+                                            isVerifyPanNumber = false;
+                                            isDataClear = true;
+                                            _panNumberCl.text = "";
+                                            _nameAsPanCl.text = "";
+                                            dobAsPan="";
+                                            _dOBAsPanCl.text = "";
+                                            _fatherNameAsPanCl.text = "";
+                                            widget.image = "";
+                                            _acceptPermissions = false;
+
+                                            LeadPANData.panCard = "";
+                                            LeadPANData.nameOnCard = "";
+                                            LeadPANData.dob = "";
+                                            LeadPANData.fatherName = "";
+                                            LeadPANData.panImagePath = "";
+                                          });
+                                        },
+                                        child: SvgPicture.asset(
+                                          'assets/icons/edit_icon.svg',
+                                          semanticsLabel: 'Edit Icon SVG',
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                      : Container(),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            const Text(
+                              'Name ( As per PAN )',
+                              textAlign: TextAlign.start,
+                              style:
+                              TextStyle(fontSize: 14, color: Color(0xff858585)),
+                            ),
+                            const SizedBox(height: 5),
+                            TextField(
+                              controller: _nameAsPanCl,
+                              keyboardType: TextInputType.text,
+                              cursorColor: kPrimaryColor,
+                              enabled: false,
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 16.0, horizontal: 16.0),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: kPrimaryColor),
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                                hintText: "Enter Name",
+                                fillColor: textFiledBackgroundColour,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: kPrimaryColor, width: 1.0),
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
                                 ),
                               ),
-                              isVerifyPanNumber
-                                  ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        SvgPicture.asset(
-                                          'assets/images/verify_pan.svg',
-                                          semanticsLabel: 'Verify PAN SVG',
-                                        ),
-                                        SizedBox(width: 10),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              isImageDelete=true;
-                                              isEnabledPanNumber = true;
-                                              isVerifyPanNumber = false;
-                                              isDataClear = true;
-                                              _panNumberCl.text = "";
-                                              _nameAsPanCl.text = "";
-                                              dobAsPan="";
-                                              _dOBAsPanCl.text = "";
-                                              _fatherNameAsPanCl.text = "";
-                                              image = "";
-                                              _acceptPermissions = false;
-
-                                              LeadPANData.panCard = "";
-                                              LeadPANData.nameOnCard = "";
-                                              LeadPANData.dob = "";
-                                              LeadPANData.fatherName = "";
-                                              LeadPANData.panImagePath = "";
-                                            });
-                                          },
-                                          child: SvgPicture.asset(
-                                            'assets/icons/edit_icon.svg',
-                                            semanticsLabel: 'Edit Icon SVG',
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Container(),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        const Text(
-                          'Name ( As per PAN )',
-                          textAlign: TextAlign.start,
-                          style:
-                              TextStyle(fontSize: 14, color: Color(0xff858585)),
-                        ),
-                        const SizedBox(height: 5),
-                        TextField(
-                          controller: _nameAsPanCl,
-                          keyboardType: TextInputType.text,
-                          cursorColor: kPrimaryColor,
-                          enabled: false,
-                          decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 16.0, horizontal: 16.0),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: kPrimaryColor),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                            hintText: "Enter Name",
-                            fillColor: textFiledBackgroundColour,
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: kPrimaryColor, width: 1.0),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
                             ),
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Text(
-                          'DOB ( As per PAN )',
-                          textAlign: TextAlign.start,
-                          style:
+                            SizedBox(height: 20),
+                            Text(
+                              'DOB ( As per PAN )',
+                              textAlign: TextAlign.start,
+                              style:
                               TextStyle(fontSize: 14, color: Color(0xff858585)),
-                        ),
-                        SizedBox(height: 5),
-                        TextField(
-                          controller: _dOBAsPanCl,
-                          keyboardType: TextInputType.text,
-                          cursorColor: kPrimaryColor,
-                          enabled: false,
-                          inputFormatters: [DateTextFormatter()],
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 16.0, horizontal: 16.0),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: kPrimaryColor),
-                                borderRadius:
+                            ),
+                            SizedBox(height: 5),
+                            TextField(
+                              controller: _dOBAsPanCl,
+                              keyboardType: TextInputType.text,
+                              cursorColor: kPrimaryColor,
+                              enabled: false,
+                              inputFormatters: [DateTextFormatter()],
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 16.0, horizontal: 16.0),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: kPrimaryColor),
+                                    borderRadius:
                                     BorderRadius.all(Radius.circular(10.0))),
-                            hintText: "DD | MM | YYYY",
-                            fillColor: textFiledBackgroundColour,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: kPrimaryColor, width: 1.0),
-                                borderRadius:
+                                hintText: "DD | MM | YYYY",
+                                fillColor: textFiledBackgroundColour,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: kPrimaryColor, width: 1.0),
+                                    borderRadius:
                                     BorderRadius.all(Radius.circular(10.0))),
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Text(
-                          'Father’s Name ( As per PAN )',
-                          textAlign: TextAlign.start,
-                          style:
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            Text(
+                              'Father’s Name ( As per PAN )',
+                              textAlign: TextAlign.start,
+                              style:
                               TextStyle(fontSize: 14, color: Color(0xff858585)),
-                        ),
-                        SizedBox(height: 5),
-                        TextField(
-                          controller: _fatherNameAsPanCl,
-                          keyboardType: TextInputType.text,
-                          cursorColor: kPrimaryColor,
-                          textCapitalization: TextCapitalization.characters,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 16.0, horizontal: 16.0),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: kPrimaryColor),
-                                borderRadius:
+                            ),
+                            SizedBox(height: 5),
+                            TextField(
+                              controller: _fatherNameAsPanCl,
+                              keyboardType: TextInputType.text,
+                              cursorColor: kPrimaryColor,
+                              textCapitalization: TextCapitalization.characters,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 16.0, horizontal: 16.0),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: kPrimaryColor),
+                                    borderRadius:
                                     BorderRadius.all(Radius.circular(10.0))),
-                            hintText: "Enter Father Name",
-                            fillColor: textFiledBackgroundColour,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: kPrimaryColor, width: 1.0),
-                                borderRadius:
+                                hintText: "Enter Father Name",
+                                fillColor: textFiledBackgroundColour,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: kPrimaryColor, width: 1.0),
+                                    borderRadius:
                                     BorderRadius.all(Radius.circular(10.0))),
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Stack(
-                          children: [
+                              ),
+                            ),
+                            SizedBox(height: 20),
                             Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
@@ -420,204 +400,200 @@ class _PancardScreenState extends State<PancardScreen> {
                                       color: Color(0xffEFFAFF),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    child: (!image.isEmpty)
+                                    child: (productProvider.getPostSingleFileData !=
+                                        null)
                                         ? ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            child: Image.network(
-                                              image,
-                                              fit: BoxFit.cover,
-                                              width: double.infinity,
-                                              height: 148,
-                                            ),
-                                          )
-                                        : (image.isNotEmpty)
-                                            ? ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: Image.network(
-                                                  image,
-                                                  fit: BoxFit.cover,
-                                                  width: double.infinity,
-                                                  height: 148,
-                                                ),
-                                              )
-                                            : Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  SvgPicture.asset(
-                                                      'assets/images/gallery.svg'),
-                                                  const Text(
-                                                    'Upload PAN Image',
-                                                    style: TextStyle(
-                                                        color: Color(0xff0196CE),
-                                                        fontSize: 12),
-                                                  ),
-                                                  const Text('Supports : JPEG, PNG',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color:
-                                                              Color(0xffCACACA))),
-                                                ],
-                                              ),
+                                      borderRadius:
+                                      BorderRadius.circular(8.0),
+                                      child: Image.network(
+                                        productProvider
+                                            .getPostSingleFileData!.filePath!,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 148,
+                                      ),
+                                    )
+                                        : (widget.image.isNotEmpty)
+                                        ? ClipRRect(
+                                      borderRadius:
+                                      BorderRadius.circular(8.0),
+                                      child: Image.network(
+                                        widget.image!,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 148,
+                                      ),
+                                    )
+                                        : Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                            'assets/images/gallery.svg'),
+                                        const Text(
+                                          'Upload PAN Image',
+                                          style: TextStyle(
+                                              color: Color(0xff0196CE),
+                                              fontSize: 12),
+                                        ),
+                                        const Text('Supports : JPEG, PNG',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color:
+                                                Color(0xffCACACA))),
+                                      ],
+                                    ),
                                   ),
                                 )),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isImageDelete = true;
-                                  image = "";
-                                });
-                              },
-                              child: !image.isEmpty?Container(
-                                padding: EdgeInsets.all(4),
-                                alignment: Alignment.topRight,
-                                child: SvgPicture.asset(
-                                    'assets/icons/delete_icon.svg'),
-                              ):Container(),)
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        CommonCheckBox(
-                          onChanged: (bool isChecked) async {
-                            // Handle the state change here
-                            print('Checkbox state changed: $isChecked');
-                            if (isChecked) {
-                              final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PermissionsScreen()),
-                              );
-                              // Handle the result from Screen B using the callback function
-                              _handlePermissionsAccepted(result ?? false);
-                            }
-                          },
-                          isChecked: _acceptPermissions,
-                          text:
-                              "By proceeding, I provide consent on the following",
-                          upperCase: true,
-                        ),
-                        SizedBox(height: 20),
-                        /*Text("I hereby accept Scaleup T&C & Privacy Policy . Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners"),*/
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'I hereby accept ',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              _buildClickableTextSpan(
-                                text: 'T&C  & Privacy Policy',
-                                onClick: () {
-                                  Navigator.push(
+                            SizedBox(height: 20),
+                            CommonCheckBox(
+                              onChanged: (bool isChecked) async {
+                                // Handle the state change here
+                                print('Checkbox state changed: $isChecked');
+                                if (isChecked) {
+                                  final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) {
-                                        return PermissionsScreen();
-                                      },
-                                    ),
+                                        builder: (context) => PermissionsScreen()),
                                   );
-                                },
-                              ),
-                              TextSpan(
-                                text:
+                                  // Handle the result from Screen B using the callback function
+                                  _handlePermissionsAccepted(result ?? false);
+                                }
+                              },
+                              isChecked: _acceptPermissions,
+                              text:
+                              "By proceeding, I provide consent on the following",
+                              upperCase: true,
+                            ),
+                            SizedBox(height: 20),
+                            /*Text("I hereby accept Scaleup T&C & Privacy Policy . Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners"),*/
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'I hereby accept ',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  _buildClickableTextSpan(
+                                    text: 'T&C  & Privacy Policy',
+                                    onClick: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return PermissionsScreen();
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  TextSpan(
+                                    text:
                                     '. Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 30),
-                        CommonElevatedButton(
-                          onPressed: () async {
-                            final prefsUtil = await SharedPref.getInstance();
-                            final String? userId = prefsUtil.getString(USER_ID);
-                            final int? companyId = prefsUtil.getInt(COMPANY_ID);
+                            ),
+                            SizedBox(height: 30),
+                            CommonElevatedButton(
+                              onPressed: () async {
+                                final prefsUtil = await SharedPref.getInstance();
+                                final String? userId = prefsUtil.getString(USER_ID);
+                                final int? companyId = prefsUtil.getInt(COMPANY_ID);
 
-
-
-                            if (_panNumberCl.text.isEmpty) {
-                              Utils.showToast("Please Enter Pan Number");
-                            } else if (_nameAsPanCl.text.isEmpty) {
-                              Utils.showToast(
-                                  "Please Enter Name (As Per Pan))");
-                            } else if (_dOBAsPanCl.text.isEmpty || dobAsPan.isEmpty) {
-                              Utils.showToast(
-                                  "Please Enter Name (As Per Pan))");
-                            } else if (_fatherNameAsPanCl.text.isEmpty) {
-                              Utils.showToast(
-                                  "Please Enter Father Name (As Per Pan))");
-                            } else if (image.isEmpty) {
-                              Utils.showToast("Please Upload Pan Image ");
-                            } else if (!_acceptPermissions) {
-                              Utils.showToast(
-                                  "Please Check Terms And Conditions");
-                            } else {
-                              var postLeadPanRequestModel =
-                                  PostLeadPanRequestModel(
-                                leadId: prefsUtil.getInt(LEADE_ID),
-                                userId: userId,
-                                activityId: widget.activityId,
-                                subActivityId: widget.subActivityId,
-                                uniqueId: _panNumberCl.text,
-                                imagePath: image,
-                                documentId: 31,
-                                companyId: companyId,
-                                fathersName: _fatherNameAsPanCl.text,
-                                dob: dobAsPan,
-                                name: _nameAsPanCl.text,
-                              );
-
-                              Utils.onLoading(context, "Loading...");
-                              await Provider.of<DataProvider>(context,
-                                      listen: false)
-                                  .postLeadPAN(postLeadPanRequestModel);
-
-                              if (productProvider
-                                      .getPostLeadPaneData?.statusCode !=
-                                  401) {
-                                if (productProvider.getPostLeadPaneData !=
-                                    null) {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
-                                  Utils.showToast(productProvider
-                                      .getPostLeadPaneData!.message!);
+                                if (productProvider.getPostSingleFileData != null) {
                                   if (productProvider
-                                      .getPostLeadPaneData!.isSuccess!) {
-                                    fetchData(context);
+                                      .getPostSingleFileData!.filePath !=
+                                      null) {
+                                    widget.image = productProvider
+                                        .getPostSingleFileData!.filePath!;
+                                    documentId = productProvider
+                                        .getPostSingleFileData!.docId!;
                                   }
                                 }
-                              } else {
-                                Navigator.pushAndRemoveUntil<dynamic>(
-                                  context,
-                                  MaterialPageRoute<dynamic>(
-                                    builder: (BuildContext context) =>
-                                        LoginScreen(
-                                            activityId: 1, subActivityId: 0),
-                                  ),
-                                  (route) =>
+
+                                if (_panNumberCl.text.isEmpty) {
+                                  Utils.showToast("Please Enter Pan Number");
+                                } else if (_nameAsPanCl.text.isEmpty) {
+                                  Utils.showToast(
+                                      "Please Enter Name (As Per Pan))");
+                                } else if (_dOBAsPanCl.text.isEmpty || dobAsPan.isEmpty) {
+                                  Utils.showToast(
+                                      "Please Enter Name (As Per Pan))");
+                                } else if (_fatherNameAsPanCl.text.isEmpty) {
+                                  Utils.showToast(
+                                      "Please Enter Father Name (As Per Pan))");
+                                } else if (widget.image == "") {
+                                  Utils.showToast("Please Upload Pan Image ");
+                                } else if (!_acceptPermissions) {
+                                  Utils.showToast(
+                                      "Please Check Terms And Conditions");
+                                } else {
+                                  var postLeadPanRequestModel =
+                                  PostLeadPanRequestModel(
+                                    leadId: prefsUtil.getInt(LEADE_ID),
+                                    userId: userId,
+                                    activityId: widget.activityId,
+                                    subActivityId: widget.subActivityId,
+                                    uniqueId: _panNumberCl.text,
+                                    imagePath: widget.image,
+                                    documentId: 31,
+                                    companyId: companyId,
+                                    fathersName: _fatherNameAsPanCl.text,
+                                    dob: dobAsPan,
+                                    name: _nameAsPanCl.text,
+                                  );
+
+                                  Utils.onLoading(context, "Loading...");
+                                  await Provider.of<DataProvider>(context,
+                                      listen: false)
+                                      .postLeadPAN(postLeadPanRequestModel);
+
+                                  if (productProvider
+                                      .getPostLeadPaneData?.statusCode !=
+                                      401) {
+                                    if (productProvider.getPostLeadPaneData !=
+                                        null) {
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop();
+                                      Utils.showToast(productProvider
+                                          .getPostLeadPaneData!.message!);
+                                      if (productProvider
+                                          .getPostLeadPaneData!.isSuccess!) {
+                                        fetchData(context);
+                                      }
+                                    }
+                                  } else {
+                                    Navigator.pushAndRemoveUntil<dynamic>(
+                                      context,
+                                      MaterialPageRoute<dynamic>(
+                                        builder: (BuildContext context) =>
+                                            LoginScreen(
+                                                activityId: 1, subActivityId: 0),
+                                      ),
+                                          (route) =>
                                       false, //if you want to disable back feature set to false
-                                );
-                              }
-                            }
-                          },
-                          text: "next",
-                          upperCase: true,
-                        )
-                      ],
+                                    );
+                                  }
+                                }
+                              },
+                              text: "next",
+                              upperCase: true,
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }
-          }),
+                  );
+                }
+              }),
         ));
 
     Widget loadingWidget = Utils.onLoading(context, "Loading....");
@@ -645,8 +621,8 @@ class _PancardScreenState extends State<PancardScreen> {
     return TextSpan(
       text: text,
       style: TextStyle(
-        color: Colors.black, // Set text color to blue for clickable text
-        decoration: TextDecoration.underline,
+          color: Colors.black, // Set text color to blue for clickable text
+          decoration: TextDecoration.underline,
           fontWeight:FontWeight.bold// Underline clickable text
       ),
       recognizer: TapGestureRecognizer()..onTap = onClick,
@@ -677,8 +653,8 @@ class _PancardScreenState extends State<PancardScreen> {
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-              as LeadCurrentResponseModel?;
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
