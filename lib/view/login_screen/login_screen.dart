@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/data_provider/DataProvider.dart';
 import '../../utils/constants.dart';
@@ -15,13 +14,13 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body:
-            Consumer<DataProvider>(builder: (context, productProvider, child) {
-          return SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body:
+          SafeArea(
+            top: false,
+            child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+                    return SingleChildScrollView(
             child: Column(
               children: <Widget>[
                 LoginScreenTopImage(),
@@ -41,9 +40,9 @@ class LoginScreen extends StatelessWidget {
                 ),
               ],
             ),
-          );
-        }),
-      ),
+                    );
+                  }),
+          ),
     );
   }
 }
