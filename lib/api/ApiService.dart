@@ -45,6 +45,7 @@ import '../view/personal_info/model/PostPersonalDetailsResponseModel.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
 import '../view/profile_screen/model/AcceptedResponceModel.dart';
+import '../view/profile_screen/model/DisbursementResponce.dart';
 import '../view/profile_screen/model/OfferResponceModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/take_selfi/model/LeadSelfieResponseModel.dart';
@@ -1002,6 +1003,27 @@ class ApiService {
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<DisbursementResponce, Exception>> GetDisbursementProposal(int leadId) async {
+    try {
+      final response = await interceptor.get(Uri.parse(
+          '${apiUrls.baseUrl + apiUrls.GetDisbursementProposal}?leadId=$leadId'));
+      print(response.body); //
+      // Print the response body once here
+      switch (response.statusCode) {
+        case 200:
+          final data = json.decode(response.body);
+          // 2. return Success with the desired value
+          return Success(DisbursementResponce.fromJson(data));
+        default:
+        // 3. return Failure with the desired exception
+          return Failure(Exception(response.reasonPhrase));
+      }
+    } on Exception catch (e) {
+      // 4. return Failure here too
       return Failure(e);
     }
   }

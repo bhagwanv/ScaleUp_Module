@@ -75,7 +75,7 @@ ScreenType? customerSequence(
         return ScreenType.login;
       } else if (leadCurrentActivity.activityName == "Show Offer") {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
+          MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: false)),
         );
         return ScreenType.login;
       } else if (leadCurrentActivity.activityName == "Rejected") {
@@ -90,7 +90,7 @@ ScreenType? customerSequence(
         return ScreenType.aggrement;
       }else if (leadCurrentActivity.activityName == "Disbursement") {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
+          MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: true)),
         );
         return ScreenType.Disbursement;
       }
