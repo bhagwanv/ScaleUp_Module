@@ -15,6 +15,7 @@ import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
+import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
 import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
@@ -35,6 +36,9 @@ import '../view/personal_info/model/PersonalDetailsRequestModel.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
+import '../view/profile_screen/model/AcceptedResponceModel.dart';
+import '../view/profile_screen/model/DisbursementResponce.dart';
+import '../view/profile_screen/model/OfferPersonNameResponceModel.dart';
 import '../view/profile_screen/model/OfferResponceModel.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
@@ -115,6 +119,12 @@ class DataProvider extends ChangeNotifier {
   PostSingleFileResponseModel? _getPostFrontAadhaarSingleFileData;
   PostSingleFileResponseModel? get getPostFrontAadhaarSingleFileData => _getPostFrontAadhaarSingleFileData;
 
+  Result<PostLeadPanResponseModel,Exception>? _getPostLeadPanData;
+  Result<PostLeadPanResponseModel,Exception>? get getPostLeadPaneData => _getPostLeadPanData;
+
+  Result<DisbursementResponce,Exception>? _getDisbursementData;
+  Result<DisbursementResponce,Exception>? get getDisbursementData => _getDisbursementData;
+
 
   VerifyOtpResponce? _getVerifyData;
 
@@ -124,9 +134,8 @@ class DataProvider extends ChangeNotifier {
 
   BankListResponceModel? get getBankListData => _getBankListData;
 
-  BankDetailsResponceModel? _getBankDetailsData;
-
-  BankDetailsResponceModel? get getBankDetailsData => _getBankDetailsData;
+  Result<BankDetailsResponceModel,Exception>? _getBankDetailsData;
+  Result<BankDetailsResponceModel,Exception>? get getBankDetailsData => _getBankDetailsData;
 
   AllStateResponce? _getAllStateData;
 
@@ -165,8 +174,17 @@ class DataProvider extends ChangeNotifier {
   PostLeadBuisnessDetailResponsModel? get getPostLeadBuisnessDetailData => _getPostLeadBuisnessDetailData;
 
 
-  OfferResponceModel? _getOfferResponceata;
-  OfferResponceModel? get getOfferResponceata => _getOfferResponceata;
+  Result<OfferResponceModel,Exception>? _getOfferResponceata;
+  Result<OfferResponceModel,Exception>? get getOfferResponceata => _getOfferResponceata;
+
+  Result<AcceptedResponceModel,Exception>? _getAcceptOfferData;
+  Result<AcceptedResponceModel,Exception>? get getAcceptOfferData => _getAcceptOfferData;
+
+  Result<OfferPersonNameResponceModel,Exception>? _getLeadNameData;
+  Result<OfferPersonNameResponceModel,Exception>? get getLeadNameData => _getLeadNameData;
+
+  Result<SaveBankDetailResponce,Exception>? _getSaveLeadBankDetailData;
+  Result<SaveBankDetailResponce,Exception>? get getSaveLeadBankDetailData => _getSaveLeadBankDetailData;
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -356,6 +374,24 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> GetLeadOffer(int leadId ,int companyID) async {
     _getOfferResponceata = await apiService.GetLeadOffer(leadId,companyID);
+    notifyListeners();
+  }
+  Future<void> getAcceptOffer(int leadId) async {
+    _getAcceptOfferData = await apiService.getAcceptOffer(leadId);
+    notifyListeners();
+  }
+
+  Future<void> getLeadName(String UserId) async {
+    _getLeadNameData = await apiService.getLeadName(UserId);
+    notifyListeners();
+  }
+  Future<void> saveLeadBankDetail(SaveBankDetailsRequestModel model) async {
+    _getSaveLeadBankDetailData = await apiService.saveLeadBankDetail(model);
+    notifyListeners();
+  }
+
+  Future<void> getDisbursementProposal(int leadId) async {
+    _getDisbursementData = await apiService.GetDisbursementProposal(leadId);
     notifyListeners();
   }
 

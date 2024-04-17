@@ -1,28 +1,24 @@
-import 'Result.dart';
+import 'package:scale_up_module/view/bank_details_screen/model/BankDetailResult.dart';
 
 class BankDetailsResponceModel {
-  BankDetailsResponceModel({
-      this.result, 
-      this.isSuccess, 
-      this.message,});
-
-  BankDetailsResponceModel.fromJson(dynamic json) {
-    result = json['result'] != null ? Result.fromJson(json['result']) : null;
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-  }
-  Result? result;
+  BankDetailResult? result;
   bool? isSuccess;
   String? message;
 
+  BankDetailsResponceModel({this.result, this.isSuccess, this.message});
+
+  BankDetailsResponceModel.fromJson(Map<String, dynamic> json) {
+    result = json['result'];
+    isSuccess = json['isSuccess'];
+    message = json['message'];
+  }
+
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    if (result != null) {
-      map['result'] = result?.toJson();
-    }
-    map['isSuccess'] = isSuccess;
-    map['message'] = message;
-    return map;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['result'] = this.result;
+    data['isSuccess'] = this.isSuccess;
+    data['message'] = this.message;
+    return data;
   }
 
 }
