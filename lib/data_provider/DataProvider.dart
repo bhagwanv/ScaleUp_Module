@@ -36,6 +36,7 @@ import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
 import '../view/profile_screen/model/AcceptedResponceModel.dart';
+import '../view/profile_screen/model/DisbursementResponce.dart';
 import '../view/profile_screen/model/OfferPersonNameResponceModel.dart';
 import '../view/profile_screen/model/OfferResponceModel.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
@@ -96,6 +97,9 @@ class DataProvider extends ChangeNotifier {
 
   Result<PostLeadPanResponseModel,Exception>? _getPostLeadPanData;
   Result<PostLeadPanResponseModel,Exception>? get getPostLeadPaneData => _getPostLeadPanData;
+
+  Result<DisbursementResponce,Exception>? _getDisbursementData;
+  Result<DisbursementResponce,Exception>? get getDisbursementData => _getDisbursementData;
 
 
   VerifyOtpResponce? _getVerifyData;
@@ -362,6 +366,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getLeadName(String UserId) async {
     _getLeadNameData = await apiService.getLeadName(UserId);
+    notifyListeners();
+  }
+
+  Future<void> getDisbursementProposal(int leadId) async {
+    _getDisbursementData = await apiService.GetDisbursementProposal(leadId);
     notifyListeners();
   }
 

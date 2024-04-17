@@ -997,8 +997,7 @@ class ApiService {
     }
   }
 
-  Future<Result<DisbursementResponce, Exception>>
-  GetDisbursementProposal(int leadId) async {
+  Future<Result<DisbursementResponce, Exception>> GetDisbursementProposal(int leadId) async {
     try {
       final response = await interceptor.get(Uri.parse(
           '${apiUrls.baseUrl + apiUrls.GetDisbursementProposal}?leadId=$leadId'));
