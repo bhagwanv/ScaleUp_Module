@@ -15,6 +15,7 @@ import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
+import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
 import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
@@ -106,9 +107,8 @@ class DataProvider extends ChangeNotifier {
 
   BankListResponceModel? get getBankListData => _getBankListData;
 
-  BankDetailsResponceModel? _getBankDetailsData;
-
-  BankDetailsResponceModel? get getBankDetailsData => _getBankDetailsData;
+  Result<BankDetailsResponceModel,Exception>? _getBankDetailsData;
+  Result<BankDetailsResponceModel,Exception>? get getBankDetailsData => _getBankDetailsData;
 
   PersonalDetailsResponce? _getPersonalDetailsData;
 
@@ -172,6 +172,9 @@ class DataProvider extends ChangeNotifier {
 
   Result<OfferPersonNameResponceModel,Exception>? _getLeadNameData;
   Result<OfferPersonNameResponceModel,Exception>? get getLeadNameData => _getLeadNameData;
+
+  Result<SaveBankDetailResponce,Exception>? _getSaveLeadBankDetailData;
+  Result<SaveBankDetailResponce,Exception>? get getSaveLeadBankDetailData => _getSaveLeadBankDetailData;
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -362,6 +365,10 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getLeadName(String UserId) async {
     _getLeadNameData = await apiService.getLeadName(UserId);
+    notifyListeners();
+  }
+  Future<void> saveLeadBankDetail(SaveBankDetailsRequestModel model) async {
+    _getSaveLeadBankDetailData = await apiService.saveLeadBankDetail(model);
     notifyListeners();
   }
 

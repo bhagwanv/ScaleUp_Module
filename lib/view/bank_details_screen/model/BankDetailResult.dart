@@ -1,5 +1,5 @@
-class Result {
-  Result({
+class BankDetailResult {
+  BankDetailResult({
       this.leadId, 
       this.eNach, 
       this.bankName, 
@@ -10,7 +10,7 @@ class Result {
       this.accountNumber, 
       this.accountHolderName,});
 
-  Result.fromJson(dynamic json) {
+  BankDetailResult.fromJson(dynamic json) {
     leadId = json['leadId'];
     eNach = json['eNach'];
     bankName = json['bankName'];

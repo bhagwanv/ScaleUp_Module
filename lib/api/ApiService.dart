@@ -422,28 +422,35 @@ class ApiService {
     }
   }
 
-  Future<BankDetailsResponceModel> GetLeadBankDetail(int leadID) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final response = await interceptor.get(
-        Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.GetLeadBankDetail}?LeadId=$leadID'),
-        headers: {
-          'Content-Type': 'application/json', // Set the content type as JSON
-        },
-      );
-      //print(json.encode(leadCurrentRequestModel));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-        final BankDetailsResponceModel responseModel =
-            BankDetailsResponceModel.fromJson(jsonData);
-        return responseModel;
+  Future<Result<BankDetailsResponceModel,Exception>> GetLeadBankDetail(int leadID) async {
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.get(
+          Uri.parse(
+              '${apiUrls.baseUrl + apiUrls.GetLeadBankDetail}?LeadId=$leadID'),
+          headers: {
+            'Content-Type': 'application/json', // Set the content type as JSON
+          },
+        );
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+          final dynamic jsonData = json.decode(response.body);
+          final BankDetailsResponceModel responseModel =
+          BankDetailsResponceModel.fromJson(jsonData);
+          return Success(responseModel);
+
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+
+    }on Exception catch (e) {
+      return Failure(e);
     }
   }
 
@@ -783,32 +790,35 @@ class ApiService {
     }
   }
 
-  Future<SaveBankDetailResponce> saveLeadBankDetail(SaveBankDetailsRequestModel model) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var token = prefsUtil.getString(TOKEN);
-      final response = await interceptor.post(
-          Uri.parse(apiUrls.baseUrl + apiUrls.saveLeadBankDetail),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token'
-            // Set the content type as JSON// Set the content type as JSON
-          },
-          body: json.encode(model));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        final dynamic jsonData = json.decode(response.body);
-        final SaveBankDetailResponce responseModel =
-        SaveBankDetailResponce.fromJson(jsonData);
-        return responseModel;
-      }
-      if (response.statusCode == 401) {
-        return SaveBankDetailResponce(statusCode: 401);
+  Future<Result<SaveBankDetailResponce,Exception>> saveLeadBankDetail(SaveBankDetailsRequestModel model) async {
+    try{
+
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse(apiUrls.baseUrl + apiUrls.saveLeadBankDetail),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(model));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          final dynamic jsonData = json.decode(response.body);
+          final SaveBankDetailResponce responseModel =
+          SaveBankDetailResponce.fromJson(jsonData);
+          return Success(responseModel);
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+    }on Exception catch (e) {
+      return Failure(e);
     }
   }
   Future<Result<OfferResponceModel,Exception>> GetLeadOffer(int leadId ,int companyID) async {

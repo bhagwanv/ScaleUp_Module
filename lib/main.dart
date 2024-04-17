@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
 
-      home: CreditLineApproved(activityId: 2,subActivityId: 3,),
+      home: BankDetailsScreen(activityId: 2,subActivityId: 3,),
 
 
      /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
