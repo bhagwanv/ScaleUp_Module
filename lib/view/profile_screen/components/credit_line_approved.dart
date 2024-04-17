@@ -128,7 +128,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                         style: TextStyle(color: kPrimaryColor, fontSize: 18),
                       ),
                       SizedBox(height: 10),
-                      disbusmentWidget(disbursementResponce!),
+                      disbusmentWidget(),
                     ],
                   ):
                   Column(
@@ -250,33 +250,34 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
       return Container();
     }
   }
-  Widget disbusmentWidget(DisbursementResponce disbursementResponce) {
-    if (disbursementResponce.status!) {
-      return Column(
-        children: [
-          SizedBox(height: 10),
-          Center(
-            child: Text(
-              "₹ ${disbursementResponce.response?.creditLimit}",
-              style: TextStyle(color: Colors.black, fontSize: 30),
+  Widget disbusmentWidget() {
+    if(disbursementResponce!=null){
+      if (disbursementResponce!.status!) {
+        return Column(
+          children: [
+            SizedBox(height: 10),
+            Center(
+              child: Text(
+                "₹ ${disbursementResponce!.response?.creditLimit}",
+                style: TextStyle(color: Colors.black, fontSize: 30),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text.rich(TextSpan(
+              text:
+              'Interest Rate : ${disbursementResponce!.response?.convenionFeeRate} %',
+            )),
+            Text(
+              "(will be charged on every transaction)",
+              style: TextStyle(color: Colors.black, fontSize: 15),
               textAlign: TextAlign.center,
             ),
-          ),
-          SizedBox(height: 20),
-          Text.rich(TextSpan(
-            text:
-            'Interest Rate : ${disbursementResponce!.response?.convenionFeeRate} %',
-          )),
-          Text(
-            "(will be charged on every transaction)",
-            style: TextStyle(color: Colors.black, fontSize: 15),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 20),
-          ClipRRect(
+            SizedBox(height: 20),
+            ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Container(
-              color: Colors.blue,
+                color: Colors.blue,
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
@@ -287,10 +288,13 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                 ),
               ),),
 
-        ],
-      );
-    } else {
-      Utils.showToast(offerResponceModel!.message!);
+          ],
+        );
+      } else {
+        Utils.showToast(offerResponceModel!.message!);
+        return Container();
+      }
+    }else {
       return Container();
     }
   }
