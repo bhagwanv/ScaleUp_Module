@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/api/ApiService.dart';
+import 'package:scale_up_module/api/ExceptionHandling.dart';
 import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/view/Bank_details_screen/BankDetailsScreen.dart';
+import 'package:scale_up_module/view/profile_screen/model/DisbursementResponce.dart';
 import 'package:scale_up_module/view/profile_screen/model/OfferPersonNameResponceModel.dart';
 import 'package:scale_up_module/view/profile_screen/model/OfferResponceModel.dart';
 
@@ -19,13 +21,16 @@ import '../../../utils/loader.dart';
 import '../../splash_screen/model/GetLeadResponseModel.dart';
 import '../../splash_screen/model/LeadCurrentRequestModel.dart';
 import '../../splash_screen/model/LeadCurrentResponseModel.dart';
+import '../model/DisbursementResponce.dart';
+import '../model/DisbursementResponce.dart';
+import '../model/DisbursementResponce.dart';
 
 class CreditLineApproved extends StatefulWidget {
   final int activityId;
   final int subActivityId;
+  final bool isDisbursement;
 
-  const CreditLineApproved(
-      {super.key, required this.activityId, required this.subActivityId});
+  const CreditLineApproved({super.key, required this.activityId, required this.subActivityId,required this.isDisbursement});
 
   @override
   State<CreditLineApproved> createState() => _CreditLineApprovedState();
@@ -39,7 +44,11 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
   @override
   void initState() {
     super.initState();
-    callApi(context);
+    if(widget.isDisbursement){
+      callDisbursementApi(context);
+    }else{
+      callApi(context);
+    }
   }
 
 
@@ -107,6 +116,15 @@ acceptOffer(context);
       }),
 
     );
+  }
+
+
+  void callDisbursementApi(BuildContext context)async {
+    final prefsUtil = await SharedPref.getInstance();
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+   var Disbursementresponce = await ApiService().GetDisbursementProposal(leadId!);
+
+
   }
 
   void callApi(BuildContext context)async {

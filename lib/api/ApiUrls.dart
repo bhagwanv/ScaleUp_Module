@@ -33,5 +33,6 @@ class ApiUrls{
   final String AcceptOffer="/aggregator/LeadAgg/AcceptOffer";
   final String CheckEsignStatus="/services/lead/v1/NBFCSchedular/CheckEsignStatus";
   final String GetAgreemetDetail="/aggregator/LeadAgg/GetAgreemetDetail";
+  final String GetDisbursementProposal="/aggregator/LeadAgg/GetDisbursementProposal";
 
 }
