@@ -35,6 +35,8 @@ import '../view/personal_info/model/PersonalDetailsRequestModel.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
+import '../view/profile_screen/model/AcceptedResponceModel.dart';
+import '../view/profile_screen/model/OfferPersonNameResponceModel.dart';
 import '../view/profile_screen/model/OfferResponceModel.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
@@ -162,8 +164,14 @@ class DataProvider extends ChangeNotifier {
   PostLeadBuisnessDetailResponsModel? get getPostLeadBuisnessDetailData => _getPostLeadBuisnessDetailData;
 
 
-  OfferResponceModel? _getOfferResponceata;
-  OfferResponceModel? get getOfferResponceata => _getOfferResponceata;
+  Result<OfferResponceModel,Exception>? _getOfferResponceata;
+  Result<OfferResponceModel,Exception>? get getOfferResponceata => _getOfferResponceata;
+
+  Result<AcceptedResponceModel,Exception>? _getAcceptOfferData;
+  Result<AcceptedResponceModel,Exception>? get getAcceptOfferData => _getAcceptOfferData;
+
+  Result<OfferPersonNameResponceModel,Exception>? _getLeadNameData;
+  Result<OfferPersonNameResponceModel,Exception>? get getLeadNameData => _getLeadNameData;
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -345,6 +353,15 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> GetLeadOffer(int leadId ,int companyID) async {
     _getOfferResponceata = await apiService.GetLeadOffer(leadId,companyID);
+    notifyListeners();
+  }
+  Future<void> getAcceptOffer(int leadId) async {
+    _getAcceptOfferData = await apiService.getAcceptOffer(leadId);
+    notifyListeners();
+  }
+
+  Future<void> getLeadName(String UserId) async {
+    _getLeadNameData = await apiService.getLeadName(UserId);
     notifyListeners();
   }
 

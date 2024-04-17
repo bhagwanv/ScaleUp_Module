@@ -811,68 +811,88 @@ class ApiService {
       throw Exception('No internet connection');
     }
   }
-  Future<OfferResponceModel> GetLeadOffer(int leadId ,int companyID) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var token = prefsUtil.getString(TOKEN);
-      final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadOffer}?LeadId=$leadId&companyId=$companyID'));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        final dynamic jsonData = json.decode(response.body);
-        final OfferResponceModel responseModel =
-        OfferResponceModel.fromJson(jsonData);
-        return responseModel;
-      }
-      if (response.statusCode == 401) {
-        throw Exception('Failed to load products');
+  Future<Result<OfferResponceModel,Exception>> GetLeadOffer(int leadId ,int companyID) async {
+
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadOffer}?LeadId=$leadId&companyId=$companyID'));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          final dynamic jsonData = json.decode(response.body);
+          final OfferResponceModel responseModel =
+          OfferResponceModel.fromJson(jsonData);
+          return Success(responseModel);
+
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+    }on Exception catch (e) {
+      return Failure(e);
     }
+
+
   }
-  Future<OfferPersonNameResponceModel> GetLeadName(String UserId) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var token = prefsUtil.getString(TOKEN);
-      final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadName}?UserId=$UserId'));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        final dynamic jsonData = json.decode(response.body);
-        final OfferPersonNameResponceModel responseModel =
-        OfferPersonNameResponceModel.fromJson(jsonData);
-        return responseModel;
-      }
-      if (response.statusCode == 401) {
-        throw Exception('Failed to load products');
+  Future<Result<OfferPersonNameResponceModel,Exception>> getLeadName(String UserId) async {
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadName}?UserId=$UserId'));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200 :
+          final dynamic jsonData = json.decode(response.body);
+          final OfferPersonNameResponceModel responseModel =
+          OfferPersonNameResponceModel.fromJson(jsonData);
+          return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(Exception(response.reasonPhrase));
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+    }on Exception catch (e) {
+      return Failure(e);
     }
+
+
   }
-  Future<AcceptedResponceModel> getAcceptOffer(int leadId) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var token = prefsUtil.getString(TOKEN);
-      final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.AcceptOffer}?leadId=$leadId'));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        final dynamic jsonData = json.decode(response.body);
-        final AcceptedResponceModel responseModel =
-        AcceptedResponceModel.fromJson(jsonData);
-        return responseModel;
-      }
-      if (response.statusCode == 401) {
-        throw Exception('Failed to load products');
+
+  Future<Result<AcceptedResponceModel,Exception>> getAcceptOffer(int leadId) async {
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.AcceptOffer}?leadId=$leadId'));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+
+          case 200:
+          final dynamic jsonData = json.decode(response.body);
+          final AcceptedResponceModel responseModel =
+          AcceptedResponceModel.fromJson(jsonData);
+          return Success(responseModel);
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(Exception(response.reasonPhrase));
+
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+    }on Exception catch (e) {
+      return Failure(e);
     }
+
+
   }
   Future<CheckSignResponceModel> checkEsignStatus(int leadId) async {
     if (await internetConnectivity.networkConnectivity()) {
