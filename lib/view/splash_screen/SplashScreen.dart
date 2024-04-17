@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared_preferences/SharedPref.dart';
 import '../../utils/constants.dart';
 import '../../utils/customer_sequence_logic.dart';
+import '../login_screen/login_screen.dart';
 import 'model/LeadCurrentResponseModel.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -39,11 +40,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> fetchData() async {
     final prefsUtil = await SharedPref.getInstance();
-    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, '9981810106');
     await prefsUtil.saveInt(COMPANY_ID, 2);
     await prefsUtil.saveInt(PRODUCT_ID, 2);
-    final String? mobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
 
+    final String? mobile = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
     //lead id
     var leadId = 0;
     var userID = "";
@@ -54,41 +54,46 @@ class _SplashScreenState extends State<SplashScreen> {
       userID = prefsUtil.getString(USER_ID)!;
     }
 
-    try {
-      LeadCurrentResponseModel? leadCurrentActivityAsyncData;
-      print("dsdsdd::: $mobile");
-      var leadCurrentRequestModel = LeadCurrentRequestModel(
-        companyId: prefsUtil.getInt(COMPANY_ID),
-        productId: prefsUtil.getInt(PRODUCT_ID),
-        leadId: leadId,
-        mobileNo: mobile,
-        activityId: 0,
-        subActivityId: 0,
-        userId: userID,
-        monthlyAvgBuying: 0,
-        vintageDays: 0,
-        isEditable: true,
+    if(mobile == null || prefsUtil.getString(USER_ID) == null || prefsUtil.getInt(LEADE_ID) == null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => LoginScreen(activityId: 1, subActivityId: 0)),
       );
-      leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(
-          leadCurrentRequestModel) as LeadCurrentResponseModel?;
-      GetLeadResponseModel? getLeadData;
-      getLeadData = await ApiService().getLeads(
-          mobile!,
-          prefsUtil.getInt(COMPANY_ID)!,
-          prefsUtil.getInt(PRODUCT_ID)!,
-          leadId) as GetLeadResponseModel?;
-      if (getLeadData!.userId != null){
-        prefsUtil.saveString(USER_ID, getLeadData.userId!);
-    }else{
-        prefsUtil.saveString(USER_ID, "");
-    }
-      prefsUtil.saveInt(LEADE_ID, getLeadData!.leadId!);
+    } else {
+      try {
+        LeadCurrentResponseModel? leadCurrentActivityAsyncData;
+        var leadCurrentRequestModel = LeadCurrentRequestModel(
+          companyId: prefsUtil.getInt(COMPANY_ID),
+          productId: prefsUtil.getInt(PRODUCT_ID),
+          leadId: leadId,
+          mobileNo: mobile,
+          activityId: 0,
+          subActivityId: 0,
+          userId: userID,
+          monthlyAvgBuying: 0,
+          vintageDays: 0,
+          isEditable: true,
+        );
+        leadCurrentActivityAsyncData =
+        await ApiService().leadCurrentActivityAsync(
+            leadCurrentRequestModel) as LeadCurrentResponseModel?;
+        GetLeadResponseModel? getLeadData;
+        getLeadData = await ApiService().getLeads(
+            mobile!,
+            prefsUtil.getInt(COMPANY_ID)!,
+            prefsUtil.getInt(PRODUCT_ID)!,
+            leadId) as GetLeadResponseModel?;
+        if (getLeadData!.userId != null){
+          prefsUtil.saveString(USER_ID, getLeadData.userId!);
+        }else{
+          prefsUtil.saveString(USER_ID, "");
+        }
+        prefsUtil.saveInt(LEADE_ID, getLeadData!.leadId!);
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
-    } catch (error) {
-      if (kDebugMode) {
-        print('Error occurred during API call: $error');
+        customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+      } catch (error) {
+        if (kDebugMode) {
+          print('Error occurred during API call: $error');
+        }
       }
     }
   }

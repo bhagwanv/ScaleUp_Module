@@ -32,7 +32,7 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
         preferredCameraDevice: CameraDevice.front);
     if (image != null) {
       // Call the callback function with the selected image
-    //  widget.onImageSelected(File(image.path));
+      //  widget.onImageSelected(File(image.path));
 
 
 
@@ -67,7 +67,7 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
         if (croppedImageFile != null) {
           // Use the cropped image file (e.g., display or upload)
           print('Cropped image path: ${croppedImageFile.path}');
-        //  Navigator.of(context).pop(croppedImageFile);
+          //  Navigator.of(context).pop(croppedImageFile);
           widget.onImageSelected(croppedImageFile);
         }
       } else {
@@ -91,6 +91,7 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
             Container(
               child: GestureDetector(
                 onTap: () {
+                  Navigator.pop(context);
                   print("click Camera");
                   _handleURLButtonPress(context, ImageSourceType.camera);
                 },
@@ -113,6 +114,7 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
             Container(
               child: GestureDetector(
                 onTap: () {
+                  Navigator.pop(context);
                   print("Click Gallery");
                   _handleURLButtonPress(context, ImageSourceType.gallery);
                 },
@@ -150,5 +152,5 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
       return null;
     }
     return File(croppedFile.path!);
-}
+  }
 }

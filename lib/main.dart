@@ -7,6 +7,7 @@ import 'package:scale_up_module/view/login_screen/login_screen.dart';
 import 'package:scale_up_module/view/otp_screens/OtpScreen.dart';
 import 'package:scale_up_module/view/pancard_screen/PancardScreen.dart';
 import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
+import 'package:scale_up_module/view/profile_screen/components/credit_line_approved.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';
 
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
 
-      home: SplashScreen(),
+      home: CreditLineApproved(activityId: 2,subActivityId: 3,),
 
 
      /*AadhaarScreen(activityId: 2, subActivityId: 1)*/

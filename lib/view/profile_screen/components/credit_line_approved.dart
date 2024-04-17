@@ -24,6 +24,7 @@ import '../../splash_screen/model/LeadCurrentResponseModel.dart';
 import '../model/DisbursementResponce.dart';
 import '../model/DisbursementResponce.dart';
 import '../model/DisbursementResponce.dart';
+import '../model/AcceptedResponceModel.dart';
 
 class CreditLineApproved extends StatefulWidget {
   final int activityId;
@@ -37,9 +38,11 @@ class CreditLineApproved extends StatefulWidget {
 }
 
 class _CreditLineApprovedState extends State<CreditLineApproved> {
-  OfferPersonNameResponceModel? offerNameResponceModel;
-  OfferResponceModel? offerResponceModel;
+  late OfferPersonNameResponceModel? offerPersonNameResponceModel=null;
+  late OfferResponceModel? offerResponceModel=null;
+  late AcceptedResponceModel? acceptedResponceModel=null;
   var isLoading = true;
+  var congratulations = "";
 
   @override
   void initState() {
@@ -51,16 +54,38 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: true,
       bottom: true,
-      child:  Consumer<DataProvider>(builder: (context, productProvider, child) {
+      child: Consumer<DataProvider>(builder: (context, productProvider, child) {
         if (productProvider.getOfferResponceata == null && isLoading) {
           return Center(child: Loader());
         } else {
+          if (productProvider.getOfferResponceata != null && isLoading) {
+            Navigator.of(context, rootNavigator: true).pop();
+            isLoading = false;
+          }
+
+          if (productProvider.getOfferResponceata != null) {
+            productProvider.getOfferResponceata!.when(
+              success: (OfferResponceModel) async {
+                // Handle successful response
+                offerResponceModel = OfferResponceModel;
+
+               await getLeadNameApi(context,productProvider);
+
+
+              },
+              failure: (exception) {
+                // Handle failure
+                print("Failure");
+                //print('Failure! Error: ${exception.message}');
+              },
+            );
+          }
+
           return Scaffold(
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(30),
@@ -69,14 +94,14 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                   const SizedBox(height: 10),
                   Container(
                     alignment: Alignment.center,
-                    child:
-                    SvgPicture.asset('assets/images/credit_line_approved.svg'),
+                    child: SvgPicture.asset(
+                        'assets/images/credit_line_approved.svg'),
                   ),
                   Column(
                     children: [
                       SizedBox(height: 10),
                       Text(
-                        "Congratulations ${offerNameResponceModel?.response}!! ",
+                          "Congratulations ${offerPersonNameResponceModel?.response ?? ''}!! ",
                         style: TextStyle(color: kPrimaryColor, fontSize: 18),
                       ),
                       SizedBox(height: 10),
@@ -85,16 +110,16 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                         style: TextStyle(color: Colors.black, fontSize: 15),
                         textAlign: TextAlign.center,
                       ),
-                      productProvider.getOfferResponceata!.response!.processingFeePayableBy=="Anchor"
+
+                      offerResponceModel != null && offerResponceModel!.response != null && offerResponceModel!.response!.processingFeePayableBy == "Anchor"
                           ? SetOfferWidget(productProvider)
                           : SetCutomerOfferWidget(productProvider),
                     ],
                   ),
                   const SizedBox(height: 30),
                   CommonElevatedButton(
-                    onPressed: () {
-
-acceptOffer(context);
+                    onPressed: () async{
+                      await acceptOffer(context,productProvider);
                       /* Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -128,31 +153,57 @@ acceptOffer(context);
   }
 
   void callApi(BuildContext context)async {
+  void callApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final String? userID = prefsUtil.getString(USER_ID);
-    Provider.of<DataProvider>(context, listen: false).GetLeadOffer(leadId!,prefsUtil.getInt(COMPANY_ID)!);
-    offerNameResponceModel = await ApiService().GetLeadName(userID!);
+    Provider.of<DataProvider>(context, listen: false).GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
   }
 
+  Future<void> getLeadNameApi(BuildContext context, DataProvider productProvider) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final String? userID = prefsUtil.getString(USER_ID);
+    Utils.onLoading(context,"");
+    await Provider.of<DataProvider>(context, listen: false).getLeadName(userID!);
+    Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.getLeadNameData != null) {
+      productProvider.getLeadNameData!.when(
+        success: (OfferPersonNameResponceModel) {
+          // Handle successful response
+          offerPersonNameResponceModel = OfferPersonNameResponceModel;
+          //  congratulations= offerPersonNameResponceModel!.response!;
+
+        },
+        failure: (exception) {
+          // Handle failure
+          print("Failure");
+          //print('Failure! Error: ${exception.message}');
+        },
+      );
+    }
+
+  }
+
+
   Widget SetOfferWidget(DataProvider productProvider) {
-    if(productProvider.getOfferResponceata!=null){
-      if(productProvider.getOfferResponceata!.status!){
-        Navigator.of(context, rootNavigator: true).pop();
-        isLoading = false;
-        return  Column(
+    if (productProvider.getOfferResponceata != null) {
+      if (offerResponceModel!.status!) {
+        return Column(
           children: [
             SizedBox(height: 10),
             Center(
-              child: Text("₹ ${productProvider.getOfferResponceata!.response?.creditLimit}",
+              child: Text(
+                "₹ ${offerResponceModel!.response?.creditLimit}",
                 style: TextStyle(color: Colors.black, fontSize: 30),
                 textAlign: TextAlign.center,
               ),
             ),
-
             SizedBox(height: 20),
             Text.rich(TextSpan(
-                text: 'Interest Rate : ${productProvider.getOfferResponceata!.response?.convenionFeeRate} %',)),
+              text:
+                  'Interest Rate : ${offerResponceModel!.response?.convenionFeeRate} %',
+            )),
             Text(
               "(will be charged on every transaction)",
               style: TextStyle(color: Colors.black, fontSize: 15),
@@ -160,25 +211,26 @@ acceptOffer(context);
             ),
           ],
         );
-      }else{
-        Utils.showToast(productProvider.getOfferResponceata!.message!);
+      } else {
+        Utils.showToast(offerResponceModel!.message!);
         return Container();
       }
-    }else {
+    } else {
       return Container();
     }
-
   }
+
   Widget SetCutomerOfferWidget(DataProvider productProvider) {
-    if(productProvider.getOfferResponceata!=null){
-      if(productProvider.getOfferResponceata!.status!){
+    if (offerResponceModel!= null) {
+      if (offerResponceModel!.status!) {
         Navigator.of(context, rootNavigator: true).pop();
         isLoading = false;
-        return  Column(
+        return Column(
           children: [
             SizedBox(height: 10),
             Center(
-              child: Text("₹ ${productProvider.getOfferResponceata!.response?.creditLimit}",
+              child: Text(
+                "₹ ${offerResponceModel!.response?.creditLimit}",
                 style: TextStyle(color: Colors.black, fontSize: 30),
                 textAlign: TextAlign.center,
               ),
@@ -189,9 +241,9 @@ acceptOffer(context);
                 style: TextStyle(color: Colors.black, fontSize: 15),
                 children: <InlineSpan>[
                   TextSpan(
-                    text: '₹ ${productProvider.getOfferResponceata!.response!.processingFeeAmount}',
-                    style: TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold),
+                    text:
+                        '₹ ${offerResponceModel!.response!.processingFeeAmount}',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   )
                 ])),
             Text(
@@ -201,13 +253,13 @@ acceptOffer(context);
             ),
             SizedBox(height: 20),
             Text.rich(TextSpan(
-                text: 'Interest Rate : ${productProvider.getOfferResponceata!.response?.convenionGSTAmount}',
+                text:
+                    'Interest Rate : ${offerResponceModel!.response?.convenionGSTAmount}',
                 style: TextStyle(color: Colors.black, fontSize: 15),
                 children: <InlineSpan>[
                   TextSpan(
                     text: 'per annum',
-                    style: TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   )
                 ])),
             Text(
@@ -217,25 +269,45 @@ acceptOffer(context);
             ),
           ],
         );
-      }else{
-        Utils.showToast(productProvider.getOfferResponceata!.message!);
+      } else {
+        Utils.showToast(offerResponceModel!.message!);
         return Container();
       }
-    }else {
+    } else {
       return Container();
     }
 
   }
 
-  void acceptOffer(BuildContext context)async {
+  Future<void> acceptOffer(BuildContext context, DataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-   var responce = await ApiService().getAcceptOffer(leadId!);
-   if(responce.status!){
-     fetchData(context);
-   }else{
-     Utils.showToast(responce.message!);
-   }
+    Utils.onLoading(context,"");
+    await Provider.of<DataProvider>(context, listen: false).getAcceptOffer(leadId!);
+    Navigator.of(context, rootNavigator: true).pop();
+    if (productProvider.getAcceptOfferData != null) {
+      productProvider.getAcceptOfferData!.when(
+        success: (AcceptedResponceModel) {
+          // Handle successful response
+          acceptedResponceModel = AcceptedResponceModel;
+
+          if (acceptedResponceModel!.status!) {
+            fetchData(context);
+          } else {
+            Utils.showToast(acceptedResponceModel!.message!);
+          }
+
+        },
+        failure: (exception) {
+          // Handle failure
+          print("Failure!");
+          //print('Failure! Error: ${exception.message}');
+        },
+      );
+    }
+
+   // var responce = await ApiService().getAcceptOffer(leadId!);
+
   }
 
   Future<void> fetchData(BuildContext context) async {
