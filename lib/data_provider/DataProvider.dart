@@ -91,6 +91,12 @@ class DataProvider extends ChangeNotifier {
   Result<ValidateAadhaarOTPResponseModel,Exception>? _getValidateAadhaarOTPData;
   Result<ValidateAadhaarOTPResponseModel,Exception>? get getValidateAadhaarOTPData => _getValidateAadhaarOTPData;
 
+  PostSingleFileResponseModel? _getPostBackAadhaarSingleFileData;
+  PostSingleFileResponseModel? get getPostBackAadhaarSingleFileData => _getPostBackAadhaarSingleFileData;
+
+  PostSingleFileResponseModel? _getPostFrontAadhaarSingleFileData;
+  PostSingleFileResponseModel? get getPostFrontAadhaarSingleFileData => _getPostFrontAadhaarSingleFileData;
+
   //take selfie module
   Result<LeadSelfieResponseModel,Exception>? _getLeadSelfieData;
   Result<LeadSelfieResponseModel,Exception>? get getLeadSelfieData =>
@@ -110,17 +116,9 @@ class DataProvider extends ChangeNotifier {
   PostSingleFileResponseModel? _getpostElectricityBillDocumentSingleFileData;
   PostSingleFileResponseModel? get getpostElectricityBillDocumentSingleFileData => _getpostElectricityBillDocumentSingleFileData;
 
+  //Buisness details
   PostSingleFileResponseModel? _getpostBusineesDoumentSingleFileData;
   PostSingleFileResponseModel? get getpostBusineesDoumentSingleFileData => _getpostBusineesDoumentSingleFileData;
-
-  PostSingleFileResponseModel? _getPostBackAadhaarSingleFileData;
-  PostSingleFileResponseModel? get getPostBackAadhaarSingleFileData => _getPostBackAadhaarSingleFileData;
-
-  PostSingleFileResponseModel? _getPostFrontAadhaarSingleFileData;
-  PostSingleFileResponseModel? get getPostFrontAadhaarSingleFileData => _getPostFrontAadhaarSingleFileData;
-
-  Result<PostLeadPanResponseModel,Exception>? _getPostLeadPanData;
-  Result<PostLeadPanResponseModel,Exception>? get getPostLeadPaneData => _getPostLeadPanData;
 
   Result<DisbursementResponce,Exception>? _getDisbursementData;
   Result<DisbursementResponce,Exception>? get getDisbursementData => _getDisbursementData;

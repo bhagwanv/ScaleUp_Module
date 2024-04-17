@@ -1207,8 +1207,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       buisnessProof: selectedChooseBusinessProofValue,
     );
     debugPrint("Post DATA:: ${postLeadBuisnessDetailRequestModel.toJson()}");
-    /* await Provider.of<DataProvider>(context, listen: false)
-        .postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);*/
+     await Provider.of<DataProvider>(context, listen: false)
+        .postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
   }
 
