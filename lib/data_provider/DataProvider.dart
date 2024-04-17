@@ -59,6 +59,7 @@ class DataProvider extends ChangeNotifier {
 
   GenrateOptResponceModel? get genrateOptData => _genrateOptData;
 
+  //pan card module
   Result< LeadPanResponseModel, Exception>? _getLeadPANData;
   Result< LeadPanResponseModel, Exception>? get getLeadPANData => _getLeadPANData;
 
@@ -66,19 +67,41 @@ class DataProvider extends ChangeNotifier {
   Result<ValidPanCardResponsModel,Exception>? get getLeadValidPanCardData =>
       _getLeadValidPanCardData;
 
-  LeadAadhaarResponse? _getLeadAadhaar;
-
-  LeadAadhaarResponse? get getLeadAadhaar => _getLeadAadhaar;
-
-  AadhaarGenerateOTPResponseModel? _getLeadAadharGenerateOTP;
-
-  AadhaarGenerateOTPResponseModel? get getLeadAadharGenerateOTP => _getLeadAadharGenerateOTP;
-
   Result<FathersNameByValidPanCardResponseModel,Exception>? _getFathersNameByValidPanCardData;
   Result<FathersNameByValidPanCardResponseModel,Exception>? get getFathersNameByValidPanCardData => _getFathersNameByValidPanCardData;
 
   PostSingleFileResponseModel? _getPostSingleFileData;
   PostSingleFileResponseModel? get getPostSingleFileData => _getPostSingleFileData;
+
+  Result<PostLeadPanResponseModel,Exception>? _getPostLeadPanData;
+  Result<PostLeadPanResponseModel,Exception>? get getPostLeadPaneData => _getPostLeadPanData;
+
+  //Aadhaar module
+  Result<LeadAadhaarResponse,Exception>? _getLeadAadhaar;
+  Result<LeadAadhaarResponse,Exception>? get getLeadAadhaar =>
+      _getLeadAadhaar;
+
+  Result<AadhaarGenerateOTPResponseModel,Exception>? _getLeadAadharGenerateOTP;
+  Result<AadhaarGenerateOTPResponseModel,Exception>? get getLeadAadharGenerateOTP => _getLeadAadharGenerateOTP;
+
+  Result<ValidateAadhaarOTPResponseModel,Exception>? _getValidateAadhaarOTPData;
+  Result<ValidateAadhaarOTPResponseModel,Exception>? get getValidateAadhaarOTPData => _getValidateAadhaarOTPData;
+
+  //take selfie module
+  Result<LeadSelfieResponseModel,Exception>? _getLeadSelfieData;
+  Result<LeadSelfieResponseModel,Exception>? get getLeadSelfieData =>
+      _getLeadSelfieData;
+
+  Result<PostLeadSelfieResponseModel,Exception>? _getPostLeadSelfieData;
+  Result<PostLeadSelfieResponseModel,Exception>? get getPostLeadSelfieData => _getPostLeadSelfieData;
+
+  PostSingleFileResponseModel? _getPostSelfieImageSingleFileData;
+  PostSingleFileResponseModel? get getPostSelfieImageSingleFileData => _getPostSelfieImageSingleFileData;
+
+  //Personal Info Module
+  Result<PersonalDetailsResponce,Exception>? _getPersonalDetailsData;
+  Result<PersonalDetailsResponce,Exception>? get getPersonalDetailsData =>
+      _getPersonalDetailsData;
 
   PostSingleFileResponseModel? _getpostElectricityBillDocumentSingleFileData;
   PostSingleFileResponseModel? get getpostElectricityBillDocumentSingleFileData => _getpostElectricityBillDocumentSingleFileData;
@@ -91,9 +114,6 @@ class DataProvider extends ChangeNotifier {
 
   PostSingleFileResponseModel? _getPostFrontAadhaarSingleFileData;
   PostSingleFileResponseModel? get getPostFrontAadhaarSingleFileData => _getPostFrontAadhaarSingleFileData;
-
-  Result<PostLeadPanResponseModel,Exception>? _getPostLeadPanData;
-  Result<PostLeadPanResponseModel,Exception>? get getPostLeadPaneData => _getPostLeadPanData;
 
 
   VerifyOtpResponce? _getVerifyData;
@@ -108,10 +128,6 @@ class DataProvider extends ChangeNotifier {
 
   BankDetailsResponceModel? get getBankDetailsData => _getBankDetailsData;
 
-  PersonalDetailsResponce? _getPersonalDetailsData;
-
-  PersonalDetailsResponce? get getPersonalDetailsData => _getPersonalDetailsData;
-
   AllStateResponce? _getAllStateData;
 
   AllStateResponce? get getAllStateData => _getAllStateData;
@@ -121,19 +137,6 @@ class DataProvider extends ChangeNotifier {
 
   List<CityResponce?>? _getCurrentAllCityData;
   List<CityResponce?>? get getCurrentAllCityData => _getCurrentAllCityData;
-
-  LeadSelfieResponseModel? _getLeadSelfieData;
-
-  LeadSelfieResponseModel? get getLeadSelfieData => _getLeadSelfieData;
-
-  PostLeadSelfieResponseModel? _getPostLeadSelfieData;
-
-  PostLeadSelfieResponseModel? get getPostLeadSelfieData =>
-      _getPostLeadSelfieData;
-
-  ValidateAadhaarOTPResponseModel? _getValidateAadhaarOTPData;
-
-  ValidateAadhaarOTPResponseModel? get getValidateAadhaarOTPData => _getValidateAadhaarOTPData;
 
   EmailExistRespoce? _getEmailExistData;
 
@@ -224,6 +227,13 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> postTakeSelfieFile(File imageFile, bool isValidForLifeTime,
+      String validityInDays, String subFolderName) async {
+    _getPostSelfieImageSingleFileData = await apiService.postSingleFile(
+        imageFile, isValidForLifeTime, validityInDays, subFolderName);
+    notifyListeners();
+  }
+
   Future<void> postElectricityBillDocumentSingleFile(File imageFile, bool isValidForLifeTime,
       String validityInDays, String subFolderName) async {
     _getpostElectricityBillDocumentSingleFileData = await apiService.postSingleFile(
@@ -250,6 +260,7 @@ class DataProvider extends ChangeNotifier {
     _getPostLeadPanData = await apiService.postLeadPAN(postLeadPanRequestModel);
     notifyListeners();
   }
+
 
   Future<void> getBankList() async {
     _getBankListData = await apiService.getBankList();

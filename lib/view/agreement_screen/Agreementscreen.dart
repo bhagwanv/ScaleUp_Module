@@ -40,13 +40,13 @@ class _AgreementScreenState extends State<AgreementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      bottom: true,
-      child: Scaffold(
-          body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-        child: SingleChildScrollView(
+    return Scaffold(
+        body: SafeArea(
+          top: true,
+          bottom: true,
+          child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
+                child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -98,9 +98,9 @@ class _AgreementScreenState extends State<AgreementScreen> {
               ),
             ],
           ),
-        ),
-      )),
-    );
+                ),
+              ),
+        ));
     ;
   }
 

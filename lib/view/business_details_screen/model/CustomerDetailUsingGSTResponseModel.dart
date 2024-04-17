@@ -57,7 +57,7 @@ class CustomerDetailUsingGstResponseModel {
   dynamic buisnessMonthlySalary;
   dynamic incomeSlab;
   dynamic buisnessProof;
-  dynamic buisnessProofUrl;
+  String? buisnessProofUrl;
   int? buisnessProofDocId;
   dynamic buisnessDocumentNo;
   dynamic inquiryAmount;

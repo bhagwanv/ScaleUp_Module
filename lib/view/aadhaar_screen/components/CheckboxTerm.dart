@@ -1,16 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/constants.dart';
 
 class CheckboxTerm extends StatefulWidget {
-  const CheckboxTerm({super.key});
+  final String? content;
+  bool isChecked = false;
+  final ValueChanged<bool>? onChanged;
+
+  CheckboxTerm({super.key, this.content, this.isChecked = false, this.onChanged});
 
   @override
   State<CheckboxTerm> createState() => _CheckboxTermState();
 }
 
 class _CheckboxTermState extends State<CheckboxTerm> {
-  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,21 +30,26 @@ class _CheckboxTermState extends State<CheckboxTerm> {
       return Colors.blue;
     }
 
-    return Row(children: [
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
       Checkbox(
         checkColor: Colors.white,
-        fillColor: MaterialStateProperty.resolveWith(getColor),
-        value: isChecked,
+        value: widget.isChecked,
         side: const BorderSide(color: kPrimaryColor),
         onChanged: (bool? value) {
           setState(() {
-            isChecked = value!;
+            widget.isChecked = value!;
+            widget.onChanged!(value);
           });
         },
       ),
-      const Text(
-        'Terms & Conditions. ',
-        style: TextStyle(fontSize: 14.0),
+          Expanded(
+        child: Text(
+          widget.content ?? "",
+          style: TextStyle(fontSize: 14.0),
+        ),
       ),
     ]);
   }

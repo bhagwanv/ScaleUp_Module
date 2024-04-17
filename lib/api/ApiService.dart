@@ -152,161 +152,12 @@ class ApiService {
     }
   }
 
-  Future<Result<ValidPanCardResponsModel, Exception>> getLeadValidPanCard(
-      String panNumber) async {
-    try {
-      if (await internetConnectivity.networkConnectivity()) {
-        final prefsUtil = await SharedPref.getInstance();
-        var token = await prefsUtil.getString(TOKEN);
-        final response = await interceptor.get(
-          Uri.parse(
-              '${apiUrls.baseUrl + apiUrls.getLeadValidPanCard}?PanNumber=$panNumber'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token'
-            // Set the content type as JSON
-          },
-        );
-
-        print(response.body); // Print the response body once here
-        switch (response.statusCode) {
-          // Parse the JSON response
-          case 200:
-            final dynamic jsonData = json.decode(response.body);
-            final ValidPanCardResponsModel responseModel =
-                ValidPanCardResponsModel.fromJson(jsonData);
-            return Success(responseModel);
-          default:
-            // 3. return Failure with the desired exception
-            return Failure(Exception(response.reasonPhrase));
-        }
-      } else {
-        return Failure(Exception("No Internet connection"));
-      }
-    } on Exception catch (e) {
-      return Failure(e);
-    }
-  }
-
-  Future<LeadAadhaarResponse> getLeadAadhar(String userId) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final response = await interceptor.get(Uri.parse(
-          '${apiUrls.baseUrl + apiUrls.getLeadAadhar}?UserId=$userId'));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-
-        final LeadAadhaarResponse responseModel =
-            LeadAadhaarResponse.fromJson(jsonData);
-        return responseModel;
-      } else {
-        throw Exception('Failed to load products');
-      }
-    } else {
-      throw Exception('No internet connection');
-    }
-  }
-
-  Future<AadhaarGenerateOTPResponseModel> getLeadAadharGenerateOTP(
-      AadhaarGenerateOTPRequestModel aadhaarGenerateOTPRequestModel) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var token = await prefsUtil.getString(TOKEN);
-      final response = await interceptor.post(
-          Uri.parse('${apiUrls.baseUrl + apiUrls.getLeadAadharGenerateOTP}'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token'
-          },
-          body: json.encode(aadhaarGenerateOTPRequestModel));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        final dynamic jsonData = json.decode(response.body);
-        final AadhaarGenerateOTPResponseModel responseModel =
-            AadhaarGenerateOTPResponseModel.fromJson(jsonData);
-        return responseModel;
-      } else if (response.statusCode == 401) {
-        print("Unauthorized access. Please login again.");
-        return AadhaarGenerateOTPResponseModel(errorCode: 401);
-      } else if (response.statusCode == 500) {
-        print("Unauthorized access. Please login again.");
-        return AadhaarGenerateOTPResponseModel(errorCode: 500);
-      } else {
-        throw Exception('Failed to load products');
-      }
-    } else {
-      throw Exception('No internet connection');
-    }
-  }
-
-  Future<Result<FathersNameByValidPanCardResponseModel,Exception>> getFathersNameByValidPanCard(
-      String panNumber) async {
-    try{
-      if (await internetConnectivity.networkConnectivity()) {
-        final prefsUtil = await SharedPref.getInstance();
-        var token = await prefsUtil.getString(TOKEN);
-        final response = await interceptor.get(
-          Uri.parse(
-              '${apiUrls.baseUrl + apiUrls.getFathersNameByValidPanCard}?PanNumber=$panNumber'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization':'Bearer $token'
-            // Set the content type as JSON
-          },
-        );
-        print(response.body); // Print the response body once here
-        switch (response.statusCode) {
-          case 200:
-          // Parse the JSON response
-          final dynamic jsonData = json.decode(response.body);
-          final FathersNameByValidPanCardResponseModel responseModel =
-          FathersNameByValidPanCardResponseModel.fromJson(jsonData);
-          return Success(responseModel);
-          default:
-            return Failure(Exception(response.reasonPhrase));
-        }
-      } else {
-        return Failure(Exception("No Internet connection"));
-      }
-
-    }on Exception catch (e) {
-      return Failure(e);
-    }
-
-
-  }
-
-  Future<VerifyOtpResponce> verifyOtp(VarifayOtpRequest verifayOtp) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final response = await interceptor.post(
-          Uri.parse('${apiUrls.baseUrl + apiUrls.LeadMobileValidate}'),
-          headers: {
-            'Content-Type': 'application/json', // Set the content type as JSON
-          },
-          body: json.encode(verifayOtp));
-      //print(json.encode(leadCurrentRequestModel));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-        final VerifyOtpResponce responseModel =
-            VerifyOtpResponce.fromJson(jsonData);
-        return responseModel;
-      } else {
-        throw Exception('Failed to load products');
-      }
-    } else {
-      throw Exception('No internet connection');
-    }
-  }
-
   Future<PostSingleFileResponseModel> postSingleFile(
-    File file,
-    bool isValidForLifeTime,
-    String? validityInDays,
-    String? subFolderName,
-  ) async {
+      File file,
+      bool isValidForLifeTime,
+      String? validityInDays,
+      String? subFolderName,
+      ) async {
     if (await internetConnectivity.networkConnectivity()) {
       try {
         var request = http.MultipartRequest(
@@ -356,6 +207,80 @@ class ApiService {
     }
   }
 
+  //panCard Module
+  Future<Result<ValidPanCardResponsModel, Exception>> getLeadValidPanCard(
+      String panNumber) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(
+          Uri.parse(
+              '${apiUrls.baseUrl + apiUrls.getLeadValidPanCard}?PanNumber=$panNumber'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON
+          },
+        );
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          // Parse the JSON response
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final ValidPanCardResponsModel responseModel =
+                ValidPanCardResponsModel.fromJson(jsonData);
+            return Success(responseModel);
+          default:
+            // 3. return Failure with the desired exception
+            return Failure(Exception(response.reasonPhrase));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<FathersNameByValidPanCardResponseModel,Exception>> getFathersNameByValidPanCard(
+      String panNumber) async {
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(
+          Uri.parse(
+              '${apiUrls.baseUrl + apiUrls.getFathersNameByValidPanCard}?PanNumber=$panNumber'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':'Bearer $token'
+            // Set the content type as JSON
+          },
+        );
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final FathersNameByValidPanCardResponseModel responseModel =
+            FathersNameByValidPanCardResponseModel.fromJson(jsonData);
+            return Success(responseModel);
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+
+    }on Exception catch (e) {
+      return Failure(e);
+    }
+
+
+  }
+
   Future<Result<PostLeadPanResponseModel,Exception>> postLeadPAN(
       PostLeadPanRequestModel postLeadPanRequestModel) async {
 
@@ -377,10 +302,10 @@ class ApiService {
         switch (response.statusCode) {
           case 200:
           // Parse the JSON response
-          final dynamic jsonData = json.decode(response.body);
-          final PostLeadPanResponseModel responseModel =
-          PostLeadPanResponseModel.fromJson(jsonData);
-          return Success(responseModel);
+            final dynamic jsonData = json.decode(response.body);
+            final PostLeadPanResponseModel responseModel =
+            PostLeadPanResponseModel.fromJson(jsonData);
+            return Success(responseModel);
 
           default:
             return Failure(Exception(response.reasonPhrase));
@@ -396,6 +321,220 @@ class ApiService {
 
 
 
+  }
+
+
+  //aadhaar module
+  Future<Result<LeadAadhaarResponse,Exception>> getLeadAadhar(String userId) async {
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.getLeadAadhar}?UserId=$userId'),
+          headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          },);
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final LeadAadhaarResponse responseModel =
+            LeadAadhaarResponse.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    }on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<AadhaarGenerateOTPResponseModel,Exception>> getLeadAadharGenerateOTP(
+      AadhaarGenerateOTPRequestModel aadhaarGenerateOTPRequestModel) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse('${apiUrls.baseUrl + apiUrls.getLeadAadharGenerateOTP}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+            },
+            body: json.encode(aadhaarGenerateOTPRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final AadhaarGenerateOTPResponseModel responseModel =
+            AadhaarGenerateOTPResponseModel.fromJson(jsonData);
+            return Success(responseModel);
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<ValidateAadhaarOTPResponseModel,Exception>> validateAadhaarOtp(
+      ValidateAadhaarOTPRequestModel validateAadhaarOTPRequestModel) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse(apiUrls.baseUrl + apiUrls.postLeadAadharVerifyOTP),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+            },
+            body: json.encode(validateAadhaarOTPRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final ValidateAadhaarOTPResponseModel responseModel =
+            ValidateAadhaarOTPResponseModel.fromJson(jsonData);
+            return Success(responseModel);
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  //Selfie module
+  Future<Result<LeadSelfieResponseModel,Exception>> getLeadSelfie(String userId) async {
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.getLeadSelfie}?UserId=$userId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },);
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final LeadSelfieResponseModel responseModel =
+            LeadSelfieResponseModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    }on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<PostLeadSelfieResponseModel,Exception>> postLeadSelfie(
+      PostLeadSelfieRequestModel postLeadSelfieRequestModel) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse(apiUrls.baseUrl + apiUrls.postLeadSelfie),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+            },
+            body: json.encode(postLeadSelfieRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final PostLeadSelfieResponseModel responseModel =
+            PostLeadSelfieResponseModel.fromJson(jsonData);
+            return Success(responseModel);
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  //personal info module
+  Future<Result<PersonalDetailsResponce,Exception>> getLeadPersnalDetails(String userId) async {
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=$userId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },);
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final PersonalDetailsResponce responseModel =
+            PersonalDetailsResponce.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(Exception(response.reasonPhrase));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    }on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<VerifyOtpResponce> verifyOtp(VarifayOtpRequest verifayOtp) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.post(
+          Uri.parse('${apiUrls.baseUrl + apiUrls.LeadMobileValidate}'),
+          headers: {
+            'Content-Type': 'application/json', // Set the content type as JSON
+          },
+          body: json.encode(verifayOtp));
+      //print(json.encode(leadCurrentRequestModel));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final VerifyOtpResponce responseModel =
+            VerifyOtpResponce.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
   }
 
   Future<BankListResponceModel> getBankList() async {
@@ -447,34 +586,6 @@ class ApiService {
     }
   }
 
-  Future<PersonalDetailsResponce> getLeadPersnalDetails(String userId) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var token = await prefsUtil.getString(TOKEN);
-      final response = await interceptor.get(
-        Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=${userId}'),
-        headers: {
-          'Content-Type': 'application/json',
-         // 'Authorization': 'Bearer $token'// Set the content type as JSON
-          'Authorization': '$token'},
-      );
-      //print(json.encode(leadCurrentRequestModel));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-        final PersonalDetailsResponce responseModel =
-            PersonalDetailsResponce.fromJson(jsonData);
-        return responseModel;
-      } else {
-        throw Exception('Failed to load products');
-      }
-    } else {
-      throw Exception('No internet connection');
-    }
-  }
-
   Future<AllStateResponce> getAllState() async {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(
@@ -515,34 +626,6 @@ class ApiService {
         final dynamic jsonData = json.decode(response.body);
         final List<CityResponce> responseModel = List<CityResponce>.from(
             jsonData.map((model) => CityResponce.fromJson(model)));
-        return responseModel;
-      } else {
-        throw Exception('Failed to load products');
-      }
-    } else {
-      throw Exception('No internet connection');
-    }
-  }
-
-  Future<ValidateAadhaarOTPResponseModel> validateAadhaarOtp(
-      ValidateAadhaarOTPRequestModel verifayOtp) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var token = await prefsUtil.getString(TOKEN);
-      final response = await interceptor.post(
-          Uri.parse(apiUrls.baseUrl + apiUrls.postLeadAadharVerifyOTP),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token'
-          },
-          body: json.encode(verifayOtp));
-      if (kDebugMode) {
-        print(response.body);
-      } // Print the response body once here
-      if (response.statusCode == 200) {
-        final dynamic jsonData = json.decode(response.body);
-        final ValidateAadhaarOTPResponseModel responseModel =
-            ValidateAadhaarOTPResponseModel.fromJson(jsonData);
         return responseModel;
       } else {
         throw Exception('Failed to load products');
@@ -626,57 +709,6 @@ class ApiService {
     }
   }
 
-  Future<LeadSelfieResponseModel> getLeadSelfie(String userId) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final response = await interceptor.get(Uri.parse(
-          '${apiUrls.baseUrl + apiUrls.getLeadSelfie}?UserId=$userId'));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-
-        final LeadSelfieResponseModel responseModel =
-            LeadSelfieResponseModel.fromJson(jsonData);
-        return responseModel;
-      } else {
-        throw Exception('Failed to load products');
-      }
-    } else {
-      throw Exception('No internet connection');
-    }
-  }
-
-  Future<PostLeadSelfieResponseModel> postLeadSelfie(
-      PostLeadSelfieRequestModel postLeadSelfieRequestModel) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var token = await prefsUtil.getString(TOKEN);
-      final response = await interceptor.post(
-          Uri.parse('${apiUrls.baseUrl + apiUrls.postLeadSelfie}'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token'
-            // Set the content type as JSON// Set the content type as JSON
-          },
-          body: json.encode(postLeadSelfieRequestModel));
-      //print(json.encode(leadCurrentRequestModel));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-        final PostLeadSelfieResponseModel responseModel =
-            PostLeadSelfieResponseModel.fromJson(jsonData);
-        return responseModel;
-      }
-      if (response.statusCode == 401) {
-        return PostLeadSelfieResponseModel(statusCode: 401);
-      } else {
-        throw Exception('Failed to load products');
-      }
-    } else {
-      throw Exception('No internet connection');
-    }
-  }
 
   Future<LeadBusinessDetailResponseModel> getLeadBusinessDetail(
       String userId) async {

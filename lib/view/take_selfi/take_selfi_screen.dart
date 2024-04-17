@@ -20,13 +20,15 @@ import '../login_screen/login_screen.dart';
 import '../splash_screen/model/GetLeadResponseModel.dart';
 import '../splash_screen/model/LeadCurrentRequestModel.dart';
 import '../splash_screen/model/LeadCurrentResponseModel.dart';
+import 'model/LeadSelfieResponseModel.dart';
 import 'model/PostLeadSelfieRequestModel.dart';
 
 class TakeSelfieScreen extends StatefulWidget {
   final int activityId;
   final int subActivityId;
 
-  TakeSelfieScreen({super.key, required this.activityId, required this.subActivityId});
+  TakeSelfieScreen(
+      {super.key, required this.activityId, required this.subActivityId});
 
   @override
   State<TakeSelfieScreen> createState() => _TakeSelfieScreenState();
@@ -39,8 +41,6 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
   var isSelfieDelete = false;
   var isAgenSelfieDelete = false;
 
-
-
   void _handlePermissionsAccepted(File? picture) {
     setState(() {
 /*
@@ -48,7 +48,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
       print("dsfjskf$picture");
 */
 
-     uolpadSelfie(context, picture!);
+      uolpadSelfie(context, picture!);
     });
   }
 
@@ -67,38 +67,53 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    LeadSelfieResponseModel? leadSelfieResponseModel = null;
+
+    return Scaffold(
       backgroundColor: textFiledBackgroundColour,
-      body: Consumer<DataProvider>(builder: (context, productProvider, child) {
-        if (productProvider.getLeadSelfieData == null && isLoading) {
-          return Loader();
-        } else {
-          if (productProvider.getLeadSelfieData != null && isLoading) {
-            Navigator.of(context, rootNavigator: true).pop();
-            isLoading = false;
-          }
-          if (productProvider.getLeadSelfieData != null) {
-            if (productProvider.getLeadSelfieData!.frontImageUrl != null &&
-                productProvider.getLeadSelfieData!.frontDocumentId != null &&
-                !isSelfieDelete) {
-              selfieImage = productProvider.getLeadSelfieData!.frontImageUrl!;
-              frontDocumentId =
-                  productProvider.getLeadSelfieData!.frontDocumentId!;
-            } else {
-              if (productProvider.getPostSingleFileData != null) {
-                if (productProvider.getPostSingleFileData!.filePath != null &&
-                    productProvider.getPostSingleFileData!.docId != null &&
+      body: SafeArea(
+        child:
+            Consumer<DataProvider>(builder: (context, productProvider, child) {
+          if (productProvider.getLeadSelfieData == null && isLoading) {
+            return Loader();
+          } else {
+            if (productProvider.getLeadSelfieData != null && isLoading) {
+              Navigator.of(context, rootNavigator: true).pop();
+              isLoading = false;
+            }
+            if (productProvider.getLeadSelfieData != null) {
+              productProvider.getLeadSelfieData!.when(
+                success: (LeadSelfieResponseModel) async {
+                  leadSelfieResponseModel = LeadSelfieResponseModel;
+                  if (leadSelfieResponseModel != null) {
+                    if (leadSelfieResponseModel!.frontImageUrl != null &&
+                        leadSelfieResponseModel!.frontDocumentId != null &&
+                        !isSelfieDelete) {
+                      selfieImage = leadSelfieResponseModel!.frontImageUrl!;
+                      frontDocumentId =
+                          leadSelfieResponseModel!.frontDocumentId!;
+                    }
+                  }
+                },
+                failure: (exception) {
+                  print("Failure");
+                },
+              );
+              if (productProvider.getPostSelfieImageSingleFileData != null) {
+                if (productProvider
+                            .getPostSelfieImageSingleFileData!.filePath !=
+                        null &&
+                    productProvider.getPostSelfieImageSingleFileData!.docId !=
+                        null &&
                     !isAgenSelfieDelete) {
-                  selfieImage =
-                      productProvider.getPostSingleFileData!.filePath!;
+                  selfieImage = productProvider
+                      .getPostSelfieImageSingleFileData!.filePath!;
                   frontDocumentId =
-                      productProvider.getPostSingleFileData!.docId!;
+                      productProvider.getPostSelfieImageSingleFileData!.docId!;
                 }
               }
             }
           }
-
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -210,30 +225,8 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                         : CommonElevatedButton(
                             onPressed: () async {
                               if (!selfieImage.isEmpty) {
-                                await postLeadSelfie(
-                                    selfieImage, frontDocumentId);
-                                if (productProvider
-                                        .getPostLeadSelfieData?.statusCode !=
-                                    401) {
-                                  if (productProvider.getPostLeadSelfieData !=
-                                      null) {
-                                    if (productProvider
-                                        .getPostLeadSelfieData!.isSuccess!) {
-                                      fetchData(context);
-                                    }
-                                  }
-                                } else {
-                                  Navigator.pushAndRemoveUntil<dynamic>(
-                                    context,
-                                    MaterialPageRoute<dynamic>(
-                                      builder: (BuildContext context) =>
-                                          LoginScreen(
-                                              activityId: 1, subActivityId: 0),
-                                    ),
-                                    (route) =>
-                                        false, //if you want to disable back feature set to false
-                                  );
-                                }
+                                await postLeadSelfie(selfieImage,
+                                    frontDocumentId, productProvider);
                               }
                             },
                             text: "Next",
@@ -242,9 +235,9 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                   ]),
             ),
           );
-        }
-      }),
-    ));
+        }),
+      ),
+    );
   }
 
   Future<void> getLeadSelfie(BuildContext context) async {
@@ -256,11 +249,12 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
   Future<void> uolpadSelfie(BuildContext context, File picture) async {
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
-        .postSingleFile(picture, true, "", "");
+        .postTakeSelfieFile(picture, true, "", "");
     Navigator.of(context, rootNavigator: true).pop();
   }
 
-  Future<void> postLeadSelfie(String selfieImage, int frontDocumentId) async {
+  Future<void> postLeadSelfie(String selfieImage, int frontDocumentId,
+      DataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     var postLeadSelfieRequestModel = PostLeadSelfieRequestModel(
@@ -277,6 +271,31 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadSelfie(postLeadSelfieRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.getPostLeadSelfieData != null) {
+      productProvider.getPostLeadSelfieData!.when(
+        success: (PostLeadSelfieResponseModel) async {
+          var postLeadSelfieResponseModel = PostLeadSelfieResponseModel;
+          if (postLeadSelfieResponseModel != null) {
+            if (postLeadSelfieResponseModel.isSuccess != null &&
+                postLeadSelfieResponseModel.isSuccess!) {
+              fetchData(context);
+            }
+          }
+        },
+        failure: (exception) {
+          Navigator.pushAndRemoveUntil<dynamic>(
+            context,
+            MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) =>
+                  LoginScreen(activityId: 1, subActivityId: 0),
+            ),
+            (route) => false, //if you want to disable back feature set to false
+          );
+        },
+      );
+    }
+    ;
   }
 
   Future<void> fetchData(BuildContext context) async {

@@ -10,6 +10,7 @@ import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/utils/common_elevted_button.dart';
 import 'package:scale_up_module/utils/constants.dart';
 import 'package:scale_up_module/view/personal_info/EmailOtpScreen.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
@@ -24,6 +25,7 @@ import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'model/CityResponce.dart';
 import 'model/EmailExistRespoce.dart';
 import 'model/PersonalDetailsRequestModel.dart';
+import 'model/PersonalDetailsResponce.dart';
 import 'model/ReturnObject.dart';
 import 'model/SendOtpOnEmailResponce.dart';
 
@@ -81,6 +83,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   List<CityResponce?> citylist = [];
   ReturnObject? selectedCurrentState;
   CityResponce? selectedCurrentCity;
+  int? billDocId;
 
   //ownership type
   String? selectedOwnershipTypeValue = "";
@@ -93,7 +96,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
   String? selectOwnershipProofValue;
   final List<String> ownershipProofList = [
-    'Electricity Manual Bill Upload ',
+    'Electricity Manual Bill Upload',
   ];
 
   bool ischeckCurrentAdress = true;
@@ -105,6 +108,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
   var cityCallInitial = true;
   var isCurrentAddSame = false;
   var updateData = false;
+  PersonalDetailsResponce? personalDetailsResponce = null;
+  var isImageDelete = false;
 
   @override
   void initState() {
@@ -114,10 +119,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       body: SafeArea(
-        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+        child:
+            Consumer<DataProvider>(builder: (context, productProvider, child) {
           if (productProvider.getPersonalDetailsData == null && isLoading) {
             return Center(child: Loader());
           } else {
@@ -129,127 +134,160 @@ class _PersonalInformationState extends State<PersonalInformation> {
             if (!updateData) {
               _countryCl.text = "India";
 
-              _firstNameCl.text =
-                  productProvider.getPersonalDetailsData!.firstName!;
-              if (productProvider.getPersonalDetailsData!.middleName != null) {
-                _middleNameCl.text =
-                    productProvider.getPersonalDetailsData!.middleName!;
-              }
-              _lastNameCl.text =
-                  productProvider.getPersonalDetailsData!.lastName!;
+              if (productProvider.getPersonalDetailsData != null) {
+                productProvider.getPersonalDetailsData!.when(
+                  success: (PersonalDetailsResponce) async {
+                    personalDetailsResponce = PersonalDetailsResponce;
+                    if (personalDetailsResponce != null) {
+                      _firstNameCl.text = personalDetailsResponce!.firstName!;
+                      if (personalDetailsResponce!.middleName != null) {
+                        _middleNameCl.text =
+                            personalDetailsResponce!.middleName!;
+                      }
+                      _lastNameCl.text = personalDetailsResponce!.lastName!;
 
-              if (productProvider.getPersonalDetailsData!.emailId!.isNotEmpty) {
-                _emailIDCl.text =
-                    productProvider.getPersonalDetailsData!.emailId!;
+                      if (personalDetailsResponce!.emailId!.isNotEmpty && !isValidEmail && !isEmailClear) {
+                        isValidEmail = true;
+                        _emailIDCl.text = personalDetailsResponce!.emailId!;
+                      }
+
+                      if (personalDetailsResponce!.alternatePhoneNo != null) {
+                        _alternatePhoneNumberCl.text =
+                            personalDetailsResponce!.alternatePhoneNo!;
+                      }
+
+                      if (personalDetailsResponce!.manulaElectrictyBillImage !=
+                          null && !isImageDelete) {
+                        widget.image = personalDetailsResponce!.manulaElectrictyBillImage!;
+                      }
+
+                      if (personalDetailsResponce!.gender == "M" || personalDetailsResponce!.gender == "Male") {
+                        _genderCl.text = "Male";
+                      } else if (personalDetailsResponce!.gender == "F" || personalDetailsResponce!.gender == "Female") {
+                        _genderCl.text = "Female";
+                      } else {
+                        _genderCl.text = "Other";
+                      }
+
+                      if(personalDetailsResponce!.marital != null) {
+                      if (personalDetailsResponce!.marital!.isNotEmpty) {
+                        if (personalDetailsResponce!.marital == "M" || personalDetailsResponce!.marital == "Married") {
+                          selectedMaritalStatusValue = "Married";
+                        } else if (personalDetailsResponce!.marital == "UM" || personalDetailsResponce!.marital == "UnMarried") {
+                          selectedMaritalStatusValue = "UnMarried";
+                        } else {
+                          selectedMaritalStatusValue = "Widow";
+                        }
+                      }
+                      }
+
+                      if(personalDetailsResponce!.ownershipType != null) {
+                        if (personalDetailsResponce!.ownershipType!.isNotEmpty) {
+                          if (personalDetailsResponce!.ownershipType == "Owned") {
+                            selectedOwnershipTypeValue = "Owned";
+                          } else if (personalDetailsResponce!.ownershipType == "Owned by parents") {
+                            selectedOwnershipTypeValue = "Owned by parents";
+                          }  else if (personalDetailsResponce!.ownershipType == "Owned by Spouse") {
+                            selectedOwnershipTypeValue = "Owned by Spouse";
+                          } else {
+                            selectedOwnershipTypeValue = "Rented";
+                          }
+                        }
+                      }
+
+                      if(personalDetailsResponce!.ownershipTypeProof != null) {
+                        if (personalDetailsResponce!.ownershipTypeProof!.isNotEmpty) {
+                          if (personalDetailsResponce!.ownershipTypeProof == "Electricity Manual Bill Upload") {
+                            selectOwnershipProofValue = "Electricity Manual Bill Upload";
+                          }
+                        }
+                      }
+
+                      //set permanent Address
+                      if (personalDetailsResponce!
+                          .permanentAddressLine1!.isNotEmpty) {
+                        _permanentAddresslineOneCl.text =
+                            personalDetailsResponce!.permanentAddressLine1!;
+                      }
+
+                      if (personalDetailsResponce!
+                          .permanentAddressLine2!.isNotEmpty) {
+                        _permanentAddresslineTwoCl.text =
+                            personalDetailsResponce!.permanentAddressLine2!;
+                      }
+
+                      if (personalDetailsResponce!.permanentPincode != null) {
+                        _permanentAddressPinCodeCl.text =
+                            personalDetailsResponce!.permanentPincode!
+                                .toString();
+                      }
+
+                      if (personalDetailsResponce!.permanentAddressLine1 ==
+                              personalDetailsResponce!.resAddress1 &&
+                          personalDetailsResponce!.permanentAddressLine2 ==
+                              personalDetailsResponce!.resAddress2) {
+                        isCurrentAddSame = true;
+                      }
+
+                      //set Current Address
+                      if (personalDetailsResponce!.resAddress1!.isNotEmpty) {
+                        _currentAddressLineOneCl.text =
+                            personalDetailsResponce!.resAddress1!;
+                      }
+                      if (personalDetailsResponce!.resAddress2!.isNotEmpty) {
+                        _currentAddressLineTwoCl.text =
+                            personalDetailsResponce!.resAddress2!;
+                      }
+                      if (personalDetailsResponce!.pincode != null) {
+                        _currentAddressPinCodeCl.text =
+                            personalDetailsResponce!.pincode!.toString();
+                      }
+
+                      if (personalDetailsResponce!.state != null) {
+                        stateId = personalDetailsResponce!.state!;
+                      }
+
+                      if (personalDetailsResponce!.electricityBillDocumentId != null) {
+                        billDocId = personalDetailsResponce!.electricityBillDocumentId!;
+                      }
+                      if (productProvider.getAllCityData != null) {
+                        permanentCitylist = productProvider.getAllCityData!;
+                      }
+
+                      if (productProvider.getCurrentAllCityData != null) {
+                        citylist = productProvider.getCurrentAllCityData!;
+                      }
+                    } else {
+                      if (!isEmailClear && !isValidEmail) {
+                        _emailIDCl.text = personalDetailsResponce!.emailId!;
+                      } else if (!isValidEmail) {
+                        _emailIDCl.clear();
+                      }
+
+                      if (productProvider.getAllCityData != null) {
+                        permanentCitylist = productProvider.getAllCityData!;
+                      }
+
+                      if (productProvider.getCurrentAllCityData != null) {
+                        citylist = productProvider.getCurrentAllCityData!;
+                      }
+                      if (citylist.isNotEmpty) {
+                        selectedCurrentCity = citylist.first;
+                        print("dsds" + selectedCurrentCity!.name!);
+                      }
+                    }
+                  },
+                  failure: (exception) {
+                    print("Failure");
+                  },
+                );
               }
 
-              if (productProvider.getPersonalDetailsData!.alternatePhoneNo != null) {
-                _alternatePhoneNumberCl.text =
-                productProvider.getPersonalDetailsData!.alternatePhoneNo!;
-              }
-
-              if (productProvider.getPersonalDetailsData!.manulaElectrictyBillImage != null) {
-                widget.image =
-                productProvider.getPersonalDetailsData!.manulaElectrictyBillImage!;
-              }
-
-              if (productProvider.getPersonalDetailsData!.gender == "M") {
-                _genderCl.text = "Male";
-              } else if (productProvider.getPersonalDetailsData!.gender ==
-                  "F") {
-                _genderCl.text = "Female";
-              } else {
-                _genderCl.text = "Other";
-              }
-
-              if (productProvider.getPersonalDetailsData!.marital!.isNotEmpty) {
-                if (productProvider.getPersonalDetailsData!.marital == "M") {
-                  selectedMaritalStatusValue = "Married";
-                } else if (productProvider.getPersonalDetailsData!.gender ==
-                    "UM") {
-                  selectedMaritalStatusValue = "UnMarried";
-                } else {
-                  selectedMaritalStatusValue = "Widow";
-                }
-              }
-
-              //set permanent Address
-              if (productProvider
-                  .getPersonalDetailsData!.permanentAddressLine1!.isNotEmpty) {
-                _permanentAddresslineOneCl.text = productProvider
-                    .getPersonalDetailsData!.permanentAddressLine1!;
-              }
-
-              if (productProvider
-                  .getPersonalDetailsData!.permanentAddressLine2!.isNotEmpty) {
-                _permanentAddresslineTwoCl.text = productProvider
-                    .getPersonalDetailsData!.permanentAddressLine2!;
-              }
-
-              if (productProvider.getPersonalDetailsData!.permanentPincode !=
-                  null) {
-                _permanentAddressPinCodeCl.text = productProvider
-                    .getPersonalDetailsData!.permanentPincode!
-                    .toString();
-              }
-
-              if (productProvider
-                          .getPersonalDetailsData!.permanentAddressLine1 ==
-                      productProvider.getPersonalDetailsData!.resAddress1 &&
-                  productProvider
-                          .getPersonalDetailsData!.permanentAddressLine2 ==
-                      productProvider.getPersonalDetailsData!.resAddress2) {
-                isCurrentAddSame = true;
-              }
-
-              //set Current Address
-              if (productProvider
-                  .getPersonalDetailsData!.resAddress1!.isNotEmpty) {
-                _currentAddressLineOneCl.text =
-                    productProvider.getPersonalDetailsData!.resAddress1!;
-              }
-              if (productProvider
-                  .getPersonalDetailsData!.resAddress2!.isNotEmpty) {
-                _currentAddressLineTwoCl.text =
-                    productProvider.getPersonalDetailsData!.resAddress2!;
-              }
-              if (productProvider.getPersonalDetailsData!.pincode != null) {
-                _currentAddressPinCodeCl.text =
-                    productProvider.getPersonalDetailsData!.pincode!.toString();
-              }
-
-              if (productProvider.getPersonalDetailsData!.state != null) {
-                stateId = productProvider.getPersonalDetailsData!.state!;
-              }
-
-              if (productProvider.getAllCityData != null) {
-                permanentCitylist = productProvider.getAllCityData!;
-              }
-
-              if (productProvider.getCurrentAllCityData != null) {
-                citylist = productProvider.getCurrentAllCityData!;
-              }
-            } else {
-              if (!isEmailClear && !isValidEmail) {
-                _emailIDCl.text =
-                    productProvider.getPersonalDetailsData!.emailId!;
-              } else if (!isValidEmail) {
-                _emailIDCl.clear();
-              }
-
-              if (productProvider.getAllCityData != null) {
-                permanentCitylist = productProvider.getAllCityData!;
-              }
-
-              if (productProvider.getCurrentAllCityData != null) {
-                citylist = productProvider.getCurrentAllCityData!;
-              }
-              if (citylist.isNotEmpty) {
-                selectedCurrentCity = citylist.first;
-                print("dsds" + selectedCurrentCity!.name!);
-              }
             }
-
+            if (productProvider.getpostElectricityBillDocumentSingleFileData != null && !isImageDelete) {
+              billDocId = productProvider.getpostElectricityBillDocumentSingleFileData!.docId!;
+              widget.image = productProvider.getpostElectricityBillDocumentSingleFileData!.filePath!;
+            }
             return SingleChildScrollView(
                 child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
@@ -301,8 +339,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide:
-                                  const BorderSide(color: kPrimaryColor, width: 1),
+                              borderSide: const BorderSide(
+                                  color: kPrimaryColor, width: 1),
                             ),
                           ),
                           hint: const Text(
@@ -410,94 +448,88 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                     ),
                                   ),
                                   SizedBox(height: 15),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [kPrimaryColor, kPrimaryColor],
-                                      ),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    height: 148,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(1),
-                                      child: InkWell(
-                                        child: Container(
+                                  Stack(
+                                    children: [
+                                      Container(
                                           decoration: BoxDecoration(
-                                            color: textFiledBackgroundColour,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                          child: (productProvider
-                                                      .getpostElectricityBillDocumentSingleFileData !=
-                                                  null)
-                                              ? ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                  child: Image.network(
-                                                    productProvider
-                                                        .getpostElectricityBillDocumentSingleFileData!
-                                                        .filePath!,
-                                                    fit: BoxFit.cover,
-                                                    width: double.infinity,
-                                                    height: 148,
-                                                  ),
-                                                )
-                                              : (widget.image.isNotEmpty)
+                                              borderRadius: BorderRadius.circular(10),
+                                              border: Border.all(color: Color(0xff0196CE))),
+                                          width: double.infinity,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              bottomSheetMenu(context);
+                                            },
+                                            child: Container(
+                                              height: 148,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xffEFFAFF),
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              child: (widget.image.isNotEmpty)
                                                   ? ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      child: Image.network(
-                                                        widget.image,
-                                                        fit: BoxFit.cover,
-                                                        width: double.infinity,
-                                                        height: 148,
-                                                      ),
-                                                    )
+                                                borderRadius:
+                                                BorderRadius.circular(8.0),
+                                                child: Image.network(
+                                                  widget.image,
+                                                  fit: BoxFit.cover,
+                                                  width: double.infinity,
+                                                  height: 148,
+                                                ),
+                                              )
+                                                  : (widget.image.isNotEmpty)
+                                                  ? ClipRRect(
+                                                borderRadius:
+                                                BorderRadius.circular(8.0),
+                                                child: Image.network(
+                                                  widget.image,
+                                                  fit: BoxFit.cover,
+                                                  width: double.infinity,
+                                                  height: 148,
+                                                ),
+                                              )
                                                   : Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Center(
-                                                            child: SvgPicture.asset(
-                                                                "assets/icons/gallery.svg",
-                                                                colorFilter: const ColorFilter
-                                                                    .mode(
-                                                                    kPrimaryColor,
-                                                                    BlendMode
-                                                                        .srcIn))),
-                                                        const Text(
-                                                          'Upload Bill',
-                                                          style: TextStyle(
-                                                            color:
-                                                                kPrimaryColor,
-                                                            fontSize: 12.0,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                          ),
-                                                        ),
-                                                        const Text(
-                                                          'Supports : JPEG, PNG',
-                                                          style: TextStyle(
-                                                            color: blackSmall,
-                                                            fontSize: 12.0,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                        ),
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                      'assets/images/gallery.svg'),
+                                                  const Text(
+                                                    'Upload PAN Image',
+                                                    style: TextStyle(
+                                                        color:
+                                                        Color(0xff0196CE),
+                                                        fontSize: 12),
+                                                  ),
+                                                  const Text(
+                                                      'Supports : JPEG, PNG',
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Color(
+                                                              0xffCACACA))),
+                                                ],
+                                              ),
+                                            ),
+                                          )),
+                                      GestureDetector(
                                         onTap: () {
-                                          bottomSheetMenu(context);
+                                          setState(() {
+                                            isImageDelete = true;
+                                            widget.image = "";
+                                          });
                                         },
-                                      ),
-                                    ),
+                                        child: widget.image.isNotEmpty
+                                            ? Container(
+                                          padding: EdgeInsets.all(4),
+                                          alignment: Alignment.topRight,
+                                          child: SvgPicture.asset(
+                                              'assets/icons/delete_icon.svg'),
+                                        )
+                                            : Container(),
+                                      )
+                                    ],
                                   ),
                                 ],
                               ),
@@ -535,13 +567,15 @@ class _PersonalInformationState extends State<PersonalInformation> {
       BuildContext context,
       DataProvider productProvider,
       PersonalDetailsRequestModel postData) async {
-    Utils.onLoading(context, "Wait...");
+    Utils.onLoading(context, "");
     await productProvider.postLeadPersonalDetail(postData);
-    if (productProvider.getPostPersonalDetailsResponseModel?.statusCode != 401) {
+    if (productProvider.getPostPersonalDetailsResponseModel?.statusCode !=
+        401) {
       if (productProvider.getPostPersonalDetailsResponseModel != null) {
         Navigator.of(context, rootNavigator: true).pop();
-        if(productProvider.getPostPersonalDetailsResponseModel!.isSuccess!) {
-          if (productProvider.getPostPersonalDetailsResponseModel!.message != null) {
+        if (productProvider.getPostPersonalDetailsResponseModel!.isSuccess!) {
+          if (productProvider.getPostPersonalDetailsResponseModel!.message !=
+              null) {
             Utils.showToast(
                 " ${productProvider.getPostPersonalDetailsResponseModel!.message!}");
           }
@@ -571,16 +605,16 @@ class _PersonalInformationState extends State<PersonalInformation> {
         productId: prefsUtil.getInt(PRODUCT_ID),
         leadId: prefsUtil.getInt(LEADE_ID),
         mobileNo: prefsUtil.getString(LOGIN_MOBILE_NUMBER),
-        activityId:widget.activityId,
+        activityId: widget.activityId,
         subActivityId: widget.subActivityId,
-        userId:  prefsUtil.getString(USER_ID),
+        userId: prefsUtil.getString(USER_ID),
         monthlyAvgBuying: 0,
         vintageDays: 0,
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-      as LeadCurrentResponseModel?;
+          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+              as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -796,22 +830,19 @@ class _PersonalInformationState extends State<PersonalInformation> {
   }
 
   Widget buildStateField(DataProvider productProvider) {
-    if (productProvider.getPersonalDetailsData!.permanentState != null) {
-      if(productProvider.getAllStateData != null) {
+    if (personalDetailsResponce!.permanentState != null) {
+      if (productProvider.getAllStateData != null) {
         var allStates = productProvider.getAllStateData!.returnObject!;
         var initialData = allStates.firstWhere(
-                (element) =>
-            element?.id ==
-                productProvider.getPersonalDetailsData!.permanentState,
+            (element) => element?.id == personalDetailsResponce!.permanentState,
             orElse: () => null);
         _permanentStateNameCl.text = initialData!.name!;
       }
-      if (productProvider.getPersonalDetailsData!.permanentState != null) {
-        if (productProvider.getPersonalDetailsData!.permanentCity != null &&
-            cityCallInitial) {
+      if (personalDetailsResponce!.permanentState != null) {
+        if (personalDetailsResponce!.permanentCity != null && cityCallInitial) {
           permanentCitylist.clear();
-          Provider.of<DataProvider>(context, listen: false).getAllCity(
-              productProvider.getPersonalDetailsData!.permanentState!);
+          Provider.of<DataProvider>(context, listen: false)
+              .getAllCity(personalDetailsResponce!.permanentState!);
           cityCallInitial = false;
         }
       }
@@ -844,11 +875,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
   }
 
   Widget buildCityField(DataProvider productProvider) {
-    if (productProvider.getPersonalDetailsData!.permanentCity != null) {
+    if (personalDetailsResponce!.permanentCity != null) {
       var initialData = productProvider.getAllCityData!.firstWhere(
-          (element) =>
-              element?.id ==
-              productProvider.getPersonalDetailsData!.permanentCity,
+          (element) => element?.id == personalDetailsResponce!.permanentCity,
           orElse: () => CityResponce());
 
       _permanentCityNameCl.text = initialData!.name!;
@@ -884,7 +913,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
   Future<void> getPersonalDetailAndStateApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
-    Provider.of<DataProvider>(context, listen: false).getLeadPersonalDetails(userId!);
+    Provider.of<DataProvider>(context, listen: false)
+        .getLeadPersonalDetails(userId!);
     Provider.of<DataProvider>(context, listen: false).getAllState();
   }
 
@@ -1291,13 +1321,12 @@ class _PersonalInformationState extends State<PersonalInformation> {
               if (isChecked) {
                 print("Check${isChecked}");
                 ischeckCurrentAdress = false;
-                _currentAddressLineOneCl.text = productProvider
-                    .getPersonalDetailsData!.permanentAddressLine1!;
-                _currentAddressLineTwoCl.text = productProvider
-                    .getPersonalDetailsData!.permanentAddressLine2!;
-                _currentAddressPinCodeCl.text = productProvider
-                    .getPersonalDetailsData!.permanentPincode!
-                    .toString();
+                _currentAddressLineOneCl.text =
+                    personalDetailsResponce!.permanentAddressLine1!;
+                _currentAddressLineTwoCl.text =
+                    personalDetailsResponce!.permanentAddressLine2!;
+                _currentAddressPinCodeCl.text =
+                    personalDetailsResponce!.permanentPincode!.toString();
               } else {
                 ischeckCurrentAdress = true;
                 _currentAddressLineOneCl.clear();
@@ -1317,7 +1346,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           textInputAction: TextInputAction.next,
           maxLines: 1,
           cursorColor: Colors.black,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: kPrimaryColor,
@@ -1397,6 +1426,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  productProvider.getAllStateData != null ?
                   DropdownButtonFormField2<ReturnObject>(
                     isExpanded: true,
                     decoration: InputDecoration(
@@ -1451,7 +1481,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     iconStyleData: const IconStyleData(
                       openMenuIcon: Icon(Icons.arrow_drop_up),
                     ),
-                  ),
+                  ) : Container(),
                   const SizedBox(height: 15),
                   citylist.isNotEmpty
                       ? DropdownButtonFormField2<CityResponce>(
@@ -1549,10 +1579,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
     //address
     if (isCurrentAddSame) {
-      currentStateId =
-          productProvider.getPersonalDetailsData!.permanentState!.toString();
-      currentCityId =
-          productProvider.getPersonalDetailsData!.permanentCity!.toString();
+      currentStateId = personalDetailsResponce!.permanentState!.toString();
+      currentCityId = personalDetailsResponce!.permanentCity!.toString();
     } else {
       if (selectedCurrentState != null) {
         currentStateId = selectedCurrentState!.id.toString();
@@ -1563,32 +1591,25 @@ class _PersonalInformationState extends State<PersonalInformation> {
     }
 
     //bill
-    int? billDocId;
-
     if (productProvider.getpostElectricityBillDocumentSingleFileData != null) {
-      billDocId = productProvider.getpostElectricityBillDocumentSingleFileData!.docId!;
+      billDocId =
+          productProvider.getpostElectricityBillDocumentSingleFileData!.docId!;
     }
 
     PersonalDetailsRequestModel postData = PersonalDetailsRequestModel(
         firstName: _firstNameCl.text.toString(),
         lastName: _lastNameCl.text.toString(),
-        fatherName: productProvider.getPersonalDetailsData!.fatherName!,
-        fatherLastName: productProvider.getPersonalDetailsData!.fatherLastName!,
+        fatherName: personalDetailsResponce!.fatherName!,
+        fatherLastName: personalDetailsResponce!.fatherLastName!,
         dOB: "",
         alternatePhoneNo: _alternatePhoneNumberCl.text.toString(),
         emailId: _emailIDCl.text.toString(),
         typeOfAddress: "Permanent",
-        permanentAddressLine1:
-            productProvider.getPersonalDetailsData!.permanentAddressLine1!,
-        permanentAddressLine2:
-            productProvider.getPersonalDetailsData!.permanentAddressLine2!,
-        permanentPincode: productProvider
-            .getPersonalDetailsData!.permanentPincode!
-            .toString(),
-        permanentCity:
-            productProvider.getPersonalDetailsData!.permanentCity!.toString(),
-        permanentState:
-            productProvider.getPersonalDetailsData!.permanentState!.toString(),
+        permanentAddressLine1: personalDetailsResponce!.permanentAddressLine1!,
+        permanentAddressLine2: personalDetailsResponce!.permanentAddressLine2!,
+        permanentPincode: personalDetailsResponce!.permanentPincode!.toString(),
+        permanentCity: personalDetailsResponce!.permanentCity!.toString(),
+        permanentState: personalDetailsResponce!.permanentState!.toString(),
         pincode: _currentAddressPinCodeCl.text.toString(),
         state: currentStateId,
         city: currentCityId,
@@ -1599,17 +1620,17 @@ class _PersonalInformationState extends State<PersonalInformation> {
         subActivityId: widget.subActivityId!,
         middleName: _middleNameCl.text.toString(),
         companyId: companyId,
-        mobileNo: productProvider.getPersonalDetailsData!.mobileNo!.toString(),
+        mobileNo: personalDetailsResponce!.mobileNo ?? _alternatePhoneNumberCl.text.toString(),
         ownershipType: selectedOwnershipTypeValue,
         ownershipTypeAddress: "",
         ownershipTypeProof: selectOwnershipProofValue,
         electricityBillDocumentId: billDocId,
         ownershipTypeName: "",
         ownershipTypeResponseId: "",
-    gender: _genderCl.text.toString(),
-    marital: selectedMaritalStatusValue,
-    resAddress1: _currentAddressLineOneCl.text.toString(),
-    resAddress2: _currentAddressLineTwoCl.text.toString());
+        gender: _genderCl.text.toString(),
+        marital: selectedMaritalStatusValue,
+        resAddress1: _currentAddressLineOneCl.text.toString(),
+        resAddress2: _currentAddressLineTwoCl.text.toString());
 
     bool isValid = false;
     String errorMessage = "";
@@ -1638,9 +1659,6 @@ class _PersonalInformationState extends State<PersonalInformation> {
     } else if (currentStateId.isEmpty) {
       errorMessage = "Current City is required";
       isValid = false;
-    } else if (selectedOwnershipTypeValue != "Rented" && billDocId == null) {
-      errorMessage = "Add Electricity Bill Document";
-      isValid = false;
     } else if (!isValidEmail) {
       errorMessage = "Verify Email ";
       isValid = false;
@@ -1652,7 +1670,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
       Utils.showToast(errorMessage.toString());
     }
 
-    print("postData::: " + postData.toString());
+    print("postData::: " +postData.toJson().toString());
     return ValidationResult(postData, isValid);
   }
 
@@ -1667,7 +1685,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   // Callback function to receive the selected image
   void _onImageSelected(File imageFile) async {
     Utils.onLoading(context, "");
-
+    isImageDelete = false;
     // Perform asynchronous work first
     await Provider.of<DataProvider>(context, listen: false)
         .postElectricityBillDocumentSingleFile(imageFile, true, "", "");

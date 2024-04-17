@@ -9,12 +9,11 @@ class PermissionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      bottom: true,
-      child: Scaffold(
-        body: PermissionsWidget(),
-      ),
+    return Scaffold(
+      body: SafeArea(
+          top: true,
+          bottom: true,
+          child: PermissionsWidget()),
     );
   }
 }
