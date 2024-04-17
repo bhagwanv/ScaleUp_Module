@@ -128,11 +128,7 @@ class _LoginFormState extends State<LoginForm> {
                       Utils.showToast(widget.productProvider!.genrateOptData!.message!);
                     } else {
                       Navigator.of(context, rootNavigator: true).pop();
-                     // var appSignatureID = await SmsAutoFill().getAppSignature;
-                    /*  setState(() {
-                        _code = '123456';
-                      });*/
-
+                      await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, _mobileNumberCl.text.toString());
                       Navigator.push(
                         context,
                         MaterialPageRoute(

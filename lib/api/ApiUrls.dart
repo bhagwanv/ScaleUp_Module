@@ -15,7 +15,6 @@ class ApiUrls{
   final String LeadMobileValidate="/aggregator/LeadAgg/LeadMobileValidate";
   final String bankListApi="/services/lead/v1/api/eNach/BankList";
   final String GetLeadBankDetail="/services/lead/v1/api/LeadBankDetail/GetLeadBankDetail";
-  final String GetLeadPersonalDetail="/aggregator/LeadAgg/GetLeadPersonalDetail";
   final String GetAllState="/services/location/v1/State/GetAllState";
   final String GetCityByStateId="/services/location/v1/City/GetCityByStateId";
   final String getLeadSelfie="/aggregator/LeadAgg/GetLeadSelfie";
@@ -23,6 +22,7 @@ class ApiUrls{
   final String EmailExist="/services/kyc/v1/KYCDoc/EmailExist";
   final String SendOtpOnEmail="/aggregator/LeadAgg/SendOtpOnEmail";
   final String OTPValidateForEmail="/aggregator/LeadAgg/OTPValidateForEmail";
+  final String GetLeadPersonalDetail="/aggregator/LeadAgg/GetLeadPersonalDetail";
   final String PostLeadPersonalDetail="/services/lead/v1/PostLeadPersonalDetail";
   final String getLeadBusinessDetail="/aggregator/LeadAgg/GetLeadBusinessDetail";
   final String getCustomerDetailUsingGST="/aggregator/LeadAgg/GetCustomerDetailUsingGST";
