@@ -59,7 +59,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
       bottom: true,
       child: Consumer<DataProvider>(builder: (context, productProvider, child) {
         if(widget.isDisbursement){
-          if (productProvider.getDisbursementData == null && isLoading) {
+          if (productProvider.getDisbursementProposalData == null && isLoading) {
             return Center(child: Loader());
           }else {
             Navigator.of(context, rootNavigator: true).pop();
@@ -76,8 +76,8 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
 
 
           if(widget.isDisbursement){
-            if (productProvider.getDisbursementData != null) {
-              productProvider.getDisbursementData!.when(
+            if (productProvider.getDisbursementProposalData != null) {
+              productProvider.getDisbursementProposalData!.when(
                 success: (DisbursementResponce) {
                   disbursementResponce = DisbursementResponce;
 
@@ -123,9 +123,11 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                   widget.isDisbursement? Column(
                     children: [
                       SizedBox(height: 10),
-                      Text(
-                        " Thank You For Choosing Us!Your Account Setup has been successfully Completed for Credit Limit",
-                        style: TextStyle(color: kPrimaryColor, fontSize: 18),
+                      Center(
+                        child: Text(
+                          " Thank You For Choosing Us!Your Account Setup has been successfully Completed for Credit Limit",
+                          style: TextStyle(color: kPrimaryColor, fontSize: 18),
+                        ),
                       ),
                       SizedBox(height: 10),
                       disbusmentWidget(),

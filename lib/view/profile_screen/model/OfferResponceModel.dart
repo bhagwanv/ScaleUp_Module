@@ -1,4 +1,4 @@
-import 'Response.dart';
+import 'package:scale_up_module/view/profile_screen/model/disResponse.dart';
 
 class OfferResponceModel {
   OfferResponceModel({

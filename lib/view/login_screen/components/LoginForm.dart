@@ -15,26 +15,38 @@ class LoginForm extends StatefulWidget {
   DataProvider? productProvider;
   int? activityId;
   int? subActivityId;
+  final int? companyID;
+  final int?  ProductID;
+  final String?  MobileNumber;
 
 
-  LoginForm({required this.productProvider, required this.activityId, required this.subActivityId, super.key });
+
+  LoginForm({required this.productProvider, required this.activityId, required this.subActivityId,this.companyID, this.ProductID, this.MobileNumber, super.key });
 
   @override
   State<LoginForm> createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final TextEditingController _mobileNumberCl = TextEditingController();
+
   @override
   void initState() {
     super.initState();
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _mobileNumberCl.clear();
+  }
+
+  @override
   Widget build(BuildContext context) {
      bool isTermsChecks= false;
-    final TextEditingController _mobileNumberCl = TextEditingController();
-    String _code="";
-
+     Utils.showToast("Login:: "+widget.MobileNumber.toString());
+   _mobileNumberCl.text=  widget.MobileNumber.toString();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -67,6 +79,7 @@ class _LoginFormState extends State<LoginForm> {
           Expanded(
             child: SizedBox(
               child: TextField(
+                enabled: false,
                 controller: _mobileNumberCl,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
@@ -122,13 +135,17 @@ class _LoginFormState extends State<LoginForm> {
 
                     Utils.onLoading(context, "Loading....");
                     final prefsUtil = await SharedPref.getInstance();
-                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(_mobileNumberCl.text, prefsUtil.getInt(COMPANY_ID)!);
+                    var appSignatureID = await SmsAutoFill().getAppSignature;
+                    print("appSignatureID ${appSignatureID}");
+                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(_mobileNumberCl.text, widget.companyID!);
                     if (!widget.productProvider!.genrateOptData!.status!) {
                       Navigator.of(context, rootNavigator: true).pop();
                       Utils.showToast(widget.productProvider!.genrateOptData!.message!);
                     } else {
                       Navigator.of(context, rootNavigator: true).pop();
                       await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, _mobileNumberCl.text.toString());
+                      await prefsUtil.saveInt(COMPANY_ID, widget.companyID!);
+                      await prefsUtil.saveInt(PRODUCT_ID, widget.ProductID!);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -150,5 +167,7 @@ class _LoginFormState extends State<LoginForm> {
       ],
     );
   }
+
+
 }
 

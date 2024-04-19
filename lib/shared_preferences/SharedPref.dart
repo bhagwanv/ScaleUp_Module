@@ -59,4 +59,13 @@ class SharedPref {
   List<String>? getStringList(String key) {
     return _prefs.getStringList(key);
   }
+
+  Future<void> clear() async {
+    try {
+      await _prefs.clear();
+    } catch (e) {
+      print("Error clearing shared preferences: $e");
+      // Handle clearing error
+    }
+  }
 }

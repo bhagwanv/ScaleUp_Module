@@ -8,5 +8,6 @@ enum ScreenType {
   businessInfo,
   aggrement,
   Disbursement,
-  AgreementEsign
+  AgreementEsign,
+  DisbursementCompleted
 }

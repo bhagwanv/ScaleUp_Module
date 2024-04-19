@@ -37,6 +37,7 @@ import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
 import '../view/profile_screen/model/AcceptedResponceModel.dart';
+import '../view/profile_screen/model/DisbursementCompletedResponse.dart';
 import '../view/profile_screen/model/DisbursementResponce.dart';
 import '../view/profile_screen/model/OfferPersonNameResponceModel.dart';
 import '../view/profile_screen/model/OfferResponceModel.dart';
@@ -120,8 +121,11 @@ class DataProvider extends ChangeNotifier {
   PostSingleFileResponseModel? _getpostBusineesDoumentSingleFileData;
   PostSingleFileResponseModel? get getpostBusineesDoumentSingleFileData => _getpostBusineesDoumentSingleFileData;
 
-  Result<DisbursementResponce,Exception>? _getDisbursementData;
-  Result<DisbursementResponce,Exception>? get getDisbursementData => _getDisbursementData;
+  Result<DisbursementResponce,Exception>? _getDisbursementProposalData;
+  Result<DisbursementResponce,Exception>? get getDisbursementProposalData => _getDisbursementProposalData;
+
+  Result<DisbursementCompletedResponse,Exception>? _getDisbursementData;
+  Result<DisbursementCompletedResponse,Exception>? get getDisbursementData => _getDisbursementData;
 
 
   VerifyOtpResponce? _getVerifyData;
@@ -389,7 +393,12 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> getDisbursementProposal(int leadId) async {
-    _getDisbursementData = await apiService.GetDisbursementProposal(leadId);
+    _getDisbursementProposalData = await apiService.GetDisbursementProposal(leadId);
+    notifyListeners();
+  }
+
+  Future<void> GetDisbursement(int leadId) async {
+    _getDisbursementData = await apiService.GetDisbursement(leadId);
     notifyListeners();
   }
 

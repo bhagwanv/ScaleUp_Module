@@ -45,6 +45,9 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     setState(() {
       otpCode = code;
       print("Code ######## " + otpCode!);
+      setState(() {
+
+      });
     });
   }
 

@@ -1,14 +1,14 @@
 class Response {
   Response({
-      this.leadNo, 
-      this.appliedDate, 
-      this.creditLimit, 
-      this.processingFeeAmount, 
-      this.gstAmount, 
-      this.processingFeePayableBy, 
-      this.convenionFeeRate, 
-      this.convenionGSTAmount, 
-      this.convenionFeePayableBy,});
+    this.leadNo,
+    this.appliedDate,
+    this.creditLimit,
+    this.processingFeeAmount,
+    this.gstAmount,
+    this.processingFeePayableBy,
+    this.convenionFeeRate,
+    this.convenionGSTAmount,
+    this.convenionFeePayableBy,});
 
   Response.fromJson(dynamic json) {
     leadNo = json['leadNo'];

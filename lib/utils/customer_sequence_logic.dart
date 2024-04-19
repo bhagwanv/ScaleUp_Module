@@ -99,6 +99,11 @@ ScreenType? customerSequence(
           MaterialPageRoute(builder: (context) => AgreementScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
         );
         return ScreenType.AgreementEsign;
+      } else if (leadCurrentActivity.activityName == "Disbursement Completed") {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: false,)),
+        );
+        return ScreenType.DisbursementCompleted;
       }
     } else {
       return null;
