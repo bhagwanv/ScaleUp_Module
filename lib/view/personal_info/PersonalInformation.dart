@@ -93,6 +93,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     'Owned by Spouse',
     'Rented',
   ];
+  bool selectedOwnershipEditable = false;
 
   String? selectOwnershipProofValue;
   final List<String> ownershipProofList = [
@@ -182,7 +183,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       }
 
                       if(personalDetailsResponce!.ownershipType != null) {
-                        if (personalDetailsResponce!.ownershipType!.isNotEmpty) {
+                        if (personalDetailsResponce!.ownershipType!.isNotEmpty && !selectedOwnershipEditable) {
                           if (personalDetailsResponce!.ownershipType == "Owned") {
                             selectedOwnershipTypeValue = "Owned";
                           } else if (personalDetailsResponce!.ownershipType == "Owned by parents") {
@@ -357,6 +358,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               : null,
                           onChanged: (String? value) {
                             setState(() {
+                              selectedOwnershipEditable = true;
                               selectedOwnershipTypeValue = value;
                             });
                           },

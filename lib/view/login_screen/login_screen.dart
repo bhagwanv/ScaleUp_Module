@@ -1,11 +1,8 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/data_provider/DataProvider.dart';
-import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/constants.dart';
 import 'components/LoginForm.dart';
 
@@ -17,17 +14,17 @@ class LoginScreen extends StatelessWidget {
   final String?  MobileNumber;
 
   const LoginScreen(
-      {super.key, required this.activityId, required this.subActivityId, this.companyID, this.ProductID, this.MobileNumber});
+      {super.key, required this.activityId, required this.subActivityId});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body:
-            Consumer<DataProvider>(builder: (context, productProvider, child) {
-          return SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body:
+          SafeArea(
+            top: false,
+            child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+                    return SingleChildScrollView(
             child: Column(
               children: <Widget>[
                 LoginScreenTopImage(),
@@ -50,9 +47,9 @@ class LoginScreen extends StatelessWidget {
                 ),
               ],
             ),
-          );
-        }),
-      ),
+                    );
+                  }),
+          ),
     );
   }
 }

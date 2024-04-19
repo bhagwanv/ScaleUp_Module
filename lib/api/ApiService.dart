@@ -53,6 +53,7 @@ import '../view/take_selfi/model/LeadSelfieResponseModel.dart';
 import '../view/take_selfi/model/PostLeadSelfieRequestModel.dart';
 import '../view/take_selfi/model/PostLeadSelfieResponseModel.dart';
 import 'ExceptionHandling.dart';
+import 'FailureException.dart';
 import 'Interceptor.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
 import 'package:http/http.dart' as http;
@@ -107,25 +108,36 @@ class ApiService {
     }
   }
 
-  Future<GenrateOptResponceModel> genrateOtp(
+  Future<Result<GenrateOptResponceModel,Exception>> genrateOtp(
       String mobileNumber, int CompanyID) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final response = await interceptor.get(Uri.parse(
-          '${apiUrls.baseUrl + apiUrls.generateOtp}?MobileNo=$mobileNumber&companyId=$CompanyID'));
 
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-        final GenrateOptResponceModel responseModel =
-            GenrateOptResponceModel.fromJson(jsonData);
-        return responseModel;
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.generateOtp}?MobileNo=$mobileNumber&companyId=$CompanyID'));
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+          final dynamic jsonData = json.decode(response.body);
+          final GenrateOptResponceModel responseModel =
+          GenrateOptResponceModel.fromJson(jsonData);
+          return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode,"" ));
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+    } on Exception catch (e) {
+      // 4. return Failure here too
+      return Failure(e);
     }
+
+
   }
 
   Future<PostSingleFileResponseModel> postSingleFile(
@@ -183,28 +195,37 @@ class ApiService {
     }
   }
 
-  Future<VerifyOtpResponce> verifyOtp(VarifayOtpRequest verifayOtp) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final response = await interceptor.post(
-          Uri.parse('${apiUrls.baseUrl + apiUrls.LeadMobileValidate}'),
-          headers: {
-            'Content-Type': 'application/json', // Set the content type as JSON
-          },
-          body: json.encode(verifayOtp));
-      //print(json.encode(leadCurrentRequestModel));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-        final VerifyOtpResponce responseModel =
-        VerifyOtpResponce.fromJson(jsonData);
-        return responseModel;
+  Future<Result<VerifyOtpResponce,Exception>> verifyOtp(VarifayOtpRequest verifayOtp) async {
+
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.post(
+            Uri.parse('${apiUrls.baseUrl + apiUrls.LeadMobileValidate}'),
+            headers: {
+              'Content-Type': 'application/json', // Set the content type as JSON
+            },
+            body: json.encode(verifayOtp));
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+          final dynamic jsonData = json.decode(response.body);
+          final VerifyOtpResponce responseModel =
+          VerifyOtpResponce.fromJson(jsonData);
+          return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode,"" ));
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+    } on Exception catch (e) {
+      return Failure(e);
     }
+
   }
 
   //panCard Module
@@ -234,7 +255,7 @@ class ApiService {
             return Success(responseModel);
           default:
             // 3. return Failure with the desired exception
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -268,7 +289,7 @@ class ApiService {
             FathersNameByValidPanCardResponseModel.fromJson(jsonData);
             return Success(responseModel);
           default:
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -308,7 +329,7 @@ class ApiService {
             return Success(responseModel);
 
           default:
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
 
         }
       } else {
@@ -339,7 +360,7 @@ class ApiService {
             return Success(responseModel);
 
           default:
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -372,7 +393,7 @@ class ApiService {
             return Success(responseModel);
 
           default:
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -403,7 +424,7 @@ class ApiService {
             AadhaarGenerateOTPResponseModel.fromJson(jsonData);
             return Success(responseModel);
           default:
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -434,7 +455,7 @@ class ApiService {
             ValidateAadhaarOTPResponseModel.fromJson(jsonData);
             return Success(responseModel);
           default:
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -466,7 +487,7 @@ class ApiService {
             return Success(responseModel);
 
           default:
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -497,7 +518,7 @@ class ApiService {
             PostLeadSelfieResponseModel.fromJson(jsonData);
             return Success(responseModel);
           default:
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -529,7 +550,7 @@ class ApiService {
             return Success(responseModel);
 
           default:
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -764,7 +785,7 @@ class ApiService {
             return Success(responseModel);
 
           default:
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -796,7 +817,7 @@ class ApiService {
             SaveBankDetailResponce.fromJson(jsonData);
             return Success(responseModel);
           default:
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -872,7 +893,7 @@ class ApiService {
           return Success(responseModel);
 
           default:
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -899,7 +920,7 @@ class ApiService {
 
           default:
           // 3. return Failure with the desired exception
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
         return Failure(Exception("No Internet connection"));
@@ -927,7 +948,7 @@ class ApiService {
           return Success(responseModel);
           default:
           // 3. return Failure with the desired exception
-            return Failure(Exception(response.reasonPhrase));
+            return Failure(ApiException(response.statusCode,"" ));
 
         }
       } else {
@@ -996,7 +1017,7 @@ class ApiService {
           return Success(DisbursementResponce.fromJson(data));
         default:
         // 3. return Failure with the desired exception
-          return Failure(Exception(response.reasonPhrase));
+          return Failure(ApiException(response.statusCode,"" ));
       }
     } on Exception catch (e) {
       // 4. return Failure here too

@@ -117,141 +117,142 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       ),
     );
 
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: Colors.white,
-      body: Consumer<DataProvider>(builder: (context, productProvider, child) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding:
-                const EdgeInsets.only(left: 30, top: 50, right: 30, bottom: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                    height: 69,
-                    width: 51,
-                    alignment: Alignment.topLeft,
-                    child: Image.asset('assets/images/scale.png')),
-                const SizedBox(
-                  height: 50,
-                ),
-                const Text(
-                  'Enter \nVerification Code',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(fontSize: 35, color: Colors.black),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'We just sent to +91 $userLoginMobile',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(fontSize: 15, color: Colors.black),
-                ),
-                const SizedBox(
-                  height: 55,
-                ),
-                Center(
-                  child: Pinput(
-                    controller: pinController,
-                    length: 6,
-                    androidSmsAutofillMethod:
-                        AndroidSmsAutofillMethod.smsRetrieverApi,
-                    showCursor: true,
-                    pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                    defaultPinTheme: defaultPinTheme,
-                    focusedPinTheme: defaultPinTheme.copyWith(
-                      decoration: defaultPinTheme.decoration!.copyWith(
-                        border: Border.all(color: kPrimaryColor),
-                      ),
+    return Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding:
+              const EdgeInsets.only(left: 30, top: 50, right: 30, bottom: 30),
+                    child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  height: 69,
+                  width: 51,
+                  alignment: Alignment.topLeft,
+                  child: Image.asset('assets/images/scale.png')),
+              const SizedBox(
+                height: 50,
+              ),
+              const Text(
+                'Enter \nVerification Code',
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 35, color: Colors.black),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                'We just sent to +91 $userLoginMobile',
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 15, color: Colors.black),
+              ),
+              const SizedBox(
+                height: 55,
+              ),
+              Center(
+                child: Pinput(
+                  controller: pinController,
+                  length: 6,
+                  androidSmsAutofillMethod:
+                      AndroidSmsAutofillMethod.smsRetrieverApi,
+                  showCursor: true,
+                  pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                  defaultPinTheme: defaultPinTheme,
+                  focusedPinTheme: defaultPinTheme.copyWith(
+                    decoration: defaultPinTheme.decoration!.copyWith(
+                      border: Border.all(color: kPrimaryColor),
                     ),
-                    onCompleted: (pin) => debugPrint(pin),
                   ),
+                  onCompleted: (pin) => debugPrint(pin),
                 ),
-                const SizedBox(
-                  height: 40,
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Resend Code in ',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    buildCountdown(),
+                  ],
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Resend Code in ',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: kPrimaryColor,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      buildCountdown(),
-                    ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Container(
+                  padding: EdgeInsets.all(10),
+                  child: Center(
+                    child: RichText(
+                      text: TextSpan(
+                          text: 'If you didn’t received a code!',
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal),
+                          children: <TextSpan>[
+                            isReSendDisable
+                                ? TextSpan(
+                                    text: '  Resend',
+                                    style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.normal),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () async {})
+                                : TextSpan(
+                                    text: '  Resend',
+                                    style: const TextStyle(
+                                        color: Colors.blueAccent,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.normal),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () async {
+                                        listenOtp();
+                                      await  reSendOpt(context, productProvider,
+                                            userLoginMobile!, _controller);
+                                        isReSendDisable = true;
+                                      })
+                          ]),
+                    ),
+                  )),
+              const SizedBox(
+                height: 10,
+              ),
+              CommonElevatedButton(
+                onPressed: () async{
+                 await callVerifyOtpApi(
+                      context,
+                      pinController.text,
+                      productProvider,
+                      widget.activityId!,
+                      widget.subActivityId!,
+                      userLoginMobile!);
+                },
+                text: "Verify Code",
+                upperCase: true,
+              )
+            ],
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                    padding: EdgeInsets.all(10),
-                    child: Center(
-                      child: RichText(
-                        text: TextSpan(
-                            text: 'If you didn’t received a code!',
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal),
-                            children: <TextSpan>[
-                              isReSendDisable
-                                  ? TextSpan(
-                                      text: '  Resend',
-                                      style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () async {})
-                                  : TextSpan(
-                                      text: '  Resend',
-                                      style: const TextStyle(
-                                          color: Colors.blueAccent,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () async {
-                                          listenOtp();
-                                          reSendOpt(context, productProvider,
-                                              userLoginMobile!, _controller);
-                                          isReSendDisable = true;
-                                        })
-                            ]),
-                      ),
-                    )),
-                const SizedBox(
-                  height: 10,
-                ),
-                CommonElevatedButton(
-                  onPressed: () {
-                    callVerifyOtpApi(
-                        context,
-                        pinController.text,
-                        productProvider,
-                        widget.activityId!,
-                        widget.subActivityId!,
-                        userLoginMobile!);
-                  },
-                  text: "Verify Code",
-                  upperCase: true,
-                )
-              ],
-            ),
+                );
+            }),
           ),
         );
-      }),
-    ));
   }
-  void callVerifyOtpApi(
+ Future<void> callVerifyOtpApi(
       BuildContext context,
       String otpText,
       DataProvider productProvider,
@@ -276,20 +277,34 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
               vintageDays: 0,
               monthlyAvgBuying: 0,
               screen: "MobileOtp"));
+      Navigator.of(context, rootNavigator: true).pop();
 
-      if (!productProvider.getVerifyData!.status!) {
-        Navigator.of(context, rootNavigator: true).pop();
-        Utils.showToast(productProvider.getVerifyData!.message!);
-      } else {
-        Navigator.of(context, rootNavigator: true).pop();
-        await prefsUtil.saveString(
-            USER_ID, productProvider.getVerifyData!.userId.toString());
-        await prefsUtil.saveString(
-            TOKEN, productProvider.getVerifyData!.userTokan.toString());
-        await prefsUtil.saveInt(
-            LEADE_ID, productProvider.getVerifyData!.leadId!);
+      if (productProvider.getVerifyData != null) {
+        productProvider.getVerifyData!.when(
+          success: (VerifyOtpResponce) async {
+            // Handle successful response
+            var verifyOtpResponce = VerifyOtpResponce;
+            if (!verifyOtpResponce.status!) {
+              Utils.showToast(verifyOtpResponce.message!);
+            } else {
+              await prefsUtil.saveString(
+                  USER_ID, verifyOtpResponce.userId.toString());
+              await prefsUtil.saveString(
+                  TOKEN, verifyOtpResponce.userTokan.toString());
+              await prefsUtil.saveInt(
+                  LEADE_ID, verifyOtpResponce.leadId!);
 
-        fetchData(context, userLoginMobile);
+              fetchData(context, userLoginMobile);
+            }
+
+
+          },
+          failure: (exception) {
+            // Handle failure
+            print("dfjsf2");
+            //print('Failure! Error: ${exception.message}');
+          },
+        );
       }
     }
   }
@@ -329,19 +344,32 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     }
   }
 
-  void reSendOpt(BuildContext context, DataProvider productProvider,
+ Future<void>reSendOpt(BuildContext context, DataProvider productProvider,
       String userLoginMobile, CountdownController controller) async {
-    Utils.onLoading(context, "Loading....");
     final prefsUtil = await SharedPref.getInstance();
 
-    await Provider.of<DataProvider>(context, listen: false)
-        .genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
-    if (!productProvider.genrateOptData!.status!) {
-      Navigator.of(context, rootNavigator: true).pop();
-      Utils.showToast(productProvider.genrateOptData!.message!);
-    } else {
-      Navigator.of(context, rootNavigator: true).pop();
-      controller.restart();
+    Utils.onLoading(context, "Loading....");
+    await Provider.of<DataProvider>(context, listen: false).genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
+    Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.genrateOptData != null) {
+      productProvider.genrateOptData!.when(
+        success: (GenrateOptResponceModel) {
+          // Handle successful response
+          var genrateOptResponceModel = GenrateOptResponceModel;
+
+          if (!genrateOptResponceModel.status!) {
+            Utils.showToast(genrateOptResponceModel.message!);
+          } else {
+            controller.restart();
+          }
+        },
+        failure: (exception) {
+          // Handle failure
+          print("dfjsf2");
+          //print('Failure! Error: ${exception.message}');
+        },
+      );
     }
   }
 
