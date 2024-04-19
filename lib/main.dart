@@ -57,7 +57,8 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
 
-      home: SplashScreen(mobileNumber: mobileNumber.toString(),companyID:  int.parse(companyID),ProductID:int.parse(ProductID)),
+      home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
+     // home: LoginScreen(activityId: 1, subActivityId: 0, companyID: 2, ProductID:2, MobileNumber: "7803994667"),
 
       /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
       /*LoginScreen(activityId: 1, subActivityId: 0),*/
@@ -83,8 +84,11 @@ class _MyAppState extends State<MyApp> {
         mobileNumber = jData['mobileNumber'];
         companyID = jData['companyID'];
         ProductID = jData['productID'];
+      } else {
+        mobileNumber = "";
+        companyID = 0;
+        ProductID = 0;
       }
-      Utils.showToast("main:: "+mobileNumber.toString());
     });
   }
 }

@@ -45,9 +45,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     setState(() {
       otpCode = code;
       print("Code ######## " + otpCode!);
-      setState(() {
-
-      });
     });
   }
 
@@ -118,93 +115,93 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     );
 
     return Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding:
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding:
               const EdgeInsets.only(left: 30, top: 50, right: 30, bottom: 30),
-                    child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                  height: 69,
-                  width: 51,
-                  alignment: Alignment.topLeft,
-                  child: Image.asset('assets/images/scale.png')),
-              const SizedBox(
-                height: 50,
-              ),
-              const Text(
-                'Enter \nVerification Code',
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 35, color: Colors.black),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                'We just sent to +91 $userLoginMobile',
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 15, color: Colors.black),
-              ),
-              const SizedBox(
-                height: 55,
-              ),
-              Center(
-                child: Pinput(
-                  controller: pinController,
-                  length: 6,
-                  androidSmsAutofillMethod:
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      height: 69,
+                      width: 51,
+                      alignment: Alignment.topLeft,
+                      child: Image.asset('assets/images/scale.png')),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  const Text(
+                    'Enter \nVerification Code',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 35, color: Colors.black),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'We just sent to +91 $userLoginMobile',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 15, color: Colors.black),
+                  ),
+                  const SizedBox(
+                    height: 55,
+                  ),
+                  Center(
+                    child: Pinput(
+                      controller: pinController,
+                      length: 6,
+                      androidSmsAutofillMethod:
                       AndroidSmsAutofillMethod.smsRetrieverApi,
-                  showCursor: true,
-                  pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                  defaultPinTheme: defaultPinTheme,
-                  focusedPinTheme: defaultPinTheme.copyWith(
-                    decoration: defaultPinTheme.decoration!.copyWith(
-                      border: Border.all(color: kPrimaryColor),
+                      showCursor: true,
+                      pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                      defaultPinTheme: defaultPinTheme,
+                      focusedPinTheme: defaultPinTheme.copyWith(
+                        decoration: defaultPinTheme.decoration!.copyWith(
+                          border: Border.all(color: kPrimaryColor),
+                        ),
+                      ),
+                      onCompleted: (pin) => debugPrint(pin),
                     ),
                   ),
-                  onCompleted: (pin) => debugPrint(pin),
-                ),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Resend Code in ',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    buildCountdown(),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                  padding: EdgeInsets.all(10),
-                  child: Center(
-                    child: RichText(
-                      text: TextSpan(
-                          text: 'If you didn’t received a code!',
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Resend Code in ',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: kPrimaryColor,
                               fontWeight: FontWeight.normal),
-                          children: <TextSpan>[
-                            isReSendDisable
-                                ? TextSpan(
+                        ),
+                        buildCountdown(),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                      padding: EdgeInsets.all(10),
+                      child: Center(
+                        child: RichText(
+                          text: TextSpan(
+                              text: 'If you didn’t received a code!',
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal),
+                              children: <TextSpan>[
+                                isReSendDisable
+                                    ? TextSpan(
                                     text: '  Resend',
                                     style: const TextStyle(
                                         color: Colors.grey,
@@ -212,7 +209,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                                         fontWeight: FontWeight.normal),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {})
-                                : TextSpan(
+                                    : TextSpan(
                                     text: '  Resend',
                                     style: const TextStyle(
                                         color: Colors.blueAccent,
@@ -221,38 +218,38 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
                                         listenOtp();
-                                      await  reSendOpt(context, productProvider,
+                                        await  reSendOpt(context, productProvider,
                                             userLoginMobile!, _controller);
                                         isReSendDisable = true;
                                       })
-                          ]),
-                    ),
-                  )),
-              const SizedBox(
-                height: 10,
-              ),
-              CommonElevatedButton(
-                onPressed: () async{
-                 await callVerifyOtpApi(
-                      context,
-                      pinController.text,
-                      productProvider,
-                      widget.activityId!,
-                      widget.subActivityId!,
-                      userLoginMobile!);
-                },
-                text: "Verify Code",
-                upperCase: true,
-              )
-            ],
-                    ),
+                              ]),
+                        ),
+                      )),
+                  const SizedBox(
+                    height: 10,
                   ),
-                );
-            }),
-          ),
-        );
+                  CommonElevatedButton(
+                    onPressed: () async{
+                      await callVerifyOtpApi(
+                          context,
+                          pinController.text,
+                          productProvider,
+                          widget.activityId!,
+                          widget.subActivityId!,
+                          userLoginMobile!);
+                    },
+                    text: "Verify Code",
+                    upperCase: true,
+                  )
+                ],
+              ),
+            ),
+          );
+        }),
+      ),
+    );
   }
- Future<void> callVerifyOtpApi(
+  Future<void> callVerifyOtpApi(
       BuildContext context,
       String otpText,
       DataProvider productProvider,
@@ -264,7 +261,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     } else if (otpText.length < 6) {
       Utils.showToast("PLease Enter Valid Otp");
     } else {
-      Utils.onLoading(context, "Loading....");
+      Utils.onLoading(context, "");
       final prefsUtil = await SharedPref.getInstance();
       await Provider.of<DataProvider>(context, listen: false).verifyOtp(
           VarifayOtpRequest(
@@ -344,7 +341,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     }
   }
 
- Future<void>reSendOpt(BuildContext context, DataProvider productProvider,
+  Future<void>reSendOpt(BuildContext context, DataProvider productProvider,
       String userLoginMobile, CountdownController controller) async {
     final prefsUtil = await SharedPref.getInstance();
 

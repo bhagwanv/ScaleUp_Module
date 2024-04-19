@@ -6,6 +6,7 @@ import 'package:scale_up_module/view/business_details_screen/business_details_sc
 import 'package:scale_up_module/view/pancard_screen/PancardScreen.dart';
 import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
 import 'package:scale_up_module/view/profile_screen/components/credit_line_approved.dart';
+import 'package:scale_up_module/view/profile_screen/components/my_account.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/LeadCurrentResponseModel.dart';
 import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';
@@ -28,23 +29,23 @@ ScreenType? customerSequence(
       print("SubActivityName  ${leadCurrentActivity.subActivityName}");
       if (leadCurrentActivity.activityName == "MobileOtp") {
         print("11111");
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => LoginScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
         );
         return ScreenType.login;
       } else if (leadCurrentActivity.activityName == "KYC") {
         if (leadCurrentActivity.subActivityName == "Pan") {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => PancardScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
           );
           return ScreenType.pancard;
         } else if (leadCurrentActivity.subActivityName == "Aadhar") {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => AadhaarScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
           );
           return ScreenType.aadhar;
         } else if (leadCurrentActivity.subActivityName == "Selfie") {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).push(
 
             MaterialPageRoute(builder: (context) => TakeSelfieScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
 
@@ -54,54 +55,59 @@ ScreenType? customerSequence(
           return ScreenType.selfie;
         }
       } else if (leadCurrentActivity.activityName == "Bank Detail") {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => BankDetailsScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
         );
         return ScreenType.bankDetail;
       } else if (leadCurrentActivity.activityName == "PersonalInfo") {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => PersonalInformation(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
         );
         return ScreenType.personalInfo;
       } else if (leadCurrentActivity.activityName == "BusinessInfo") {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => BusinessDetailsScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
         );
         return ScreenType.businessInfo;
       } else if (leadCurrentActivity.activityName == "Inprogress") {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => ProfileReview()),
         );
         return ScreenType.login;
       } else if (leadCurrentActivity.activityName == "Show Offer") {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: false)),
         );
         return ScreenType.login;
       } else if (leadCurrentActivity.activityName == "Rejected") {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => RejectedScreen()),
         );
         return ScreenType.login;
       }else if (leadCurrentActivity.activityName == "Agreement") {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => ProfileReview()),
         );
         return ScreenType.aggrement;
       }else if (leadCurrentActivity.activityName == "Disbursement") {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: true)),
         );
         return ScreenType.Disbursement;
       }
       else if (leadCurrentActivity.activityName == "AgreementEsign") {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => AgreementScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
         );
         return ScreenType.AgreementEsign;
       } else if (leadCurrentActivity.activityName == "Disbursement Completed") {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: false,)),
+        );
+        return ScreenType.DisbursementCompleted;
+      } else if (leadCurrentActivity.activityName == "MyAccount") {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const MyAccount()),
         );
         return ScreenType.DisbursementCompleted;
       }

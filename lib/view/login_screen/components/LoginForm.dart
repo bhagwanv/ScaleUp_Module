@@ -16,12 +16,17 @@ class LoginForm extends StatefulWidget {
   int? activityId;
   int? subActivityId;
   final int? companyID;
-  final int?  ProductID;
-  final String?  MobileNumber;
+  final int? ProductID;
+  final String? MobileNumber;
 
-
-
-  LoginForm({required this.productProvider, required this.activityId, required this.subActivityId,this.companyID, this.ProductID, this.MobileNumber, super.key });
+  LoginForm(
+      {required this.productProvider,
+      required this.activityId,
+      required this.subActivityId,
+      this.companyID,
+      this.ProductID,
+      this.MobileNumber,
+      super.key});
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -29,29 +34,21 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController _mobileNumberCl = TextEditingController();
-
   @override
   void initState() {
     super.initState();
   }
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    _mobileNumberCl.clear();
-  }
-
-  @override
   Widget build(BuildContext context) {
-     bool isTermsChecks= false;
-     Utils.showToast("Login:: "+widget.MobileNumber.toString());
-   _mobileNumberCl.text=  widget.MobileNumber.toString();
+    bool isTermsChecks = false;
+    _mobileNumberCl.text = widget.MobileNumber.toString();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(children: [
-          SizedBox(
+          const SizedBox(
             width: 58,
             child: TextField(
               keyboardType: TextInputType.number,
@@ -79,7 +76,6 @@ class _LoginFormState extends State<LoginForm> {
           Expanded(
             child: SizedBox(
               child: TextField(
-                enabled: false,
                 controller: _mobileNumberCl,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
@@ -106,14 +102,15 @@ class _LoginFormState extends State<LoginForm> {
         const SizedBox(
           height: 50,
         ),
-         Column(
+        Column(
           children: [
             CommonCheckBox(
               onChanged: (bool isChecked) {
                 print("$isChecked");
                 isTermsChecks = isChecked;
               },
-              text: "I acknowledge and consent to the sharing of my data for the purpose of Scaleup pay application. I understand that my data may be used in accordance with the scaleup privacy policy. By proceeding, I agree to these terms.",
+              text:
+                  "I acknowledge and consent to the sharing of my data for the purpose of Scaleup pay application. I understand that my data may be used in accordance with the scaleup privacy policy. By proceeding, I agree to these terms.",
               upperCase: false,
             ),
           ],
@@ -128,31 +125,47 @@ class _LoginFormState extends State<LoginForm> {
                     Utils.showToast("Please Enter Mobile Number");
                   } else if (!Utils.isPhoneNoValid(_mobileNumberCl.text)) {
                     Utils.showToast("Please Enter Valid Mobile Number");
-                  }else if(!isTermsChecks) {
+                  } else if (!isTermsChecks) {
                     Utils.showToast("Please Check Terms And Conditions");
                   } else {
                     Utils.hideKeyBored(context);
 
-                    Utils.onLoading(context, "Loading....");
                     final prefsUtil = await SharedPref.getInstance();
-                    var appSignatureID = await SmsAutoFill().getAppSignature;
-                    print("appSignatureID ${appSignatureID}");
-                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(_mobileNumberCl.text, widget.companyID!);
-                    if (!widget.productProvider!.genrateOptData!.status!) {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      Utils.showToast(widget.productProvider!.genrateOptData!.message!);
-                    } else {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, _mobileNumberCl.text.toString());
-                      await prefsUtil.saveInt(COMPANY_ID, widget.companyID!);
-                      await prefsUtil.saveInt(PRODUCT_ID, widget.ProductID!);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return OtpScreen(activityId: widget.activityId!, subActivityId:widget.subActivityId!);
-                          },
-                        ),
+                    Utils.onLoading(context, "");
+                    await Provider.of<DataProvider>(context, listen: false)
+                        .genrateOtp(_mobileNumberCl.text,
+                        widget.companyID!);
+                    Navigator.of(context, rootNavigator: true).pop();
+
+                    if (widget.productProvider!.genrateOptData != null) {
+                      widget.productProvider!.genrateOptData!.when(
+                        success: (GenrateOptResponceModel) async {
+                          // Handle successful response
+                          var genrateOptResponceModel = GenrateOptResponceModel;
+
+                          if (!genrateOptResponceModel.status!) {
+                            Utils.showToast(genrateOptResponceModel.message!);
+                          } else {
+                            await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, _mobileNumberCl.text.toString());
+                            await prefsUtil.saveInt(COMPANY_ID, widget.companyID!);
+                            await prefsUtil.saveInt(PRODUCT_ID, widget.ProductID!);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return OtpScreen(
+                                      activityId: widget.activityId!,
+                                      subActivityId: widget.subActivityId!);
+                                },
+                              ),
+                            );
+                          }
+                        },
+                        failure: (exception) {
+                          // Handle failure
+                          print("dfjsf2");
+                          //print('Failure! Error: ${exception.message}');
+                        },
                       );
                     }
                   }
@@ -168,4 +181,3 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 }
-
