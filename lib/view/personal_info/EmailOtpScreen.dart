@@ -185,7 +185,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                                         fontWeight: FontWeight.normal),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
-                                        reSendOpt(context, productProvider,
+                                       await reSendOpt(context, productProvider,
                                             userLoginMobile!, _controller);
                                         isReSendDisable = true;
                                       })
@@ -254,19 +254,33 @@ class _OtpScreenState extends State<EmailOtpScreen> {
     }
   }
 
-  void reSendOpt(BuildContext context, DataProvider productProvider,
+  Future<void> reSendOpt(BuildContext context, DataProvider productProvider,
       String userLoginMobile, CountdownController controller) async {
-    Utils.onLoading(context, "Loading....");
     final prefsUtil = await SharedPref.getInstance();
 
+    Utils.onLoading(context, "Loading....");
     await Provider.of<DataProvider>(context, listen: false)
         .genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
-    if (!productProvider.genrateOptData!.status!) {
-      Navigator.of(context, rootNavigator: true).pop();
-      Utils.showToast("Something went wrong");
-    } else {
-      Navigator.of(context, rootNavigator: true).pop();
-      controller.restart();
+    Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.genrateOptData != null) {
+      productProvider.genrateOptData!.when(
+        success: (GenrateOptResponceModel) {
+          // Handle successful response
+          var genrateOptResponceModel = GenrateOptResponceModel;
+
+          if (!genrateOptResponceModel.status!) {
+            Utils.showToast("Something went wrong");
+          } else {
+            controller.restart();
+          }
+        },
+        failure: (exception) {
+          // Handle failure
+          print("dfjsf2");
+          //print('Failure! Error: ${exception.message}');
+        },
+      );
     }
   }
 }

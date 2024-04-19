@@ -59,9 +59,9 @@ class DataProvider extends ChangeNotifier {
 
   LeadCurrentResponseModel? get leadCurrentActivityAsyncData =>
       _leadCurrentActivityAsyncData;
-  GenrateOptResponceModel? _genrateOptData;
 
-  GenrateOptResponceModel? get genrateOptData => _genrateOptData;
+  Result< GenrateOptResponceModel, Exception>? _genrateOptData;
+  Result< GenrateOptResponceModel, Exception>? get genrateOptData => _genrateOptData;
 
   //pan card module
   Result< LeadPanResponseModel, Exception>? _getLeadPANData;
@@ -124,9 +124,8 @@ class DataProvider extends ChangeNotifier {
   Result<DisbursementResponce,Exception>? get getDisbursementData => _getDisbursementData;
 
 
-  VerifyOtpResponce? _getVerifyData;
-
-  VerifyOtpResponce? get getVerifyData => _getVerifyData;
+  Result<VerifyOtpResponce,Exception>? _getVerifyData;
+  Result<VerifyOtpResponce,Exception>? get getVerifyData => _getVerifyData;
 
   BankListResponceModel? _getBankListData;
 

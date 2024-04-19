@@ -218,7 +218,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
                                         listenOtp();
-                                        reSendOpt(context, productProvider,
+                                      await  reSendOpt(context, productProvider,
                                             userLoginMobile!, _controller);
                                         isReSendDisable = true;
                                       })
@@ -229,8 +229,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                 height: 10,
               ),
               CommonElevatedButton(
-                onPressed: () {
-                  callVerifyOtpApi(
+                onPressed: () async{
+                 await callVerifyOtpApi(
                       context,
                       pinController.text,
                       productProvider,
@@ -249,7 +249,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
           ),
         );
   }
-  void callVerifyOtpApi(
+ Future<void> callVerifyOtpApi(
       BuildContext context,
       String otpText,
       DataProvider productProvider,
@@ -274,20 +274,34 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
               vintageDays: 0,
               monthlyAvgBuying: 0,
               screen: "MobileOtp"));
+      Navigator.of(context, rootNavigator: true).pop();
 
-      if (!productProvider.getVerifyData!.status!) {
-        Navigator.of(context, rootNavigator: true).pop();
-        Utils.showToast(productProvider.getVerifyData!.message!);
-      } else {
-        Navigator.of(context, rootNavigator: true).pop();
-        await prefsUtil.saveString(
-            USER_ID, productProvider.getVerifyData!.userId.toString());
-        await prefsUtil.saveString(
-            TOKEN, productProvider.getVerifyData!.userTokan.toString());
-        await prefsUtil.saveInt(
-            LEADE_ID, productProvider.getVerifyData!.leadId!);
+      if (productProvider.getVerifyData != null) {
+        productProvider.getVerifyData!.when(
+          success: (VerifyOtpResponce) async {
+            // Handle successful response
+            var verifyOtpResponce = VerifyOtpResponce;
+            if (!verifyOtpResponce.status!) {
+              Utils.showToast(verifyOtpResponce.message!);
+            } else {
+              await prefsUtil.saveString(
+                  USER_ID, verifyOtpResponce.userId.toString());
+              await prefsUtil.saveString(
+                  TOKEN, verifyOtpResponce.userTokan.toString());
+              await prefsUtil.saveInt(
+                  LEADE_ID, verifyOtpResponce.leadId!);
 
-        fetchData(context, userLoginMobile);
+              fetchData(context, userLoginMobile);
+            }
+
+
+          },
+          failure: (exception) {
+            // Handle failure
+            print("dfjsf2");
+            //print('Failure! Error: ${exception.message}');
+          },
+        );
       }
     }
   }
@@ -327,19 +341,32 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     }
   }
 
-  void reSendOpt(BuildContext context, DataProvider productProvider,
+ Future<void>reSendOpt(BuildContext context, DataProvider productProvider,
       String userLoginMobile, CountdownController controller) async {
-    Utils.onLoading(context, "Loading....");
     final prefsUtil = await SharedPref.getInstance();
 
-    await Provider.of<DataProvider>(context, listen: false)
-        .genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
-    if (!productProvider.genrateOptData!.status!) {
-      Navigator.of(context, rootNavigator: true).pop();
-      Utils.showToast(productProvider.genrateOptData!.message!);
-    } else {
-      Navigator.of(context, rootNavigator: true).pop();
-      controller.restart();
+    Utils.onLoading(context, "Loading....");
+    await Provider.of<DataProvider>(context, listen: false).genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
+    Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.genrateOptData != null) {
+      productProvider.genrateOptData!.when(
+        success: (GenrateOptResponceModel) {
+          // Handle successful response
+          var genrateOptResponceModel = GenrateOptResponceModel;
+
+          if (!genrateOptResponceModel.status!) {
+            Utils.showToast(genrateOptResponceModel.message!);
+          } else {
+            controller.restart();
+          }
+        },
+        failure: (exception) {
+          // Handle failure
+          print("dfjsf2");
+          //print('Failure! Error: ${exception.message}');
+        },
+      );
     }
   }
 
