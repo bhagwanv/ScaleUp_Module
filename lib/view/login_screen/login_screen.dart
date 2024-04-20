@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/data_provider/DataProvider.dart';
+import '../../shared_preferences/SharedPref.dart';
 import '../../utils/constants.dart';
 import 'components/LoginForm.dart';
 
@@ -13,8 +15,8 @@ class LoginScreen extends StatelessWidget {
   final int?  ProductID;
   final String?  MobileNumber;
 
-  const LoginScreen(
-      {super.key, required this.activityId, required this.subActivityId});
+   LoginScreen(
+      {super.key, required this.activityId, required this.subActivityId,this.companyID,this.ProductID,this.MobileNumber});
 
   @override
   Widget build(BuildContext context) {
