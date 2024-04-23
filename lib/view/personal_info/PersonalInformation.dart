@@ -591,7 +591,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
         context,
         MaterialPageRoute<dynamic>(
           builder: (BuildContext context) =>
-              const LoginScreen(activityId: 1, subActivityId: 0),
+               LoginScreen(activityId: 1, subActivityId: 0),
         ),
         (route) => false, //if you want to disable back feature set to false
       );
