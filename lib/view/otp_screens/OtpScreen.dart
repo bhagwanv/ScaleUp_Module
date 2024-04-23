@@ -343,7 +343,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       String userLoginMobile, CountdownController controller) async {
     final prefsUtil = await SharedPref.getInstance();
 
-    Utils.onLoading(context, "Loading....");
+    Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false).genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -361,8 +361,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
         },
         failure: (exception) {
           // Handle failure
-          print("dfjsf2");
-          //print('Failure! Error: ${exception.message}');
+          print('Failure! Error: ${exception}');
         },
       );
     }

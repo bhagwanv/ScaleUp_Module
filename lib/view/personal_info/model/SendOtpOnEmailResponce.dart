@@ -1,24 +1,26 @@
 class SendOtpOnEmailResponce {
-  SendOtpOnEmailResponce({
-      this.status, 
-      this.message, 
-      this.otp,});
+  bool? status;
+  String? message;
+  String? otp;
 
-  SendOtpOnEmailResponce.fromJson(dynamic json) {
+  SendOtpOnEmailResponce({this.status, this.message, this.otp});
+
+  SendOtpOnEmailResponce.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     otp = json['otp'];
+
+    // Handle null values
+    status ??= false; // Assigns false if status is null
+    message ??= "";   // Assigns an empty string if message is null
+    otp ??= "";
   }
-  bool? status;
-  String? message;
-  dynamic otp;
 
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['status'] = status;
-    map['message'] = message;
-    map['otp'] = otp;
-    return map;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    data['otp'] = this.otp;
+    return data;
   }
-
 }

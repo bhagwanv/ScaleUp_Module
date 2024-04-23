@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/shared_preferences/SharedPref.dart';
@@ -20,6 +22,7 @@ import '../splash_screen/model/GetLeadResponseModel.dart';
 import '../splash_screen/model/LeadCurrentRequestModel.dart';
 import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'model/OTPValidateForEmailRequest.dart';
+import 'model/SendOtpOnEmailResponce.dart';
 
 class EmailOtpScreen extends StatefulWidget {
   String? emailID;
@@ -35,7 +38,6 @@ class _OtpScreenState extends State<EmailOtpScreen> {
   String? otpCode;
   DataProvider? productProvider;
   int _start = 60;
-  String? userLoginMobile;
   bool isReSendDisable = true;
   var isLoading = true;
   final CountdownController _controller = CountdownController(autoStart: true);
@@ -52,7 +54,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
       controller: _controller,
       seconds: _start,
       build: (_, double time) => Text(
-        time.toString(),
+          time.toStringAsFixed(0)+" S",
         style: TextStyle(
           fontSize: 15,
           color: Colors.blue,
@@ -86,7 +88,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
       decoration: BoxDecoration(
         color: textFiledBackgroundColour,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.transparent),
+        border: Border.all(color: kPrimaryColor),
       ),
     );
 
@@ -124,6 +126,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                       androidSmsAutofillMethod:
                       AndroidSmsAutofillMethod.smsRetrieverApi,
                       showCursor: true,
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9\.]")),],
                       pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                       defaultPinTheme: defaultPinTheme,
                       focusedPinTheme: defaultPinTheme.copyWith(
@@ -137,7 +140,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                   const SizedBox(
                     height: 40,
                   ),
-                  SizedBox(
+                  isReSendDisable?SizedBox(
                     width: double.infinity,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -153,7 +156,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                         buildCountdown(),
                       ],
                     ),
-                  ),
+                  ):Container(),
                   const SizedBox(
                     height: 20,
                   ),
@@ -185,8 +188,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                                         fontWeight: FontWeight.normal),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
-                                        await reSendOpt(context, productProvider,
-                                            userLoginMobile!, _controller);
+                                        reSendOpt(context, productProvider, _controller, widget.emailID);
                                         isReSendDisable = true;
                                       })
                               ]),
@@ -230,7 +232,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
     } else if (otpText.length < 6) {
       Utils.showToast("PLease Enter Valid Otp",context);
     } else {
-      Utils.onLoading(context, "Loading....");
+      Utils.onLoading(context, "");
       try {
         await productProvider.otpValidateForEmail(
             OtpValidateForEmailRequest(email: email, otp: otpText));
@@ -254,33 +256,15 @@ class _OtpScreenState extends State<EmailOtpScreen> {
     }
   }
 
-  Future<void> reSendOpt(BuildContext context, DataProvider productProvider,
-      String userLoginMobile, CountdownController controller) async {
-    final prefsUtil = await SharedPref.getInstance();
-
-    Utils.onLoading(context, "Loading....");
-    await Provider.of<DataProvider>(context, listen: false)
-        .genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
+  void reSendOpt(BuildContext context, DataProvider productProvider, CountdownController controller, String? emailID) async {
+    Utils.onLoading(context, "");
+    SendOtpOnEmailResponce sendOtpOnEmailResponce;
+    sendOtpOnEmailResponce = await ApiService().sendOtpOnEmail(emailID!);
     Navigator.of(context, rootNavigator: true).pop();
-
-    if (productProvider.genrateOptData != null) {
-      productProvider.genrateOptData!.when(
-        success: (GenrateOptResponceModel) {
-          // Handle successful response
-          var genrateOptResponceModel = GenrateOptResponceModel;
-
-          if (!genrateOptResponceModel.status!) {
-            Utils.showToast("Something went wrong",context);
-          } else {
-            controller.restart();
-          }
-        },
-        failure: (exception) {
-          // Handle failure
-          print("dfjsf2");
-          //print('Failure! Error: ${exception.message}');
-        },
-      );
+    if (sendOtpOnEmailResponce != null && sendOtpOnEmailResponce.status!) {
+      controller.restart();
+      Utils.showToast(sendOtpOnEmailResponce.message!,context);
     }
+
   }
 }
