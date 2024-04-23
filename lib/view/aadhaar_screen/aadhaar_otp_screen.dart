@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
@@ -49,7 +50,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
     decoration: BoxDecoration(
       color: textFiledBackgroundColour,
       borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: Colors.transparent),
+      border: Border.all(color: kPrimaryColor),
     ),
   );
   int _start = 60;
@@ -122,6 +123,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                   length: 6,
                   controller: pinController,
                   showCursor: true,
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9\.]")),],
                   defaultPinTheme: defaultPinTheme,
                   focusedPinTheme: defaultPinTheme.copyWith(
                     decoration: defaultPinTheme.decoration!.copyWith(
@@ -134,7 +136,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
               const SizedBox(
                 height: 40,
               ),
-              SizedBox(
+              isReSendDisable?SizedBox(
                 width: double.infinity,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -150,7 +152,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                     buildCountdown(),
                   ],
                 ),
-              ),
+              ) : Container(),
               const SizedBox(
                 height: 20,
               ),

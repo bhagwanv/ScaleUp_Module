@@ -368,8 +368,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
         },
         failure: (exception) {
           // Handle failure
-          print("dfjsf2");
-          //print('Failure! Error: ${exception.message}');
+          print('Failure! Error: ${exception}');
         },
       );
     }
