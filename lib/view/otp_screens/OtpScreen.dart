@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/shared_preferences/SharedPref.dart';
@@ -140,12 +141,12 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                   ),
                   const SizedBox(
                     height: 20,
-                  ),
+                  ),userLoginMobile!=null?
                   Text(
-                    'We just sent to +91 XXXXXX'+userLoginMobile!.substring(userLoginMobile!.length-4),
+                    'We just sent to +91 XXXXXX${userLoginMobile!.substring(userLoginMobile!.length-4)}',
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: Colors.black),
-                  ),
+                  ):Container(),
                   const SizedBox(
                     height: 55,
                   ),
@@ -156,6 +157,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                       androidSmsAutofillMethod:
                       AndroidSmsAutofillMethod.smsRetrieverApi,
                       showCursor: true,
+                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9\.]")),],
                       pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                       defaultPinTheme: defaultPinTheme,
                       focusedPinTheme: defaultPinTheme.copyWith(
@@ -232,7 +234,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                           productProvider,
                           widget.activityId!,
                           widget.subActivityId!,
-                          userLoginMobile!);
+                          userLoginMobile!,pinController);
                     },
                     text: "Verify Code",
                     upperCase: true,
@@ -253,11 +255,12 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       DataProvider productProvider,
       int activityId,
       int subActivityId,
-      String userLoginMobile) async {
+      String userLoginMobile, TextEditingController pinController) async {
     if (otpText.isEmpty) {
-      Utils.showToast("Please Enter Opt",context);
+     Utils.showBottomSheet(context,"Please enter the OTP we just sent you on your mobile number",VALIDACTION_IMAGE_PATH);
     } else if (otpText.length < 6) {
-      Utils.showToast("PLease Enter Valid Otp",context);
+      pinController.clear();
+      Utils.showBottomSheet(context,"Please enter the OTP we just sent you on your mobile number",VALIDACTION_IMAGE_PATH);
     } else {
       Utils.onLoading(context, "");
       final prefsUtil = await SharedPref.getInstance();
@@ -280,6 +283,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
             // Handle successful response
             var verifyOtpResponce = VerifyOtpResponce;
             if (!verifyOtpResponce.status!) {
+              pinController.clear();
               Utils.showToast(verifyOtpResponce.message!,context);
             } else {
               await prefsUtil.saveString(
@@ -306,6 +310,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
   Future<void> fetchData(BuildContext context, String userLoginMobile) async {
     final prefsUtil = await SharedPref.getInstance();
+
+    Utils.onLoading(context, "");
     try {
       LeadCurrentResponseModel? leadCurrentActivityAsyncData;
       var leadCurrentRequestModel = LeadCurrentRequestModel(
@@ -323,7 +329,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       leadCurrentActivityAsyncData =
       await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
       as LeadCurrentResponseModel?;
-
+      Navigator.of(context, rootNavigator: true).pop();
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
           userLoginMobile,
@@ -333,6 +339,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
       customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
     } catch (error) {
+      Navigator.of(context, rootNavigator: true).pop();
       if (kDebugMode) {
         print('Error occurred during API call: $error');
       }
@@ -343,7 +350,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       String userLoginMobile, CountdownController controller) async {
     final prefsUtil = await SharedPref.getInstance();
 
-    Utils.onLoading(context, "Loading....");
+    Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false).genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -366,14 +373,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
         },
       );
     }
-  }
-
-  void bottomSheetMenu(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (builder) {
-          return const KycFailedWidgets();
-        });
   }
 
 }

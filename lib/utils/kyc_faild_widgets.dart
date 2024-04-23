@@ -1,77 +1,77 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import '../view/pancard_screen/PancardScreen.dart';
 import 'common_elevted_button.dart';
 import 'constants.dart';
 
 class KycFailedWidgets extends StatelessWidget {
+  String message;
+  String imagePath;
 
-  const KycFailedWidgets({Key? key}) : super(key: key);
+  //KycFailedWidgets({required this.message,super.key});
+
+  KycFailedWidgets({Key? key, required this.message,required this.imagePath}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      height: 450.0,
       color: Colors.transparent, //could change this to Color(0xFF737373),
       //so you don't have to change MaterialApp canvasColor
       child: Container(
         decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                topRight: Radius.circular(10.0))),
-        child: SingleChildScrollView(child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: Container(
-                  alignment:Alignment.topCenter,
-                  child:  Image.asset('assets/images/kyc_faild.png')
-              ),
-            ),
-            const SizedBox(height: 40,),
-
-            const Center(
-              child: Text(
-                'Oops ...',
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 18, color: redColor),
-              ),
-            ),
-
-            const SizedBox(height: 20,),
-
-            const Center(
-              child: Text(
-                'Your Aadhaar could not be validated due to technical reason. Please re-try after sometime.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15, color: Colors.black),
-              ),
-            ),
-
-            const SizedBox(height: 30,),
-            Padding(
-              padding: const EdgeInsets.only(top: 20,bottom: 40,right: 20,left: 20),
-              child:
-              CommonElevatedButton(onPressed: (){
-                /*Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return PancardScreen();
-                    },
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0))),
+        child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
                   ),
-                );*/
+                ],
+              ),
+              Container(
+                height: 250,
+                  width: 250,
+                  alignment: Alignment.topCenter,
+                  child: Image.asset(imagePath)),
+              const SizedBox(
+                height: 40,
+              ),
+              Center(
+                child: Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 15, color: Colors.black),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
 
-              }, text: "RETRY",upperCase: true, ),
-            )
-
-          ],
-        )),),
-
+                        ],
+                      ),
+            )),
+      ),
     );
   }
 }

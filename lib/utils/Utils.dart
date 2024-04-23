@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
+import 'kyc_faild_widgets.dart';
+
 class Utils {
   static void showToast(String msg,BuildContext context) {
 
@@ -40,6 +42,15 @@ class Utils {
         textColor: Colors.white,
         fontSize: 16.0
     );*/
+  }
+
+  static void showBottomSheet(BuildContext context,String msg,String imagePath) {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          return Container(
+              child: KycFailedWidgets(message: msg, imagePath: imagePath));
+        });
   }
 
   static bool isPhoneNoValid(String? phoneNo) {

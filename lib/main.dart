@@ -58,8 +58,8 @@ class _MyAppState extends State<MyApp> {
       ),
 
       //home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
-     home: LoginScreen(activityId: 1, subActivityId: 0, companyID: 2, ProductID:2, MobileNumber: "8959311437"),
-
+     home: LoginScreen(activityId: 1, subActivityId: 0, companyID: 2, ProductID:2, MobileNumber: "9755108415"),
+       //home: PancardScreen(activityId: 1, subActivityId: 0),
       /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
       /*LoginScreen(activityId: 1, subActivityId: 0),*/
       //TakeSelfieScreen(activityId: 2, subActivityId: 1),

@@ -19,3 +19,4 @@ const String LEADE_ID = "lead_id";
 const String COMPANY_ID = "COMPANY_ID";
 const String PRODUCT_ID = "PRODUCT_ID";
 const String VERIFYED_EMAIL = "verifay_email";
+const String VALIDACTION_IMAGE_PATH = 'assets/images/valid_otp.png';

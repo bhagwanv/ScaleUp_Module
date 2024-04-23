@@ -11,6 +11,7 @@ import 'package:sms_autofill/sms_autofill.dart';
 import '../../../shared_preferences/SharedPref.dart';
 import '../../../utils/common_check_box.dart';
 import '../../../utils/constants.dart';
+import '../../aadhaar_screen/components/CheckboxTerm.dart';
 
 class LoginForm extends StatefulWidget {
   DataProvider? productProvider;
@@ -108,14 +109,13 @@ class _LoginFormState extends State<LoginForm> {
         ),
         Column(
           children: [
-            CommonCheckBox(
-              onChanged: (bool isChecked) {
-                print("$isChecked");
-                isTermsChecks = isChecked;
+            CheckboxTerm(
+              content:
+              "I acknowledge and consent to the sharing of my data for the purpose of Scaleup pay application. I understand that my data may be used in accordance with the scaleup privacy policy. By proceeding, I agree to these terms.",
+              onChanged: (bool? value) {
+                isTermsChecks = value!;
               },
-              text: "I acknowledge and consent to the sharing of my data for the purpose of Scaleup pay application. I understand that my data may be used in accordance with the scaleup privacy policy. By proceeding, I agree to these terms.",
-              upperCase: false,
-            ),
+            )
           ],
         ),
         Padding(

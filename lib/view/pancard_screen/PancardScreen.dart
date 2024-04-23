@@ -196,10 +196,12 @@ class _PancardScreenState extends State<PancardScreen> {
                                     TextCapitalization.characters,
                                     maxLines: 1,
                                     enabled: isEnabledPanNumber,
-                                    inputFormatters: [
+                                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
+                                      LengthLimitingTextInputFormatter(10)],
+                                    /*inputFormatters: [
                                       LengthLimitingTextInputFormatter(10),
                                       // Limit to 10 characters
-                                    ],
+                                    ],*/
                                     decoration: const InputDecoration(
                                       contentPadding: EdgeInsets.symmetric(
                                           vertical: 0.0, horizontal: 0.0),
@@ -338,6 +340,10 @@ class _PancardScreenState extends State<PancardScreen> {
                             controller: _fatherNameAsPanCl,
                             keyboardType: TextInputType.text,
                             cursorColor: kPrimaryColor,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.deny(
+                                    RegExp(r'\s')),
+                              ],
                             textCapitalization: TextCapitalization.characters,
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
@@ -458,7 +464,7 @@ class _PancardScreenState extends State<PancardScreen> {
                             isChecked: _acceptPermissions,
                             text:
                             "By proceeding, I provide consent on the following",
-                            upperCase: true,
+                            upperCase: false,
                           ),
                           SizedBox(height: 20),
                           /*Text("I hereby accept Scaleup T&C & Privacy Policy . Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners"),*/
@@ -473,15 +479,15 @@ class _PancardScreenState extends State<PancardScreen> {
                                 ),
                                 _buildClickableTextSpan(
                                   text: 'T&C  & Privacy Policy',
-                                  onClick: () {
-                                    Navigator.push(
+                                  onClick: ()async {
+
+                                    final result = await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) {
-                                          return PermissionsScreen();
-                                        },
-                                      ),
+                                          builder: (context) => PermissionsScreen()),
                                     );
+                                    // Handle the result from Screen B using the callback function
+                                    _handlePermissionsAccepted(result ?? false);
                                   },
                                 ),
                                 TextSpan(
@@ -502,22 +508,18 @@ class _PancardScreenState extends State<PancardScreen> {
                               final int? companyId = prefsUtil.getInt(COMPANY_ID);
 
                               if (_panNumberCl.text.isEmpty) {
-                                Utils.showToast("Please Enter Pan Number",context);
-                              } else if (_nameAsPanCl.text.isEmpty) {
-                                Utils.showToast(
-                                    "Please Enter Name (As Per Pan))",context);
-                              } else if (_dOBAsPanCl.text.isEmpty ||
-                                  dobAsPan.isEmpty) {
-                                Utils.showToast(
-                                    "Please Enter Name (As Per Pan))",context);
-                              } else if (_fatherNameAsPanCl.text.isEmpty) {
-                                Utils.showToast(
-                                    "Please Enter Father Name (As Per Pan))",context);
+                                Utils.showToast("Please Enter Valid Pan Card Details",context);
+                              }/* else if (_nameAsPanCl.text.isEmpty) {
+                                Utils.showToast("Please Enter Name (As Per Pan))",context);
+                              } else if (_dOBAsPanCl.text.isEmpty || dobAsPan.isEmpty) {
+                                Utils.showToast("Please Enter Name (As Per Pan))",context);
+                              }*/ else if (_fatherNameAsPanCl.text.isEmpty) {
+                                Utils.showToast("Please Enter Father Name!!!",context);
                               } else if (image.isEmpty) {
-                                Utils.showToast("Please Upload Pan Image ",context);
+                                Utils.showToast("Upload PAN-CARD Image!! ",context);
                               } else if (!_acceptPermissions) {
                                 Utils.showToast(
-                                    "Please Check Terms And Conditions",context);
+                                    "Please provide consent for T&C & privacy!!!",context);
                               } else {
                                 var postLeadPanRequestModel =
                                 PostLeadPanRequestModel(
@@ -641,7 +643,7 @@ class _PancardScreenState extends State<PancardScreen> {
             _nameAsPanCl.text = validPanCardResponsModel.nameOnPancard!;
             isVerifyPanNumber = true;
             isEnabledPanNumber = false;
-            Utils.showToast(validPanCardResponsModel.message!,context);
+          //  Utils.showToast(validPanCardResponsModel.message!,context);
             await getFathersNameByValidPanCard(
                 context, pancardNumber, productProvider);
           } else {
