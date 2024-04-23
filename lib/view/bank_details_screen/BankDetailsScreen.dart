@@ -175,7 +175,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                           _accountTypeCl.text =
                           bankDetailsResponceModel!.result!.accountType!;
                         } else {
-                          Utils.showToast(bankDetailsResponceModel!.message!);
+                          Utils.showToast(bankDetailsResponceModel!.message!,context);
                         }
                       }
 
@@ -624,20 +624,20 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   Future<void> submitBankDetailsApi(
       BuildContext contextz, DataProvider productProvider) async {
     if (selectedBankValue == null) {
-      Utils.showToast("Please Select Bank");
+      Utils.showToast("Please Select Bank",context);
     } else if (selectedBankValue!.isEmpty) {
-      Utils.showToast("Please Select Bank");
+      Utils.showToast("Please Select Bank",context);
     } else if (_accountHolderController.text.isEmpty) {
-      Utils.showToast("Please Enter Account Holder Name");
+      Utils.showToast("Please Enter Account Holder Name",context);
     } else if (_bankAccountNumberCl.text.isEmpty) {
-      Utils.showToast("Please Enter Account Number");
+      Utils.showToast("Please Enter Account Number",context);
     } else if (selectedAccountTypeValue.isEmpty) {
-      Utils.showToast("Please Select account Type");
+      Utils.showToast("Please Select account Type",context);
     } else if (_ifsccodeCl.text.isEmpty) {
-      Utils.showToast("Please Enter IFSC code");
+      Utils.showToast("Please Enter IFSC code",context);
     } else if (!Utils.isValidIFSCCode(_ifsccodeCl.text)) {
       Utils.showToast(
-          "IFSC code should be minimum 9 digits and max 11 digits!!");
+          "IFSC code should be minimum 9 digits and max 11 digits!!",context);
     } else {
       final prefsUtil = await SharedPref.getInstance();
       final int? leadID = prefsUtil.getInt(LEADE_ID);
@@ -664,7 +664,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             if (saveBankDetailResponce.isSuccess!) {
               fetchData(context);
             } else {
-              Utils.showToast(saveBankDetailResponce.message!);
+              Utils.showToast(saveBankDetailResponce.message!,context);
             }
           },
           failure: (exception) {

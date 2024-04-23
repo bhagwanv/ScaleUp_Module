@@ -502,22 +502,22 @@ class _PancardScreenState extends State<PancardScreen> {
                               final int? companyId = prefsUtil.getInt(COMPANY_ID);
 
                               if (_panNumberCl.text.isEmpty) {
-                                Utils.showToast("Please Enter Pan Number");
+                                Utils.showToast("Please Enter Pan Number",context);
                               } else if (_nameAsPanCl.text.isEmpty) {
                                 Utils.showToast(
-                                    "Please Enter Name (As Per Pan))");
+                                    "Please Enter Name (As Per Pan))",context);
                               } else if (_dOBAsPanCl.text.isEmpty ||
                                   dobAsPan.isEmpty) {
                                 Utils.showToast(
-                                    "Please Enter Name (As Per Pan))");
+                                    "Please Enter Name (As Per Pan))",context);
                               } else if (_fatherNameAsPanCl.text.isEmpty) {
                                 Utils.showToast(
-                                    "Please Enter Father Name (As Per Pan))");
+                                    "Please Enter Father Name (As Per Pan))",context);
                               } else if (image.isEmpty) {
-                                Utils.showToast("Please Upload Pan Image ");
+                                Utils.showToast("Please Upload Pan Image ",context);
                               } else if (!_acceptPermissions) {
                                 Utils.showToast(
-                                    "Please Check Terms And Conditions");
+                                    "Please Check Terms And Conditions",context);
                               } else {
                                 var postLeadPanRequestModel =
                                 PostLeadPanRequestModel(
@@ -641,11 +641,11 @@ class _PancardScreenState extends State<PancardScreen> {
             _nameAsPanCl.text = validPanCardResponsModel.nameOnPancard!;
             isVerifyPanNumber = true;
             isEnabledPanNumber = false;
-            Utils.showToast(validPanCardResponsModel.message!);
+            Utils.showToast(validPanCardResponsModel.message!,context);
             await getFathersNameByValidPanCard(
                 context, pancardNumber, productProvider);
           } else {
-            Utils.showToast(validPanCardResponsModel.message!);
+            Utils.showToast(validPanCardResponsModel.message!,context);
             _nameAsPanCl.clear();
             _dOBAsPanCl.clear();
             _fatherNameAsPanCl.clear();
@@ -665,7 +665,7 @@ class _PancardScreenState extends State<PancardScreen> {
                     (route) => false, //if you want to disable back feature set to false
               );
             }else{
-              Utils.showToast(exception.errorMessage);
+              Utils.showToast(exception.errorMessage,context);
             }
           }
         },
@@ -706,7 +706,7 @@ class _PancardScreenState extends State<PancardScreen> {
                     (route) => false, //if you want to disable back feature set to false
               );
             }else{
-              Utils.showToast(exception.errorMessage);
+              Utils.showToast(exception.errorMessage,context);
             }
           }
         },
@@ -725,7 +725,7 @@ class _PancardScreenState extends State<PancardScreen> {
         success: (PostLeadPanResponseModel) {
           // Handle successful response
           postLeadPanResponseModel = PostLeadPanResponseModel;
-          Utils.showToast(postLeadPanResponseModel.message!);
+          Utils.showToast(postLeadPanResponseModel.message!,context);
           if (postLeadPanResponseModel.isSuccess!) {
             fetchData(context);
           }
@@ -743,7 +743,7 @@ class _PancardScreenState extends State<PancardScreen> {
                     (route) => false, //if you want to disable back feature set to false
               );
             }else{
-              Utils.showToast(exception.errorMessage);
+              Utils.showToast(exception.errorMessage,context);
             }
           }
         },

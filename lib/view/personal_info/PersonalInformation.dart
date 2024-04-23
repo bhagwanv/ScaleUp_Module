@@ -579,7 +579,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           if (productProvider.getPostPersonalDetailsResponseModel!.message !=
               null) {
             Utils.showToast(
-                " ${productProvider.getPostPersonalDetailsResponseModel!.message!}");
+                " ${productProvider.getPostPersonalDetailsResponseModel!.message!}",context);
           }
           fetchData(context);
         }
@@ -639,7 +639,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     data = await ApiService().sendOtpOnEmail(emailID);
 
     if (data != null && data.status!) {
-      Utils.showToast(data.message!);
+      Utils.showToast(data.message!,context);
       final result = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -658,7 +658,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
         print('Result is null or does not contain expected keys');
       }
     } else {
-      Utils.showToast(data.message!);
+      Utils.showToast(data.message!,context);
     }
     Navigator.of(context, rootNavigator: true).pop();
   }
@@ -670,7 +670,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     EmailExistRespoce data;
     data = await ApiService().emailExist(userId!, emailID) as EmailExistRespoce;
     if (data.isSuccess!) {
-      Utils.showToast(data.message!);
+      Utils.showToast(data.message!,context);
     } else {
       callSendOptEmail(context, _emailIDCl.text);
     }
@@ -1259,9 +1259,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 child: InkWell(
                   onTap: () async {
                     if (_emailIDCl.text.isEmpty) {
-                      Utils.showToast("Please Enter Email ID");
+                      Utils.showToast("Please Enter Email ID",context);
                     } else if (!Utils.validateEmail(_emailIDCl.text)) {
-                      Utils.showToast("Please Enter Valid Email ID");
+                      Utils.showToast("Please Enter Valid Email ID",context);
                     } else {
                       callEmailIDExist(context, _emailIDCl.text);
                     }
@@ -1669,7 +1669,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     }
 
     if (errorMessage.isNotEmpty) {
-      Utils.showToast(errorMessage.toString());
+      Utils.showToast(errorMessage.toString(),context);
     }
 
     print("postData::: " +postData.toJson().toString());

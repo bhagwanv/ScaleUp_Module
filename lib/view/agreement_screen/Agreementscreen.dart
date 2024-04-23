@@ -161,7 +161,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
     if(aggrementDetails!.status!){
       fetchData(context);
     }else{
-      Utils.showToast(aggrementDetails!.message!);
+      Utils.showToast(aggrementDetails!.message!,context);
     }
   }
 }

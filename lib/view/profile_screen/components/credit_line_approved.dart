@@ -245,7 +245,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
           ],
         );
       } else {
-        Utils.showToast(offerResponceModel!.message!);
+        Utils.showToast(offerResponceModel!.message!,context);
         return Container();
       }
     } else {
@@ -293,7 +293,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
           ],
         );
       } else {
-        Utils.showToast(offerResponceModel!.message!);
+        Utils.showToast(offerResponceModel!.message!,context);
         return Container();
       }
     }else {
@@ -351,7 +351,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
           ],
         );
       } else {
-        Utils.showToast(offerResponceModel!.message!);
+        Utils.showToast(offerResponceModel!.message!,context);
         return Container();
       }
     } else {
@@ -375,7 +375,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
           if (acceptedResponceModel!.status!) {
             fetchData(context);
           } else {
-            Utils.showToast(acceptedResponceModel!.message!);
+            Utils.showToast(acceptedResponceModel!.message!,context);
           }
 
         },

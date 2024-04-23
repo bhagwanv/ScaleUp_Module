@@ -47,7 +47,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> fetchData() async {
 
     final String? mobile = widget.mobileNumber.toString();
-    Utils.showToast("Splash:: "+mobile.toString());
     final prefsUtil = await SharedPref.getInstance();
     /*await prefsUtil.saveInt(COMPANY_ID, int.parse(widget.companyID));
     await prefsUtil.saveInt(PRODUCT_ID, int.parse(widget.ProductID));

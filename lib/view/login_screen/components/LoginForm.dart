@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/data_provider/DataProvider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
@@ -48,16 +49,17 @@ class _LoginFormState extends State<LoginForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(children: [
-          const SizedBox(
+           SizedBox(
             width: 58,
             child: TextField(
+              readOnly: true,
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.done,
               maxLength: 10,
               maxLines: 1,
-              cursorColor: Colors.black,
-              style: TextStyle(color: Colors.red),
+              cursorColor: Colors.blue,
               decoration: InputDecoration(
+                counterText: "",
                 hintText: "+91",
                 fillColor: textFiledBackgroundColour,
                 filled: true,
@@ -81,8 +83,10 @@ class _LoginFormState extends State<LoginForm> {
                 textInputAction: TextInputAction.done,
                 maxLength: 10,
                 maxLines: 1,
+                readOnly: true,
                 cursorColor: Colors.black,
                 decoration: const InputDecoration(
+                  counterText: "",
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: kPrimaryColor),
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -109,8 +113,7 @@ class _LoginFormState extends State<LoginForm> {
                 print("$isChecked");
                 isTermsChecks = isChecked;
               },
-              text:
-                  "I acknowledge and consent to the sharing of my data for the purpose of Scaleup pay application. I understand that my data may be used in accordance with the scaleup privacy policy. By proceeding, I agree to these terms.",
+              text: "I acknowledge and consent to the sharing of my data for the purpose of Scaleup pay application. I understand that my data may be used in accordance with the scaleup privacy policy. By proceeding, I agree to these terms.",
               upperCase: false,
             ),
           ],
@@ -122,11 +125,11 @@ class _LoginFormState extends State<LoginForm> {
               CommonElevatedButton(
                 onPressed: () async {
                   if (_mobileNumberCl.text.isEmpty) {
-                    Utils.showToast("Please Enter Mobile Number");
+                    Utils.showToast("Please Enter Mobile Number",context);
                   } else if (!Utils.isPhoneNoValid(_mobileNumberCl.text)) {
-                    Utils.showToast("Please Enter Valid Mobile Number");
+                    Utils.showToast("Please Enter Valid Mobile Number",context);
                   } else if (!isTermsChecks) {
-                    Utils.showToast("Please Check Terms And Conditions");
+                    Utils.showToast("Please Check Terms And Conditions",context);
                   } else {
                     Utils.hideKeyBored(context);
 
@@ -144,7 +147,7 @@ class _LoginFormState extends State<LoginForm> {
                           var genrateOptResponceModel = GenrateOptResponceModel;
 
                           if (!genrateOptResponceModel.status!) {
-                            Utils.showToast(genrateOptResponceModel.message!);
+                            Utils.showToast(genrateOptResponceModel.message!,context);
                           } else {
                             await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, _mobileNumberCl.text.toString());
                             await prefsUtil.saveInt(COMPANY_ID, widget.companyID!);

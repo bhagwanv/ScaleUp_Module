@@ -445,7 +445,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                         null) {
                                       Utils.showToast(productProvider
                                           .getCustomerDetailUsingGSTData!
-                                          .message!);
+                                          .message!,context);
                                       updateData = false;
                                       gstUpdate = false;
                                       cityCallInitial = true;
@@ -479,7 +479,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                     } else {
                                       Utils.showToast(productProvider
                                           .getCustomerDetailUsingGSTData!
-                                          .message!);
+                                          .message!,context);
                                     }
                                   }
                                 } catch (error) {
@@ -896,25 +896,25 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       onPressed: () async {
                         if (_businessNameController.text.isEmpty) {
                           Utils.showToast(
-                              "Please Enter Business Name (As Per Doc)");
+                              "Please Enter Business Name (As Per Doc)",context);
                         } else if (_addressLineController.text.isEmpty) {
-                          Utils.showToast("Please Enter Address Line 1");
+                          Utils.showToast("Please Enter Address Line 1",context);
                         } else if (_addressLine2Controller.text.isEmpty) {
-                          Utils.showToast("Please Enter Address Line 2");
+                          Utils.showToast("Please Enter Address Line 2",context);
                         } else if (_pinCodeController.text.isEmpty) {
-                          Utils.showToast("Please Enter Pin Code");
+                          Utils.showToast("Please Enter Pin Code",context);
                         } else if (selectedBusinessTypeValue == null) {
-                          Utils.showToast("Please Select Business Type");
+                          Utils.showToast("Please Select Business Type",context);
                         } else if (selectedMonthlySalesTurnoverValue == null) {
-                          Utils.showToast("Please Select Income Slab");
+                          Utils.showToast("Please Select Income Slab",context);
                         } else if (_businessDocumentNumberController
                             .text.isEmpty) {
                           Utils.showToast(
-                              "Please Enter Business Document Number");
+                              "Please Enter Business Document Number",context);
                         } else if (businessProofDocId == null) {
-                          Utils.showToast("Please Select Proof");
+                          Utils.showToast("Please Select Proof",context);
                         } else if (slectedDate!.isEmpty) {
-                          Utils.showToast("Please Select Incorporation Date");
+                          Utils.showToast("Please Select Incorporation Date",context);
                         } else {
                           await postLeadBuisnessDetail(context);
 

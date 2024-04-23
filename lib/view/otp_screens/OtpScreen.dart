@@ -34,7 +34,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   String? appSignature;
   String? otpCode;
   DataProvider? productProvider;
-  int _start = 60;
+  int _start = 30;
   String? userLoginMobile;
   bool isReSendDisable = true;
   var isLoading = true;
@@ -52,7 +52,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   void initState() {
     super.initState();
     listenOtp();
-    _start = 60;
+    _start = 30;
     // startTimer();
     SmsAutoFill().getAppSignature.then((signature) {
       setState(() {
@@ -68,7 +68,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       controller: _controller,
       seconds: _start,
       build: (_, double time) => Text(
-        time.toString(),
+        time.toStringAsFixed(0)+" S",
         style: TextStyle(
           fontSize: 15,
           color: Colors.blue,
@@ -110,7 +110,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       decoration: BoxDecoration(
         color: textFiledBackgroundColour,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.transparent),
+        border: Border.all(color: kPrimaryColor),
       ),
     );
 
@@ -142,7 +142,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                     height: 20,
                   ),
                   Text(
-                    'We just sent to +91 $userLoginMobile',
+                    'We just sent to +91 XXXXXX'+userLoginMobile!.substring(userLoginMobile!.length-4),
                     textAlign: TextAlign.start,
                     style: TextStyle(fontSize: 15, color: Colors.black),
                   ),
@@ -165,13 +165,14 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                       ),
                       onCompleted: (pin) => debugPrint(pin),
                     ),
+
                   ),
                   const SizedBox(
                     height: 40,
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: Row(
+                    child:isReSendDisable? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
@@ -184,7 +185,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                         ),
                         buildCountdown(),
                       ],
-                    ),
+                    ):Container(),
                   ),
                   const SizedBox(
                     height: 20,
@@ -200,23 +201,18 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal),
                               children: <TextSpan>[
-                                isReSendDisable
-                                    ? TextSpan(
+                                isReSendDisable ? TextSpan(
                                     text: '  Resend',
                                     style: const TextStyle(
                                         color: Colors.grey,
                                         fontSize: 14,
                                         fontWeight: FontWeight.normal),
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () async {})
-                                    : TextSpan(
-                                    text: '  Resend',
-                                    style: const TextStyle(
+                                      ..onTap = () async {}) :
+                                TextSpan(text: '  Resend', style: const TextStyle(
                                         color: Colors.blueAccent,
                                         fontSize: 14,
-                                        fontWeight: FontWeight.normal),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () async {
+                                        fontWeight: FontWeight.normal), recognizer: TapGestureRecognizer()..onTap = () async {
                                         listenOtp();
                                         await  reSendOpt(context, productProvider,
                                             userLoginMobile!, _controller);
@@ -249,6 +245,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       ),
     );
   }
+
+
   Future<void> callVerifyOtpApi(
       BuildContext context,
       String otpText,
@@ -257,9 +255,9 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       int subActivityId,
       String userLoginMobile) async {
     if (otpText.isEmpty) {
-      Utils.showToast("Please Enter Opt");
+      Utils.showToast("Please Enter Opt",context);
     } else if (otpText.length < 6) {
-      Utils.showToast("PLease Enter Valid Otp");
+      Utils.showToast("PLease Enter Valid Otp",context);
     } else {
       Utils.onLoading(context, "");
       final prefsUtil = await SharedPref.getInstance();
@@ -282,7 +280,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
             // Handle successful response
             var verifyOtpResponce = VerifyOtpResponce;
             if (!verifyOtpResponce.status!) {
-              Utils.showToast(verifyOtpResponce.message!);
+              Utils.showToast(verifyOtpResponce.message!,context);
             } else {
               await prefsUtil.saveString(
                   USER_ID, verifyOtpResponce.userId.toString());
@@ -356,7 +354,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
           var genrateOptResponceModel = GenrateOptResponceModel;
 
           if (!genrateOptResponceModel.status!) {
-            Utils.showToast(genrateOptResponceModel.message!);
+            Utils.showToast(genrateOptResponceModel.message!,context);
           } else {
             controller.restart();
           }

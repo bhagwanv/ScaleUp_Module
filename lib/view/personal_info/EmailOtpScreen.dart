@@ -226,9 +226,9 @@ class _OtpScreenState extends State<EmailOtpScreen> {
       DataProvider productProvider) async {
     var isValid = false;
     if (otpText.isEmpty) {
-      Utils.showToast("Please Enter Opt");
+      Utils.showToast("Please Enter Opt",context);
     } else if (otpText.length < 6) {
-      Utils.showToast("PLease Enter Valid Otp");
+      Utils.showToast("PLease Enter Valid Otp",context);
     } else {
       Utils.onLoading(context, "Loading....");
       try {
@@ -237,14 +237,14 @@ class _OtpScreenState extends State<EmailOtpScreen> {
         if (productProvider.getValidOtpEmailData != null &&
             productProvider.getValidOtpEmailData!.status != null &&
             !productProvider.getValidOtpEmailData!.status!) {
-          Utils.showToast(productProvider.getValidOtpEmailData!.message!);
+          Utils.showToast(productProvider.getValidOtpEmailData!.message!,context);
         } else {
           isValid = true;
           Navigator.of(context, rootNavigator: true).pop();
         }
       } catch (error) {
         // Handle any errors that occur during the API call
-        Utils.showToast("An error occurred: $error");
+        Utils.showToast("An error occurred: $error",context);
       } finally {
         Navigator.of(context, rootNavigator: true).pop({
           'isValid': isValid,
@@ -270,7 +270,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
           var genrateOptResponceModel = GenrateOptResponceModel;
 
           if (!genrateOptResponceModel.status!) {
-            Utils.showToast("Something went wrong");
+            Utils.showToast("Something went wrong",context);
           } else {
             controller.restart();
           }

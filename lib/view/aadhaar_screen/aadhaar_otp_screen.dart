@@ -215,9 +215,9 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
     DataProvider productProvider,
   ) async {
     if (otpText.isEmpty) {
-      Utils.showToast("Please Enter OTP");
+      Utils.showToast("Please Enter OTP",context);
     } else if (otpText.length < 6) {
-      Utils.showToast("PLease Enter Valid Otp");
+      Utils.showToast("PLease Enter Valid Otp",context);
     } else {
       final prefsUtil = await SharedPref.getInstance();
 
@@ -245,7 +245,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
             if(leadAadhaarResponse != null) {
               if (leadAadhaarResponse.isSuccess != null) {
                 Utils.showToast(
-                    " ${leadAadhaarResponse.message!}");
+                    " ${leadAadhaarResponse.message!}",context);
                 if(leadAadhaarResponse.isSuccess!) {
                   fetchData(context);
                 }
@@ -325,7 +325,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
           if(leadAadhaarResponse != null) {
             if (leadAadhaarResponse.data!.message != null) {
               Utils.showToast(
-                  " ${leadAadhaarResponse.data!.message!}");
+                  " ${leadAadhaarResponse.data!.message!}",context);
             }
             widget.requestId =leadAadhaarResponse.requestId!;
           }

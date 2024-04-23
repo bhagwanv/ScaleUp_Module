@@ -440,13 +440,13 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
                     //call api
                     if (_aadhaarController.text == "") {
-                      Utils.showToast("Please Enter Aadhaar Number");
+                      Utils.showToast("Please Enter Aadhaar Number",context);
                     } else if (frontFileUrl == "" || frontDocumentId == "") {
-                      Utils.showToast("Please select Aadhaar Front Image");
+                      Utils.showToast("Please select Aadhaar Front Image",context);
                     } else if (backFileUrl == "" || backDocumentId == "") {
-                      Utils.showToast("Please select Aadhaar Back Image");
+                      Utils.showToast("Please select Aadhaar Back Image",context);
                     } else if (!tcChecked) {
-                      Utils.showToast("Please Check Terms and Conditions");
+                      Utils.showToast("Please Check Terms and Conditions",context);
                     } else {
                       String stringWithSpaces = _aadhaarController.text;
                       print("normal" + stringWithSpaces);
@@ -525,7 +525,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
             String reqID = "";
             if (leadAadhaarResponse.data!.message != null) {
               Utils.showToast(
-                  " ${leadAadhaarResponse.data!.message!}");
+                  " ${leadAadhaarResponse.data!.message!}",context);
             }
             reqID = leadAadhaarResponse.requestId!;
             Navigator.push(
