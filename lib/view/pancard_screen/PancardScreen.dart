@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/pancard_screen/model/PostLeadPANRequestModel.dart';
 
@@ -340,10 +341,6 @@ class _PancardScreenState extends State<PancardScreen> {
                             controller: _fatherNameAsPanCl,
                             keyboardType: TextInputType.text,
                             cursorColor: kPrimaryColor,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.deny(
-                                    RegExp(r'\s')),
-                              ],
                             textCapitalization: TextCapitalization.characters,
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
@@ -686,13 +683,13 @@ class _PancardScreenState extends State<PancardScreen> {
       productProvider.getFathersNameByValidPanCardData!.when(
         success: (FathersNameByValidPanCardResponseModel) {
           // Handle successful response
-          fathersNameByValidPanCardResponseModel =
-              FathersNameByValidPanCardResponseModel;
-          if (fathersNameByValidPanCardResponseModel.dob != Null) {
-            var formateDob = Utils.dateFormate(
-                context, fathersNameByValidPanCardResponseModel.dob);
-            dobAsPan = fathersNameByValidPanCardResponseModel.dob;
-            _dOBAsPanCl.text = formateDob;
+          fathersNameByValidPanCardResponseModel = FathersNameByValidPanCardResponseModel;
+          if (fathersNameByValidPanCardResponseModel.dob != null) {
+            var formateDob = Utils.dateFormate(context, fathersNameByValidPanCardResponseModel.dob);dobAsPan = fathersNameByValidPanCardResponseModel.dob;_dOBAsPanCl.text = formateDob;
+          } else {
+            if(fathersNameByValidPanCardResponseModel.message != null) {
+              Utils.showToast(fathersNameByValidPanCardResponseModel.message!, context);
+            }
           }
         },
         failure: (exception) {
