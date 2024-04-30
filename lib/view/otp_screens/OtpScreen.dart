@@ -63,13 +63,18 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     });
   }
 
-  Widget buildCountdown() {
-    print("_start $_start");
+
+
+
+
+
+
+   Widget buildCountdown() {
     return Countdown(
       controller: _controller,
       seconds: _start,
       build: (_, double time) => Text(
-        time.toStringAsFixed(0)+" S",
+        time.toStringAsFixed(0) + " S",
         style: TextStyle(
           fontSize: 15,
           color: Colors.blue,
@@ -118,11 +123,12 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+        child:
+            Consumer<DataProvider>(builder: (context, productProvider, child) {
           return SingleChildScrollView(
             child: Padding(
-              padding:
-              const EdgeInsets.only(left: 30, top: 50, right: 30, bottom: 30),
+              padding: const EdgeInsets.only(
+                  left: 30, top: 50, right: 30, bottom: 30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -141,12 +147,14 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                   ),
                   const SizedBox(
                     height: 20,
-                  ),userLoginMobile!=null?
-                  Text(
-                    'We just sent to +91 XXXXXX${userLoginMobile!.substring(userLoginMobile!.length-4)}',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 15, color: Colors.black),
-                  ):Container(),
+                  ),
+                  userLoginMobile != null
+                      ? Text(
+                          'We just sent to +91 XXXXXX${userLoginMobile!.substring(userLoginMobile!.length - 4)}',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 15, color: Colors.black),
+                        )
+                      : Container(),
                   const SizedBox(
                     height: 55,
                   ),
@@ -155,9 +163,11 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                       controller: pinController,
                       length: 6,
                       androidSmsAutofillMethod:
-                      AndroidSmsAutofillMethod.smsRetrieverApi,
+                          AndroidSmsAutofillMethod.smsRetrieverApi,
                       showCursor: true,
-                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9\.]")),],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9\]")),
+                      ],
                       pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                       defaultPinTheme: defaultPinTheme,
                       focusedPinTheme: defaultPinTheme.copyWith(
@@ -167,27 +177,26 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                       ),
                       onCompleted: (pin) => debugPrint(pin),
                     ),
-
                   ),
                   const SizedBox(
                     height: 40,
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child:isReSendDisable? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Resend Code in ',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: kPrimaryColor,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        buildCountdown(),
-                      ],
-                    ):Container(),
+                    child: isReSendDisable ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Resend Code in ',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              buildCountdown(),
+                            ],
+                          ) : Container(),
                   ),
                   const SizedBox(
                     height: 20,
@@ -203,23 +212,32 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal),
                               children: <TextSpan>[
-                                isReSendDisable ? TextSpan(
-                                    text: '  Resend',
-                                    style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () async {}) :
-                                TextSpan(text: '  Resend', style: const TextStyle(
-                                        color: Colors.blueAccent,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal), recognizer: TapGestureRecognizer()..onTap = () async {
-                                        listenOtp();
-                                        await  reSendOpt(context, productProvider,
-                                            userLoginMobile!, _controller);
-                                        isReSendDisable = true;
-                                      })
+                                isReSendDisable
+                                    ? TextSpan(
+                                        text: '  Resend',
+                                        style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.normal),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () async {})
+                                    : TextSpan(
+                                        text: '  Resend',
+                                        style: const TextStyle(
+                                            color: Colors.blueAccent,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.normal),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () async {
+                                            listenOtp();
+                                            pinController.clear();
+                                            await reSendOpt(
+                                                context,
+                                                productProvider,
+                                                userLoginMobile!,
+                                                _controller);
+                                            isReSendDisable = true;
+                                          })
                               ]),
                         ),
                       )),
@@ -227,14 +245,15 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                     height: 10,
                   ),
                   CommonElevatedButton(
-                    onPressed: () async{
+                    onPressed: () async {
                       await callVerifyOtpApi(
                           context,
                           pinController.text,
                           productProvider,
                           widget.activityId!,
                           widget.subActivityId!,
-                          userLoginMobile!,pinController);
+                          userLoginMobile!,
+                          pinController);
                     },
                     text: "Verify Code",
                     upperCase: true,
@@ -248,19 +267,25 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     );
   }
 
-
   Future<void> callVerifyOtpApi(
       BuildContext context,
       String otpText,
       DataProvider productProvider,
       int activityId,
       int subActivityId,
-      String userLoginMobile, TextEditingController pinController) async {
+      String userLoginMobile,
+      TextEditingController pinController) async {
     if (otpText.isEmpty) {
-     Utils.showBottomSheet(context,"Please enter the OTP we just sent you on your mobile number",VALIDACTION_IMAGE_PATH);
+      Utils.showBottomSheet(
+          context,
+          "Please enter the OTP we just sent you on your mobile number",
+          VALIDACTION_IMAGE_PATH);
     } else if (otpText.length < 6) {
       pinController.clear();
-      Utils.showBottomSheet(context,"Please enter the OTP we just sent you on your mobile number",VALIDACTION_IMAGE_PATH);
+      Utils.showBottomSheet(
+          context,
+          "Please enter the OTP we just sent you on your mobile number",
+          VALIDACTION_IMAGE_PATH);
     } else {
       Utils.onLoading(context, "");
       final prefsUtil = await SharedPref.getInstance();
@@ -284,19 +309,16 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
             var verifyOtpResponce = VerifyOtpResponce;
             if (!verifyOtpResponce.status!) {
               pinController.clear();
-              Utils.showToast(verifyOtpResponce.message!,context);
+              Utils.showToast(verifyOtpResponce.message!, context);
             } else {
               await prefsUtil.saveString(
                   USER_ID, verifyOtpResponce.userId.toString());
               await prefsUtil.saveString(
                   TOKEN, verifyOtpResponce.userTokan.toString());
-              await prefsUtil.saveInt(
-                  LEADE_ID, verifyOtpResponce.leadId!);
+              await prefsUtil.saveInt(LEADE_ID, verifyOtpResponce.leadId!);
 
               fetchData(context, userLoginMobile);
             }
-
-
           },
           failure: (exception) {
             // Handle failure
@@ -319,16 +341,16 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
         productId: prefsUtil.getInt(PRODUCT_ID),
         leadId: prefsUtil.getInt(LEADE_ID),
         mobileNo: userLoginMobile,
-        activityId:widget.activityId,
+        activityId: widget.activityId,
         subActivityId: widget.subActivityId,
-        userId:  prefsUtil.getString(USER_ID),
+        userId: prefsUtil.getString(USER_ID),
         monthlyAvgBuying: 0,
         vintageDays: 0,
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-      as LeadCurrentResponseModel?;
+          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+              as LeadCurrentResponseModel?;
       Navigator.of(context, rootNavigator: true).pop();
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -346,12 +368,13 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     }
   }
 
-  Future<void>reSendOpt(BuildContext context, DataProvider productProvider,
+  Future<void> reSendOpt(BuildContext context, DataProvider productProvider,
       String userLoginMobile, CountdownController controller) async {
     final prefsUtil = await SharedPref.getInstance();
 
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false).genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
+    await Provider.of<DataProvider>(context, listen: false)
+        .genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
     Navigator.of(context, rootNavigator: true).pop();
 
     if (productProvider.genrateOptData != null) {
@@ -361,7 +384,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
           var genrateOptResponceModel = GenrateOptResponceModel;
 
           if (!genrateOptResponceModel.status!) {
-            Utils.showToast(genrateOptResponceModel.message!,context);
+            Utils.showToast(genrateOptResponceModel.message!, context);
           } else {
             controller.restart();
           }
@@ -373,5 +396,4 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       );
     }
   }
-
 }

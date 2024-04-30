@@ -126,7 +126,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                       androidSmsAutofillMethod:
                       AndroidSmsAutofillMethod.smsRetrieverApi,
                       showCursor: true,
-                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9\.]")),],
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9\]")),],
                       pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                       defaultPinTheme: defaultPinTheme,
                       focusedPinTheme: defaultPinTheme.copyWith(

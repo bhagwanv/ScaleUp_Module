@@ -27,7 +27,7 @@ class BankDetailResult {
   String? ifscCode;
   String? accountType;
   int? activityId;
-  dynamic subActivityId;
+  int? subActivityId;
   String? accountNumber;
   String? accountHolderName;
 
@@ -44,5 +44,4 @@ class BankDetailResult {
     map['accountHolderName'] = accountHolderName;
     return map;
   }
-
 }

@@ -131,14 +131,10 @@ class _LoginFormState extends State<LoginForm> {
                   } else if (!isTermsChecks) {
                     Utils.showToast("Please Check Terms And Conditions",context);
                   } else {
-                    Utils.hideKeyBored(context);
 
                     final prefsUtil = await SharedPref.getInstance();
                     Utils.onLoading(context, "");
-                    await Provider.of<DataProvider>(context, listen: false)
-                        .genrateOtp(_mobileNumberCl.text,
-                        widget.companyID!);
-                    Navigator.of(context, rootNavigator: true).pop();
+                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(_mobileNumberCl.text, widget.companyID!);
 
                     if (widget.productProvider!.genrateOptData != null) {
                       widget.productProvider!.genrateOptData!.when(
@@ -171,6 +167,9 @@ class _LoginFormState extends State<LoginForm> {
                         },
                       );
                     }
+                    //Utils.hideKeyBored(context);
+                    Navigator.of(context, rootNavigator: true).pop();
+
                   }
                   ;
                 },

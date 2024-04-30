@@ -267,6 +267,15 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> disposeAllSingleFileData() async {
+    _getPostFrontAadhaarSingleFileData = null;
+    _getPostBackAadhaarSingleFileData=null;
+    _getPostSingleFileData=null;
+    _getpostElectricityBillDocumentSingleFileData = null;
+    _getPostSelfieImageSingleFileData = null;
+    notifyListeners();
+  }
+
   Future<void> postBusineesDoumentSingleFile(File imageFile, bool isValidForLifeTime,
       String validityInDays, String subFolderName) async {
     _getpostBusineesDoumentSingleFileData = await apiService.postSingleFile(

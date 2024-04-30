@@ -8,7 +8,7 @@ class BankDetailsResponceModel {
   BankDetailsResponceModel({this.result, this.isSuccess, this.message});
 
   BankDetailsResponceModel.fromJson(Map<String, dynamic> json) {
-    result = json['result'];
+    result = json['result'] != null ? BankDetailResult.fromJson(json['result']) : null;
     isSuccess = json['isSuccess'];
     message = json['message'];
   }

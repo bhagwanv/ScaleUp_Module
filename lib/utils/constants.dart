@@ -26,3 +26,4 @@ const String COMPANY_ID = "COMPANY_ID";
 const String PRODUCT_ID = "PRODUCT_ID";
 const String VERIFYED_EMAIL = "verifay_email";
 const String VALIDACTION_IMAGE_PATH = 'assets/images/valid_otp.png';
+const String KYC_FAild_PATH = 'assets/images/kyc_faild.png';

@@ -13,7 +13,7 @@ import 'package:scale_up_module/utils/common_text_field.dart';
 import '../../api/ApiService.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
-import '../../utils/ImagePicker.dart';
+import '../../utils/ImagePickerFile.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
 import '../../utils/customer_sequence_logic.dart';
@@ -150,7 +150,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     'Trade License',
     'Others'
   ];
-  String? selectedChooseBusinessProofValue;
+  String? selectedChooseBusinessProofValue = null;
 
   var gstUpdate = false;
 
@@ -318,6 +318,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                     .toString();
                 businessProofDocId = productProvider
                     .getLeadBusinessDetailData!.buisnessProofDocId!;
+                if(productProvider
+                    .getLeadBusinessDetailData!.buisnessProof != null) {
+                  selectedChooseBusinessProofValue = productProvider
+                      .getLeadBusinessDetailData!.buisnessProof!;
+                }
               } else {
                 updateData = true;
               }
@@ -347,6 +352,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   if (productProvider
                           .getCustomerDetailUsingGSTData!.buisnessProof !=
                       null) {
+                    print("yha pr aaya ");
                     selectedChooseBusinessProofValue = productProvider
                         .getCustomerDetailUsingGSTData!.buisnessProof!;
                   }
@@ -356,7 +362,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                     if (productProvider
                             .getCustomerDetailUsingGSTData!.busEntityType !=
                         null) {
-                      selectedChooseBusinessProofValue = productProvider
+                      selectedBusinessTypeValue = productProvider
                           .getCustomerDetailUsingGSTData!.busEntityType!;
                     }
                   }
@@ -381,6 +387,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
               }
             }
 
+            print("business proff ::"+selectedChooseBusinessProofValue!);
             return Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
@@ -422,12 +429,14 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       children: [
                         CommonTextField(
                             controller: _gstController,
-                            hintText: "07AACDW15215NF",
+                            hintText: "GST Number(Optional)",
                             keyboardType: TextInputType.text,
                             enabled: updateData,
                             labelText: "GST Number(Optional)",
                             textCapitalization: TextCapitalization.characters,
                             inputFormatter: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp((r'[A-Z0-9]'))),
                               LengthLimitingTextInputFormatter(15)
                             ],
                             onChanged: (text) async {
@@ -443,9 +452,6 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                             .getCustomerDetailUsingGSTData!
                                             .busGSTNO !=
                                         null) {
-                                      Utils.showToast(productProvider
-                                          .getCustomerDetailUsingGSTData!
-                                          .message!,context);
                                       updateData = false;
                                       gstUpdate = false;
                                       cityCallInitial = true;
@@ -471,15 +477,18 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                           .getCustomerDetailUsingGSTData!
                                           .zipCode!
                                           .toString();
-
+                                      //chooseBusinessProofList!.first;
+                                      selectedChooseBusinessProofValue = "GST Certificate";
                                       _businessDocumentNumberController.text =
                                           productProvider
                                               .getCustomerDetailUsingGSTData!
-                                              .buisnessDocumentNo!;
+                                              .busGSTNO!;
                                     } else {
-                                      Utils.showToast(productProvider
-                                          .getCustomerDetailUsingGSTData!
-                                          .message!,context);
+                                      Utils.showToast(
+                                          productProvider
+                                              .getCustomerDetailUsingGSTData!
+                                              .message!,
+                                          context);
                                     }
                                   }
                                 } catch (error) {
@@ -511,7 +520,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 selectedStateValue = null;
                                 selectedCityValue = null;
                                 selectedMonthlySalesTurnoverValue = null;
-
+                                selectedChooseBusinessProofValue = null;
                                 isClearData = true;
                                 gstNumber = "";
                                 image = "";
@@ -535,7 +544,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                     CommonTextField(
                       controller: _businessNameController,
                       enabled: updateData,
-                      hintText: "Shree Balaji Traders ",
+                      hintText: "Business Name(As Per Doc) ",
                       labelText: "Business Name(As Per Doc)",
                     ),
                     const SizedBox(
@@ -827,16 +836,26 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 ),
                                 child: Container(
                                   child: (image.isNotEmpty)
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          child: Image.network(
-                                            image,
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                            height: 148,
-                                          ),
-                                        )
+                                      ? image.contains(".pdf")
+                                          ? Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(Icons.picture_as_pdf),
+                                              ],
+                                            )
+                                          : ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              child: Image.network(
+                                                image,
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: 148,
+                                              ),
+                                            )
                                       : (image.isNotEmpty)
                                           ? ClipRRect(
                                               borderRadius:
@@ -896,25 +915,30 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       onPressed: () async {
                         if (_businessNameController.text.isEmpty) {
                           Utils.showToast(
-                              "Please Enter Business Name (As Per Doc)",context);
+                              "Please Enter Business Name (As Per Doc)",
+                              context);
                         } else if (_addressLineController.text.isEmpty) {
-                          Utils.showToast("Please Enter Address Line 1",context);
+                          Utils.showToast(
+                              "Please Enter Address Line 1", context);
                         } else if (_addressLine2Controller.text.isEmpty) {
-                          Utils.showToast("Please Enter Address Line 2",context);
+                          Utils.showToast(
+                              "Please Enter Address Line 2", context);
                         } else if (_pinCodeController.text.isEmpty) {
-                          Utils.showToast("Please Enter Pin Code",context);
+                          Utils.showToast("Please Enter Pin Code", context);
                         } else if (selectedBusinessTypeValue == null) {
-                          Utils.showToast("Please Select Business Type",context);
+                          Utils.showToast(
+                              "Please Select Business Type", context);
                         } else if (selectedMonthlySalesTurnoverValue == null) {
-                          Utils.showToast("Please Select Income Slab",context);
+                          Utils.showToast("Please Select Income Slab", context);
                         } else if (_businessDocumentNumberController
                             .text.isEmpty) {
                           Utils.showToast(
-                              "Please Enter Business Document Number",context);
+                              "Please Enter Business Document Number", context);
                         } else if (businessProofDocId == null) {
-                          Utils.showToast("Please Select Proof",context);
+                          Utils.showToast("Please Select Proof", context);
                         } else if (slectedDate!.isEmpty) {
-                          Utils.showToast("Please Select Incorporation Date",context);
+                          Utils.showToast(
+                              "Please Select Incorporation Date", context);
                         } else {
                           await postLeadBuisnessDetail(context);
 
@@ -923,6 +947,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                             if (productProvider
                                 .getPostLeadBuisnessDetailData!.isSuccess!) {
                               fetchData(context);
+                            } else {
+                              Utils.showToast(
+                                  productProvider
+                                      .getPostLeadBuisnessDetailData!.message!,
+                                  context);
                             }
                           }
                         }
@@ -972,7 +1001,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
         }
       }
     } else {
-      if (productProvider.getLeadBusinessDetailData!.stateId != null && productProvider.getLeadBusinessDetailData!.stateId! != 0) {
+      if (productProvider.getLeadBusinessDetailData!.stateId != null &&
+          productProvider.getLeadBusinessDetailData!.stateId! != 0) {
         if (productProvider.getAllStateData != null) {
           var allStates = productProvider.getAllStateData!.returnObject!;
           if (setStateListFirstTime) {
@@ -1073,11 +1103,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           }
         }
       } else {
-        if(productProvider.getLeadBusinessDetailData!.cityId != 0) {
+        if (productProvider.getLeadBusinessDetailData!.cityId != 0) {
           if (setCityListFirstTime) {
             initialData = citylist.firstWhere(
-                    (element) =>
-                element?.id ==
+                (element) =>
+                    element?.id ==
                     productProvider.getLeadBusinessDetailData!.cityId,
                 orElse: () => CityResponce());
             selectedCityValue =
@@ -1088,58 +1118,57 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
         }
       }
 
-     return DropdownButtonFormField2<CityResponce>(
-          isExpanded: true,
-          value: initialData,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-            fillColor: textFiledBackgroundColour,
-            filled: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: kPrimaryColor, width: 1),
-            ),
+      return DropdownButtonFormField2<CityResponce>(
+        isExpanded: true,
+        value: initialData,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 16),
+          fillColor: textFiledBackgroundColour,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
           ),
-          hint: const Text(
-            'City',
-            style: TextStyle(
-              color: blueColor,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w500,
-            ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
           ),
-          items: getAllCity(citylist),
-          onChanged: setCityListFirstTime
-              ? null
-              : (CityResponce? value) {
-            selectedCityValue = value!.id.toString();
-            setState(() {
-              setCityListFirstTime = false;
-            });
-          },
-          buttonStyleData: const ButtonStyleData(
-            padding: EdgeInsets.only(right: 8),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
           ),
-          dropdownStyleData: const DropdownStyleData(
-            maxHeight: 200,
+        ),
+        hint: const Text(
+          'City',
+          style: TextStyle(
+            color: blueColor,
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
           ),
-          menuItemStyleData: MenuItemStyleData(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            customHeights: _getCustomItemsHeights3(citylist),
-          ),
-          iconStyleData: const IconStyleData(
-            openMenuIcon: Icon(Icons.arrow_drop_up),
-          ),
-        );
-
+        ),
+        items: getAllCity(citylist),
+        onChanged: setCityListFirstTime
+            ? null
+            : (CityResponce? value) {
+                selectedCityValue = value!.id.toString();
+                setState(() {
+                  setCityListFirstTime = false;
+                });
+              },
+        buttonStyleData: const ButtonStyleData(
+          padding: EdgeInsets.only(right: 8),
+        ),
+        dropdownStyleData: const DropdownStyleData(
+          maxHeight: 200,
+        ),
+        menuItemStyleData: MenuItemStyleData(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          customHeights: _getCustomItemsHeights3(citylist),
+        ),
+        iconStyleData: const IconStyleData(
+          openMenuIcon: Icon(Icons.arrow_drop_up),
+        ),
+      );
     } else {
       return Container();
     }
@@ -1207,7 +1236,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       buisnessProof: selectedChooseBusinessProofValue,
     );
     debugPrint("Post DATA:: ${postLeadBuisnessDetailRequestModel.toJson()}");
-     await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<DataProvider>(context, listen: false)
         .postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
   }
@@ -1216,7 +1245,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     showModalBottomSheet(
         context: context,
         builder: (builder) {
-          return ImagePickerWidgets(onImageSelected: _onImageSelected);
+          return ImagePickerFileWidgets(onImageSelected: _onImageSelected);
         });
   }
 
