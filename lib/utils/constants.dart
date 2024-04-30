@@ -9,6 +9,11 @@ const redColor = Color(0xffE8505B);
 const lightBlueColor = Color(0x00effaff);
 const blueColor = Color(0xFF2B3674);
 const greenColor = Color(0xFF6BCFB3);
+const whiteColor = Color(0xFFFFFFFF);
+const dashboard_bg_color_light_blue = Color(0xffecfcfc);
+const card_color = Color(0xFFFFF4F2);
+const text_green_color = Color(0xFF6BCFB3);
+const text_orange_color = Color(0xFFF56B3B);
 
 const double defaultPadding = 16.0;
 
