@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../utils/constants.dart';
+import '../../../utils/constants.dart';
 
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 class MyAccount extends StatefulWidget {
   const MyAccount({super.key});
@@ -17,7 +16,8 @@ class MyAccount extends StatefulWidget {
 class _MyAccountState extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
-    int _selectedIndex = 0;
+    ValueNotifier<int> selectedIndex = ValueNotifier<int>(0);
+
 
     return Scaffold(
       body: SafeArea(
@@ -154,7 +154,7 @@ class _MyAccountState extends State<MyAccount> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Container(
@@ -225,7 +225,7 @@ class _MyAccountState extends State<MyAccount> {
                 Container(
                   height: 450,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color:text_light_whit_color,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20.0),
                       // Radius for top-left corner
@@ -256,109 +256,126 @@ class _MyAccountState extends State<MyAccount> {
         backgroundColor: kPrimaryColor,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        color:kPrimaryColor,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        height: 60,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 7,
-        elevation: 20,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            // Menu item
-            GestureDetector(
-              onTap: () {
-                // Add your onPressed functionality here for Menu item
-              },
-              child: Column(
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/ic_vendors.svg',
-                    semanticsLabel: 'Verify PAN SVG',
-                  ),
-                  const SizedBox(height: 3), // Add space between icon and text
-                  Text(
-                    'Vendors',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 10,
+
+    bottomNavigationBar: BottomAppBar(
+      surfaceTintColor: Colors.white,
+      shadowColor: textFiledBackgroundColour,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      height: 70,
+      shape: const CircularNotchedRectangle(),
+      notchMargin: 10,
+      elevation: 30,
+      child: ValueListenableBuilder<int>(
+        valueListenable: selectedIndex,
+        builder: (context, index, _) {
+          return Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              // Menu item
+              GestureDetector(
+                onTap: () {
+                  selectedIndex.value = 0; // Update the selected index
+                  // Add your onPressed functionality here for Menu item
+                },
+                child: Column(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/ic_vendors.svg',
+                      semanticsLabel: 'Verify PAN SVG',
+                      color: index == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
                     ),
-                  ),
-                ],
-              ),
-            ),
-            // Search item
-            GestureDetector(
-              onTap: () {
-                // Add your onPressed functionality here for Search item
-              },
-              child: Column(
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/ic_transactions.svg',
-                    semanticsLabel: 'Verify PAN SVG',
-                  ),
-                  const SizedBox(height: 3), // Add space between icon and text
-                  Text(
-                    'Transactions',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 10,
+                    const SizedBox(height: 3), // Add space between icon and text
+                    Text(
+                      'Vendors',
+                      style: TextStyle(
+                        color: index == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                        fontSize: 10,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(width: 24.0),
-            // Print item
-            GestureDetector(
-              onTap: () {
-                // Add your onPressed functionality here for Print item
-              },
-              child: Column(
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/ic_services.svg',
-                    semanticsLabel: 'Verify PAN SVG',
-                  ),
-                  const SizedBox(height: 3), // Add space between icon and text
-                  Text(
-                    'Services',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 10,
+              // Search item
+              GestureDetector(
+                onTap: () {
+                  selectedIndex.value = 1; // Update the selected index
+                  // Add your onPressed functionality here for Search item
+                },
+                child: Column(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/ic_transactions.svg',
+                      semanticsLabel: 'Verify PAN SVG',
+                      color: index == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
                     ),
-                  ),
-                ],
-              ),
-            ),
-            // People item
-            GestureDetector(
-              onTap: () {
-                // Add your onPressed functionality here for People item
-              },
-              child: Column(
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/ic_setting.svg',
-                    semanticsLabel: 'Verify PAN SVG',
-                  ),
-                  const SizedBox(height: 3), // Add space between icon and text
-                  Text(
-                    'Setting',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 10,
+                    const SizedBox(height: 3), // Add space between icon and text
+                    Text(
+                      'Transactions',
+                      style: TextStyle(
+                        color: index == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                        fontSize: 10,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+              SizedBox(width: 24.0),
+              // Print item
+              GestureDetector(
+                onTap: () {
+                  selectedIndex.value = 2; // Update the selected index
+                  // Add your onPressed functionality here for Print item
+                },
+                child: Column(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/ic_services.svg',
+                      semanticsLabel: 'Verify PAN SVG',
+                      color: index == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                    ),
+                    const SizedBox(height: 3), // Add space between icon and text
+                    Text(
+                      'Services',
+                      style: TextStyle(
+                        color: index == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // People item
+              GestureDetector(
+                onTap: () {
+                  selectedIndex.value = 3; // Update the selected index
+                  // Add your onPressed functionality here for People item
+                },
+                child: Column(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/ic_setting.svg',
+                      semanticsLabel: 'Verify PAN SVG',
+                      color: index == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                    ),
+                    const SizedBox(height: 3), // Add space between icon and text
+                    Text(
+                      'Setting',
+                      style: TextStyle(
+                        color: index == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
+    )
+
+
     );
   }
 

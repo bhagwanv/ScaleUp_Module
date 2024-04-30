@@ -14,6 +14,7 @@ const dashboard_bg_color_light_blue = Color(0xffecfcfc);
 const card_color = Color(0xFFFFF4F2);
 const text_green_color = Color(0xFF6BCFB3);
 const text_orange_color = Color(0xFFF56B3B);
+const text_light_whit_color = Color(0xFFF7FBFC);
 
 const double defaultPadding = 16.0;
 

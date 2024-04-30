@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/Bank_details_screen/BankDetailsScreen.dart';
 import 'package:scale_up_module/view/business_details_screen/business_details_screen.dart';
 import 'package:scale_up_module/view/login_screen/login_screen.dart';
-import 'package:scale_up_module/view/dashboard_screen/my_account.dart';
+import 'package:scale_up_module/view/dashboard_screen/my_account/my_account.dart';
 
 
 import 'data_provider/DataProvider.dart';
