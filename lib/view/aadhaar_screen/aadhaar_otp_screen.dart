@@ -63,7 +63,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
       controller: _controller,
       seconds: _start,
       build: (_, double time) => Text(
-        time.toString(),
+        time.toStringAsFixed(0)+" S",
         style: TextStyle(
           fontSize: 15,
           color: Colors.blue,
@@ -123,7 +123,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                   length: 6,
                   controller: pinController,
                   showCursor: true,
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9\.]")),],
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9\]")),],
                   defaultPinTheme: defaultPinTheme,
                   focusedPinTheme: defaultPinTheme.copyWith(
                     decoration: defaultPinTheme.decoration!.copyWith(
@@ -246,8 +246,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
             var leadAadhaarResponse = ValidateAadhaarOTPResponseModel;
             if(leadAadhaarResponse != null) {
               if (leadAadhaarResponse.isSuccess != null) {
-                Utils.showToast(
-                    " ${leadAadhaarResponse.message!}",context);
+                Utils.showBottomSheetKeyFailed(context,"${leadAadhaarResponse.message!}",KYC_FAild_PATH,widget.activityId,widget.subActivityId);
                 if(leadAadhaarResponse.isSuccess!) {
                   fetchData(context);
                 }
@@ -317,8 +316,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
         otp: "",
         requestId: "");
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
-        .leadAadharGenerateOTP(request);
+    await Provider.of<DataProvider>(context, listen: false).leadAadharGenerateOTP(request);
     Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.getLeadAadharGenerateOTP != null) {
       productProvider.getLeadAadharGenerateOTP!.when(
@@ -326,8 +324,8 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
           var leadAadhaarResponse = AadhaarGenerateOTPResponseModel;
           if(leadAadhaarResponse != null) {
             if (leadAadhaarResponse.data!.message != null) {
-              Utils.showToast(
-                  " ${leadAadhaarResponse.data!.message!}",context);
+              /*Utils.showToast(
+                  " ${leadAadhaarResponse.data!.message!}",context);*/
             }
             widget.requestId =leadAadhaarResponse.requestId!;
           }

@@ -34,7 +34,7 @@ class AadhaarScreen extends StatefulWidget {
 
 class _AadhaarScreenState extends State<AadhaarScreen> {
   final TextEditingController _aadhaarController = TextEditingController();
-
+  DataProvider productProvider = DataProvider();
   String frontDocumentId = "";
   String backDocumentId = "";
   String frontFileUrl = "";
@@ -47,8 +47,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
     Utils.onLoading(context, "");
     isFrontImageDelete = false;
     // Perform asynchronous work first
-    await Provider.of<DataProvider>(context, listen: false)
-        .PostFrontAadhaarSingleFileData(imageFile, true, "", "");
+    await Provider.of<DataProvider>(context, listen: false).PostFrontAadhaarSingleFileData(imageFile, true, "", "");
     Navigator.of(context, rootNavigator: true).pop();
     // Update the widget state synchronously inside setState
   }
@@ -398,7 +397,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
               ),
               const SizedBox(height: 20),
               Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15),
+                padding: const EdgeInsets.only(left: 15, right: 30),
                 child: CheckboxTerm(
                   content:
                       "I hereby agree to provide my Aadhaar Number and One Time Password (OTP) data for Aadhaar based authentication for KYC purpose in establishing my identity with Scaleupfincap Private Limited.",
@@ -487,7 +486,6 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed
     _aadhaarController.dispose();
     super.dispose();
   }
@@ -512,8 +510,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
     Utils.onLoading(context, "");
 
-    await Provider.of<DataProvider>(context, listen: false)
-        .leadAadharGenerateOTP(request);
+    await Provider.of<DataProvider>(context, listen: false).leadAadharGenerateOTP(request);
 
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -524,10 +521,10 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
           if(leadAadhaarResponse != null) {
             String reqID = "";
             if (leadAadhaarResponse.data!.message != null) {
-              Utils.showToast(
-                  " ${leadAadhaarResponse.data!.message!}",context);
+              print(leadAadhaarResponse.data!.message!);
             }
             reqID = leadAadhaarResponse.requestId!;
+            productProvider.disposeAllSingleFileData();
             Navigator.push(
                 context,
                 MaterialPageRoute(

@@ -30,27 +30,36 @@ class _CheckboxTermState extends State<CheckboxTerm> {
       return Colors.blue;
     }
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return  InkWell(
+        splashColor: Colors.transparent,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-      Checkbox(
-        checkColor: Colors.white,
-        value: widget.isChecked,
-        side: const BorderSide(color: kPrimaryColor),
-        onChanged: (bool? value) {
-          setState(() {
-            widget.isChecked = value!;
-            widget.onChanged!(value);
-          });
-        },
-      ),
+          Checkbox(
+            checkColor: Colors.white,
+            value: widget.isChecked,
+            side: const BorderSide(color: kPrimaryColor),
+            onChanged: (bool? value) {
+              setState(() {
+                widget.isChecked = value!;
+                widget.onChanged!(value);
+              });
+            },
+          ),
+
           Expanded(
-        child: Text(
-          widget.content ?? "",
-          style: TextStyle(fontSize: 14.0),
-        ),
-      ),
-    ]);
+            child: Text(
+              widget.content ?? "",
+              textAlign: TextAlign.justify,
+              style: TextStyle(fontSize: 14.0,),
+            ),),
+        ]),onTap: () {
+      // Toggle checkbox state when the row is tapped
+      setState(() {
+        widget.isChecked = !widget.isChecked;
+        widget.onChanged!(widget.isChecked);
+      });
+    },) ;
   }
 }

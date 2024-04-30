@@ -25,7 +25,6 @@ class CommonTextField extends StatefulWidget {
   final bool? enabled;
   final int? maxLength;
 
-
   const CommonTextField({
     Key? key,
     required this.controller,

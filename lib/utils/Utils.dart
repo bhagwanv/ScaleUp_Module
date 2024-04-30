@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
+import 'adhar_faild_widgets.dart';
 import 'kyc_faild_widgets.dart';
 
 class Utils {
@@ -17,8 +18,9 @@ class Utils {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Alert"),
-      content: Text(msg),
+      title: Text("Alert",
+      style: TextStyle(),),
+      content: Text(msg, textAlign: TextAlign.justify),
       actions: [
         okButton,
       ],
@@ -50,6 +52,14 @@ class Utils {
         builder: (builder) {
           return Container(
               child: KycFailedWidgets(message: msg, imagePath: imagePath));
+        });
+  }
+  static void showBottomSheetKeyFailed(BuildContext context,String msg,String imagePath,int activityId,int subActivityId) {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          return Container(
+              child: AdharFailedWidgets(message: msg, imagePath: imagePath,activityId: activityId,subActivityId: subActivityId,));
         });
   }
 
@@ -86,7 +96,7 @@ class Utils {
     );
   }
 
-  static  onLoading(BuildContext context, String msg) {
+ /* static  onLoading(BuildContext context, String msg) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -107,7 +117,36 @@ class Utils {
         ),
       ),
     );
+  }*/
+
+  static onLoading(BuildContext context, String msg) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => WillPopScope(
+        onWillPop: () async => false,
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 20.0, height: 60.0),
+              // Replace CircularProgressIndicator with your custom image
+              Image.asset(
+                'assets/images/scalup_loder.gif',
+                width: 200.0,
+                height: 200.0,
+                // Adjust width and height according to your image size
+              ),
+              SizedBox(width: 20.0, height: 60.0),
+              Text(msg),
+            ],
+          ),
+        ),
+      ),
+    );
   }
+
 
   static void hideKeyBored(BuildContext context){
     FocusScope.of(context).requestFocus(new FocusNode());

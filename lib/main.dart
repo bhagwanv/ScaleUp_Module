@@ -3,17 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/view/Bank_details_screen/BankDetailsScreen.dart';
-import 'package:scale_up_module/view/aadhaar_screen/aadhaar_screen.dart';
 import 'package:scale_up_module/view/business_details_screen/business_details_screen.dart';
 import 'package:scale_up_module/view/login_screen/login_screen.dart';
-import 'package:scale_up_module/view/otp_screens/OtpScreen.dart';
-import 'package:scale_up_module/view/pancard_screen/PancardScreen.dart';
-import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
-import 'package:scale_up_module/view/profile_screen/components/credit_line_approved.dart';
-import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
-import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';
+
 
 import 'data_provider/DataProvider.dart';
 
@@ -58,8 +51,7 @@ class _MyAppState extends State<MyApp> {
       ),
 
       //home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
-     home: LoginScreen(activityId: 1, subActivityId: 0, companyID: 2, ProductID:2, MobileNumber: "9755108415"),
-       //home: PancardScreen(activityId: 1, subActivityId: 0),
+      home: LoginScreen(activityId: 1, subActivityId: 0, companyID: 2, ProductID:2, MobileNumber: "9179173021"),
       /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
       /*LoginScreen(activityId: 1, subActivityId: 0),*/
       //TakeSelfieScreen(activityId: 2, subActivityId: 1),
