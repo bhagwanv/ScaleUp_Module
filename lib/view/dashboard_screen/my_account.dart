@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../utils/constants.dart';
+import '../../utils/constants.dart';
 
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
@@ -30,10 +30,59 @@ class _MyAccountState extends State<MyAccount> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                  'https://googleflutter.com/sample_image.jpg'),
+                              fit: BoxFit.fill),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('Welcome back',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: whiteColor,
+                                  fontSize: 10,
+                                  letterSpacing: 0.20000000298023224,
+                                  fontWeight: FontWeight.normal,
+                                  height: 1.5)),
+                          Text('Hello Vaibhav',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color:whiteColor,
+                                  fontSize: 15,
+                                  letterSpacing: 0.20000000298023224,
+                                  fontWeight: FontWeight.normal,
+                                  height: 1.5))
+                        ],
+                      ),
+                      const Spacer(),
+                      SvgPicture.asset(
+                        'assets/icons/notification.svg',
+                        semanticsLabel: 'notification SVG',
+                        color: whiteColor,
+                      ),
+                    ],
+                  ),
+                ),
+
+                Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Container(
                     width: double.infinity,
-                    height: 200,
+                    height: 190,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(
@@ -44,7 +93,8 @@ class _MyAccountState extends State<MyAccount> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
+                          Row (
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
                                 child: SvgPicture.asset(
@@ -52,48 +102,48 @@ class _MyAccountState extends State<MyAccount> {
                                   semanticsLabel: 'dummy_image SVG',
                                 ),
                               ),
-                              const SizedBox(width: 30),
+
                               Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   const Text(
                                     'Total Balance',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
-                                        fontSize: 15, color: Colors.black),
+                                        fontSize: 10, color: gryColor),
                                   ),
                                   const Text(
                                     '₹30,000',
-                                    textAlign: TextAlign.start,
+                                    textAlign: TextAlign.right,
                                     style: TextStyle(
-                                        fontSize: 15, color: Colors.black),
+                                        fontSize: 15, color: text_green_color),
                                   ),
-                                  const SizedBox(height: 10),
+                                  const SizedBox(height: 15),
                                   const Text(
                                     'Available to spend',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
-                                        fontSize: 15, color: Colors.black),
+                                        fontSize: 10, color: gryColor),
                                   ),
                                   const Text(
-                                    '₹3,30,000',
-                                    textAlign: TextAlign.start,
+                                    '₹3,30,000 ',
+                                    textAlign: TextAlign.right,
                                     style: TextStyle(
-                                        fontSize: 15, color: Colors.black),
+                                        fontSize: 20, color: Colors.black),
                                   ),
-                                  const SizedBox(height: 10),
+                                  const SizedBox(height: 15),
                                   const Text(
                                     'Total Outstanding ',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
-                                        fontSize: 15, color: Colors.black),
+                                        fontSize: 10, color: gryColor),
                                   ),
                                   const Text(
-                                    '₹₹30,000',
-                                    textAlign: TextAlign.start,
+                                    '₹30,000',
+                                    textAlign: TextAlign.right,
                                     style: TextStyle(
-                                        fontSize: 15, color: Colors.black),
+                                        fontSize: 15, color: text_orange_color),
                                   ),
-                                  const SizedBox(height: 10),
                                 ],
                               ),
                             ],
@@ -184,7 +234,7 @@ class _MyAccountState extends State<MyAccount> {
                     ), // Adjust the value to change the roundness
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.only(top: 20),
                     child: _horizontalList(10),
                   ),
                 ),
