@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/Bank_details_screen/BankDetailsScreen.dart';
 import 'package:scale_up_module/view/business_details_screen/business_details_screen.dart';
+import 'package:scale_up_module/view/dashboard_screen/bottom_navigation.dart';
 import 'package:scale_up_module/view/login_screen/login_screen.dart';
 import 'package:scale_up_module/view/dashboard_screen/my_account/my_account.dart';
 
@@ -52,7 +53,7 @@ class _MyAppState extends State<MyApp> {
       ),
 
       //home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
-      home: MyAccount()
+      home: BottomNav()
       //LoginScreen(activityId: 1, subActivityId: 0, companyID: 2, ProductID:2, MobileNumber: "9179173021"),
       /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
       /*LoginScreen(activityId: 1, subActivityId: 0),*/
