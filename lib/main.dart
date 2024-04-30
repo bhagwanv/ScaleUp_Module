@@ -7,6 +7,8 @@ import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/view/Bank_details_screen/BankDetailsScreen.dart';
 import 'package:scale_up_module/view/aadhaar_screen/aadhaar_screen.dart';
 import 'package:scale_up_module/view/business_details_screen/business_details_screen.dart';
+import 'package:scale_up_module/view/dashboard_screen/transactions_screen/transactions_screen.dart';
+import 'package:scale_up_module/view/dashboard_screen/vendors_screen/vendors_screen.dart';
 import 'package:scale_up_module/view/login_screen/login_screen.dart';
 import 'package:scale_up_module/view/otp_screens/OtpScreen.dart';
 import 'package:scale_up_module/view/pancard_screen/PancardScreen.dart';
@@ -58,8 +60,8 @@ class _MyAppState extends State<MyApp> {
       ),
 
       //home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
-     home: LoginScreen(activityId: 1, subActivityId: 0, companyID: 2, ProductID:2, MobileNumber: "9755108415"),
-       //home: PancardScreen(activityId: 1, subActivityId: 0),
+    // home: LoginScreen(activityId: 1, subActivityId: 0, companyID: 2, ProductID:2, MobileNumber: "9755108415"),
+       home: VendorsScreen(),
       /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
       /*LoginScreen(activityId: 1, subActivityId: 0),*/
       //TakeSelfieScreen(activityId: 2, subActivityId: 1),
