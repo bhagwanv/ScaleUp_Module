@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/Bank_details_screen/BankDetailsScreen.dart';
 import 'package:scale_up_module/view/business_details_screen/business_details_screen.dart';
 import 'package:scale_up_module/view/login_screen/login_screen.dart';
+import 'package:scale_up_module/view/profile_screen/components/my_account.dart';
 
 
 import 'data_provider/DataProvider.dart';
@@ -51,7 +52,8 @@ class _MyAppState extends State<MyApp> {
       ),
 
       //home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
-      home: LoginScreen(activityId: 1, subActivityId: 0, companyID: 2, ProductID:2, MobileNumber: "9179173021"),
+      home: MyAccount()
+      //LoginScreen(activityId: 1, subActivityId: 0, companyID: 2, ProductID:2, MobileNumber: "9179173021"),
       /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
       /*LoginScreen(activityId: 1, subActivityId: 0),*/
       //TakeSelfieScreen(activityId: 2, subActivityId: 1),
