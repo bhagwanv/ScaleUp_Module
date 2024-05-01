@@ -6,7 +6,7 @@ import 'package:scale_up_module/view/business_details_screen/business_details_sc
 import 'package:scale_up_module/view/pancard_screen/PancardScreen.dart';
 import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
 import 'package:scale_up_module/view/profile_screen/components/credit_line_approved.dart';
-import 'package:scale_up_module/view/profile_screen/components/my_account.dart';
+import 'package:scale_up_module/view/dashboard_screen/my_account/my_account.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/LeadCurrentResponseModel.dart';
 import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';

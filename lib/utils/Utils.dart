@@ -33,17 +33,17 @@ class Utils {
         return alert;
       },
     );
+  }
 
-
-
-   /* Fluttertoast.showToast(
+  static void showBottomToast(String msg) {
+    Fluttertoast.showToast(
         msg: msg,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
         textColor: Colors.white,
         fontSize: 16.0
-    );*/
+    );
   }
 
   static void showBottomSheet(BuildContext context,String msg,String imagePath) {
