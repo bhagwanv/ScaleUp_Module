@@ -755,8 +755,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     }
   }
 
-  Future<void> submitBankDetailsApi(
-      BuildContext contextz, DataProvider productProvider, List<int?> docList) async {
+  Future<void> submitBankDetailsApi(BuildContext contextz, DataProvider productProvider, List<int?> docList) async {
     if (selectedBankValue == null) {
       Utils.showToast("Please Select Bank", context);
     } else if (selectedBankValue!.isEmpty) {

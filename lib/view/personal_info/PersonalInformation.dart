@@ -58,7 +58,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
   ];
   final List<String> maritalList = [
     'Married',
-    'UnMarried',
+    'Single',
+    'Others',
+    'Divorced'
     'Widow',
   ];
 
@@ -166,11 +168,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             personalDetailsResponce!.manulaElectrictyBillImage!;
                       }
 
-                      if (personalDetailsResponce!.gender == "M" ||
-                          personalDetailsResponce!.gender == "Male") {
+                      if (personalDetailsResponce!.gender == "Male") {
                         _genderCl.text = "Male";
-                      } else if (personalDetailsResponce!.gender == "F" ||
-                          personalDetailsResponce!.gender == "Female") {
+                      } else if (personalDetailsResponce!.gender == "Female") {
                         _genderCl.text = "Female";
                       } else {
                         _genderCl.text = "Other";
@@ -178,13 +178,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
                       if (personalDetailsResponce!.marital != null) {
                         if (personalDetailsResponce!.marital!.isNotEmpty) {
-                          if (personalDetailsResponce!.marital == "M" ||
-                              personalDetailsResponce!.marital == "Married") {
-                            selectedMaritalStatusValue = "Married";
-                          } else if (personalDetailsResponce!.marital == "UM" ||
-                              personalDetailsResponce!.marital == "UnMarried") {
-                            selectedMaritalStatusValue = "UnMarried";
-                          } else {
+                          if (personalDetailsResponce!.marital == "Married") {selectedMaritalStatusValue = "Married";
+                          } else if (personalDetailsResponce!.marital == "Single") {
+                            selectedMaritalStatusValue = "Single";
+                          } else if (personalDetailsResponce!.marital == "Others") {
+                            selectedMaritalStatusValue = "Others";
+                          } else if (personalDetailsResponce!.marital == "Divorced") {
+                            selectedMaritalStatusValue = "Divorced";
+                          } else if (personalDetailsResponce!.marital == "Widow") {
                             selectedMaritalStatusValue = "Widow";
                           }
                         }

@@ -3,11 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:scale_up_module/view/Bank_details_screen/BankDetailsScreen.dart';
-import 'package:scale_up_module/view/business_details_screen/business_details_screen.dart';
 import 'package:scale_up_module/view/login_screen/login_screen.dart';
-
-
+import 'package:scale_up_module/view/profile_screen/components/credit_line_approved.dart';
 import 'data_provider/DataProvider.dart';
 
 void main() {
@@ -22,7 +19,7 @@ void main() {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  static const platform = const MethodChannel('com.souvikbiswas.tipsy/result');
+  static const platform =  MethodChannel('com.souvikbiswas.tipsy/result');
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -50,11 +47,10 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
 
-      //home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
+     // home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
       home: LoginScreen(activityId: 1, subActivityId: 0, companyID: 2, ProductID:2, MobileNumber: "9179173021"),
-      /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
+     //home:  CreditLineApproved(activityId: 2, subActivityId: 1,isDisbursement: false)
       /*LoginScreen(activityId: 1, subActivityId: 0),*/
-      //TakeSelfieScreen(activityId: 2, subActivityId: 1),
     );
   }
 
