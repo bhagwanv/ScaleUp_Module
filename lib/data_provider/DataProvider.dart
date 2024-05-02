@@ -200,8 +200,8 @@ class DataProvider extends ChangeNotifier {
   Result<OfferResponceModel,Exception>? _getCustomerOrderSummaryForAnchorData;
   Result<OfferResponceModel,Exception>? get getCustomerOrderSummaryForAnchorData => _getCustomerOrderSummaryForAnchorData;
 
-  Result<CustomerTransactionListTwoRespModel,Exception>? _getCustomerTransactionListTwoData;
-  Result<CustomerTransactionListTwoRespModel,Exception>? get getCustomerTransactionListTwoData => _getCustomerTransactionListTwoData;
+  Result<List<CustomerTransactionListTwoRespModel>,Exception>? _getCustomerTransactionListTwoData;
+  Result<List<CustomerTransactionListTwoRespModel>,Exception>? get getCustomerTransactionListTwoData => _getCustomerTransactionListTwoData;
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -452,6 +452,7 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> disposegetCustomerOrderSummaryData() async {
     _getCustomerOrderSummaryData = null;
+    _getCustomerTransactionListTwoData = null;
     notifyListeners();
   }
 

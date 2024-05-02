@@ -48,12 +48,25 @@ class _MyAccountState extends State<MyAccount> {
           bottom: true,
           child: Consumer<DataProvider>(builder: (context, productProvider, child) {
             if (productProvider.getCustomerOrderSummaryData == null && isLoading) {
+              Future.delayed(Duration(seconds: 1), () {
+                setState(() {
+
+                });
+                print("sdfjaskfd1");
+              });
               return Loader();
             } else {
               if (productProvider.getCustomerOrderSummaryData != null && isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
                 isLoading = false;
               }
+/*
+              Future.delayed(Duration(seconds: 1), () {
+                setState(() {
+
+                });
+              });
+*/
 
               if (productProvider.getCustomerOrderSummaryData != null) {
                 productProvider.getCustomerOrderSummaryData!.when(
@@ -61,8 +74,13 @@ class _MyAccountState extends State<MyAccount> {
                   // await getCustomerTransactionList(context);
                     // Handle successful response
                     customerOrderSummaryResModel = CustomerOrderSummaryResModel;
+
                     if(customerOrderSummaryResModel!.customerName!=null){
                       customerName=customerOrderSummaryResModel!.customerName!;
+
+                      final prefsUtil = await SharedPref.getInstance();
+                      prefsUtil.saveString(CUSTOMERNAME, customerOrderSummaryResModel!.customerName!);
+
                     }
 
                     if(customerOrderSummaryResModel!.totalOutStanding!=null){
@@ -194,7 +212,7 @@ class _MyAccountState extends State<MyAccount> {
                                                 fontSize: 10, color: gryColor),
                                           ),
                                           Text(
-                                            totalPayableAmount,
+                                            "₹ $totalPayableAmount",
                                             textAlign: TextAlign.right,
                                             style: TextStyle(
                                                 fontSize: 15,
@@ -208,7 +226,7 @@ class _MyAccountState extends State<MyAccount> {
                                                 fontSize: 10, color: gryColor),
                                           ),
                                           Text(
-                                            availableLimit,
+                                            "₹ $availableLimit",
                                             textAlign: TextAlign.right,
                                             style: TextStyle(
                                                 fontSize: 20, color: Colors.black),
@@ -221,7 +239,7 @@ class _MyAccountState extends State<MyAccount> {
                                                 fontSize: 10, color: gryColor),
                                           ),
                                           Text(
-                                            totalOutStanding,
+                                            "₹ $totalOutStanding",
                                             textAlign: TextAlign.right,
                                             style: TextStyle(
                                                 fontSize: 15,
@@ -265,7 +283,7 @@ class _MyAccountState extends State<MyAccount> {
                                       const SizedBox(width: 10),
                                       // Add some space between the icon and text
                                        Text(
-                                        '$totalPayableAmount  Payable Today',
+                                        '₹ $totalPayableAmount  Payable Today',
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                             fontSize: 12, color: Colors.black),
@@ -401,7 +419,7 @@ class _MyAccountState extends State<MyAccount> {
     final prefsUtil = await SharedPref.getInstance();
   //  final int? leadId = prefsUtil.getInt(LEADE_ID);
 
-    Provider.of<DataProvider>(context, listen: false).getCustomerOrderSummary(257);
+    await Provider.of<DataProvider>(context, listen: false).getCustomerOrderSummary(257);
   }
 
   Future<void> getCustomerTransactionList(BuildContext context) async {

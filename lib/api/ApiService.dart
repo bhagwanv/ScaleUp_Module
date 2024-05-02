@@ -1133,7 +1133,7 @@ class ApiService {
     }
   }
 
-  Future<Result<CustomerTransactionListTwoRespModel,Exception>> getCustomerTransactionListTwo(
+  Future<Result<List<CustomerTransactionListTwoRespModel>,Exception>> getCustomerTransactionListTwo(
       CustomerTransactionListTwoReqModel customerTransactionListTwoReqModel) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
@@ -1150,8 +1150,8 @@ class ApiService {
         switch (response.statusCode) {
           case 200:
             final dynamic jsonData = json.decode(response.body);
-            final CustomerTransactionListTwoRespModel responseModel =
-            CustomerTransactionListTwoRespModel.fromJson(jsonData);
+            final List<CustomerTransactionListTwoRespModel> responseModel = List<CustomerTransactionListTwoRespModel>.from(
+                jsonData.map((model) => CustomerTransactionListTwoRespModel.fromJson(model)));
             return Success(responseModel);
           default:
             return Failure(ApiException(response.statusCode,"" ));

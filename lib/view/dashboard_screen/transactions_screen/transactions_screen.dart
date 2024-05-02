@@ -1,9 +1,12 @@
 
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:scale_up_module/utils/Utils.dart';
 
 import '../../../data_provider/DataProvider.dart';
 import '../../../shared_preferences/SharedPref.dart';
@@ -21,8 +24,9 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-  var isLoading = false;
-  late CustomerTransactionListTwoRespModel? customerTransactionListTwoRespModel = null;
+  var isLoading = true;
+  var customerName = "";
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +36,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<CustomerTransactionListTwoRespModel>? customerTransactionList;
     return Scaffold(
       backgroundColor: dashboard_bg_color_light_blue,
       body: SafeArea(
@@ -41,22 +46,27 @@ class _TransactionScreenState extends State<TransactionScreen> {
             Consumer<DataProvider>(builder: (context, productProvider, child) {
 
           if (productProvider.getCustomerTransactionListTwoData == null && isLoading) {
-             return Loader();
+            Future.delayed(Duration(seconds: 1), () {
+              setState(() {
+
+              });
+              print("sdfjaskfd1");
+            });
+            return Loader();
 
           } else {
             if (productProvider.getCustomerTransactionListTwoData != null && isLoading) {
-              Navigator.of(context, rootNavigator: true).pop();
+             Navigator.of(context, rootNavigator: true).pop();
               isLoading = false;
+              print("sdfjaskfd1");
             }
-
-            if (productProvider.getCustomerTransactionListTwoData != null) {
+            print("sdfjaskfd1$isLoading");
+            if (productProvider.getCustomerTransactionListTwoData != null)  {
               productProvider.getCustomerTransactionListTwoData!.when(
-                success: (CustomerTransactionListTwoRespModel) {
+                success: (data){
                   // Handle successful response
-                  customerTransactionListTwoRespModel = CustomerTransactionListTwoRespModel;
-
-                 // anchorName=customerTransactionListTwoRespModel!.anchorName
-
+                  customerTransactionList = data;
+                  
 
                 },
                 failure: (exception) {
@@ -89,7 +99,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       const SizedBox(
                         width: 16,
                       ),
-                      const Column(
+                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text('Welcome back',
@@ -100,7 +110,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   letterSpacing: 0.20000000298023224,
                                   fontWeight: FontWeight.normal,
                                   height: 1.5)),
-                          Text('Hello Vaibhav',
+                          Text(customerName,
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   color: Color.fromRGBO(30, 30, 30, 1),
@@ -119,7 +129,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     ],
                   ),
                 ),
-                Expanded(child: _myListView(context))
+                Expanded(child: customerTransactionList != null ? _myListView(context,customerTransactionList!): Container())
               ]),
             );
           }
@@ -128,10 +138,32 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 
-  Widget _myListView(BuildContext context) {
+  Widget _myListView(BuildContext context, List<CustomerTransactionListTwoRespModel> customerTransactionList) {
+    if (customerTransactionList == null || customerTransactionList!.isEmpty) {
+      // Return a widget indicating that the list is empty or null
+      return Center(
+        child: Text('No transactions available'),
+      );
+    }
+
     ListView listView = ListView.separated(
-      itemCount: 5,
+      itemCount: customerTransactionList!.length,
       itemBuilder: (BuildContext context, int index) {
+        CustomerTransactionListTwoRespModel transaction = customerTransactionList![index];
+
+
+        // Null check for each property before accessing it
+        String anchorName = transaction.anchorName ?? ''; // Default value if anchorName is null
+        String dueDate = transaction.dueDate!=null?Utils.convertDateTime(transaction.dueDate!):"" ;
+        String orderId = transaction.orderId ?? '';
+        String status = transaction.status ?? '';
+        int? amount = int.tryParse(transaction.amount.toString());
+        String? transactionId = transaction.transactionId.toString() ?? '';
+         String? invoiceId = transaction.invoiceId.toString() ?? '';
+        String paidAmount = transaction.paidAmount?.toString() ?? '';
+        String invoiceNo = transaction.invoiceNo ?? '';
+
+
         return Card(
           child: Container(
             decoration: BoxDecoration(
@@ -145,6 +177,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   offset: Offset(0, 3), // changes position of shadow
                 ),
               ],*/
+
             ),
             child: Row(
               mainAxisSize: MainAxisSize.max,
@@ -166,7 +199,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               width: 8,
                             ),
                             Text(
-                              "Shopkirana PVT. LTD.",
+                              anchorName,
                               style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.black,
@@ -174,7 +207,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             ),
                             Spacer(),
                             Text(
-                              "12/04  | 05:35 PM",
+                             dueDate,
                               style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey,
@@ -189,14 +222,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Order ID 45215",
+                              "Order ID  $orderId",
                               style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey,
                                   fontWeight: FontWeight.normal),
                             ),
                             Text(
-                              "₹5,000.0",
+                           " ₹ ${amount.toString()}",
                               style: TextStyle(
                                   fontSize: 15,
                                   color: kPrimaryColor,
@@ -233,9 +266,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   Future<void> getCustomerTransactionListTwo(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    final String? userId = prefsUtil.getString(USER_ID);
+     customerName = prefsUtil.getString(CUSTOMERNAME)!;
 
    var  customerTransactionListTwoReqModel=CustomerTransactionListTwoReqModel(leadId:257,skip:0,take:5);
-    Provider.of<DataProvider>(context, listen: false).getCustomerTransactionListTwo(customerTransactionListTwoReqModel);
+   Provider.of<DataProvider>(context, listen: false).getCustomerTransactionListTwo(customerTransactionListTwoReqModel);
   }
 }
