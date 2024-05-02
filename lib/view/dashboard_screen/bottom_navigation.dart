@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import 'package:scale_up_module/view/dashboard_screen/pagination.dart';
 import 'package:scale_up_module/view/dashboard_screen/transactions_screen/transactions_screen.dart';
 import 'package:scale_up_module/view/dashboard_screen/vendors_screen/vendors_screen.dart';
 
+import '../../data_provider/DataProvider.dart';
 import '../../utils/Utils.dart';
 import '../../utils/constants.dart';
 import 'my_account/my_account.dart';
@@ -21,8 +24,10 @@ class _BottomNavState extends State<BottomNav> {
     const MyAccount(),
   ];
   var selectedIndex = 2;
+  late DataProvider productProvider;
   @override
   Widget build(BuildContext context) {
+    productProvider = Provider.of<DataProvider>(context, listen: false);
     return Scaffold(
         body: _pages[selectedIndex],
         extendBody: true,
@@ -30,11 +35,12 @@ class _BottomNavState extends State<BottomNav> {
           onPressed: () {
             setState(() {
               selectedIndex = 2;
+              productProvider.disposegetCustomerOrderSummaryData();
             });
           },
           child: SvgPicture.asset(
             'assets/icons/ic_home.svg',
-            semanticsLabel: 'Verify PAN SVG',
+            semanticsLabel: 'home',
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
@@ -60,13 +66,14 @@ class _BottomNavState extends State<BottomNav> {
                 onTap: () {
                   setState(() {
                     selectedIndex = 0;
+                    productProvider.disposegetCustomerOrderSummaryData();
                   });
                 },
                 child: Column(
                   children: [
                     SvgPicture.asset(
                       'assets/icons/ic_vendors.svg',
-                      semanticsLabel: 'Verify PAN SVG',
+                      semanticsLabel: 'vendors',
                       color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
                     ),
                     const SizedBox(height: 3), // Add space between icon and text
@@ -85,13 +92,14 @@ class _BottomNavState extends State<BottomNav> {
                 onTap: () {
                   setState(() {
                     selectedIndex = 1;
+                    productProvider.disposegetCustomerOrderSummaryData();
                   });
                 },
                 child: Column(
                   children: [
                     SvgPicture.asset(
                       'assets/icons/ic_transactions.svg',
-                      semanticsLabel: 'Verify PAN SVG',
+                      semanticsLabel: 'transactionsG',
                       color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
                     ),
                     const SizedBox(height: 3), // Add space between icon and text
@@ -109,20 +117,23 @@ class _BottomNavState extends State<BottomNav> {
               // Print item
               GestureDetector(
                 onTap: () {
+                 /* setState(() {
+                    selectedIndex = 3;
+                  });*/
                   Utils.showBottomToast("Service Not Available");
                 },
                 child: Column(
                   children: [
                     SvgPicture.asset(
                       'assets/icons/ic_services.svg',
-                      semanticsLabel: 'Verify PAN SVG',
-                      color: selectedIndex == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                      semanticsLabel: 'ic_services',
+                      color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
                     ),
                     const SizedBox(height: 3), // Add space between icon and text
                     Text(
                       'Services',
                       style: TextStyle(
-                        color: selectedIndex == 2 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                        color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
                         fontSize: 10,
                       ),
                     ),
@@ -139,13 +150,13 @@ class _BottomNavState extends State<BottomNav> {
                     SvgPicture.asset(
                       'assets/icons/ic_setting.svg',
                       semanticsLabel: 'Verify PAN SVG',
-                      color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                      color: selectedIndex == 4 ? kPrimaryColor : Colors.black, // Change color based on selected index
                     ),
                     const SizedBox(height: 3), // Add space between icon and text
                     Text(
                       'Setting',
                       style: TextStyle(
-                        color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                        color: selectedIndex == 4 ? kPrimaryColor : Colors.black, // Change color based on selected index
                         fontSize: 10,
                       ),
                     ),

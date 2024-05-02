@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -5,8 +6,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data_provider/DataProvider.dart';
+import '../../../shared_preferences/SharedPref.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/loader.dart';
+import '../model/CustomerTransactionListRequestModel.dart';
+import 'model/CustomerTransactionListTwoReqModel.dart';
+import 'model/CustomerTransactionListTwoRespModel.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -16,6 +21,15 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
+  var isLoading = false;
+  late CustomerTransactionListTwoRespModel? customerTransactionListTwoRespModel = null;
+  @override
+  void initState() {
+    super.initState();
+    //Api Call
+    getCustomerTransactionListTwo(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,8 +39,35 @@ class _TransactionScreenState extends State<TransactionScreen> {
         bottom: true,
         child:
             Consumer<DataProvider>(builder: (context, productProvider, child) {
-          if (productProvider.getLeadPANData == null) {
-            // return Loader();
+
+          if (productProvider.getCustomerTransactionListTwoData == null && isLoading) {
+             return Loader();
+
+          } else {
+            if (productProvider.getCustomerTransactionListTwoData != null && isLoading) {
+              Navigator.of(context, rootNavigator: true).pop();
+              isLoading = false;
+            }
+
+            if (productProvider.getCustomerTransactionListTwoData != null) {
+              productProvider.getCustomerTransactionListTwoData!.when(
+                success: (CustomerTransactionListTwoRespModel) {
+                  // Handle successful response
+                  customerTransactionListTwoRespModel = CustomerTransactionListTwoRespModel;
+
+                 // anchorName=customerTransactionListTwoRespModel!.anchorName
+
+
+                },
+                failure: (exception) {
+                  // Handle failure
+                  print("dfjsf2");
+                  //print('Failure! Error: ${exception.message}');
+                },
+              );
+            }
+
+
             return Padding(
               padding: EdgeInsets.all(16.0),
               child: Column(children: [
@@ -81,8 +122,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 Expanded(child: _myListView(context))
               ]),
             );
-          } else {
-            return _myListView(context);
           }
         }),
       ),
@@ -189,5 +228,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
         ),
       ],
     ));
+  }
+
+
+  Future<void> getCustomerTransactionListTwo(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final String? userId = prefsUtil.getString(USER_ID);
+
+   var  customerTransactionListTwoReqModel=CustomerTransactionListTwoReqModel(leadId:257,skip:0,take:5);
+    Provider.of<DataProvider>(context, listen: false).getCustomerTransactionListTwo(customerTransactionListTwoReqModel);
   }
 }

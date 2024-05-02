@@ -21,6 +21,10 @@ import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseMode
 import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailRequestModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailResponsModel.dart';
+import '../view/dashboard_screen/model/CustomerTransactionListRequestModel.dart';
+import '../view/dashboard_screen/my_account/model/CustomerOrderSummaryResModel.dart';
+import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
+import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
@@ -186,6 +190,18 @@ class DataProvider extends ChangeNotifier {
 
   Result<SaveBankDetailResponce,Exception>? _getSaveLeadBankDetailData;
   Result<SaveBankDetailResponce,Exception>? get getSaveLeadBankDetailData => _getSaveLeadBankDetailData;
+
+  Result<CustomerOrderSummaryResModel,Exception>? _getCustomerOrderSummaryData;
+  Result<CustomerOrderSummaryResModel,Exception>? get getCustomerOrderSummaryData => _getCustomerOrderSummaryData;
+
+  Result<PostLeadSelfieResponseModel,Exception>? _getCustomerTransactionListData;
+  Result<PostLeadSelfieResponseModel,Exception>? get getCustomerTransactionListData => _getCustomerTransactionListData;
+
+  Result<OfferResponceModel,Exception>? _getCustomerOrderSummaryForAnchorData;
+  Result<OfferResponceModel,Exception>? get getCustomerOrderSummaryForAnchorData => _getCustomerOrderSummaryForAnchorData;
+
+  Result<CustomerTransactionListTwoRespModel,Exception>? _getCustomerTransactionListTwoData;
+  Result<CustomerTransactionListTwoRespModel,Exception>? get getCustomerTransactionListTwoData => _getCustomerTransactionListTwoData;
 
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
@@ -407,6 +423,35 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> GetDisbursement(int leadId) async {
     _getDisbursementData = await apiService.GetDisbursement(leadId);
+    notifyListeners();
+  }
+
+  Future<void> getCustomerOrderSummary( leadId) async {
+    _getCustomerOrderSummaryData = await apiService.getCustomerOrderSummary(leadId);
+    notifyListeners();
+  }
+
+  Future<void> getCustomerTransactionList(
+      CustomerTransactionListRequestModel customerTransactionListRequestModel) async {
+    _getCustomerTransactionListData =
+    await apiService.getCustomerTransactionList(customerTransactionListRequestModel);
+
+  }
+
+  Future<void> getCustomerOrderSummaryForAnchor(int leadId) async {
+    _getCustomerOrderSummaryForAnchorData = await apiService.getCustomerOrderSummaryForAnchor(leadId);
+    notifyListeners();
+  }
+
+  Future<void> getCustomerTransactionListTwo(
+      CustomerTransactionListTwoReqModel customerTransactionListTwoReqModel) async {
+    _getCustomerTransactionListTwoData =
+    await apiService.getCustomerTransactionListTwo(customerTransactionListTwoReqModel);
+
+  }
+
+  Future<void> disposegetCustomerOrderSummaryData() async {
+    _getCustomerOrderSummaryData = null;
     notifyListeners();
   }
 
