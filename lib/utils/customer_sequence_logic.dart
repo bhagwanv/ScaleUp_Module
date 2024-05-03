@@ -46,11 +46,7 @@ ScreenType? customerSequence(
           return ScreenType.aadhar;
         } else if (leadCurrentActivity.subActivityName == "Selfie") {
           Navigator.of(context).push(
-
             MaterialPageRoute(builder: (context) => TakeSelfieScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
-
-
-
           );
           return ScreenType.selfie;
         }
@@ -73,34 +69,32 @@ ScreenType? customerSequence(
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => ProfileReview()),
         );
-        return ScreenType.login;
+        return ScreenType.Inprogress;
+
       } else if (leadCurrentActivity.activityName == "Show Offer") {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: false)),
         );
-        return ScreenType.login;
+        return ScreenType.showoOffer;
       } else if (leadCurrentActivity.activityName == "Rejected") {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => RejectedScreen()),
         );
-        return ScreenType.login;
+        return ScreenType.Rejected;
       }else if (leadCurrentActivity.activityName == "Agreement") {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => ProfileReview()),
-        );
-        return ScreenType.aggrement;
+        if (leadCurrentActivity.subActivityName == "AgreementEsign") {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => AgreementScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
+          );
+          return ScreenType.AgreementEsign;
+        }
       }else if (leadCurrentActivity.activityName == "Disbursement") {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: true)),
         );
         return ScreenType.Disbursement;
       }
-      else if (leadCurrentActivity.activityName == "AgreementEsign") {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => AgreementScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
-        );
-        return ScreenType.AgreementEsign;
-      } else if (leadCurrentActivity.activityName == "Disbursement Completed") {
+      else if (leadCurrentActivity.activityName == "Disbursement Completed") {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: false,)),
         );

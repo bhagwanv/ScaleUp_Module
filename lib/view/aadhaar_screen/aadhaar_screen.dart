@@ -351,7 +351,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                                                       kPrimaryColor,
                                                       BlendMode.srcIn))),
                                       const Text(
-                                        'Upload Aadhar Front Image',
+                                        'Upload Aadhar Back Image',
                                         style: TextStyle(
                                           color: kPrimaryColor,
                                           fontSize: 12.0,

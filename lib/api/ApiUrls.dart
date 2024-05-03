@@ -37,6 +37,15 @@ class ApiUrls{
   final String GetAgreemetDetail="/aggregator/LeadAgg/GetAgreemetDetail";
   final String GetDisbursementProposal="/aggregator/LeadAgg/GetDisbursementProposal";
   final String GetDisbursement="/aggregator/LeadAgg/GetDisbursement";
+  final String ScaleUpPaymentInitiate="/aggregator/LeadAgg/GetDisbursement";
+  final String GetByTransactionReqNoForOTP="/aggregator/LoanAccountAgg/GetByTransactionReqNoForOTP";
+  final String ResentOrderOTP="/aggregator/LoanAccountAgg/ResentOrderOTP";
+  final String ValidateOrderOTPGetToken="/aggregator/LoanAccountAgg/ValidateOrderOTPGetToken";
+  final String GetByTransactionReqNo="/aggregator/LoanAccountAgg/GetByTransactionReqNo";
+  final String PostOrderPlacement="/aggregator/LoanAccountAgg/PostOrderPlacement";
+
+
+
   final String getCustomerOrderSummary="/services/loanaccount/v1/GetCustomerOrderSummary";
   final String getCustomerTransactionList="/services/loanaccount/v1/GetCustomerTransactionList";
   final String getCustomerOrderSummaryForAnchor="/services/loanaccount/v1/GetCustomerOrderSummaryForAnchor";

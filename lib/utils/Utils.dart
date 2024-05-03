@@ -170,4 +170,16 @@ class Utils {
     return formattedDate;
 
   }
+
+  static String convertDateTime(String dateTimeString) {
+    DateTime dateTime = DateTime.parse(dateTimeString);
+
+    // Format date to "12/04/2024" format
+    String date = DateFormat('MM/dd/yyyy').format(dateTime);
+
+    // Format time to "05:35 PM" format
+    String time = DateFormat('hh:mm a').format(dateTime);
+
+    return '$date | $time';
+  }
 }
