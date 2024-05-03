@@ -94,6 +94,8 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
               },
             );
           }
+
+
           if (productProvider.getCustomerTransactionListData != null) {
             productProvider.getCustomerTransactionListData!.when(
               success: (data) {
@@ -568,7 +570,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
     Provider.of<DataProvider>(context, listen: false)
         .getCustomerOrderSummary(257);
     if(selectedTab == 0) {
-      getCustomerTransactionList(context);
+     await getCustomerTransactionList(context);
     }
   }
 
@@ -585,5 +587,9 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
     await Provider.of<DataProvider>(context, listen: false)
         .getCustomerTransactionList(customerTransactionListRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
+
+    setState(() {
+
+    });
   }
 }

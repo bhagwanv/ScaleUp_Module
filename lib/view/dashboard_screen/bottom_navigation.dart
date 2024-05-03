@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/dashboard_screen/pagination.dart';
 import 'package:scale_up_module/view/dashboard_screen/transactions_screen/transactions_screen.dart';
+import 'package:scale_up_module/view/dashboard_screen/vendorDetail/vendor_detail_screen.dart';
 import 'package:scale_up_module/view/dashboard_screen/vendors_screen/vendors_screen.dart';
 
 import '../../data_provider/DataProvider.dart';
@@ -19,7 +20,7 @@ class BottomNav extends StatefulWidget {
 
 class _BottomNavState extends State<BottomNav> {
   final List<Widget> _pages = [
-    const VendorsScreen(),
+    const VendorDetailScreen(),
     const TransactionScreen(),
     const MyAccount(),
   ];
