@@ -523,7 +523,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                   ),
                                 ),
                                 SvgPicture.asset(
-                                  'assets/icons/ic_information.svg',
+                                  'assets/icons/information.png',
                                   semanticsLabel: 'notification SVG',
                                   color: whiteColor,
                                 ),
