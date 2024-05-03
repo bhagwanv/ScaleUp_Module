@@ -36,7 +36,8 @@ class BankDetailsScreen extends StatefulWidget {
 }
 
 class _BankDetailsScreenState extends State<BankDetailsScreen> {
-  final TextEditingController _accountHolderController = TextEditingController();
+  final TextEditingController _accountHolderController =
+      TextEditingController();
   final TextEditingController _bankNameController = TextEditingController();
   final TextEditingController _bankAccountNumberCl = TextEditingController();
   final TextEditingController _accountTypeCl = TextEditingController();
@@ -47,7 +48,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   List<LiveBankList?>? liveBankList = [];
   late String selectedAccountTypeValue = "";
   String? selectedBankValue;
-  BankDetailsResponceModel? bankDetailsResponceModel = null;
+  BankDetailsResponceModel?
+  bankDetailsResponceModel = null;
   List<int?>? documentList = [];
 
   @override
@@ -154,6 +156,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             if (productProvider.getBankDetailsData == null && isLoading) {
               return Center(child: Loader());
             } else {
+
               if (productProvider.getBankDetailsData != null && isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
                 isLoading = false;
@@ -383,7 +386,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                           Icon(Icons.picture_as_pdf),
                                           Spacer(),
                                           InkWell(
-                                            onTap: (){
+                                            onTap: () {
                                               setState(() {
                                                 documentList!.removeAt(index);
                                               });
@@ -406,7 +409,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       ),
                       CommonElevatedButton(
                         onPressed: () async {
-                          await submitBankDetailsApi(context, productProvider, documentList!);
+                          await submitBankDetailsApi(
+                              context, productProvider, documentList!);
 
                           /* Navigator.push(
                             context,
@@ -755,8 +759,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     }
   }
 
-  Future<void> submitBankDetailsApi(
-      BuildContext contextz, DataProvider productProvider, List<int?> docList) async {
+  Future<void> submitBankDetailsApi(BuildContext contextz,
+      DataProvider productProvider, List<int?> docList) async {
     if (selectedBankValue == null) {
       Utils.showToast("Please Select Bank", context);
     } else if (selectedBankValue!.isEmpty) {
@@ -787,7 +791,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           subActivityId: widget.subActivityId,
           accountNumber: _bankAccountNumberCl.text,
           accountHolderName: _accountHolderController.text,
-      DocumentId: document);
+          DocumentId: document);
 
       Utils.onLoading(context, "");
       await Provider.of<DataProvider>(context, listen: false)

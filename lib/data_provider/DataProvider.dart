@@ -17,10 +17,16 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/bank_details_screen/model/TransactionDetailModel.dart';
 import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailRequestModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailResponsModel.dart';
+import '../view/checkoutView/CheckOutOtpScreen.dart';
+import '../view/checkoutView/model/CheckOutOtpModel.dart';
+import '../view/checkoutView/model/OrderPaymentModel.dart';
+import '../view/checkoutView/model/PayemtOrderPostRequestModel.dart';
+import '../view/checkoutView/model/ValidOtpForCheckoutModel.dart';
 import '../view/dashboard_screen/model/CustomerTransactionListRequestModel.dart';
 import '../view/dashboard_screen/my_account/model/CustomerOrderSummaryResModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
@@ -190,6 +196,22 @@ class DataProvider extends ChangeNotifier {
 
   Result<SaveBankDetailResponce,Exception>? _getSaveLeadBankDetailData;
   Result<SaveBankDetailResponce,Exception>? get getSaveLeadBankDetailData => _getSaveLeadBankDetailData;
+
+
+  Result< CheckOutOtpModel, Exception>? _genrateOptPaymentData;
+  Result< CheckOutOtpModel, Exception>? get genrateOptPaymentData => _genrateOptPaymentData;
+
+  Result< bool, Exception>? _reSendOptPaymentData;
+  Result< bool, Exception>? get reSendOptPaymentData => _reSendOptPaymentData;
+
+  Result< ValidOtpForCheckoutModel, Exception>? _validOptPaymentData;
+  Result< ValidOtpForCheckoutModel, Exception>? get validOptPaymentData => _validOptPaymentData;
+
+  Result< TransactionDetailModel, Exception>? _getTranscationData;
+  Result< TransactionDetailModel, Exception>? get getTranscationData => _getTranscationData;
+
+  Result< OrderPaymentModel, Exception>? _postPaymentOrderData;
+  Result< OrderPaymentModel, Exception>? get postPaymentOrderData => _postPaymentOrderData;
 
   Result<CustomerOrderSummaryResModel,Exception>? _getCustomerOrderSummaryData;
   Result<CustomerOrderSummaryResModel,Exception>? get getCustomerOrderSummaryData => _getCustomerOrderSummaryData;
@@ -423,6 +445,29 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> GetDisbursement(int leadId) async {
     _getDisbursementData = await apiService.GetDisbursement(leadId);
+    notifyListeners();
+  }
+ Future<void> GetByTransactionReqNoForOTP(String transactionReqNo) async {
+   _genrateOptPaymentData = await apiService.genrateOtpPaymentConfromation(transactionReqNo);
+    notifyListeners();
+  }
+
+  Future<void> reSendOtpPaymentConfromation(String MobileNo,String transactionReqNo) async {
+    _reSendOptPaymentData = await apiService.reSendOtpPaymentConfromation(MobileNo,transactionReqNo);
+    notifyListeners();
+  }
+
+  Future<void> ValidateOrderOTPGetToken(String MobileNo,String otp,String transactionReqNo) async {
+    _validOptPaymentData = await apiService.ValidateOrderOTPGetToken(MobileNo,otp,transactionReqNo);
+    notifyListeners();
+  }
+
+  Future<void> GetByTransactionReqNo(String transactionReqNo) async {
+    _getTranscationData = await apiService.GetByTransactionReqNo(transactionReqNo);
+    notifyListeners();
+  }
+  Future<void> PostOrderPlacement(PayemtOrderPostRequestModel model) async {
+    _postPaymentOrderData = await apiService.PostOrderPlacement(model);
     notifyListeners();
   }
 

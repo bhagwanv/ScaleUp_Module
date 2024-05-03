@@ -53,14 +53,16 @@ class _AgreementScreenState extends State<AgreementScreen> {
               SizedBox(
                 height: 16.0,
               ),
-              Text(
-                "Agreement",
-                style: TextStyle(
-                  fontSize: 40.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w100,
+              Center(
+                child: Text(
+                  "Agreement",
+                  style: TextStyle(
+                    fontSize: 40.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w100,
+                  ),
+                  textAlign: TextAlign.start,
                 ),
-                textAlign: TextAlign.start,
               ),
               SizedBox(
                 height: 30.0,
@@ -108,10 +110,8 @@ class _AgreementScreenState extends State<AgreementScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     var responce = await ApiService().checkEsignStatus(leadId!);
-    if (responce.isSuccess!) {
-      //Navigator.of(context, rootNavigator: true).pop();
+    if (responce.result!) {
       fetchData(context);
-      //var responce = await ApiService().GetAgreemetDetail(leadId!,false,prefsUtil.getString(COMPANY_ID)!);
     } else {
       callAggrementDetailsApi(false,context);
     }
@@ -133,9 +133,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-              as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -153,15 +151,14 @@ class _AgreementScreenState extends State<AgreementScreen> {
   }
 
   void callAggrementDetailsApi(bool accept, BuildContext context,) async {
+    Utils.onLoading(context, "");
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final int? companyID = prefsUtil.getInt(COMPANY_ID);
-    aggrementDetails = await ApiService().GetAgreemetDetail(leadId!, false, companyID!);
-    setState(() {});
-    if(aggrementDetails!.status!){
-      fetchData(context);
-    }else{
-      Utils.showToast(aggrementDetails!.message!,context);
-    }
+    aggrementDetails = await ApiService().GetAgreemetDetail(leadId!, accept, companyID!);
+
+    setState(() {
+      Navigator.pop(context);
+    });
   }
 }

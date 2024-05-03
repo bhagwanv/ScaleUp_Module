@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/api/ApiService.dart';
-import 'package:scale_up_module/api/ExceptionHandling.dart';
 import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/utils/Utils.dart';
-import 'package:scale_up_module/view/Bank_details_screen/BankDetailsScreen.dart';
 import 'package:scale_up_module/view/profile_screen/model/DisbursementResponce.dart';
 import 'package:scale_up_module/view/profile_screen/model/OfferPersonNameResponceModel.dart';
 import 'package:scale_up_module/view/profile_screen/model/OfferResponceModel.dart';
@@ -41,6 +39,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
   late DisbursementResponce? disbursementResponce=null;
   var isLoading = true;
   var congratulations = "";
+  String? userID = "";
 
   @override
   void initState() {
@@ -66,14 +65,14 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
             isLoading = false;
           }
         }else {
-          if (productProvider.getOfferResponceata == null && isLoading) {
+         /* if (productProvider.getOfferResponceata == null && isLoading) {
+            isLoading = false;
             return Center(child: Loader());
           }else {
-            Navigator.of(context, rootNavigator: true).pop();
+          //  Navigator.of(context, rootNavigator: true).pop();
             isLoading = false;
-          }
+          }*/
         }
-
 
           if(widget.isDisbursement){
             if (productProvider.getDisbursementProposalData != null) {
@@ -92,13 +91,8 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
           }else{
             if (productProvider.getOfferResponceata != null) {
               productProvider.getOfferResponceata!.when(
-                success: (OfferResponceModel) async {
-                  // Handle successful response
+                success: (OfferResponceModel) {
                   offerResponceModel = OfferResponceModel;
-
-                  await getLeadNameApi(context,productProvider);
-
-
                 },
                 failure: (exception) {
                   // Handle failure
@@ -109,6 +103,16 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
             }
           }
 
+        if (productProvider.getLeadNameData != null) {
+          productProvider.getLeadNameData!.when(
+            success: (OfferPersonNameResponceModel) {
+              offerPersonNameResponceModel = OfferPersonNameResponceModel;
+            },
+            failure: (exception) {
+              print("Failure");
+            },
+          );
+        }
           return Scaffold(
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(30),
@@ -137,6 +141,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                     children: [
                       SizedBox(height: 10),
                       Text(
+                        textAlign: TextAlign.center,
                           "Congratulations ${offerPersonNameResponceModel?.response ?? ''}!! ",
                         style: TextStyle(color: kPrimaryColor, fontSize: 18),
                       ),
@@ -189,33 +194,16 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
   void callApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    final String? userID = prefsUtil.getString(USER_ID);
-    Provider.of<DataProvider>(context, listen: false).GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
+    userID = prefsUtil.getString(USER_ID);
+    Utils.onLoading(context,"");
+    await Provider.of<DataProvider>(context, listen: false).GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
+    Navigator.of(context, rootNavigator: true).pop();
+    getLeadNameApi(context);
   }
 
-  Future<void> getLeadNameApi(BuildContext context, DataProvider productProvider) async {
-    final prefsUtil = await SharedPref.getInstance();
-    final String? userID = prefsUtil.getString(USER_ID);
-    Utils.onLoading(context,"");
-    await Provider.of<DataProvider>(context, listen: false).getLeadName(userID!);
-    Navigator.of(context, rootNavigator: true).pop();
-
-    if (productProvider.getLeadNameData != null) {
-      productProvider.getLeadNameData!.when(
-        success: (OfferPersonNameResponceModel) {
-          // Handle successful response
-          offerPersonNameResponceModel = OfferPersonNameResponceModel;
-          //  congratulations= offerPersonNameResponceModel!.response!;
-
-        },
-        failure: (exception) {
-          // Handle failure
-          print("Failure");
-          //print('Failure! Error: ${exception.message}');
-        },
-      );
-    }
-
+  Future<void> getLeadNameApi(BuildContext context) async {
+    Provider.of<DataProvider>(context, listen: false).getLeadName(userID!);
+    //Navigator.of(context, rootNavigator: true).pop();
   }
 
 
@@ -304,8 +292,6 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
   Widget SetCutomerOfferWidget(DataProvider productProvider) {
     if (offerResponceModel!= null) {
       if (offerResponceModel!.status!) {
-        Navigator.of(context, rootNavigator: true).pop();
-        isLoading = false;
         return Column(
           children: [
             SizedBox(height: 10),

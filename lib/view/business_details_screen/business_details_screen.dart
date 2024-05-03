@@ -54,6 +54,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   var isClearData = false;
   var isImageDelete = false;
+  var isGstFilled = false;
 
   var updateData = false;
 
@@ -387,7 +388,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
               }
             }
 
-            print("business proff ::"+selectedChooseBusinessProofValue!);
+
             return Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
@@ -478,6 +479,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                           .zipCode!
                                           .toString();
                                       //chooseBusinessProofList!.first;
+                                      isGstFilled=true;
                                       selectedChooseBusinessProofValue = "GST Certificate";
                                       _businessDocumentNumberController.text =
                                           productProvider
@@ -525,6 +527,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 gstNumber = "";
                                 image = "";
                                 businessProofDocId = null;
+                                isGstFilled=false;
                               });
                             },
                             child: Container(
@@ -784,7 +787,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       ),
                       items: _addDividersAfterItems(chooseBusinessProofList),
                       value: selectedChooseBusinessProofValue,
-                      onChanged: (String? value) {
+                      onChanged: isGstFilled ? null : (String? value) {
                         setState(() {
                           selectedChooseBusinessProofValue = value;
                         });

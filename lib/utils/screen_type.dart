@@ -9,5 +9,8 @@ enum ScreenType {
   aggrement,
   Disbursement,
   AgreementEsign,
-  DisbursementCompleted
+  DisbursementCompleted,
+  Inprogress,
+  showoOffer,
+  Rejected,
 }
