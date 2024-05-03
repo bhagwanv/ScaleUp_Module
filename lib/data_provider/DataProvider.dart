@@ -22,7 +22,6 @@ import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseMode
 import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailRequestModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailResponsModel.dart';
-import '../view/checkoutView/CheckOutOtpScreen.dart';
 import '../view/checkoutView/model/CheckOutOtpModel.dart';
 import '../view/checkoutView/model/OrderPaymentModel.dart';
 import '../view/checkoutView/model/PayemtOrderPostRequestModel.dart';
