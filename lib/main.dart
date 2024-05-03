@@ -3,12 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:scale_up_module/view/Bank_details_screen/BankDetailsScreen.dart';
-import 'package:scale_up_module/view/business_details_screen/business_details_screen.dart';
-import 'package:scale_up_module/view/dashboard_screen/bottom_navigation.dart';
+import 'package:scale_up_module/utils/loader.dart';
+import 'package:scale_up_module/view/dashboard_screen/vendorDetail/vendor_detail_screen.dart';
 import 'package:scale_up_module/view/login_screen/login_screen.dart';
-import 'package:scale_up_module/view/dashboard_screen/my_account/my_account.dart';
-
+import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 
 import 'data_provider/DataProvider.dart';
 
@@ -32,8 +30,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var mobileNumber;
-  var companyID;
-  var ProductID;
+  var company;
+  var product;
 
   @override
   void initState() {
@@ -45,20 +43,22 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Scalup',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
+        title: 'Scalup',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          useMaterial3: true,
+        ),
 
-      //home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
-      home: BottomNav()
-      //home: LoginScreen(activityId: 10, subActivityId: 0, companyID: 2, ProductID:5, MobileNumber: "7509764461"),
-      /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
-      /*LoginScreen(activityId: 1, subActivityId: 0),*/
-      //TakeSelfieScreen(activityId: 2, subActivityId: 1),
-    );
+       // home: SplashScreen(companyID: int.parse(company), ProductID:int.parse(product), mobileNumber: mobileNumber.toString())
+        home: SplashScreen(mobileNumber:  "7803994667",ProductID:  2,companyID: 2)
+            //VendorDetailScreen()
+          //home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
+          //home: LoginScreen(activityId: 10, subActivityId: 0, companyID: 2, ProductID:5, MobileNumber: "7509764461"),
+            /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
+            /*LoginScreen(activityId: 1, subActivityId: 0),*/
+            //TakeSelfieScreen(activityId: 2, subActivityId: 1),
+            );
   }
 
   Future<void> _receiveFromHost(MethodCall call) async {
@@ -68,7 +68,6 @@ class _MyAppState extends State<MyApp> {
       if (call.method == "getScaleUPData") {
         final String data = call.arguments;
         jData = await jsonDecode(data);
-
       }
     } on PlatformException catch (error) {
       print(error);
@@ -77,12 +76,14 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       if (jData != null) {
         mobileNumber = jData['mobileNumber'];
-        companyID = jData['companyID'];
-        ProductID = jData['productID'];
+        company = jData['companyID'];
+        product = jData['productID'];
+
+      //  productCompanyDetail(context, company, Product);
       } else {
         mobileNumber = "";
-        companyID = 0;
-        ProductID = 0;
+        company = "";
+        product = "";
       }
     });
   }

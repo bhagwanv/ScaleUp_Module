@@ -7,6 +7,7 @@ import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPRes
 import 'package:scale_up_module/view/pancard_screen/model/PostLeadPANRequestModel.dart';
 import 'package:scale_up_module/view/pancard_screen/model/PostSingleFileResponseModel.dart';
 import 'package:scale_up_module/view/personal_info/model/PostPersonalDetailsResponseModel.dart';
+import 'package:scale_up_module/ProductCompanyDetailResponseModel.dart';
 
 import '../api/ApiService.dart';
 import '../api/ExceptionHandling.dart';
@@ -64,6 +65,15 @@ class DataProvider extends ChangeNotifier {
 
   LeadCurrentResponseModel? get leadCurrentActivityAsyncData =>
       _leadCurrentActivityAsyncData;
+
+ /* ProductCompanyDetailResponseModel? _ProductCompanyDetailResponseModel;
+
+  ProductCompanyDetailResponseModel? get productCompanyDetailResponseModel => _ProductCompanyDetailResponseModel;
+*/
+  ProductCompanyDetailResponseModel? _ProductCompanyDetailResponseModel;
+
+  ProductCompanyDetailResponseModel? get productCompanyDetailResponseModel =>
+      _ProductCompanyDetailResponseModel;
 
   Result< GenrateOptResponceModel, Exception>? _genrateOptData;
   Result< GenrateOptResponceModel, Exception>? get genrateOptData => _genrateOptData;
@@ -203,10 +213,17 @@ class DataProvider extends ChangeNotifier {
   Result<CustomerTransactionListTwoRespModel,Exception>? _getCustomerTransactionListTwoData;
   Result<CustomerTransactionListTwoRespModel,Exception>? get getCustomerTransactionListTwoData => _getCustomerTransactionListTwoData;
 
+  Future<void> productCompanyDetail(
+      String product, String company) async {
+    _ProductCompanyDetailResponseModel =
+        await apiService.productCompanyDetail(product, company);
+    notifyListeners();
+  }
+
   Future<void> getLeads(
       String mobile, int productId, int companyId, int leadId) async {
     _getLeadData =
-        await apiService.getLeads(mobile, productId, companyId, leadId);
+    await apiService.getLeads(mobile, productId, companyId, leadId);
     notifyListeners();
   }
 

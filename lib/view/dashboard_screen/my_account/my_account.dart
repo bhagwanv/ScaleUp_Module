@@ -158,7 +158,6 @@ class _MyAccountState extends State<MyAccount> {
                             ],
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Container(
@@ -237,7 +236,6 @@ class _MyAccountState extends State<MyAccount> {
                             ),
                           ),
                         ),
-
                         Padding(
                           padding:  EdgeInsets.all(10.0),
                           child: Container(
