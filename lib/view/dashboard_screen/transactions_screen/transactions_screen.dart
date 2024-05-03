@@ -70,9 +70,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           if (productProvider.getCustomerTransactionListTwoData == null && isLoading) {
             Future.delayed(Duration(seconds: 1), () {
               setState(() {
-
               });
-              print("sdfjaskfd1");
             });
             return Loader();
 

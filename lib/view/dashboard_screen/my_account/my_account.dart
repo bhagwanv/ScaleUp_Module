@@ -49,10 +49,7 @@ class _MyAccountState extends State<MyAccount> {
           child: Consumer<DataProvider>(builder: (context, productProvider, child) {
             if (productProvider.getCustomerOrderSummaryData == null && isLoading) {
               Future.delayed(Duration(seconds: 1), () {
-                setState(() {
-
-                });
-                print("sdfjaskfd1");
+                setState(() {});
               });
               return Loader();
             } else {

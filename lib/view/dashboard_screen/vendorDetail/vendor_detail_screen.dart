@@ -38,7 +38,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
     super.initState();
 
     //Api Call
-       getCustomerOrderSummary(context);
+    getCustomerOrderSummary(context);
   }
 
   @override
@@ -55,6 +55,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
               isLoading) {
             Navigator.of(context, rootNavigator: true).pop();
             isLoading = false;
+            getCustomerTransactionList(context);
           }
 
           if (productProvider.getCustomerOrderSummaryData != null) {
@@ -94,7 +95,6 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
               },
             );
           }
-
 
           if (productProvider.getCustomerTransactionListData != null) {
             productProvider.getCustomerTransactionListData!.when(
@@ -355,12 +355,16 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                     color: Colors.white,
                     child: TabBar(
                       onTap: (index) {
-                        setState(() {
-                          selectedTab = index;
-                          if(selectedTab == 1) {
-                            getCustomerTransactionList(context);
-                          }
-                        });
+                        if(selectedTab != index) {
+                          setState(() {
+                            selectedTab = index;
+                            if (selectedTab == 1) {
+                              getCustomerTransactionList(context);
+                            } else {
+                              getCustomerTransactionList(context);
+                            }
+                          });
+                        }
                       },
                       physics: const ClampingScrollPhysics(),
                       padding: EdgeInsets.only(
@@ -427,8 +431,8 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      _myListView(context,customerTransactionList),
-                      _myListView(context,customerTransactionList)
+                      _myListView(context, customerTransactionList),
+                      _myListView(context, customerTransactionList)
                     ],
                   ),
                 )
@@ -440,28 +444,29 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
     ));
   }
 
-  Widget _myListView(BuildContext context, List<CustomerTransactionListTwoRespModel> customerTransactionList) {
+  Widget _myListView(BuildContext context,
+      List<CustomerTransactionListTwoRespModel> customerTransactionList) {
     if (customerTransactionList == null || customerTransactionList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
       /*  return Center(
         child: Text('No transactions available'),
       );*/
-
     }
 
-
     return ListView.builder(
-     // controller: _scrollController,
+      // controller: _scrollController,
       itemCount: customerTransactionList!.length,
       itemBuilder: (context, index) {
         if (index < customerTransactionList.length) {
-          CustomerTransactionListTwoRespModel transaction = customerTransactionList![index];
-
-
+          CustomerTransactionListTwoRespModel transaction =
+              customerTransactionList![index];
 
           // Null check for each property before accessing it
-          String anchorName = transaction.anchorName ?? ''; // Default value if anchorName is null
-          String dueDate = transaction.dueDate!=null?Utils.convertDateTime(transaction.dueDate!):"" ;
+          String anchorName = transaction.anchorName ??
+              ''; // Default value if anchorName is null
+          String dueDate = transaction.dueDate != null
+              ? Utils.convertDateTime(transaction.dueDate!)
+              : "";
           String orderId = transaction.orderId ?? '';
           String status = transaction.status ?? '';
           int? amount = int.tryParse(transaction.amount.toString());
@@ -470,93 +475,152 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
           String paidAmount = transaction.paidAmount?.toString() ?? '';
           String invoiceNo = transaction.invoiceNo ?? '';
 
-          return Card(
-            child: Container(
-              decoration: BoxDecoration(
-                color: whiteColor,
-                borderRadius: BorderRadius.circular(12.0), // Set border radius
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 3,
-                    offset: Offset(0, 3), // changes position of shadow
-                  ),
-                ],
+          return Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+            child: Card(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: whiteColor,
+                  borderRadius: BorderRadius.circular(12.0), // Set border radius
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 3,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Flexible(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: text_orange_color,
+                                      width: 5.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    color: text_orange_color,
+                                    // Uniform radius
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2.0),
+                                    child: Text(
+                                      'PAY NOW',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                          fontSize: 10, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                SvgPicture.asset(
+                                  'assets/icons/ic_information.svg',
+                                  semanticsLabel: 'notification SVG',
+                                  color: whiteColor,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 32,
+                            ),
+                            Text(
+                              anchorName,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Order ID  $orderId",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16.0),
+                              child: Divider(height: 1,
+                                color: kPrimaryColor,),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              // Align children to the start and end of the row
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '₹ $totalPayableAmount',
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: text_green_color,
+                                          fontWeight: FontWeight.bold),
+                                    ),
 
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Flexible(
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icons/add_circle.svg',
-                                semanticsLabel: 'add_circle SVG',
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Text(
-                                anchorName,
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Spacer(),
-                              Text(
-                                dueDate,
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Order ID  $orderId",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              Text(
-                                " ₹ ${amount.toString()}",
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: kPrimaryColor,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ],
+                                    Text(
+                                      "Confirmed",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: kPrimaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                InkWell(
+                                  // Wrap the button in InkWell to make it clickable
+                                  onTap: () {
+                                    // Handle the pay now button tap
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: kPrimaryColor,
+                                        width: 5.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      color: kPrimaryColor,
+                                      // Uniform radius
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'PAY NOW',
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            fontSize: 10, color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          );;
+          );
+          ;
         } else {
           print("112");
           return Padding(
             padding: EdgeInsets.symmetric(vertical: 16.0),
             child: Center(
-              child:  Utils.onLoading(context, ""), // Loading indicator
+              child: Utils.onLoading(context, ""), // Loading indicator
             ),
           );
         }
@@ -569,9 +633,6 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
     //  final int? leadId = prefsUtil.getInt(LEADE_ID);
     Provider.of<DataProvider>(context, listen: false)
         .getCustomerOrderSummary(257);
-    if(selectedTab == 0) {
-     await getCustomerTransactionList(context);
-    }
   }
 
   Future<void> getCustomerTransactionList(BuildContext context) async {
@@ -587,9 +648,6 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
     await Provider.of<DataProvider>(context, listen: false)
         .getCustomerTransactionList(customerTransactionListRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
-
-    setState(() {
-
-    });
+    setState(() {});
   }
 }
