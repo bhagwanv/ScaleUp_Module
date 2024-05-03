@@ -36,8 +36,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   String? otpCode;
   DataProvider? productProvider;
   int _start = 30;
-  String? userLoginMobile;
   bool isReSendDisable = true;
+  String? userLoginMobile;
   var isLoading = true;
   final CountdownController _controller = CountdownController(autoStart: true);
 
@@ -123,8 +123,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child:
-            Consumer<DataProvider>(builder: (context, productProvider, child) {
+        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -313,8 +312,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
             } else {
               await prefsUtil.saveString(
                   USER_ID, verifyOtpResponce.userId.toString());
-              await prefsUtil.saveString(
-                  TOKEN, verifyOtpResponce.userTokan.toString());
+              await prefsUtil.saveString(TOKEN, verifyOtpResponce.userTokan.toString());
               await prefsUtil.saveInt(LEADE_ID, verifyOtpResponce.leadId!);
 
               fetchData(context, userLoginMobile);

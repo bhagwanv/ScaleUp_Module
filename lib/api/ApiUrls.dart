@@ -1,6 +1,7 @@
 class ApiUrls{
 
-  final String baseUrl = 'https://gateway-uat.scaleupfin.com';
+  final String baseUrl = 'https://gateway-qa.scaleupfin.com';
+  //final String baseUrl = 'https://gateway-uat.scaleupfin.com';
   final String getLeadCurrentActivity="/services/lead/v1/GetLeadCurrentActivity";
   final String leadCurrentActivityAsync="/aggregator/LeadAgg/LeadCurrentActivityAsync";
   final String getLeadPAN="/aggregator/LeadAgg/GetLeadPAN";
@@ -35,6 +36,12 @@ class ApiUrls{
   final String GetAgreemetDetail="/aggregator/LeadAgg/GetAgreemetDetail";
   final String GetDisbursementProposal="/aggregator/LeadAgg/GetDisbursementProposal";
   final String GetDisbursement="/aggregator/LeadAgg/GetDisbursement";
+  final String ScaleUpPaymentInitiate="/aggregator/LeadAgg/GetDisbursement";
+  final String GetByTransactionReqNoForOTP="/aggregator/LoanAccountAgg/GetByTransactionReqNoForOTP";
+  final String ResentOrderOTP="/aggregator/LoanAccountAgg/ResentOrderOTP";
+  final String ValidateOrderOTPGetToken="/aggregator/LoanAccountAgg/ValidateOrderOTPGetToken";
+  final String GetByTransactionReqNo="/aggregator/LoanAccountAgg/GetByTransactionReqNo";
+  final String PostOrderPlacement="/aggregator/LoanAccountAgg/PostOrderPlacement";
 
 
 

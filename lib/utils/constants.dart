@@ -15,6 +15,7 @@ const card_color = Color(0xFFFFF4F2);
 const text_green_color = Color(0xFF6BCFB3);
 const text_orange_color = Color(0xFFF56B3B);
 const text_light_whit_color = Color(0xFFF7FBFC);
+const gry = Color(0xFFEFEEFC);
 
 const double defaultPadding = 16.0;
 
@@ -22,6 +23,7 @@ const double defaultPadding = 16.0;
 const String LOGIN_MOBILE_NUMBER = "login_mobile_number";
 const String USER_ID = "user_id";
 const String TOKEN = "token";
+const String TOKEN_CHECKOUT = "token_check_out";
 const String LEADE_ID = "lead_id";
 const String COMPANY_ID = "COMPANY_ID";
 const String PRODUCT_ID = "PRODUCT_ID";

@@ -46,11 +46,7 @@ ScreenType? customerSequence(
           return ScreenType.aadhar;
         } else if (leadCurrentActivity.subActivityName == "Selfie") {
           Navigator.of(context).push(
-
             MaterialPageRoute(builder: (context) => TakeSelfieScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
-
-
-
           );
           return ScreenType.selfie;
         }

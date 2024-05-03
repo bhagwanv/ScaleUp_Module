@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -21,10 +22,16 @@ import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../view/bank_details_screen/model/TransactionDetailModel.dart';
 import '../view/business_details_screen/model/CustomerDetailUsingGSTResponseModel.dart';
 import '../view/business_details_screen/model/LeadBusinessDetailResponseModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailRequestModel.dart';
 import '../view/business_details_screen/model/PostLeadBuisnessDetailResponsModel.dart';
+import '../view/checkoutView/CheckOutOtpScreen.dart';
+import '../view/checkoutView/model/CheckOutOtpModel.dart';
+import '../view/checkoutView/model/OrderPaymentModel.dart';
+import '../view/checkoutView/model/PayemtOrderPostRequestModel.dart';
+import '../view/checkoutView/model/ValidOtpForCheckoutModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
@@ -1045,4 +1052,170 @@ class ApiService {
       return Failure(e);
     }
   }
+
+  Future<Result<CheckOutOtpModel,Exception>> genrateOtpPaymentConfromation(
+      String TransactionReqNo) async {
+
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.GetByTransactionReqNoForOTP}?TransactionReqNo=$TransactionReqNo'));
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final CheckOutOtpModel responseModel = CheckOutOtpModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode,"" ));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      // 4. return Failure here too
+      return Failure(e);
+    }
+
+
+  }
+
+  Future<Result<bool,Exception>> reSendOtpPaymentConfromation(String MobileNumber,String TransactionNo) async {
+
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.ResentOrderOTP}?MobileNo=$MobileNumber&TransactionNo=$TransactionNo'));
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final bool responseModel = jsonData;
+            return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode,"" ));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      // 4. return Failure here too
+      return Failure(e);
+    }
+
+
+  }
+
+  Future<Result<ValidOtpForCheckoutModel,Exception>> ValidateOrderOTPGetToken(String MobileNumber,String Otp,String TransactionNo) async {
+
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl + apiUrls.ValidateOrderOTPGetToken}?MobileNo=$MobileNumber&otp=$Otp&TransactionReqNo=$TransactionNo'));
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final ValidOtpForCheckoutModel responseModel =ValidOtpForCheckoutModel.fromJson(jsonData) ;
+            return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode,"" ));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      // 4. return Failure here too
+      return Failure(e);
+    }
+
+
+  }
+
+  Future<Result<TransactionDetailModel, Exception>> GetByTransactionReqNo(
+      String TransactionReqNo) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN_CHECKOUT);
+        final response = await interceptor.get(
+          Uri.parse(
+              '${apiUrls.baseUrl + apiUrls.GetByTransactionReqNo}?TransactionReqNo=$TransactionReqNo'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON
+          },
+        );
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+        // Parse the JSON response
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final TransactionDetailModel responseModel =
+            TransactionDetailModel.fromJson(jsonData);
+            return Success(responseModel);
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode,"" ));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<OrderPaymentModel, Exception>> PostOrderPlacement(
+      PayemtOrderPostRequestModel model) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN_CHECKOUT);
+        final response = await interceptor.post(
+          Uri.parse(
+              '${apiUrls.baseUrl + apiUrls.PostOrderPlacement}'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON
+          },
+            body: json.encode(model)
+
+        );
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+        // Parse the JSON response
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final OrderPaymentModel responseModel =
+            OrderPaymentModel.fromJson(jsonData);
+            return Success(responseModel);
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode,"" ));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
 }
