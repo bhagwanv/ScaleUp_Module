@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'data_provider/DataProvider.dart';
 
 void main() {
