@@ -6,6 +6,12 @@ import 'package:intl/intl.dart';
 import 'adhar_faild_widgets.dart';
 import 'kyc_faild_widgets.dart';
 
+enum ValueType {
+  boolean,
+  string,
+  integer,
+  unknown,
+}
 class Utils {
   static void showToast(String msg,BuildContext context) {
 

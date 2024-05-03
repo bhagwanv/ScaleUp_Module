@@ -49,6 +49,7 @@ import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/personal_info/model/PostPersonalDetailsResponseModel.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
+import '../ProductCompanyDetailResponseModel.dart';
 import '../view/profile_screen/model/AcceptedResponceModel.dart';
 import '../view/profile_screen/model/DisbursementCompletedResponse.dart';
 import '../view/profile_screen/model/DisbursementResponce.dart';
@@ -67,6 +68,26 @@ class ApiService {
   final apiUrls = ApiUrls();
   final interceptor = Interceptor();
   final internetConnectivity = InternetConnectivity();
+
+
+  Future<ProductCompanyDetailResponseModel> productCompanyDetail(String product, String company) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final response = await interceptor.get(Uri.parse(
+          '${apiUrls.baseUrl + apiUrls.productCompanyDetail}?product=$product&company=$company'));
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final dynamic jsonData = json.decode(response.body);
+        final ProductCompanyDetailResponseModel responseModel =
+        ProductCompanyDetailResponseModel.fromJson(jsonData);
+        return responseModel;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
 
   Future<GetLeadResponseModel> getLeads(
       String mobile, int productId, int companyId, int leadId) async {

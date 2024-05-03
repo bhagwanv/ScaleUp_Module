@@ -63,13 +63,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     });
   }
 
-
-
-
-
-
-
-   Widget buildCountdown() {
+  Widget buildCountdown() {
     return Countdown(
       controller: _controller,
       seconds: _start,
@@ -182,7 +176,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: isReSendDisable ? Row(
+                    child: isReSendDisable
+                        ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
@@ -195,7 +190,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                               ),
                               buildCountdown(),
                             ],
-                          ) : Container(),
+                          )
+                        : Container(),
                   ),
                   const SizedBox(
                     height: 20,
@@ -288,17 +284,20 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     } else {
       Utils.onLoading(context, "");
       final prefsUtil = await SharedPref.getInstance();
-      await Provider.of<DataProvider>(context, listen: false).verifyOtp(
-          VarifayOtpRequest(
-              activityId: activityId,
-              companyId: prefsUtil.getInt(COMPANY_ID),
-              mobileNo: userLoginMobile,
-              otp: otpText,
-              productId: prefsUtil.getInt(PRODUCT_ID),
-              subActivityId: subActivityId,
-              vintageDays: 0,
-              monthlyAvgBuying: 0,
-              screen: "MobileOtp"));
+      await Provider.of<DataProvider>(context, listen: false)
+          .verifyOtp(VarifayOtpRequest(
+        activityId: activityId,
+        companyId: prefsUtil.getInt(COMPANY_ID),
+        mobileNo: userLoginMobile,
+        otp: otpText,
+        productId: prefsUtil.getInt(PRODUCT_ID),
+        subActivityId: subActivityId,
+        vintageDays: 0,
+        monthlyAvgBuying: 0,
+        screen: "MobileOtp",
+        ProductCode: prefsUtil.getString(PRODUCT_CODE),
+        CompanyCode: prefsUtil.getString(COMPANY_CODE),
+      ));
       Navigator.of(context, rootNavigator: true).pop();
 
       if (productProvider.getVerifyData != null) {

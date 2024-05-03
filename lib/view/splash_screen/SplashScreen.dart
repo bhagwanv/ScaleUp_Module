@@ -1,9 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scale_up_module/ProductCompanyDetailResponseModel.dart';
 import 'package:scale_up_module/api/ApiService.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/LeadCurrentRequestModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
+import '../../utils/Utils.dart';
 import '../../utils/constants.dart';
 import '../../utils/customer_sequence_logic.dart';
 import '../login_screen/login_screen.dart';
@@ -13,7 +19,12 @@ class SplashScreen extends StatefulWidget {
   var mobileNumber;
   int companyID;
   int ProductID;
-   SplashScreen({super.key,required this.mobileNumber,required this.companyID,required this.ProductID});
+
+  SplashScreen(
+      {super.key,
+      required this.mobileNumber,
+      required this.companyID,
+      required this.ProductID});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -23,32 +34,110 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
-    fetchData();
+    productCompanyDetail(
+        context, widget.ProductID.toString(), widget.companyID.toString());
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           title: const Center(child: Text('Scaleup')),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(child: Image.asset('assets/images/scalup_gif_logo.gif')),
-          ],
-        ));
+        body:
+            Consumer<DataProvider>(builder: (context, productProvider, child) {
+          if (productProvider.productCompanyDetailResponseModel != null) {
+            if (productProvider.productCompanyDetailResponseModel!.status!) {
+              SaveData(productProvider.productCompanyDetailResponseModel!.response!);
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(
+                      activityId: 10,
+                      subActivityId: 0,
+                      companyID: productProvider
+                          .productCompanyDetailResponseModel!
+                          .response!
+                          .productId,
+                      ProductID: productProvider
+                          .productCompanyDetailResponseModel!
+                          .response!
+                          .companyId,
+                      MobileNumber: widget.mobileNumber,
+                    ),
+                  ),
+                );
+              });
+            } else {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Utils.showToast(
+                    productProvider
+                                .productCompanyDetailResponseModel!.message !=
+                            null
+                        ? productProvider
+                            .productCompanyDetailResponseModel!.message!
+                            .toString()
+                        : "",
+                    context);
+              });
+            }
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: Image.asset('assets/images/scalup_gif_logo.gif')),
+              ],
+            );
+          } else {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: Image.asset('assets/images/scalup_gif_logo.gif')),
+              ],
+            );
+          }
+        }));
   }
 
-  Future<void> fetchData() async {
+  Future<void> productCompanyDetail(
+      BuildContext context, product, company) async {
+    Provider.of<DataProvider>(context, listen: false)
+        .productCompanyDetail(product, product);
+  }
 
+  Future<void> SaveData(ProductCompanyDetailResponse response) async {
+    final prefsUtil = await SharedPref.getInstance();
+    ValueType checkValueType<T>(T value) {
+      if (value is bool) {
+        return ValueType.boolean;
+      } else if (value is String) {
+        return ValueType.string;
+      } else if (value is int) {
+        return ValueType.integer;
+      } else {
+        return ValueType.unknown;
+      }
+    }
+
+    if (checkValueType(response.companyId) == ValueType.integer) {
+      prefsUtil.saveInt(COMPANY_ID, response.companyId!);
+    } else {
+      prefsUtil.saveString(COMPANY_ID, response.companyId!.toString());
+    }
+    if (checkValueType(response.productId) == ValueType.integer) {
+      prefsUtil.saveInt(PRODUCT_ID, response.productId!);
+    } else {
+      prefsUtil.saveString(PRODUCT_ID, response.productId!.toString());
+    }
+    prefsUtil.saveString(PRODUCT_CODE, response.productCode!);
+    prefsUtil.saveString(COMPANY_CODE, response.companyCode!);
+  }
+
+/*  Future<void> fetchData() async {
     final String? mobile = widget.mobileNumber.toString();
     final prefsUtil = await SharedPref.getInstance();
-    /*await prefsUtil.saveInt(COMPANY_ID, int.parse(widget.companyID));
+    */ /*await prefsUtil.saveInt(COMPANY_ID, int.parse(widget.companyID));
     await prefsUtil.saveInt(PRODUCT_ID, int.parse(widget.ProductID));
-    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, widget.mobileNumber.toString());*/
+    await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, widget.mobileNumber.toString());*/ /*
 
     //lead id
     var leadId = 0;
@@ -60,9 +149,17 @@ class _SplashScreenState extends State<SplashScreen> {
       userID = prefsUtil.getString(USER_ID)!;
     }
 
-    if(mobile == null || prefsUtil.getString(USER_ID) == null || prefsUtil.getInt(LEADE_ID) == null) {
+    if (mobile == null ||
+        prefsUtil.getString(USER_ID) == null ||
+        prefsUtil.getInt(LEADE_ID) == null) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => LoginScreen(activityId: 1, subActivityId: 0,companyID: widget.companyID,ProductID: widget.ProductID, MobileNumber:widget.mobileNumber)),
+        MaterialPageRoute(
+            builder: (context) => LoginScreen(
+                activityId: 1,
+                subActivityId: 0,
+                companyID: widget.companyID,
+                ProductID: widget.ProductID,
+                MobileNumber: widget.mobileNumber)),
       );
     } else {
       try {
@@ -81,17 +178,15 @@ class _SplashScreenState extends State<SplashScreen> {
         );
 
         leadCurrentActivityAsyncData =
-        await ApiService().leadCurrentActivityAsync(
-            leadCurrentRequestModel) as LeadCurrentResponseModel?;
+            await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+                as LeadCurrentResponseModel?;
         GetLeadResponseModel? getLeadData;
-        getLeadData = await ApiService().getLeads(
-            mobile!,
-            widget.companyID,
-            widget.ProductID,
-            leadId) as GetLeadResponseModel?;
-        if (getLeadData!.userId != null){
+        getLeadData = await ApiService()
+                .getLeads(mobile!, widget.companyID, widget.ProductID, leadId)
+            as GetLeadResponseModel?;
+        if (getLeadData!.userId != null) {
           prefsUtil.saveString(USER_ID, getLeadData.userId!);
-        }else{
+        } else {
           prefsUtil.saveString(USER_ID, "");
         }
         prefsUtil.saveInt(LEADE_ID, getLeadData!.leadId!);
@@ -103,5 +198,5 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }
     }
-  }
+  }*/
 }

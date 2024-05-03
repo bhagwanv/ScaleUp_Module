@@ -22,6 +22,8 @@ const double defaultPadding = 16.0;
 /*shared variable*/
 const String LOGIN_MOBILE_NUMBER = "login_mobile_number";
 const String USER_ID = "user_id";
+const String PRODUCT_CODE = "PRODUCT_CODE";
+const String COMPANY_CODE = "COMPANY_CODE";
 const String TOKEN = "token";
 const String TOKEN_CHECKOUT = "token_check_out";
 const String LEADE_ID = "lead_id";
