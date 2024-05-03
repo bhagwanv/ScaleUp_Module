@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/view/bank_details_screen/model/CreditDayAmountCals.dart';
 import 'package:scale_up_module/view/bank_details_screen/model/CreditDayWiseAmounts.dart';
+import 'package:scale_up_module/view/dashboard_screen/bottom_navigation.dart';
 
 import '../../../utils/constants.dart';
 import '../../data_provider/DataProvider.dart';
@@ -100,8 +101,8 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                    image: NetworkImage(widget.imageUrl),
-                                   // image: NetworkImage("https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/d1e100eb-626f-4e19-b611-e87694de6467.jpg"),
+                                    //image: NetworkImage(widget.imageUrl),
+                                    image: NetworkImage("https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/d1e100eb-626f-4e19-b611-e87694de6467.jpg"),
                                     fit: BoxFit.fill),
                               ),
                             ),
@@ -356,61 +357,155 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                     ),
                                   ),
                                   SizedBox(height: 10),
-                                  Center(
-                                    child: Text(
-                                      'Choose Repayment Duration',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black87,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Container(
-                                      child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+
+                                  (transactionDetailModel!.response!.transactionStatus=="Overdue")?Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Container(
+                                      child: Column(
                                         children: [
-                                          Container(
-                                            height: 180,
-                                            // Set the height of the horizontal list container
-                                            child:
+                                          Center(
+                                            child: Text(
+                                              'Credit Limit Blocked',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          SizedBox(height: 20),
+                                          Center(
+                                            child: Text(
+                                              'Dear Customer, your credit limit is currently blocked due to non-payment of an invoice on the due date. Please settle the outstanding amount to restore your credit limit',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                          ),
+                                          SizedBox(height: 50),
+                                        ],
+                                      ),
+                                    ),
+                                  ): (transactionDetailModel!.response!.availableCreditLimit! < transactionDetailModel!.response!.invoiceAmount!)?Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Container(
+                                      child: Column(
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              'Insufficient Credit Limit',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          SizedBox(height: 20),
+                                          Center(
+                                            child: Text(
+                                              'Your Scaleup Account has insufficient credit amount to pay for this invoice.',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                          ),
+                                          SizedBox(height: 20),
+                                          Center(
+                                            child: Text(
+                                              ' You may clear your outstanding dues to free your credit limit.',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                          ),
+                                          SizedBox(height: 50),
+                                        ],
+                                      ),
+                                    ),
+                                  ):Column(
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          'Choose Repayment Duration',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black87,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Container(child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                height: 180,
+                                                // Set the height of the horizontal list container
+                                                child:
                                                 CallDayWiseIntrestCalculateWidget(
                                                     context,
                                                     transactionDetailModel!
                                                         .response!
                                                         .creditDayWiseAmounts!),
-                                          ),
-                                          SizedBox(height: 10),
-                                          Center(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: Text(
-                                                'Credit Cycle will begin after your order is delivered You will be notified via SMS and Email about repayment date.',
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    letterSpacing: 0.10,
-                                                    color: Colors.black87,
-                                                    fontWeight:
-                                                        FontWeight.bold),
                                               ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 20),
-                                          CommonElevatedButton(
-                                            onPressed: () async {
-                                              payemtOrderPost(context,productProvider,transactionDetailModel!);
+                                              SizedBox(height: 10),
+                                              Center(
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets.all(10.0),
+                                                  child: Text(
+                                                    'Credit Cycle will begin after your order is delivered You will be notified via SMS and Email about repayment date.',
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                        fontSize: 13,
+                                                        letterSpacing: 0.10,
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height: 20),
+                                            ]),
+                                      ))
+                                    ],
+                                  ),
+                                  transactionDetailModel!.response!.transactionStatus=="Overdue"?
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: CommonElevatedButton(
+                                      onPressed: () async {
 
-                                            },
-                                            text: "Proceed",
-                                            upperCase: true,
-                                          ),
-                                        ]),
-                                  )),
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (context) => BottomNav()),
+                                        );
+
+                                       // payemtOrderPost(context,productProvider,transactionDetailModel!);
+
+                                      },
+                                      text: "Clear Dues",
+                                      upperCase: true,
+                                    ),
+                                  ): Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: CommonElevatedButton(
+                                      onPressed: () async {
+                                        payemtOrderPost(context,productProvider,transactionDetailModel!);
+
+                                      },
+                                      text: "Proceed",
+                                      upperCase: true,
+                                    ),
+                                  ),
 
                                   //CallDayWiseIntrestCalculateWidget()
                                 ]),
