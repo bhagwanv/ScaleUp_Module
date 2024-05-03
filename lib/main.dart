@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:scale_up_module/view/dashboard_screen/vendorDetail/vendor_detail_screen.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'data_provider/DataProvider.dart';
 
@@ -47,7 +48,8 @@ class _MyAppState extends State<MyApp> {
         ),
 
        // home: SplashScreen(companyID: int.parse(company), ProductID:int.parse(product), mobileNumber: mobileNumber.toString())
-        home: SplashScreen(mobileNumber:  "7803994667",ProductID:  2,companyID: 2)
+       // home: SplashScreen(mobileNumber:  "7803994667",ProductID:  2,companyID: 2)
+        home: VendorDetailScreen()
             //VendorDetailScreen()
           //home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
           //home: LoginScreen(activityId: 10, subActivityId: 0, companyID: 2, ProductID:5, MobileNumber: "7509764461"),

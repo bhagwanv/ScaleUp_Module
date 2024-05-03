@@ -226,8 +226,8 @@ class DataProvider extends ChangeNotifier {
   Result<CustomerOrderSummaryResModel,Exception>? _getCustomerOrderSummaryData;
   Result<CustomerOrderSummaryResModel,Exception>? get getCustomerOrderSummaryData => _getCustomerOrderSummaryData;
 
-  Result<PostLeadSelfieResponseModel,Exception>? _getCustomerTransactionListData;
-  Result<PostLeadSelfieResponseModel,Exception>? get getCustomerTransactionListData => _getCustomerTransactionListData;
+  Result<List<CustomerTransactionListTwoRespModel>,Exception>? _getCustomerTransactionListData;
+  Result<List<CustomerTransactionListTwoRespModel>,Exception>? get getCustomerTransactionListData => _getCustomerTransactionListData;
 
   Result<OfferResponceModel,Exception>? _getCustomerOrderSummaryForAnchorData;
   Result<OfferResponceModel,Exception>? get getCustomerOrderSummaryForAnchorData => _getCustomerOrderSummaryForAnchorData;

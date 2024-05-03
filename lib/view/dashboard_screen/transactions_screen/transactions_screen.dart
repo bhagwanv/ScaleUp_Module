@@ -95,13 +95,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
                   } else {
                    print("asdfjsaf");
-                   Future.delayed(Duration(seconds: 1), () {
-                     setState(() {
-                       loading=false;
-                     });
-
-                   });
-
+                   loading=false;
                   }
                 },
                 failure: (exception) {

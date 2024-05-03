@@ -15,6 +15,7 @@ const card_color = Color(0xFFFFF4F2);
 const text_green_color = Color(0xFF6BCFB3);
 const text_orange_color = Color(0xFFF56B3B);
 const text_light_whit_color = Color(0xFFF7FBFC);
+const text_light_blue_color = Color(0xFFA3AED0);
 const gry = Color(0xFFEFEEFC);
 
 const double defaultPadding = 16.0;
