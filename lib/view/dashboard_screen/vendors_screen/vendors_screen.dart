@@ -5,7 +5,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data_provider/DataProvider.dart';
+import '../../../shared_preferences/SharedPref.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/loader.dart';
+import '../model/CustomerTransactionListRequestModel.dart';
 
 class VendorsScreen extends StatefulWidget {
   const VendorsScreen({super.key});
@@ -15,6 +18,16 @@ class VendorsScreen extends StatefulWidget {
 }
 
 class _VendorsScreenState extends State<VendorsScreen> {
+  var isLoading = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+    //Api Call
+    // getCustomerTransactionList(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,8 +37,31 @@ class _VendorsScreenState extends State<VendorsScreen> {
         bottom: true,
         child:
             Consumer<DataProvider>(builder: (context, productProvider, child) {
-          if (productProvider.getLeadPANData == null) {
-            // return Loader();
+          if (productProvider.getLeadPANData == null && isLoading) {
+             return Loader();
+
+          } else {
+            if (productProvider.getCustomerTransactionListData != null && isLoading) {
+              Navigator.of(context, rootNavigator: true).pop();
+              isLoading = false;
+            }
+
+            if (productProvider.getCustomerTransactionListData != null) {
+              productProvider.getCustomerTransactionListData!.when(
+                success: (PostLeadSelfieResponseModel) {
+                  // Handle successful response
+                  var postLeadSelfieResponseModel = PostLeadSelfieResponseModel;
+
+
+                },
+                failure: (exception) {
+                  // Handle failure
+                  print("dfjsf2");
+                  //print('Failure! Error: ${exception.message}');
+                },
+              );
+            }
+
             return Padding(
               padding: EdgeInsets.all(16.0),
               child: Column(children: [
@@ -80,8 +116,6 @@ class _VendorsScreenState extends State<VendorsScreen> {
                 Expanded(child: _myListView(context))
               ]),
             );
-          } else {
-            return _myListView(context);
           }
         }),
       ),
@@ -211,5 +245,13 @@ class _VendorsScreenState extends State<VendorsScreen> {
         ),
       ],
     ));
+  }
+
+  Future<void> getCustomerTransactionList(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final String? userId = prefsUtil.getString(USER_ID);
+
+    var  customerTransactionListRequestModel=CustomerTransactionListRequestModel(anchorCompanyID:"",leadId:"",skip:"",take:"",transactionType:"");
+    Provider.of<DataProvider>(context, listen: false).getCustomerTransactionList(customerTransactionListRequestModel);
   }
 }

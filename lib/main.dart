@@ -22,7 +22,7 @@ void main() {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  static const platform =  MethodChannel('com.souvikbiswas.tipsy/result');
+  static const platform = const MethodChannel('com.souvikbiswas.tipsy/result');
 
   @override
   State<MyApp> createState() => _MyAppState();

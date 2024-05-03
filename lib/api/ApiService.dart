@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -32,6 +31,10 @@ import '../view/checkoutView/model/CheckOutOtpModel.dart';
 import '../view/checkoutView/model/OrderPaymentModel.dart';
 import '../view/checkoutView/model/PayemtOrderPostRequestModel.dart';
 import '../view/checkoutView/model/ValidOtpForCheckoutModel.dart';
+import '../view/dashboard_screen/model/CustomerTransactionListRequestModel.dart';
+import '../view/dashboard_screen/my_account/model/CustomerOrderSummaryResModel.dart';
+import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
+import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
@@ -1208,6 +1211,121 @@ class ApiService {
             return Success(responseModel);
           default:
           // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode,"" ));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+
+  Future<Result<CustomerOrderSummaryResModel,Exception>> getCustomerOrderSummary(int leadId ) async {
+
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.getCustomerOrderSummary}?LeadId=$leadId'));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final CustomerOrderSummaryResModel responseModel =
+            CustomerOrderSummaryResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode,"" ));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    }on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<PostLeadSelfieResponseModel,Exception>> getCustomerTransactionList(
+      CustomerTransactionListRequestModel customerTransactionListRequestModel) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse(apiUrls.baseUrl + apiUrls.getCustomerTransactionList),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+            },
+            body: json.encode(customerTransactionListRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final PostLeadSelfieResponseModel responseModel =
+            PostLeadSelfieResponseModel.fromJson(jsonData);
+            return Success(responseModel);
+          default:
+            return Failure(ApiException(response.statusCode,"" ));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<OfferResponceModel,Exception>> getCustomerOrderSummaryForAnchor(int leadId ) async {
+
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.getCustomerOrderSummaryForAnchor}?LeadId=$leadId'));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final OfferResponceModel responseModel =
+            OfferResponceModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode,"" ));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    }on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<List<CustomerTransactionListTwoRespModel>,Exception>> getCustomerTransactionListTwo(
+      CustomerTransactionListTwoReqModel customerTransactionListTwoReqModel) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse(apiUrls.baseUrl + apiUrls.getCustomerTransactionListTwo),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+            },
+            body: json.encode(customerTransactionListTwoReqModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final List<CustomerTransactionListTwoRespModel> responseModel = List<CustomerTransactionListTwoRespModel>.from(
+                jsonData.map((model) => CustomerTransactionListTwoRespModel.fromJson(model)));
+            return Success(responseModel);
+          default:
             return Failure(ApiException(response.statusCode,"" ));
         }
       } else {
