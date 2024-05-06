@@ -182,4 +182,17 @@ class Utils {
 
     return '$date | $time';
   }
+
+  static String dateMonthFormate(String date){
+    String inputString = date;
+
+    // Parse the input string into a DateTime object
+    DateTime dateTime = DateTime.parse(inputString);
+
+    // Format the DateTime into "dd/MM/yyyy" using intl package
+    String formattedDate = DateFormat('dd MMM').format(dateTime);
+
+    return formattedDate;
+
+  }
 }

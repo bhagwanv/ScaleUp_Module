@@ -517,5 +517,11 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> disposegetCustomerTransactionList() async {
+    _getCustomerTransactionListData = null;
+    notifyListeners();
+  }
+
+
 }
 

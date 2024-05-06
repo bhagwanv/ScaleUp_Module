@@ -30,6 +30,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
   int skip = 0;
   bool loading = false;
   List<CustomerTransactionListTwoRespModel> customerTransactionList = [];
+  bool loadData = false;
+  var take=10;
 
   @override
   void initState() {
@@ -80,19 +82,18 @@ class _TransactionScreenState extends State<TransactionScreen> {
               isLoading = false;
 
             }
-
             if (productProvider.getCustomerTransactionListTwoData != null) {
               productProvider.getCustomerTransactionListTwoData!.when(
                 success: (data) {
                   // Handle successful response
                   if (data.isNotEmpty) {
-                    print("sdfhgf$loading");
-                    print("List Length111:: ${ customerTransactionList!.length}");
-                    customerTransactionList.addAll(data);
-                    print("List Length222:: ${ customerTransactionList!.length}");
 
+                    if(loadData){
+
+                      customerTransactionList.addAll(data);
+                      loadData=false;
+                    }
                   } else {
-                   print("asdfjsaf");
                    loading=false;
                   }
                 },
@@ -102,7 +103,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 },
               );
             }
-
 
 
             return Padding(
@@ -168,9 +168,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Widget _myListView(BuildContext context, List<CustomerTransactionListTwoRespModel> customerTransactionList) {
     if (customerTransactionList == null || customerTransactionList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
-    /*  return Center(
+      return Center(
         child: Text('No transactions available'),
-      );*/
+      );
 
     }
 
@@ -276,14 +276,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
               ),
             ),
           );;
-        } else {
-          print("112");
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.0),
-            child: Center(
-              child:  Utils.onLoading(context, ""), // Loading indicator
-            ),
-          );
         }
       },
     );
@@ -294,12 +286,20 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
     final prefsUtil = await SharedPref.getInstance();
      customerName = prefsUtil.getString(CUSTOMERNAME)!;
-
-    var  customerTransactionListTwoReqModel=CustomerTransactionListTwoReqModel(leadId:257,skip:skip ,take:100);
-    await Provider.of<DataProvider>(context, listen: false).getCustomerTransactionListTwo(customerTransactionListTwoReqModel);
-
-   /* setState(() {
+     var leadeId = prefsUtil.getInt(LEADE_ID)!;
+    // var leadeId=257;
+     if(isLoading){
+       var  customerTransactionListTwoReqModel=CustomerTransactionListTwoReqModel(leadId:leadeId,skip:skip ,take:take);
+       await Provider.of<DataProvider>(context, listen: false).getCustomerTransactionListTwo(customerTransactionListTwoReqModel);
+     }else{
+       Utils.onLoading(context,"");
+       var  customerTransactionListTwoReqModel=CustomerTransactionListTwoReqModel(leadId:leadeId,skip:skip ,take:take);
+       await Provider.of<DataProvider>(context, listen: false).getCustomerTransactionListTwo(customerTransactionListTwoReqModel);
+       Navigator.of(context, rootNavigator: true).pop();
+     }
+    setState(() {
       loading = true;
-    });*/
+      loadData=true;
+    });
   }
 }

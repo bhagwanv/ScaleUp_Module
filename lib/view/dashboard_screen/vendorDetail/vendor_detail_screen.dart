@@ -32,6 +32,13 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
   var totalPendingInvoiceCount = "0";
 
   var selectedTab = 0;
+  ScrollController _scrollController = ScrollController();
+  var loading = true;
+  var skip = 0;
+  var take = "10";
+  var transactionType = "UnPaid";
+
+
 
   @override
   void initState() {
@@ -39,6 +46,24 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
 
     //Api Call
     getCustomerOrderSummary(context);
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        // Load more data if not already loading
+        if (loading) {
+          skip+=10;
+          getCustomerTransactionList(context);
+
+        }
+      }
+    });
+
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -99,7 +124,11 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
           if (productProvider.getCustomerTransactionListData != null) {
             productProvider.getCustomerTransactionListData!.when(
               success: (data) {
-                customerTransactionList.addAll(data);
+                if(data.isNotEmpty) {
+                  customerTransactionList.addAll(data);
+                }else{
+                  loading=false;
+                }
               },
               failure: (exception) {
                 // Handle failure
@@ -113,7 +142,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
             child: Column(
               children: [
                 Container(
-                  color: Colors.blue, // Example color
+                  color: kPrimaryColor, // Example color
                   child: Column(
                     children: <Widget>[
                       Padding(
@@ -300,19 +329,33 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                     SizedBox(
                                       child: SvgPicture.asset(
                                         'assets/icons/clock.svg',
-                                        semanticsLabel: 'Verify PAN SVG',
+                                        semanticsLabel: 'clock  SVG',
                                       ),
                                     ),
                                     const SizedBox(width: 10),
                                     // Add some space between the icon and text
-                                    Text(
-                                      '₹ $totalPayableAmount  Payable Today',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontSize: 12, color: Colors.black),
+                                    Column(
+                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '₹ $totalPayableAmount  Payable Today',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize: 12, color: Colors.black),
+                                        ),
+
+                                        Text(
+                                          ' Payment ',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              fontSize: 10, color:gryColor),
+                                        ),
+                                      ],
                                     ),
                                   ],
+
                                 ),
+
                                 InkWell(
                                   // Wrap the button in InkWell to make it clickable
                                   onTap: () {
@@ -359,8 +402,18 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                           setState(() {
                             selectedTab = index;
                             if (selectedTab == 1) {
+                              customerTransactionList.clear();
+                             productProvider.disposegetCustomerTransactionList();
+                             transactionType="Paid";
+                              skip=0;
+                              loading = false;
                               getCustomerTransactionList(context);
                             } else {
+                              customerTransactionList.clear();
+                              productProvider.disposegetCustomerTransactionList();
+                              transactionType="UnPaid";
+                              skip=0;
+                              loading = false;
                               getCustomerTransactionList(context);
                             }
                           });
@@ -415,7 +468,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                     width: 0)),
                             child: Align(
                               alignment: Alignment.center,
-                              child: Text("Status",
+                              child: Text("PAID PAYMENT",
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: selectedTab == 1
@@ -430,6 +483,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                 ),
                 Expanded(
                   child: TabBarView(
+                    physics: const NeverScrollableScrollPhysics(),
                     children: [
                       _myListView(context, customerTransactionList),
                       _myListView(context, customerTransactionList)
@@ -448,13 +502,13 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
       List<CustomerTransactionListTwoRespModel> customerTransactionList) {
     if (customerTransactionList == null || customerTransactionList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
-      /*  return Center(
+      return Center(
         child: Text('No transactions available'),
-      );*/
+      );
     }
 
     return ListView.builder(
-      // controller: _scrollController,
+       controller: _scrollController,
       itemCount: customerTransactionList!.length,
       itemBuilder: (context, index) {
         if (index < customerTransactionList.length) {
@@ -465,7 +519,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
           String anchorName = transaction.anchorName ??
               ''; // Default value if anchorName is null
           String dueDate = transaction.dueDate != null
-              ? Utils.convertDateTime(transaction.dueDate!)
+              ? Utils.dateMonthFormate(transaction.dueDate!)
               : "";
           String orderId = transaction.orderId ?? '';
           String status = transaction.status ?? '';
@@ -501,6 +555,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
@@ -515,7 +570,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 2.0),
                                     child: Text(
-                                      'PAY NOW',
+                                      'Due on : $dueDate',
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
                                           fontSize: 10, color: Colors.white),
@@ -523,10 +578,11 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                   ),
                                 ),
                                 SvgPicture.asset(
-                                  'assets/icons/information.png',
+                                  'assets/icons/ic_information.svg',
                                   semanticsLabel: 'notification SVG',
-                                  color: whiteColor,
+                                  color: Colors.black,
                                 ),
+
                               ],
                             ),
                             SizedBox(
@@ -598,7 +654,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                         'PAY NOW',
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                            fontSize: 10, color: Colors.white),
+                                            fontSize: 15, color: Colors.white),
                                       ),
                                     ),
                                   ),
@@ -614,15 +670,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
               ),
             ),
           );
-          ;
-        } else {
-          print("112");
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.0),
-            child: Center(
-              child: Utils.onLoading(context, ""), // Loading indicator
-            ),
-          );
+
         }
       },
     );
@@ -630,24 +678,31 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
 
   Future<void> getCustomerOrderSummary(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    //  final int? leadId = prefsUtil.getInt(LEADE_ID);
+      final int? leadId = prefsUtil.getInt(LEADE_ID);
     Provider.of<DataProvider>(context, listen: false)
-        .getCustomerOrderSummary(257);
+        .getCustomerOrderSummary(leadId);
   }
 
   Future<void> getCustomerTransactionList(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
+
+    var leadeId = prefsUtil.getInt(LEADE_ID)!;
+    var companyId = prefsUtil.getInt(COMPANY_ID)!;
+    //var companyId = "2";
+    //var leadeId=257;
     Utils.onLoading(context, "");
     var customerTransactionListRequestModel =
         CustomerTransactionListRequestModel(
-            anchorCompanyID: "2",
-            leadId: "257",
-            skip: "0",
-            take: "5",
-            transactionType: "All");
+            anchorCompanyID: companyId.toString(),
+            leadId: leadeId.toString(),
+            skip: skip.toString(),
+            take: take,
+            transactionType: transactionType);
     await Provider.of<DataProvider>(context, listen: false)
         .getCustomerTransactionList(customerTransactionListRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
-    setState(() {});
+    setState(() {
+      loading = true;
+    });
   }
 }
