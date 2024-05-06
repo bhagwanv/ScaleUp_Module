@@ -49,10 +49,7 @@ class _MyAccountState extends State<MyAccount> {
           child: Consumer<DataProvider>(builder: (context, productProvider, child) {
             if (productProvider.getCustomerOrderSummaryData == null && isLoading) {
               Future.delayed(Duration(seconds: 1), () {
-                setState(() {
-
-                });
-                print("sdfjaskfd1");
+                setState(() {});
               });
               return Loader();
             } else {
@@ -330,7 +327,7 @@ class _MyAccountState extends State<MyAccount> {
                                 topRight: Radius.circular(20.0),
                               ),
                             ),
-                            child:  Padding(
+                           /* child:  Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,7 +346,7 @@ class _MyAccountState extends State<MyAccount> {
                                     ),
                                   ]
                               ),
-                            )
+                            )*/
                         ),
                       ]
                   ),
@@ -397,7 +394,7 @@ class _MyAccountState extends State<MyAccount> {
                               padding: const EdgeInsets.all(5.0),
                               child: SvgPicture.asset(
                                 'assets/icons/ic_setting.svg',
-                                semanticsLabel: 'Verify PAN SVG',
+                                semanticsLabel: 'ic_setting SVG',
                               ),
                             ),
                           ),
@@ -415,9 +412,9 @@ class _MyAccountState extends State<MyAccount> {
 
   Future<void> getCustomerOrderSummary(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-  //  final int? leadId = prefsUtil.getInt(LEADE_ID);
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
 
-    await Provider.of<DataProvider>(context, listen: false).getCustomerOrderSummary(257);
+    await Provider.of<DataProvider>(context, listen: false).getCustomerOrderSummary(leadId);
   }
 
   Future<void> getCustomerTransactionList(BuildContext context) async {

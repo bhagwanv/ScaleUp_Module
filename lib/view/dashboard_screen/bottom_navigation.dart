@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/dashboard_screen/pagination.dart';
 import 'package:scale_up_module/view/dashboard_screen/transactions_screen/transactions_screen.dart';
+import 'package:scale_up_module/view/dashboard_screen/vendorDetail/vendor_detail_screen.dart';
 import 'package:scale_up_module/view/dashboard_screen/vendors_screen/vendors_screen.dart';
 
 import '../../data_provider/DataProvider.dart';
@@ -19,7 +20,7 @@ class BottomNav extends StatefulWidget {
 
 class _BottomNavState extends State<BottomNav> {
   final List<Widget> _pages = [
-    const VendorsScreen(),
+    const VendorDetailScreen(),
     const TransactionScreen(),
     const MyAccount(),
   ];
@@ -69,22 +70,25 @@ class _BottomNavState extends State<BottomNav> {
                     productProvider.disposegetCustomerOrderSummaryData();
                   });
                 },
-                child: Column(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/ic_vendors.svg',
-                      semanticsLabel: 'vendors',
-                      color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                    ),
-                    const SizedBox(height: 3), // Add space between icon and text
-                    Text(
-                      'Vendors',
-                      style: TextStyle(
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Column(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/ic_vendors.svg',
+                        semanticsLabel: 'vendors',
                         color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                        fontSize: 10,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 3), // Add space between icon and text
+                      Text(
+                        'Vendors',
+                        style: TextStyle(
+                          color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               // Search item
@@ -95,22 +99,25 @@ class _BottomNavState extends State<BottomNav> {
                     productProvider.disposegetCustomerOrderSummaryData();
                   });
                 },
-                child: Column(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/ic_transactions.svg',
-                      semanticsLabel: 'transactionsG',
-                      color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                    ),
-                    const SizedBox(height: 3), // Add space between icon and text
-                    Text(
-                      'Transactions',
-                      style: TextStyle(
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Column(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/ic_transactions.svg',
+                        semanticsLabel: 'transactionsG',
                         color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                        fontSize: 10,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 3), // Add space between icon and text
+                      Text(
+                        'Transactions',
+                        style: TextStyle(
+                          color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(width: 24.0),
@@ -122,22 +129,25 @@ class _BottomNavState extends State<BottomNav> {
                   });*/
                   Utils.showBottomToast("Service Not Available");
                 },
-                child: Column(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/ic_services.svg',
-                      semanticsLabel: 'ic_services',
-                      color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                    ),
-                    const SizedBox(height: 3), // Add space between icon and text
-                    Text(
-                      'Services',
-                      style: TextStyle(
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Column(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/ic_services.svg',
+                        semanticsLabel: 'ic_services',
                         color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                        fontSize: 10,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 3), // Add space between icon and text
+                      Text(
+                        'Services',
+                        style: TextStyle(
+                          color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               // People item
@@ -145,22 +155,25 @@ class _BottomNavState extends State<BottomNav> {
                 onTap: () {
                   Utils.showBottomToast("Service Not Available");
                 },
-                child: Column(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/ic_setting.svg',
-                      semanticsLabel: 'Verify PAN SVG',
-                      color: selectedIndex == 4 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                    ),
-                    const SizedBox(height: 3), // Add space between icon and text
-                    Text(
-                      'Setting',
-                      style: TextStyle(
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Column(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/ic_setting.svg',
+                        semanticsLabel: 'Verify PAN SVG',
                         color: selectedIndex == 4 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                        fontSize: 10,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 3), // Add space between icon and text
+                      Text(
+                        'Setting',
+                        style: TextStyle(
+                          color: selectedIndex == 4 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
