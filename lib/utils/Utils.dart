@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-
 import 'adhar_faild_widgets.dart';
 import 'kyc_faild_widgets.dart';
 

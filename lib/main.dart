@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:scale_up_module/utils/Utils.dart';
+import 'package:scale_up_module/view/checkoutView/CheckOutOtpScreen.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'data_provider/DataProvider.dart';
 
@@ -18,16 +20,17 @@ void main() {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  static const platform = const MethodChannel('com.souvikbiswas.tipsy/result');
+  static const platform = MethodChannel('com.ScaleUP');
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  var mobileNumber;
-  var company;
-  var product;
+  String mobileNumber="";
+  String company="";
+  String product ="";
+  bool isPayNow =false;
 
   @override
   void initState() {
@@ -46,8 +49,9 @@ class _MyAppState extends State<MyApp> {
           useMaterial3: true,
         ),
 
-       // home: SplashScreen(companyID: int.parse(company), ProductID:int.parse(product), mobileNumber: mobileNumber.toString())
-        home: SplashScreen(mobileNumber:  "7803994667",ProductID:  2,companyID: 2)
+           home: isPayNow? CheckOutOtpScreen():mobileNumber.isNotEmpty?SplashScreen(mobileNumber: mobileNumber ,companyID: company, ProductID:product):Container()
+
+       //home: SplashScreen(mobileNumber:  "7803994667",ProductID:  "CreditLine",companyID: "CN_1")
             //VendorDetailScreen()
           //home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
           //home: LoginScreen(activityId: 10, subActivityId: 0, companyID: 2, ProductID:5, MobileNumber: "7509764461"),
@@ -59,9 +63,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _receiveFromHost(MethodCall call) async {
     var jData;
-
     try {
-      if (call.method == "getScaleUPData") {
+      if (call.method == "ScaleUP") {
         final String data = call.arguments;
         jData = await jsonDecode(data);
       }
@@ -74,6 +77,7 @@ class _MyAppState extends State<MyApp> {
         mobileNumber = jData['mobileNumber'];
         company = jData['companyID'];
         product = jData['productID'];
+        isPayNow = jData['isPayNow'];
 
       //  productCompanyDetail(context, company, Product);
       } else {

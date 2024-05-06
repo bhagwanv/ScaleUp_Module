@@ -1,7 +1,7 @@
 class ApiUrls{
 
-  //final String baseUrl = 'https://gateway-uat.scaleupfin.com';
-  final String baseUrl = 'https://gateway-qa.scaleupfin.com';
+  final String baseUrl = 'https://gateway-uat.scaleupfin.com';
+  //final String baseUrl = 'https://gateway-qa.scaleupfin.com';
   final String productCompanyDetail = '/aggregator/LeadAgg/ProductCompanyDetail';
   final String getLeadCurrentActivity="/services/lead/v1/GetLeadCurrentActivity";
   final String leadCurrentActivityAsync="/aggregator/LeadAgg/LeadCurrentActivityAsync";

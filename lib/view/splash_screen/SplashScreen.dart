@@ -16,15 +16,16 @@ import '../login_screen/login_screen.dart';
 import 'model/LeadCurrentResponseModel.dart';
 
 class SplashScreen extends StatefulWidget {
-  var mobileNumber;
-  int companyID;
-  int ProductID;
+  String mobileNumber;
+  String companyID;
+  String ProductID;
 
-  SplashScreen(
-      {super.key,
-      required this.mobileNumber,
-      required this.companyID,
-      required this.ProductID});
+
+  SplashScreen({super.key,
+        required this.mobileNumber,
+        required this.ProductID,
+        required this.companyID});
+
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -35,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     productCompanyDetail(
-        context, widget.ProductID.toString(), widget.companyID.toString());
+        context, widget.ProductID, widget.companyID);
   }
 
   @override
@@ -101,7 +102,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> productCompanyDetail(
       BuildContext context, product, company) async {
     Provider.of<DataProvider>(context, listen: false)
-        .productCompanyDetail(product, product);
+        .productCompanyDetail(product, company);
   }
 
   Future<void> SaveData(ProductCompanyDetailResponse response) async {
