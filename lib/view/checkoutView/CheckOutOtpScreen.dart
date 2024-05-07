@@ -7,7 +7,6 @@ import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/checkoutView/model/CheckOutOtpModel.dart';
 import 'package:scale_up_module/view/checkoutView/model/ValidOtpForCheckoutModel.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
@@ -20,7 +19,9 @@ import '../../utils/loader.dart';
 import 'PaymentConfirmation.dart';
 
 class CheckOutOtpScreen extends StatefulWidget {
-  const CheckOutOtpScreen({super.key});
+  String transactionId;
+
+   CheckOutOtpScreen({super.key,required this.transactionId});
 
   @override
   State<CheckOutOtpScreen> createState() => _CheckOutOtpScreenState();
@@ -35,13 +36,13 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
 
   CheckOutOtpModel? checkOutOtpModel = null;
   ValidOtpForCheckoutModel? validOtpForCheckoutModel = null;
-  String TransactionReqNo = "2024620";
+
 
   @override
   void initState() {
     super.initState();
     _start = 30;
-    callGenrateOtp(TransactionReqNo);
+    callGenrateOtp(widget.transactionId);
   }
 
   @override
@@ -67,8 +68,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
               if (productProvider.genrateOptPaymentData == null && isLoading) {
                 return Center(child: Loader());
               } else {
-                if (productProvider.genrateOptPaymentData != null &&
-                    isLoading) {
+                if (productProvider.genrateOptPaymentData != null && isLoading) {
                   Navigator.of(context, rootNavigator: true).pop();
                   isLoading = false;
                 }
@@ -120,7 +120,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text('Welcome back',
+                                  const Text('Welcome back',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                           color: whiteColor,
@@ -130,7 +130,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                           height: 1.5)),
                                   Text(checkOutOtpModel!.response!.customerName!,
                                       textAlign: TextAlign.left,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: whiteColor,
                                           fontSize: 15,
                                           letterSpacing: 0.20000000298023224,
@@ -153,7 +153,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                         ),
                         Container(
                             height: MediaQuery.of(context).size.height,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: text_light_whit_color,
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(30.0),
@@ -371,13 +371,12 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
   }
 
   Future<void> callGenrateOtp(String transactionReqNo) async {
-    await Provider.of<DataProvider>(context, listen: false)
-        .GetByTransactionReqNoForOTP(transactionReqNo);
+    await Provider.of<DataProvider>(context, listen: false).GetByTransactionReqNoForOTP(transactionReqNo);
   }
 
   void reSendOtpCall(BuildContext context, String mobileNo, DataProvider productProvider)async {
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false).reSendOtpPaymentConfromation(mobileNo,TransactionReqNo);
+    await Provider.of<DataProvider>(context, listen: false).reSendOtpPaymentConfromation(mobileNo,widget.transactionId);
     Navigator.of(context, rootNavigator: true).pop();
 
     productProvider.reSendOptPaymentData!.when(
@@ -391,7 +390,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
       },
       failure: (exception) {
         // Handle failure
-        print('Failure! Error: ${exception}');
+        print('Failure! Error: $exception');
       },
     );
 
@@ -400,10 +399,9 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
 
   void callValidOtpApi(BuildContext context, String otptext, DataProvider productProvider)async {
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false).ValidateOrderOTPGetToken(checkOutOtpModel!.response!.mobileNo!,otptext,TransactionReqNo);
+    await Provider.of<DataProvider>(context, listen: false).ValidateOrderOTPGetToken(checkOutOtpModel!.response!.mobileNo!,otptext,widget.transactionId);
     Navigator.of(context, rootNavigator: true).pop();
     final prefsUtil = await SharedPref.getInstance();
-    final int? leadID = prefsUtil.getInt(LEADE_ID);
 
     productProvider.validOptPaymentData!.when(
       success: (ValidOtpForCheckoutModel) async {
@@ -500,7 +498,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          checkOutOtpModel!.response!.mobileNo!,
+                          checkOutOtpModel.response!.mobileNo!,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                               fontSize: 11,
@@ -509,9 +507,9 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          checkOutOtpModel!.response!.customerCareEmail!,
+                          checkOutOtpModel.response!.customerCareEmail!,
                           textAlign: TextAlign.start,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 11,
                               color: Colors.black87,
                               fontWeight: FontWeight.bold),

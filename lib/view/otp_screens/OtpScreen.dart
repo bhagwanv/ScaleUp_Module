@@ -35,10 +35,10 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   String? appSignature;
   String? otpCode;
   DataProvider? productProvider;
-  int _start = 30;
   bool isReSendDisable = true;
   String? userLoginMobile;
   var isLoading = true;
+  int _start = 30;
   final CountdownController _controller = CountdownController(autoStart: true);
 
   @override
@@ -284,8 +284,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     } else {
       Utils.onLoading(context, "");
       final prefsUtil = await SharedPref.getInstance();
-      await Provider.of<DataProvider>(context, listen: false)
-          .verifyOtp(VarifayOtpRequest(
+      await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(
         activityId: activityId,
         companyId: prefsUtil.getInt(COMPANY_ID),
         mobileNo: userLoginMobile,
@@ -345,9 +344,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-              as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel) as LeadCurrentResponseModel?;
       Navigator.of(context, rootNavigator: true).pop();
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(

@@ -15,12 +15,12 @@ class CreditDayAmountCals {
     invoiceAmount = json['invoiceAmount'];
     annualInterestRate = json['annualInterestRate'];
   }
-  int? interestRate;
-  int? interestAmount;
-  int? gstAmount;
-  int? totalAmount;
-  int? invoiceAmount;
-  int? annualInterestRate;
+  dynamic interestRate;
+  dynamic interestAmount;
+  dynamic gstAmount;
+  dynamic totalAmount;
+  dynamic invoiceAmount;
+  dynamic annualInterestRate;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

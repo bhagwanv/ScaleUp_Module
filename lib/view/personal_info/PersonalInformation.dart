@@ -168,9 +168,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             personalDetailsResponce!.manulaElectrictyBillImage!;
                       }
 
-                      if (personalDetailsResponce!.gender == "Male") {
+                      if (personalDetailsResponce!.gender == "Male"||personalDetailsResponce!.gender == "M") {
                         _genderCl.text = "Male";
-                      } else if (personalDetailsResponce!.gender == "Female") {
+                      } else if (personalDetailsResponce!.gender == "Female"||personalDetailsResponce!.gender == "F") {
                         _genderCl.text = "Female";
                       } else {
                         _genderCl.text = "Other";
@@ -944,8 +944,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
   Future<void> getPersonalDetailAndStateApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     Provider.of<DataProvider>(context, listen: false)
-        .getLeadPersonalDetails(userId!);
+        .getLeadPersonalDetails(userId!,productCode!);
     Provider.of<DataProvider>(context, listen: false).getAllState();
   }
 

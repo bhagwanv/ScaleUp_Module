@@ -1255,9 +1255,10 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   Future<void> getPersonalDetailAndStateApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
     await Provider.of<DataProvider>(context, listen: false)
-        .getLeadBusinessDetail(userId!);
+        .getLeadBusinessDetail(userId!,productCode!);
 
     await Provider.of<DataProvider>(context, listen: false).getAllState();
   }

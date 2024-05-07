@@ -481,6 +481,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
   @override
   void initState() {
     super.initState();
+
     getAadhaarData(context);
   }
 
@@ -552,7 +553,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
   Future<void> getAadhaarData(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
-    Provider.of<DataProvider>(context, listen: false).getLeadAadhar(userId!);
+    Provider.of<DataProvider>(context, listen: false).getLeadAadhar(userId!,productCode!);
   }
 }

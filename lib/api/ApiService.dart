@@ -371,11 +371,11 @@ class ApiService {
   }
 
   Future<Result<LeadPanResponseModel, Exception>> getLeadPAN(
-      String userId) async {
+      String userId,String productCode) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final response = await interceptor.get(Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.getLeadPAN}?UserId=$userId'));
+            '${apiUrls.baseUrl + apiUrls.getLeadPAN}?UserId=$userId&productCode=$productCode'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -398,13 +398,13 @@ class ApiService {
 
 
   //aadhaar module
-  Future<Result<LeadAadhaarResponse,Exception>> getLeadAadhar(String userId) async {
+  Future<Result<LeadAadhaarResponse,Exception>> getLeadAadhar(String userId,String productCode) async {
     try{
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.getLeadAadhar}?UserId=$userId'),
+            '${apiUrls.baseUrl + apiUrls.getLeadAadhar}?UserId=$userId&productCode=$productCode'),
           headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token'
@@ -555,13 +555,13 @@ class ApiService {
   }
 
   //personal info module
-  Future<Result<PersonalDetailsResponce,Exception>> getLeadPersnalDetails(String userId) async {
+  Future<Result<PersonalDetailsResponce,Exception>> getLeadPersnalDetails(String userId,String productCode) async {
     try{
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=$userId'),
+            '${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=$userId&productCode=$productCode'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
@@ -692,10 +692,10 @@ class ApiService {
 
   //Business Detail Module
   Future<LeadBusinessDetailResponseModel> getLeadBusinessDetail(
-      String userId) async {
+      String userId,String productCode) async {
     if (await internetConnectivity.networkConnectivity()) {
       final response = await interceptor.get(Uri.parse(
-          '${apiUrls.baseUrl + apiUrls.getLeadBusinessDetail}?UserId=$userId'));
+          '${apiUrls.baseUrl + apiUrls.getLeadBusinessDetail}?UserId=$userId&productCode=$productCode'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response
@@ -790,12 +790,12 @@ class ApiService {
       throw Exception('No internet connection');
     }
   }
-  Future<Result<BankDetailsResponceModel,Exception>> GetLeadBankDetail(int leadID) async {
+  Future<Result<BankDetailsResponceModel,Exception>> GetLeadBankDetail(int leadID,String productCode) async {
     try{
       if (await internetConnectivity.networkConnectivity()) {
         final response = await interceptor.get(
           Uri.parse(
-              '${apiUrls.baseUrl + apiUrls.GetLeadBankDetail}?LeadId=$leadID'),
+              '${apiUrls.baseUrl + apiUrls.GetLeadBankDetail}?LeadId=$leadID&productCode=$productCode'),
           headers: {
             'Content-Type': 'application/json', // Set the content type as JSON
           },
@@ -908,7 +908,6 @@ class ApiService {
     try{
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadOffer}?LeadId=$leadId&companyId=$companyID'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
@@ -934,7 +933,6 @@ class ApiService {
     try{
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadName}?UserId=$UserId'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {

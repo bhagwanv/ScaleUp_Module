@@ -248,8 +248,8 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getLeadPAN(String userId) async {
-    _getLeadPANData = await apiService.getLeadPAN(userId);
+  Future<void> getLeadPAN(String userId,String productCode) async {
+    _getLeadPANData = await apiService.getLeadPAN(userId,productCode);
     notifyListeners();
   }
 
@@ -275,8 +275,8 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getLeadAadhar(String userId) async {
-    _getLeadAadhaar = await apiService.getLeadAadhar(userId);
+  Future<void> getLeadAadhar(String userId,String productCode) async {
+    _getLeadAadhaar = await apiService.getLeadAadhar(userId,productCode);
     notifyListeners();
   }
 
@@ -349,14 +349,14 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getBankDetails(int leadID) async {
-    _getBankDetailsData = await apiService.GetLeadBankDetail(leadID);
+  Future<void> getBankDetails(int leadID,String productCode) async {
+    _getBankDetailsData = await apiService.GetLeadBankDetail(leadID,productCode);
     notifyListeners();
   }
 
 
-  Future<void> getLeadPersonalDetails(String userId) async {
-    _getPersonalDetailsData = await apiService.getLeadPersnalDetails(userId);
+  Future<void> getLeadPersonalDetails(String userId,String productCode) async {
+    _getPersonalDetailsData = await apiService.getLeadPersnalDetails(userId,productCode);
     notifyListeners();
   }
 
@@ -421,8 +421,8 @@ class DataProvider extends ChangeNotifier {
 
   }
 
-  Future<void> getLeadBusinessDetail(String userId) async {
-    _getLeadBusinessDetailData = await apiService.getLeadBusinessDetail(userId);
+  Future<void> getLeadBusinessDetail(String userId,String productCode) async {
+    _getLeadBusinessDetailData = await apiService.getLeadBusinessDetail(userId,productCode);
     notifyListeners();
   }
 

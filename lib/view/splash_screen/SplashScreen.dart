@@ -19,6 +19,7 @@ class SplashScreen extends StatefulWidget {
   String mobileNumber;
   String companyID;
   String ProductID;
+  LeadCurrentResponseModel? leadCurrentActivityAsyncData;
 
 
   SplashScreen({super.key,
@@ -41,6 +42,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var activityId = 0;
+    var subActivityId = 0;
+
     return Scaffold(
         appBar: AppBar(
           title: const Center(child: Text('Scaleup')),
@@ -49,25 +53,38 @@ class _SplashScreenState extends State<SplashScreen> {
             Consumer<DataProvider>(builder: (context, productProvider, child) {
           if (productProvider.productCompanyDetailResponseModel != null) {
             if (productProvider.productCompanyDetailResponseModel!.status!) {
-              SaveData(productProvider.productCompanyDetailResponseModel!.response!);
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(
-                      activityId: 10,
-                      subActivityId: 0,
-                      companyID: productProvider
-                          .productCompanyDetailResponseModel!
-                          .response!
-                          .productId,
-                      ProductID: productProvider
-                          .productCompanyDetailResponseModel!
-                          .response!
-                          .companyId,
-                      MobileNumber: widget.mobileNumber,
-                    ),
-                  ),
-                );
+
+              SaveData(productProvider.productCompanyDetailResponseModel!.response!).then((leadCurrentActivityAsyncData) {
+                // Handle the returned LeadCurrentResponseModel here
+                if (leadCurrentActivityAsyncData != null) {
+                  setState(() {
+                    // Update state variables
+                    activityId = leadCurrentActivityAsyncData.leadProductActivity!.first.activityMasterId!;
+                    subActivityId = leadCurrentActivityAsyncData.leadProductActivity!.first.subActivityMasterId!;
+                  });
+                  print("activityId $activityId");
+                   WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(
+                          activityId: activityId,
+                          subActivityId: subActivityId,
+                          companyID: productProvider
+                              .productCompanyDetailResponseModel!
+                              .response!
+                              .productId,
+                          ProductID: productProvider
+                              .productCompanyDetailResponseModel!
+                              .response!
+                              .companyId,
+                          MobileNumber: widget.mobileNumber,
+                        ),
+                      ),
+                    );
+                  });                }
+              }).catchError((error) {
+                // Handle errors that might occur during saving data
+                print("Error saving data: $error");
               });
             } else {
               WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -101,11 +118,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> productCompanyDetail(
       BuildContext context, product, company) async {
-    Provider.of<DataProvider>(context, listen: false)
-        .productCompanyDetail(product, company);
+     Provider.of<DataProvider>(context, listen: false).productCompanyDetail(product, company);
+
   }
 
-  Future<void> SaveData(ProductCompanyDetailResponse response) async {
+  Future<LeadCurrentResponseModel?> SaveData(ProductCompanyDetailResponse response) async {
     final prefsUtil = await SharedPref.getInstance();
     ValueType checkValueType<T>(T value) {
       if (value is bool) {
@@ -131,6 +148,20 @@ class _SplashScreenState extends State<SplashScreen> {
     }
     prefsUtil.saveString(PRODUCT_CODE, response.productCode!);
     prefsUtil.saveString(COMPANY_CODE, response.companyCode!);
+
+     var leadCurrentRequestModel = LeadCurrentRequestModel(
+      companyId: response.companyId,
+      productId: response.productId,
+      leadId: 0,
+      mobileNo: widget.mobileNumber,
+      activityId: 0,
+      subActivityId: 0,
+      userId: "",
+      monthlyAvgBuying: 0,
+      vintageDays: 0,
+      isEditable: true,
+    );
+    return await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel) as LeadCurrentResponseModel?;
   }
 
 /*  Future<void> fetchData() async {

@@ -66,7 +66,7 @@ class TransactionDetail {
   int? invoiceAmount;
   String? anchorName;
   bool? isPayableByCustomer;
-  int? interestRate;
+  dynamic interestRate;
   List<CreditDayWiseAmounts>? creditDayWiseAmounts;
   String? transactionStatus;
   bool? isAccountActive;

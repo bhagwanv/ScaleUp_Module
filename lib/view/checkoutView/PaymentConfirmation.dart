@@ -806,7 +806,6 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
     await Provider.of<DataProvider>(context, listen: false).PostOrderPlacement(payemtOrderPostRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
 
-
     productProvider.postPaymentOrderData!.when(
       success: (OrderPaymentModel) async {
         orderPaymentModel = OrderPaymentModel;

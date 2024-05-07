@@ -585,8 +585,9 @@ class _PancardScreenState extends State<PancardScreen> {
   Future<void> LeadPANApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
-    Provider.of<DataProvider>(context, listen: false).getLeadPAN(userId!);
+    Provider.of<DataProvider>(context, listen: false).getLeadPAN(userId!,productCode!);
   }
 
   Future<void> fetchData(BuildContext context) async {

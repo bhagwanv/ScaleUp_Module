@@ -436,7 +436,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   Future<void> callAPI(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    Provider.of<DataProvider>(context, listen: false).getBankDetails(leadId!);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    Provider.of<DataProvider>(context, listen: false).getBankDetails(leadId!,productCode!);
 
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false).getBankList();

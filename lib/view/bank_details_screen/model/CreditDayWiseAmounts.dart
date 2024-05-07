@@ -14,9 +14,9 @@ class CreditDayWiseAmounts {
     finalAmount = json['finalAmount'];
   }
   int? days;
-  int? amount;
+  dynamic amount;
   CreditDayAmountCals? creditDayAmountCals;
-  int? finalAmount;
+  dynamic finalAmount;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

@@ -5,10 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/view/checkoutView/CheckOutOtpScreen.dart';
+import 'package:scale_up_module/view/checkoutView/CongratulationScreen.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'data_provider/DataProvider.dart';
 
+var mobileNumber = "";
+var company = "";
+var product = "";
+var isPayNow = false;
+// var transactionId = "202420";
+var transactionId = "";
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter is initialized
   runApp(
     ChangeNotifierProvider(
       create: (context) => DataProvider(),
@@ -18,47 +27,74 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
   static const platform = MethodChannel('com.ScaleUP');
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  String mobileNumber="";
-  String company="";
-  String product ="";
-  bool isPayNow =false;
+  var mobileNumber = "";
+  var company = "";
+  var product = "";
+  var isPayNow = false;
+  var transactionId = "";
 
   @override
   void initState() {
-    MyApp.platform.setMethodCallHandler(_receiveFromHost);
     super.initState();
+    _initPlatform();
   }
 
-  // This widget is the root of your application.
+  void _initPlatform() {
+    MyApp.platform.setMethodCallHandler(_receiveFromHost);
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    try {
+      await MyApp.platform.invokeMethod('ScaleUP');
+    } catch (e) {
+      print("Error initializing data: $e");
+    }
+  }
+
+  Widget _buildHome() {
+    if (transactionId.isNotEmpty) {
+      return CheckOutOtpScreen(transactionId: transactionId);
+    } else if (mobileNumber.isNotEmpty) {
+      return SplashScreen(mobileNumber: mobileNumber, companyID: company, ProductID: product,);
+    } else {
+      return EmptyContainer();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Scalup',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          useMaterial3: true,
-        ),
+      title: 'Scaleup',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
+      home: FutureBuilder<void>(
+        future: _initializeData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Scaffold(body: Center(child: CircularProgressIndicator()));
+          } else if (snapshot.hasError) {
+            return Scaffold(body: Center(child: Text('Error: ${snapshot.error}')));
+          } else {
+           //return _buildHome();
+            //return CheckOutOtpScreen(transactionId: "202423");
+            return SplashScreen(mobileNumber: "7803994667", companyID: "CN_1", ProductID: "CreditLine",);;
 
-           home: isPayNow? CheckOutOtpScreen():mobileNumber.isNotEmpty?SplashScreen(mobileNumber: mobileNumber ,companyID: company, ProductID:product):Container()
 
-       //home: SplashScreen(mobileNumber:  "7803994667",ProductID:  "CreditLine",companyID: "CN_1")
-            //VendorDetailScreen()
-          //home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
-          //home: LoginScreen(activityId: 10, subActivityId: 0, companyID: 2, ProductID:5, MobileNumber: "7509764461"),
-            /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
-            /*LoginScreen(activityId: 1, subActivityId: 0),*/
-            //TakeSelfieScreen(activityId: 2, subActivityId: 1),
-            );
+          }
+        },
+      ),
+    );
   }
 
   Future<void> _receiveFromHost(MethodCall call) async {
@@ -72,19 +108,23 @@ class _MyAppState extends State<MyApp> {
       print(error);
     }
 
-    setState(() {
-      if (jData != null) {
-        mobileNumber = jData['mobileNumber'];
-        company = jData['companyID'];
-        product = jData['productID'];
-        isPayNow = jData['isPayNow'];
+    if (jData != null) {
+      setState(() {
+        mobileNumber = jData['mobileNumber'] ?? "";
+        company = jData['companyID'] ?? "";
+        product = jData['productID'] ?? "";
+        isPayNow = jData['isPayNow'] ?? false;
+        transactionId = jData['transactionId'] ?? jData['transactionId'];
+       // transactionId = "202420" ?? "202420";
+      });
+    }
+  }
+}
+class EmptyContainer extends StatelessWidget {
+  const EmptyContainer({Key? key}) : super(key: key);
 
-      //  productCompanyDetail(context, company, Product);
-      } else {
-        mobileNumber = "";
-        company = "";
-        product = "";
-      }
-    });
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: Center(child: Text("Hello")));
   }
 }
