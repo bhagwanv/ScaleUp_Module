@@ -37,6 +37,7 @@ class _BottomNavState extends State<BottomNav> {
             setState(() {
               selectedIndex = 2;
               productProvider.disposegetCustomerOrderSummaryData();
+              productProvider.disposegetCustomerTransactionList();
             });
           },
           child: SvgPicture.asset(
@@ -68,6 +69,7 @@ class _BottomNavState extends State<BottomNav> {
                   setState(() {
                     selectedIndex = 0;
                     productProvider.disposegetCustomerOrderSummaryData();
+                    productProvider.disposegetCustomerTransactionList();
                   });
                 },
                 child: Padding(
@@ -97,6 +99,7 @@ class _BottomNavState extends State<BottomNav> {
                   setState(() {
                     selectedIndex = 1;
                     productProvider.disposegetCustomerOrderSummaryData();
+                    productProvider.disposegetCustomerTransactionList();
                   });
                 },
                 child: Padding(

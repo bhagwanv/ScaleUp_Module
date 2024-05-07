@@ -29,8 +29,10 @@ import '../view/checkoutView/model/PayemtOrderPostRequestModel.dart';
 import '../view/checkoutView/model/ValidOtpForCheckoutModel.dart';
 import '../view/dashboard_screen/model/CustomerTransactionListRequestModel.dart';
 import '../view/dashboard_screen/my_account/model/CustomerOrderSummaryResModel.dart';
+import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
+import '../view/dashboard_screen/vendorDetail/model/TransactionBreakupResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
@@ -225,14 +227,17 @@ class DataProvider extends ChangeNotifier {
   Result<CustomerOrderSummaryResModel,Exception>? _getCustomerOrderSummaryData;
   Result<CustomerOrderSummaryResModel,Exception>? get getCustomerOrderSummaryData => _getCustomerOrderSummaryData;
 
-  Result<List<CustomerTransactionListTwoRespModel>,Exception>? _getCustomerTransactionListData;
-  Result<List<CustomerTransactionListTwoRespModel>,Exception>? get getCustomerTransactionListData => _getCustomerTransactionListData;
+  Result<List<CustomerTransactionListRespModel>,Exception>? _getCustomerTransactionListData;
+  Result<List<CustomerTransactionListRespModel>,Exception>? get getCustomerTransactionListData => _getCustomerTransactionListData;
 
   Result<OfferResponceModel,Exception>? _getCustomerOrderSummaryForAnchorData;
   Result<OfferResponceModel,Exception>? get getCustomerOrderSummaryForAnchorData => _getCustomerOrderSummaryForAnchorData;
 
   Result<List<CustomerTransactionListTwoRespModel>,Exception>? _getCustomerTransactionListTwoData;
   Result<List<CustomerTransactionListTwoRespModel>,Exception>? get getCustomerTransactionListTwoData => _getCustomerTransactionListTwoData;
+
+  Result<TransactionBreakupResModel,Exception>? _getTransactionBreakupData;
+  Result<TransactionBreakupResModel,Exception>? get getTransactionBreakupData => _getTransactionBreakupData;
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -522,6 +527,10 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getTransactionBreakup(int invoiceId) async {
+    _getTransactionBreakupData = await apiService.getTransactionBreakup(invoiceId);
+    notifyListeners();
+  }
 
 }
 
