@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/dashboard_screen/bottom_navigation.dart';
 import 'package:scale_up_module/view/dashboard_screen/vendorDetail/vendor_detail_screen.dart';
+import 'package:scale_up_module/view/login_screen/login_screen.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'data_provider/DataProvider.dart';
 
@@ -50,10 +51,10 @@ class _MyAppState extends State<MyApp> {
 
        // home: SplashScreen(companyID: int.parse(company), ProductID:int.parse(product), mobileNumber: mobileNumber.toString())
        // home: SplashScreen(mobileNumber:  "7803994667",ProductID:  2,companyID: 2)
-        home: BottomNav()
+       // home: BottomNav()
             //VendorDetailScreen()
           //home: LoginScreen(activityId: 1, subActivityId: 0, companyID: int.parse(companyID), ProductID:int.parse(ProductID), MobileNumber: mobileNumber.toString()),
-          //home: LoginScreen(activityId: 10, subActivityId: 0, companyID: 2, ProductID:5, MobileNumber: "7509764461"),
+          home: LoginScreen(activityId: 10, subActivityId: 0, companyID: 2, ProductID:5, MobileNumber: "7509764461"),
             /*AadhaarScreen(activityId: 2, subActivityId: 1)*/
             /*LoginScreen(activityId: 1, subActivityId: 0),*/
             //TakeSelfieScreen(activityId: 2, subActivityId: 1),

@@ -28,8 +28,10 @@ import '../view/checkoutView/model/PayemtOrderPostRequestModel.dart';
 import '../view/checkoutView/model/ValidOtpForCheckoutModel.dart';
 import '../view/dashboard_screen/model/CustomerTransactionListRequestModel.dart';
 import '../view/dashboard_screen/my_account/model/CustomerOrderSummaryResModel.dart';
+import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
+import '../view/dashboard_screen/vendorDetail/model/TransactionBreakupResModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
@@ -1264,7 +1266,7 @@ class ApiService {
     }
   }
 
-  Future<Result<List<CustomerTransactionListTwoRespModel>,Exception>> getCustomerTransactionList(
+  Future<Result<List<CustomerTransactionListRespModel>,Exception>> getCustomerTransactionList(
       CustomerTransactionListRequestModel customerTransactionListRequestModel) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
@@ -1281,8 +1283,8 @@ class ApiService {
         switch (response.statusCode) {
           case 200:
             final dynamic jsonData = json.decode(response.body);
-            final List<CustomerTransactionListTwoRespModel> responseModel = List<CustomerTransactionListTwoRespModel>.from(
-                jsonData.map((model) => CustomerTransactionListTwoRespModel.fromJson(model)));
+            final List<CustomerTransactionListRespModel> responseModel = List<CustomerTransactionListRespModel>.from(
+                jsonData.map((model) => CustomerTransactionListRespModel.fromJson(model)));
             return Success(responseModel);
           default:
             return Failure(ApiException(response.statusCode,"" ));
@@ -1348,6 +1350,32 @@ class ApiService {
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<TransactionBreakupResModel,Exception>> getTransactionBreakup(int invoiceId ) async {
+
+    try{
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.getTransactionBreakup}?InvoiceId=$invoiceId'));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final TransactionBreakupResModel responseModel =
+            TransactionBreakupResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode,"" ));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    }on Exception catch (e) {
       return Failure(e);
     }
   }

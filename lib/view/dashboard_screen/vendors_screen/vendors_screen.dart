@@ -46,7 +46,7 @@ class _VendorsScreenState extends State<VendorsScreen> {
               isLoading = false;
             }
 
-            if (productProvider.getCustomerTransactionListData != null) {
+           /* if (productProvider.getCustomerTransactionListData != null) {
               productProvider.getCustomerTransactionListData!.when(
                 success: (PostLeadSelfieResponseModel) {
                   // Handle successful response
@@ -60,7 +60,7 @@ class _VendorsScreenState extends State<VendorsScreen> {
                   //print('Failure! Error: ${exception.message}');
                 },
               );
-            }
+            }*/
 
             return Padding(
               padding: EdgeInsets.all(16.0),
