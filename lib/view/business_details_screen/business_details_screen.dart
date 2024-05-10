@@ -378,13 +378,9 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
             if (productProvider.getpostBusineesDoumentSingleFileData != null &&
                 !isImageDelete) {
-              if (productProvider
-                      .getpostBusineesDoumentSingleFileData!.filePath !=
-                  null) {
-                image = productProvider
-                    .getpostBusineesDoumentSingleFileData!.filePath!;
-                businessProofDocId = productProvider
-                    .getpostBusineesDoumentSingleFileData!.docId!;
+              if (productProvider.getpostBusineesDoumentSingleFileData!.filePath != null) {
+                image = productProvider.getpostBusineesDoumentSingleFileData!.filePath!;
+                businessProofDocId = productProvider.getpostBusineesDoumentSingleFileData!.docId!;
               }
             }
 
@@ -481,10 +477,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                       //chooseBusinessProofList!.first;
                                       isGstFilled=true;
                                       selectedChooseBusinessProofValue = "GST Certificate";
-                                      _businessDocumentNumberController.text =
-                                          productProvider
-                                              .getCustomerDetailUsingGSTData!
-                                              .busGSTNO!;
+                                      _businessDocumentNumberController.text = productProvider.getCustomerDetailUsingGSTData!.busGSTNO!;
                                     } else {
                                       Utils.showToast(
                                           productProvider
@@ -810,7 +803,19 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                     const SizedBox(
                       height: 15.0,
                     ),
+
+                    selectedChooseBusinessProofValue=="Udyog Aadhaar Certificate"?
                     CommonTextField(
+                      controller: _businessDocumentNumberController,
+                      hintText: "UDYAM-XX-00-0000000",
+                      labelText: "Udyog Aadhaa Document",
+                      inputFormatter: [
+                        //FilteringTextInputFormatter(RegExp(r'^UDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}$'), allow: false),
+
+                        FilteringTextInputFormatter.deny(RegExp(r'^UDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}$')), // Allow only alphanumeric characters and hyphens
+                        _UdyamNumberInputFormatter(),
+                      ],
+                    ):CommonTextField(
                       controller: _businessDocumentNumberController,
                       hintText: "Business Document Number",
                       labelText: "Business Document Number",
@@ -1298,6 +1303,30 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       if (kDebugMode) {
         print('Error occurred during API call: $error');
       }
+    }
+
+  }
+}
+
+class _UdyamNumberInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    final newText = _applyFormat(newValue.text); // Apply the desired format
+    return newValue.copyWith(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length), // Maintain cursor position
+    );
+  }
+
+  String _applyFormat(String value) {
+    if (value.length <= 5) {
+      return value.toUpperCase();
+    } else if (value.length <= 9) {
+      return '${value.substring(0, 6)}-${value.substring(6)}';
+    } else if (value.length <= 11) {
+      return '${value.substring(0, 9)}-${value.substring(9)}';
+    } else {
+      return value.substring(0, 19); // Limit total characters to 17
     }
   }
 }

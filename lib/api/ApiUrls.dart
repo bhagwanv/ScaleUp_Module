@@ -43,6 +43,9 @@ class ApiUrls{
   final String ValidateOrderOTPGetToken="/aggregator/LoanAccountAgg/ValidateOrderOTPGetToken";
   final String GetByTransactionReqNo="/aggregator/LoanAccountAgg/GetByTransactionReqNo";
   final String PostOrderPlacement="/aggregator/LoanAccountAgg/PostOrderPlacement";
+  final String GetPFCollection="/services/lead/v1/NBFCSchedular/GetPFCollection";
+  final String DisbursementNext="/aggregator/LeadAgg/DisbursementNext";
+  final String GetPFCollectionActivityStatus="/aggregator/LeadAgg/GetPFCollectionActivityStatus";
 
 
 

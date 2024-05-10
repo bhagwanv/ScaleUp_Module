@@ -60,7 +60,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     'Married',
     'Single',
     'Others',
-    'Divorced'
+    'Divorced',
     'Widow',
   ];
 
@@ -945,8 +945,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false)
-        .getLeadPersonalDetails(userId!,productCode!);
+    Provider.of<DataProvider>(context, listen: false).getLeadPersonalDetails(userId!,productCode!);
     Provider.of<DataProvider>(context, listen: false).getAllState();
   }
 
@@ -1259,7 +1258,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     child: Container(
                       child: IconButton(
                         onPressed: () => setState(() {
-                          isEmailClear = true;
+                          isEmailClear = false;
                           isValidEmail = false;
                           _emailIDCl.clear();
                         }),

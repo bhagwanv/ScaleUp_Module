@@ -1,8 +1,7 @@
-
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/api/ApiService.dart';
 import 'package:scale_up_module/shared_preferences/SharedPref.dart';
@@ -16,6 +15,7 @@ import '../../../utils/common_elevted_button.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/customer_sequence_logic.dart';
 import '../../../utils/loader.dart';
+import '../../pwa/Pwascreen.dart';
 import '../../splash_screen/model/GetLeadResponseModel.dart';
 import '../../splash_screen/model/LeadCurrentRequestModel.dart';
 import '../../splash_screen/model/LeadCurrentResponseModel.dart';
@@ -26,27 +26,32 @@ class CreditLineApproved extends StatefulWidget {
   final int subActivityId;
   final bool isDisbursement;
 
-  const CreditLineApproved({super.key, required this.activityId, required this.subActivityId,required this.isDisbursement});
+  const CreditLineApproved(
+      {super.key,
+      required this.activityId,
+      required this.subActivityId,
+      required this.isDisbursement});
 
   @override
   State<CreditLineApproved> createState() => _CreditLineApprovedState();
 }
 
 class _CreditLineApprovedState extends State<CreditLineApproved> {
-  late OfferPersonNameResponceModel? offerPersonNameResponceModel=null;
-  late OfferResponceModel? offerResponceModel=null;
-  late AcceptedResponceModel? acceptedResponceModel=null;
-  late DisbursementResponce? disbursementResponce=null;
+  late OfferPersonNameResponceModel? offerPersonNameResponceModel = null;
+  late OfferResponceModel? offerResponceModel = null;
+  late AcceptedResponceModel? acceptedResponceModel = null;
+  late DisbursementResponce? disbursementResponce = null;
   var isLoading = true;
+  var isCheckStatus = false;
   var congratulations = "";
   String? userID = "";
 
   @override
   void initState() {
     super.initState();
-    if(widget.isDisbursement){
+    if (widget.isDisbursement) {
       callDisbursementApi(context);
-    }else{
+    } else {
       callApi(context);
     }
   }
@@ -57,15 +62,16 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
       top: true,
       bottom: true,
       child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-        if(widget.isDisbursement){
-          if (productProvider.getDisbursementProposalData == null && isLoading) {
+        if (widget.isDisbursement) {
+          if (productProvider.getDisbursementProposalData == null &&
+              isLoading) {
             return Center(child: Loader());
-          }else {
+          } else {
             Navigator.of(context, rootNavigator: true).pop();
             isLoading = false;
           }
-        }else {
-         /* if (productProvider.getOfferResponceata == null && isLoading) {
+        } else {
+          /* if (productProvider.getOfferResponceata == null && isLoading) {
             isLoading = false;
             return Center(child: Loader());
           }else {
@@ -74,34 +80,33 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
           }*/
         }
 
-          if(widget.isDisbursement){
-            if (productProvider.getDisbursementProposalData != null) {
-              productProvider.getDisbursementProposalData!.when(
-                success: (DisbursementResponce) {
-                  disbursementResponce = DisbursementResponce;
-
-                },
-                failure: (exception) {
-                  // Handle failure
-                  print("Failure");
-                  //print('Failure! Error: ${exception.message}');
-                },
-              );
-            }
-          }else{
-            if (productProvider.getOfferResponceata != null) {
-              productProvider.getOfferResponceata!.when(
-                success: (OfferResponceModel) {
-                  offerResponceModel = OfferResponceModel;
-                },
-                failure: (exception) {
-                  // Handle failure
-                  print("Failure");
-                  //print('Failure! Error: ${exception.message}');
-                },
-              );
-            }
+        if (widget.isDisbursement) {
+          if (productProvider.getDisbursementProposalData != null) {
+            productProvider.getDisbursementProposalData!.when(
+              success: (DisbursementResponce) {
+                disbursementResponce = DisbursementResponce;
+              },
+              failure: (exception) {
+                // Handle failure
+                print("Failure");
+                //print('Failure! Error: ${exception.message}');
+              },
+            );
           }
+        } else {
+          if (productProvider.getOfferResponceata != null) {
+            productProvider.getOfferResponceata!.when(
+              success: (OfferResponceModel) {
+                offerResponceModel = OfferResponceModel;
+              },
+              failure: (exception) {
+                // Handle failure
+                print("Failure");
+                //print('Failure! Error: ${exception.message}');
+              },
+            );
+          }
+        }
 
         if (productProvider.getLeadNameData != null) {
           productProvider.getLeadNameData!.when(
@@ -113,56 +118,84 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
             },
           );
         }
-          return Scaffold(
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(30),
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  Container(
-                    alignment: Alignment.center,
-                    child: SvgPicture.asset(
-                        'assets/images/credit_line_approved.svg'),
-                  ),
-                  widget.isDisbursement? Column(
-                    children: [
-                      SizedBox(height: 10),
-                      Center(
-                        child: Text(
-                          " Thank You For Choosing Us!Your Account Setup has been successfully Completed for Credit Limit",
-                          style: TextStyle(color: kPrimaryColor, fontSize: 18),
-                        ),
+        return Scaffold(
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(30),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Container(
+                  alignment: Alignment.center,
+                  child: SvgPicture.asset(
+                      'assets/images/credit_line_approved.svg'),
+                ),
+                widget.isDisbursement
+                    ? Column(
+                        children: [
+                          SizedBox(height: 10),
+                          Center(
+                            child: Text(
+                              " Thank You For Choosing Us!Your Account Setup has been successfully Completed for Credit Limit",
+                              style:
+                                  TextStyle(color: kPrimaryColor, fontSize: 18),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          disbusmentWidget(),
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          SizedBox(height: 10),
+                          Text(
+                            textAlign: TextAlign.center,
+                            "Congratulations ${offerPersonNameResponceModel?.response ?? ''}!! ",
+                            style:
+                                TextStyle(color: kPrimaryColor, fontSize: 18),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "You are qualified for credit limit of",
+                            style: TextStyle(color: Colors.black, fontSize: 15),
+                            textAlign: TextAlign.center,
+                          ),
+                          offerResponceModel != null &&
+                                  offerResponceModel!.response != null &&
+                                  offerResponceModel!
+                                          .response!.processingFeePayableBy ==
+                                      "Anchor"
+                              ? SetOfferWidget(productProvider)
+                              : SetCutomerOfferWidget(productProvider),
+                        ],
                       ),
-                      SizedBox(height: 10),
-                      disbusmentWidget(),
-                    ],
-                  ):
-                  Column(
-                    children: [
-                      SizedBox(height: 10),
-                      Text(
-                        textAlign: TextAlign.center,
-                          "Congratulations ${offerPersonNameResponceModel?.response ?? ''}!! ",
-                        style: TextStyle(color: kPrimaryColor, fontSize: 18),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "You are qualified for credit limit of",
-                        style: TextStyle(color: Colors.black, fontSize: 15),
-                        textAlign: TextAlign.center,
-                      ),
-
-                      offerResponceModel != null && offerResponceModel!.response != null && offerResponceModel!.response!.processingFeePayableBy == "Anchor"
-                          ? SetOfferWidget(productProvider)
-                          : SetCutomerOfferWidget(productProvider),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  widget.isDisbursement?Container():
-                  CommonElevatedButton(
-                    onPressed: () async{
-                      await acceptOffer(context,productProvider);
-                      /* Navigator.push(
+                const SizedBox(height: 30),
+                widget.isDisbursement
+                    ? Container()
+                    : offerResponceModel != null &&
+                            offerResponceModel!.response != null &&
+                            offerResponceModel!
+                                    .response!.processingFeePayableBy ==
+                                "Customer" && !isCheckStatus
+                        ? CommonElevatedButton(
+                            onPressed: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return Pwascreen(
+                                        activityId: widget.activityId,
+                                        subActivityId: widget.subActivityId);
+                                  },
+                                ),
+                              );
+                            },
+                            text: "Pay Now",
+                            upperCase: true,
+                          )
+                        : CommonElevatedButton(
+                            onPressed: () async {
+                              await acceptOffer(context, productProvider);
+                              /* Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) {
@@ -170,42 +203,53 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                       },
                     ),
                   );*/
-                    },
-                    text: "Proceed to e-mandate",
-                    upperCase: true,
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ),
+                            },
+                            text: "Proceed to e-mandate",
+                            upperCase: true,
+                          ),
+                const SizedBox(height: 10),
+              ],
             ),
-          );
+          ),
+        );
       }),
-
     );
   }
 
-
-  void callDisbursementApi(BuildContext context)async {
+  void callDisbursementApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    Provider.of<DataProvider>(context, listen: false).getDisbursementProposal(leadId!);
+    Provider.of<DataProvider>(context, listen: false)
+        .getDisbursementProposal(leadId!);
   }
 
   void callApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     userID = prefsUtil.getString(USER_ID);
-    Utils.onLoading(context,"");
-    await Provider.of<DataProvider>(context, listen: false).GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
     Navigator.of(context, rootNavigator: true).pop();
-    getLeadNameApi(context);
+    getLeadNameApi(context, productCode!);
+    getCheckStatus(context, leadId);
   }
 
-  Future<void> getLeadNameApi(BuildContext context) async {
-    Provider.of<DataProvider>(context, listen: false).getLeadName(userID!);
+  Future<void> getLeadNameApi(BuildContext context, String productCode) async {
+    Provider.of<DataProvider>(context, listen: false)
+        .getLeadName(userID!, productCode);
     //Navigator.of(context, rootNavigator: true).pop();
   }
 
+  Future<void> getCheckStatus(BuildContext context, int leadID) async {
+    bool checkStatus = await ApiService().checkStatus(leadID);
+    if (checkStatus) {
+      isCheckStatus = checkStatus;
+    } else {
+      isCheckStatus = checkStatus;
+    }
+  }
 
   Widget SetOfferWidget(DataProvider productProvider) {
     if (productProvider.getOfferResponceata != null) {
@@ -233,15 +277,16 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
           ],
         );
       } else {
-        Utils.showToast(offerResponceModel!.message!,context);
+        Utils.showToast(offerResponceModel!.message!, context);
         return Container();
       }
     } else {
       return Container();
     }
   }
-  Widget disbusmentWidget() {
-    if(disbursementResponce!=null){
+
+  Widget disbusmentCutomerWidget() {
+    if (disbursementResponce != null) {
       if (disbursementResponce!.status!) {
         return Column(
           children: [
@@ -256,7 +301,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
             SizedBox(height: 20),
             Text.rich(TextSpan(
               text:
-              'Interest Rate : ${disbursementResponce!.response?.convenionFeeRate} %',
+                  'Interest Rate : ${disbursementResponce!.response?.convenionFeeRate} %',
             )),
             Text(
               "(will be charged on every transaction)",
@@ -276,21 +321,71 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-              ),),
-
+              ),
+            ),
           ],
         );
       } else {
-        Utils.showToast(offerResponceModel!.message!,context);
+        Utils.showToast(offerResponceModel!.message!, context);
         return Container();
       }
-    }else {
+    } else {
       return Container();
     }
   }
 
+  Widget disbusmentWidget() {
+    if (disbursementResponce != null) {
+      if (disbursementResponce!.status!) {
+        return Column(
+          children: [
+            SizedBox(height: 10),
+            Center(
+              child: Text(
+                "₹ ${disbursementResponce!.response?.creditLimit}",
+                style: TextStyle(color: Colors.black, fontSize: 30),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text.rich(TextSpan(
+              text:
+                  'Interest Rate : ${disbursementResponce!.response?.convenionFeeRate} %',
+            )),
+            Text(
+              "(will be charged on every transaction)",
+              style: TextStyle(color: Colors.black, fontSize: 15),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                color: Colors.blue,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    "Our Team will review your application and will activate your account within 48 Hrs. Wishing you success and prosperity ahead.",
+                    style: TextStyle(color: Colors.black, fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      } else {
+        Utils.showToast(offerResponceModel!.message!, context);
+        return Container();
+      }
+    } else {
+      return Container();
+    }
+  }
+
+  /*Show Offers Call*/
   Widget SetCutomerOfferWidget(DataProvider productProvider) {
-    if (offerResponceModel!= null) {
+    if (offerResponceModel != null) {
       if (offerResponceModel!.status!) {
         return Column(
           children: [
@@ -337,20 +432,21 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
           ],
         );
       } else {
-        Utils.showToast(offerResponceModel!.message!,context);
+        Utils.showToast(offerResponceModel!.message!, context);
         return Container();
       }
     } else {
       return Container();
     }
-
   }
 
-  Future<void> acceptOffer(BuildContext context, DataProvider productProvider) async {
+  Future<void> acceptOffer(
+      BuildContext context, DataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    Utils.onLoading(context,"");
-    await Provider.of<DataProvider>(context, listen: false).getAcceptOffer(leadId!);
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .getAcceptOffer(leadId!);
     Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.getAcceptOfferData != null) {
       productProvider.getAcceptOfferData!.when(
@@ -361,9 +457,8 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
           if (acceptedResponceModel!.status!) {
             fetchData(context);
           } else {
-            Utils.showToast(acceptedResponceModel!.message!,context);
+            Utils.showToast(acceptedResponceModel!.message!, context);
           }
-
         },
         failure: (exception) {
           // Handle failure
@@ -373,8 +468,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
       );
     }
 
-   // var responce = await ApiService().getAcceptOffer(leadId!);
-
+    // var responce = await ApiService().getAcceptOffer(leadId!);
   }
 
   Future<void> fetchData(BuildContext context) async {
@@ -386,16 +480,16 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
         productId: prefsUtil.getInt(PRODUCT_ID),
         leadId: prefsUtil.getInt(LEADE_ID),
         mobileNo: prefsUtil.getString(LOGIN_MOBILE_NUMBER),
-        activityId:widget.activityId,
+        activityId: widget.activityId,
         subActivityId: widget.subActivityId,
-        userId:  prefsUtil.getString(USER_ID),
+        userId: prefsUtil.getString(USER_ID),
         monthlyAvgBuying: 0,
         vintageDays: 0,
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-      as LeadCurrentResponseModel?;
+          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+              as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(

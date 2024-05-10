@@ -10,6 +10,7 @@ import 'package:scale_up_module/view/dashboard_screen/my_account/my_account.dart
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/LeadCurrentResponseModel.dart';
 import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';
+import '../view/profile_screen/components/ShowOffersScreen.dart';
 import '../view/agreement_screen/Agreementscreen.dart';
 import '../view/login_screen/login_screen.dart';
 import '../view/profile_screen/ProfileReview.dart';
@@ -73,7 +74,7 @@ ScreenType? customerSequence(
 
       } else if (leadCurrentActivity.activityName == "Show Offer") {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: false)),
+          MaterialPageRoute(builder: (context) => ShowOffersScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
         );
         return ScreenType.showoOffer;
       } else if (leadCurrentActivity.activityName == "Rejected") {
@@ -96,7 +97,7 @@ ScreenType? customerSequence(
       }
       else if (leadCurrentActivity.activityName == "Disbursement Completed") {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: false,)),
+          MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: true,)),
         );
         return ScreenType.DisbursementCompleted;
       } else if (leadCurrentActivity.activityName == "MyAccount") {

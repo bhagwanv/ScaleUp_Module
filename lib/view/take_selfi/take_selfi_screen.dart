@@ -243,7 +243,8 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
   Future<void> getLeadSelfie(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
-    Provider.of<DataProvider>(context, listen: false).getLeadSelfie(userId!);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    Provider.of<DataProvider>(context, listen: false).getLeadSelfie(userId!,productCode!);
   }
 
   Future<void> uolpadSelfie(BuildContext context, File picture) async {

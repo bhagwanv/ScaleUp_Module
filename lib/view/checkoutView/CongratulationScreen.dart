@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:scale_up_module/utils/Utils.dart';
@@ -19,6 +20,7 @@ class CongratulationScreen extends StatefulWidget {
 
 class _CongratulationScreenState extends State<CongratulationScreen> {
   int _start = 5;
+  static const platform = MethodChannel('com.ScaleUP');
 
   final CountdownController _controller = CountdownController(autoStart: true);
 
@@ -44,10 +46,19 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
       interval: Duration(seconds: 1),
       onFinished: () {
         setState(() {
-         Utils.showBottomToast("Done Bhagwan");
+         // SystemNavigator.pop();
+          redirect();
         });
       },
     );
+  }
+
+  static Future<void> redirect() async {
+    try {
+      await platform.invokeMethod('returnToPayment');
+    } on PlatformException catch (e) {
+      print("Failed to redirect: '${e.message}'.");
+    }
   }
 
   @override
@@ -107,14 +118,12 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                     ),
                     Center(
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                              "You will be redirected in 05",
-                              textAlign: TextAlign.justify,
-                              style: TextStyle(fontSize: 12, color: kPrimaryColor,),
-                            ),
+                          Text(
+                            "You will be redirected in ",
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(fontSize: 15, color: kPrimaryColor,),
                           ),
                           buildCountdown(),
                         ],

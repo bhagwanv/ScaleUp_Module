@@ -3,14 +3,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../api/ApiService.dart';
+import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
 import '../../utils/customer_sequence_logic.dart';
+import '../../utils/loader.dart';
 import '../login_screen/components/LoginForm.dart';
 import '../splash_screen/model/GetLeadResponseModel.dart';
 import '../splash_screen/model/LeadCurrentRequestModel.dart';
@@ -31,6 +34,7 @@ class AgreementScreen extends StatefulWidget {
 class _AgreementScreenState extends State<AgreementScreen> {
   AggrementDetailsResponce? aggrementDetails;
   bool ischeckBoxCheck = false;
+  var isLoading = true;
 
   @override
   void initState() {
@@ -44,77 +48,106 @@ class _AgreementScreenState extends State<AgreementScreen> {
         body: SafeArea(
           top: true,
           bottom: true,
-          child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-                child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 16.0,
-              ),
-              Center(
-                child: Text(
-                  "Agreement",
-                  style: TextStyle(
-                    fontSize: 40.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w100,
-                  ),
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              SizedBox(
-                height: 30.0,
-              ),
-              aggrementDetails != null
-                  ? Container(
-                      height: 450,
-                      width: MediaQuery.of(context).size.width,
-                      child: WebViewWidget(
-                          controller: WebViewController()
-                            ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                            ..setBackgroundColor(const Color(0x00000000))
-                            ..setNavigationDelegate(
-                              NavigationDelegate(
-                                onProgress: (int progress) {
-                                  // Update loading bar.
-                                },
-                                onPageStarted: (String url) {},
-                                onPageFinished: (String url) {},
-                                onWebResourceError: (WebResourceError error) {},
+          child: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
+                if (productProvider.getCheckSignData == null && isLoading) {
+                  return Loader();
+                } else {
+                  if (productProvider.getCheckSignData != null && isLoading) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    isLoading = false;
+                    Future.delayed(Duration(seconds: 1), () {
+                      setState(() {});
+                    });
+                  }
+
+                  if (productProvider.getCheckSignData != null) {
+                    productProvider.getCheckSignData!.when(
+                      success: (CheckSignResponceModel) async {
+                        var eSignModel = CheckSignResponceModel;
+                        if (eSignModel.result!) {
+                          await fetchData(context);
+                        } else {
+                          await callAggrementDetailsApi(false, context,false);
+                        }
+                      },
+                      failure: (exception) {
+                        print("Failure");
+                      },
+                    );
+                  }
+
+                  return Padding(
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 16.0,
+                          ),
+                          Center(
+                            child: Text(
+                              "Agreement",
+                              style: TextStyle(
+                                fontSize: 40.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w100,
                               ),
-                            )
-                            ..loadRequest(
-                                Uri.parse(aggrementDetails!.response!))))
-                  : Container(),
-              SizedBox(
-                height: 30.0,
-              ),
-              CommonElevatedButton(
-                onPressed: () {
-                  callAggrementDetailsApi(true,context);
-                },
-                text: 'Proceed to E-sign',
-                upperCase: true,
-              ),
-            ],
-          ),
-                ),
-              ),
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30.0,
+                          ),
+                          aggrementDetails != null
+                              ? Container(
+                              height: 550,
+                              width: MediaQuery.of(context).size.width,
+                              child: WebViewWidget(
+                                  controller: WebViewController()
+                                    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                                    ..setBackgroundColor(const Color(0x00000000))
+                                    ..enableZoom(false)
+                                    ..setNavigationDelegate(
+                                      NavigationDelegate(
+                                        onProgress: (int progress) {
+                                          // Update loading bar.
+                                        },
+                                        onPageStarted: (String url) {
+                                        },
+                                        onPageFinished: (String url) {
+                                        },
+                                        onWebResourceError:
+                                            (WebResourceError error) {},
+                                      ),
+                                    )
+                                    ..loadRequest(
+                                        Uri.parse(aggrementDetails!.response!)))) : Container(),
+                          SizedBox(
+                            height: 30.0,
+                          ),
+                          CommonElevatedButton(
+                            onPressed: () async {
+                              await callAggrementDetailsApi(true, context,true);
+                            },
+                            text: 'Next',
+                            upperCase: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              }),
         ));
-    ;
   }
 
   void callApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    var responce = await ApiService().checkEsignStatus(leadId!);
-    if (responce.result!) {
-      fetchData(context);
-    } else {
-      callAggrementDetailsApi(false,context);
-    }
+    Provider.of<DataProvider>(context, listen: false).checkEsignStatus(leadId!);
   }
 
   Future<void> fetchData(BuildContext context) async {
@@ -133,7 +166,9 @@ class _AgreementScreenState extends State<AgreementScreen> {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData =
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -150,15 +185,27 @@ class _AgreementScreenState extends State<AgreementScreen> {
     }
   }
 
-  void callAggrementDetailsApi(bool accept, BuildContext context,) async {
-    Utils.onLoading(context, "");
+  Future<void> callAggrementDetailsApi(
+      bool accept,
+      BuildContext context,
+      bool isSubmit,
+      ) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final int? companyID = prefsUtil.getInt(COMPANY_ID);
+    Utils.onLoading(context,"");
     aggrementDetails = await ApiService().GetAgreemetDetail(leadId!, accept, companyID!);
 
-    setState(() {
-      Navigator.pop(context);
-    });
+    Navigator.of(context, rootNavigator: true).pop();
+
+
+    if(isSubmit){
+      await  fetchData(context);
+    }else{
+      /*setState(() {
+      });*/
+    }
   }
 }
+
+

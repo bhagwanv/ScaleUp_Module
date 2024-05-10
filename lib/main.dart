@@ -88,7 +88,8 @@ class _MyAppState extends State<MyApp> {
           } else {
            //return _buildHome();
             //return CheckOutOtpScreen(transactionId: "202423");
-            return SplashScreen(mobileNumber: "7803994667", companyID: "CN_1", ProductID: "CreditLine",);;
+           //return CongratulationScreen();
+          return SplashScreen(mobileNumber: "6263246384", companyID: "CN_1", ProductID: "CreditLine",);
 
 
           }
@@ -96,6 +97,7 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+
 
   Future<void> _receiveFromHost(MethodCall call) async {
     var jData;

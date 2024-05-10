@@ -14,6 +14,7 @@ import '../api/ExceptionHandling.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
 import '../view/aadhaar_screen/models/AadhaarGenerateOTPResponseModel.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
+import '../view/agreement_screen/model/CheckSignResponceModel.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
@@ -239,6 +240,12 @@ class DataProvider extends ChangeNotifier {
   Result<TransactionBreakupResModel,Exception>? _getTransactionBreakupData;
   Result<TransactionBreakupResModel,Exception>? get getTransactionBreakupData => _getTransactionBreakupData;
 
+  Result<CheckSignResponceModel,Exception>? _getCheckSignData;
+  Result<CheckSignResponceModel,Exception>? get getCheckSignData => _getCheckSignData;
+
+  Result<AcceptedResponceModel,Exception>? _getNextCallData;
+  Result<AcceptedResponceModel,Exception>? get getNextCallData => _getNextCallData;
+
   Future<void> productCompanyDetail(
       String product, String company) async {
     _ProductCompanyDetailResponseModel =
@@ -407,8 +414,8 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getLeadSelfie(String userId) async {
-    _getLeadSelfieData = await apiService.getLeadSelfie(userId);
+  Future<void> getLeadSelfie(String userId,String productCode) async {
+    _getLeadSelfieData = await apiService.getLeadSelfie(userId,productCode);
     notifyListeners();
   }
 
@@ -450,8 +457,8 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getLeadName(String UserId) async {
-    _getLeadNameData = await apiService.getLeadName(UserId);
+  Future<void> getLeadName(String UserId,String productcode) async {
+    _getLeadNameData = await apiService.getLeadName(UserId,productcode);
     notifyListeners();
   }
   Future<void> saveLeadBankDetail(SaveBankDetailsRequestModel model) async {
@@ -531,6 +538,18 @@ class DataProvider extends ChangeNotifier {
     _getTransactionBreakupData = await apiService.getTransactionBreakup(invoiceId);
     notifyListeners();
   }
+
+  Future<void> checkEsignStatus(int leadID) async {
+    _getCheckSignData = await apiService.checkEsignStatus(leadID);
+    notifyListeners();
+  }
+
+  Future<void> getCallNext(int leadId) async {
+    _getNextCallData = await apiService.getNextCall(leadId);
+    notifyListeners();
+  }
+
+
 
 }
 
