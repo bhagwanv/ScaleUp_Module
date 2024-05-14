@@ -45,7 +45,7 @@ class ApiUrls{
   final String PostOrderPlacement="/aggregator/LoanAccountAgg/PostOrderPlacement";
   final String GetPFCollection="/services/lead/v1/NBFCSchedular/GetPFCollection";
   final String DisbursementNext="/aggregator/LeadAgg/DisbursementNext";
-  final String GetPFCollectionActivityStatus="/aggregator/LeadAgg/GetPFCollectionActivityStatus";
+  final String GetPFCollectionActivityStatus="/services/lead/v1/GetPFCollectionActivityStatus";
 
 
 

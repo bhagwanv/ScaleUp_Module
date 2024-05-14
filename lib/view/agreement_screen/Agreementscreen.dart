@@ -103,13 +103,13 @@ class _AgreementScreenState extends State<AgreementScreen> {
                           ),
                           aggrementDetails != null
                               ? Container(
-                              height: 550,
+                              height: 500,
                               width: MediaQuery.of(context).size.width,
                               child: WebViewWidget(
                                   controller: WebViewController()
                                     ..setJavaScriptMode(JavaScriptMode.unrestricted)
                                     ..setBackgroundColor(const Color(0x00000000))
-                                    ..enableZoom(false)
+
                                     ..setNavigationDelegate(
                                       NavigationDelegate(
                                         onProgress: (int progress) {

@@ -233,7 +233,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
         .GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
     Navigator.of(context, rootNavigator: true).pop();
     getLeadNameApi(context, productCode!);
-    getCheckStatus(context, leadId);
+   // getCheckStatus(context, leadId);
   }
 
   Future<void> getLeadNameApi(BuildContext context, String productCode) async {
@@ -242,14 +242,14 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
     //Navigator.of(context, rootNavigator: true).pop();
   }
 
-  Future<void> getCheckStatus(BuildContext context, int leadID) async {
+ /* Future<void> getCheckStatus(BuildContext context, int leadID) async {
     bool checkStatus = await ApiService().checkStatus(leadID);
     if (checkStatus) {
       isCheckStatus = checkStatus;
     } else {
       isCheckStatus = checkStatus;
     }
-  }
+  }*/
 
   Widget SetOfferWidget(DataProvider productProvider) {
     if (productProvider.getOfferResponceata != null) {

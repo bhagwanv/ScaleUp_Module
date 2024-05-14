@@ -117,15 +117,31 @@ class _PancardScreenState extends State<PancardScreen> {
                           !isImageDelete) {
                         isVerifyPanNumber = true;
                         isEnabledPanNumber = false;
-                        _panNumberCl.text = LeadPANData.panCard!;
-                        _nameAsPanCl.text = LeadPANData.nameOnCard!;
-                        var formateDob =
-                        Utils.dateFormate(context, LeadPANData.dob!);
-                        dobAsPan = LeadPANData.dob!;
-                        _dOBAsPanCl.text = formateDob;
-                        _fatherNameAsPanCl.text = LeadPANData.fatherName!;
-                        image = LeadPANData.panImagePath!;
-                        documentId = LeadPANData.documentId!;
+                        if(LeadPANData.panCard!=null){
+                          _panNumberCl.text = LeadPANData.panCard!;
+                        }
+                        if(LeadPANData.nameOnCard!=null){
+                          _nameAsPanCl.text = LeadPANData.nameOnCard!;
+                        }
+
+                        if(LeadPANData.dob!=null){
+                          var formateDob =
+                          Utils.dateFormate(context, LeadPANData.dob!);
+                          dobAsPan = LeadPANData.dob!;
+                          _dOBAsPanCl.text = formateDob;
+                        }
+
+                        if( LeadPANData.fatherName!=null){
+                          _fatherNameAsPanCl.text = LeadPANData.fatherName!;
+                        }
+                        if(LeadPANData.panImagePath!=null){
+                          image = LeadPANData.panImagePath!;
+                        }
+
+                        if(LeadPANData.documentId!=null){
+                          documentId = LeadPANData.documentId!;
+                        }
+
                       }
                     },
                     failure: (exception) {

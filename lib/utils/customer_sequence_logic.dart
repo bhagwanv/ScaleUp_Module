@@ -88,6 +88,11 @@ ScreenType? customerSequence(
             MaterialPageRoute(builder: (context) => AgreementScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!)),
           );
           return ScreenType.AgreementEsign;
+        }else if(leadCurrentActivity.subActivityName == "PrepareAgreement"){
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => ProfileReview()),
+          );
+          return ScreenType.PrepareAgreement;
         }
       }else if (leadCurrentActivity.activityName == "Disbursement") {
         Navigator.of(context).push(

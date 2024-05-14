@@ -13,4 +13,5 @@ enum ScreenType {
   Inprogress,
   showoOffer,
   Rejected,
+  PrepareAgreement,
 }

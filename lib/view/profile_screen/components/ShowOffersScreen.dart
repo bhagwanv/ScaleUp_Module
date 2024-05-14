@@ -11,7 +11,6 @@ import 'package:scale_up_module/view/pwa/Pwascreen.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/LeadCurrentRequestModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/LeadCurrentResponseModel.dart';
-
 import '../../../api/ApiService.dart';
 import '../../../data_provider/DataProvider.dart';
 import '../../../shared_preferences/SharedPref.dart';
@@ -20,6 +19,7 @@ import '../../../utils/common_elevted_button.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/customer_sequence_logic.dart';
 import '../../../utils/loader.dart';
+import '../model/CheckStatusModel.dart';
 
 class ShowOffersScreen extends StatefulWidget {
   final int activityId;
@@ -51,10 +51,9 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     userID = prefsUtil.getString(USER_ID);
-    await Provider.of<DataProvider>(context, listen: false)
-        .GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
+    await Provider.of<DataProvider>(context, listen: false).GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
     getLeadNameApi(context, productCode!);
-    getCheckStatus(context, leadId);
+   await getCheckStatus(context, leadId);
   }
 
   Future<void> getLeadNameApi(BuildContext context, String productCode) async {
@@ -63,11 +62,13 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
   }
 
   Future<void> getCheckStatus(BuildContext context, int leadID) async {
-    bool checkStatus = await ApiService().checkStatus(leadID);
-    if (checkStatus) {
-      isCheckStatus = checkStatus;
+    CheckStatusModel checkStatus = await ApiService().checkStatus(leadID);
+    if (checkStatus.isSuccess!) {
+      isCheckStatus = checkStatus.isSuccess!;
+      print("object Status $isCheckStatus");
     } else {
-      isCheckStatus = checkStatus;
+      isCheckStatus = checkStatus.isSuccess!;
+      print("object Status $isCheckStatus");
     }
   }
 
@@ -76,8 +77,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
-        .getAcceptOffer(leadId!);
+    await Provider.of<DataProvider>(context, listen: false).getAcceptOffer(leadId!);
     Navigator.of(context, rootNavigator: true).pop();
 
     // var responce = await ApiService().getAcceptOffer(leadId!);
@@ -150,7 +150,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
             SizedBox(height: 20),
             Text.rich(TextSpan(
                 text:
-                    'Interest Rate : ${offerResponceModel!.response?.convenionGSTAmount}',
+                    'Interest Rate : ${offerResponceModel!.response?.convenionGSTAmount} ',
                 style: TextStyle(color: Colors.black, fontSize: 15),
                 children: <InlineSpan>[
                   TextSpan(
@@ -179,8 +179,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
-        .getAcceptOffer(leadId!);
+    Provider.of<DataProvider>(context, listen: false).getAcceptOffer(leadId!);
     Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.getAcceptOfferData != null) {
       productProvider.getAcceptOfferData!.when(
@@ -195,14 +194,10 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
           }
         },
         failure: (exception) {
-          // Handle failure
           print("Failure!");
-          //print('Failure! Error: ${exception.message}');
         },
       );
     }
-
-    // var responce = await ApiService().getAcceptOffer(leadId!);
   }
 
   Future<void> fetchData(BuildContext context) async {
@@ -248,7 +243,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
         bottom: true,
         child:
             Consumer<DataProvider>(builder: (context, productProvider, child) {
-          if (productProvider.getLeadNameData == null && isLoading) {
+          if (productProvider.getOfferResponceata == null && isLoading) {
             return Center(child: Loader());
           } else {
             Navigator.of(context, rootNavigator: true).pop();
@@ -311,12 +306,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
                     ],
                   ),
                   const SizedBox(height: 30),
-                  offerResponceModel != null &&
-                          offerResponceModel!.response != null &&
-                          offerResponceModel!
-                                  .response!.processingFeePayableBy ==
-                              "Customer" &&
-                          !isCheckStatus
+                  offerResponceModel != null && offerResponceModel!.response != null && offerResponceModel!.response!.processingFeePayableBy == "Customer" && !isCheckStatus
                       ? CommonElevatedButton(
                           onPressed: () async {
                             Navigator.push(
@@ -336,16 +326,8 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
                       : CommonElevatedButton(
                           onPressed: () async {
                             await acceptOffer(context, productProvider);
-                            /* Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const BankDetailsScreen();
-                      },
-                    ),
-                  );*/
                           },
-                          text: "Proceed to e-mandate",
+                          text: "Proceed to e-Agreement",
                           upperCase: true,
                         ),
                   const SizedBox(height: 10),
