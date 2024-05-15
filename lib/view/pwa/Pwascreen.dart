@@ -72,7 +72,12 @@ class _AgreementScreenState extends State<Pwascreen> {
                               ),
                             )
                             ..loadRequest(
-                                Uri.parse(pwaModel!.result!)))) : Container(),
+                                Uri.parse(pwaModel!.result!)))) :  Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(child: Image.asset('assets/images/scalup_gif_logo.gif')),
+                  ],
+                ),
               SizedBox(
                 height: 30.0,
               ),

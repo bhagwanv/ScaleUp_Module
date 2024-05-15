@@ -277,7 +277,6 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
                   Navigator.of(context, rootNavigator: true).pop();
                   Future.delayed(Duration(seconds: 1), () {
                     setState(() {
-                      Navigator.of(context, rootNavigator: true).pop();
                       getLeadNameApi(context, productProvider);
                     });
                   });

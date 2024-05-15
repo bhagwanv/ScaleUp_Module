@@ -805,16 +805,56 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                     ),
 
                     selectedChooseBusinessProofValue=="Udyog Aadhaar Certificate"?
-                    CommonTextField(
-                      controller: _businessDocumentNumberController,
-                      hintText: "UDYAM-XX-00-0000000",
-                      labelText: "Udyog Aadhaa Document",
-                      inputFormatter: [
-                        //FilteringTextInputFormatter(RegExp(r'^UDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}$'), allow: false),
 
-                        FilteringTextInputFormatter.deny(RegExp(r'^UDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}$')), // Allow only alphanumeric characters and hyphens
-                        _UdyamNumberInputFormatter(),
+                    TextField(
+                      enabled: true,
+                      controller: _businessDocumentNumberController,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      textCapitalization: TextCapitalization.characters,
+                      maxLines: 1,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(19), // Limit the input to 19 characters
                       ],
+                      cursorColor: Colors.black,
+                      decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: kPrimaryColor,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          ),
+                          hintText: "UDYAM-XX-00-0000000",
+                          labelText: "Udyog Aadhaa Document",
+                          fillColor: textFiledBackgroundColour,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          )),
+                      onChanged: (value) {
+                        String formattedInput = value.replaceAll(RegExp(r'[^A-Za-z0-9]'), '');
+                        if (formattedInput.length >= 6 && !formattedInput.substring(5, 6).contains('-')) {
+                          formattedInput = formattedInput.substring(0, 5) + '-' + formattedInput.substring(5);
+                        }
+
+                        if (formattedInput.length >= 9 && !formattedInput.substring(8, 9).contains('-')) {
+                          formattedInput = formattedInput.substring(0, 8) + '-' + formattedInput.substring(8);
+                        }
+
+                        if (formattedInput.length >= 12 && !formattedInput.substring(11, 12).contains('-')) {
+                          formattedInput = formattedInput.substring(0, 11) + '-' + formattedInput.substring(11);
+                        }
+                        if (formattedInput.length > 19) {
+                          formattedInput = formattedInput.substring(0, 19);
+                        }
+                        _businessDocumentNumberController.value = TextEditingValue(
+                          text: formattedInput,
+                          selection: TextSelection.fromPosition(
+                            TextPosition(offset: formattedInput.length), // Maintain cursor position
+                          ),
+                        );
+                      },
                     ):CommonTextField(
                       controller: _businessDocumentNumberController,
                       hintText: "Business Document Number",
@@ -1308,25 +1348,4 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   }
 }
 
-class _UdyamNumberInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    final newText = _applyFormat(newValue.text); // Apply the desired format
-    return newValue.copyWith(
-      text: newText,
-      selection: TextSelection.collapsed(offset: newText.length), // Maintain cursor position
-    );
-  }
 
-  String _applyFormat(String value) {
-    if (value.length <= 5) {
-      return value.toUpperCase();
-    } else if (value.length <= 9) {
-      return '${value.substring(0, 6)}-${value.substring(6)}';
-    } else if (value.length <= 11) {
-      return '${value.substring(0, 9)}-${value.substring(9)}';
-    } else {
-      return value.substring(0, 19); // Limit total characters to 17
-    }
-  }
-}

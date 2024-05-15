@@ -109,7 +109,7 @@ ScreenType? customerSequence(
         return ScreenType.DisbursementCompleted;
       } else if (leadCurrentActivity.activityName == "MyAccount") {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const MyAccount()),
+          MaterialPageRoute(builder: (context) => const BottomNav()),
         );
         return ScreenType.MyAccount;
       }
