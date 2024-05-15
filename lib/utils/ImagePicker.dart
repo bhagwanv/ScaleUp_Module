@@ -98,7 +98,7 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
                 child: Column(
                   children: [
                     SvgPicture.asset(
-                      'assets/icons/photo_camera_icon.svg',
+                      'assets/icons/ic_camera.svg',
                       width: 50,
                       height: 50,
                     ),
@@ -121,7 +121,7 @@ class _ImagePickerWidgetsState extends State<ImagePickerWidgets> {
                 child: Column(
                   children: [
                     SvgPicture.asset(
-                      'assets/icons/photo_gallery_icon.svg',
+                      'assets/icons/ic_gallery.svg',
                       width: 50,
                       height: 50,
                     ),
