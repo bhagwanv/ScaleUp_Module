@@ -318,7 +318,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                         padding: EdgeInsets.all(10.0),
                         child: Container(
                           width: double.infinity,
-                          height: 50,
+                          height: 55,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(

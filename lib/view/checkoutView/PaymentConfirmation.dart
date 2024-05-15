@@ -143,7 +143,7 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                         padding: const EdgeInsets.all(18.0),
                         child: Container(
                           width: double.infinity,
-                          height: 125,
+                          height: 140.0,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(

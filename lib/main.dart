@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/view/checkoutView/CheckOutOtpScreen.dart';
 import 'package:scale_up_module/view/checkoutView/CongratulationScreen.dart';
+import 'package:scale_up_module/view/dashboard_screen/my_account/my_account.dart';
 import 'package:scale_up_module/view/profile_screen/components/ShowOffersScreen.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'data_provider/DataProvider.dart';
@@ -90,9 +91,11 @@ class _MyAppState extends State<MyApp> {
            //return _buildHome();
             //return CheckOutOtpScreen(transactionId: "202423");
            //return CongratulationScreen();
-          return SplashScreen(mobileNumber: "6263246384", companyID: "CN_1", ProductID: "CreditLine",);
+         // return SplashScreen(mobileNumber: "6263246384", companyID: "CN_1", ProductID: "CreditLine",);
          // return ShowOffersScreen(activityId: 0, subActivityId: 0,);
-
+           // return ShowOffersScreen1(activityId: 0, subActivityId: 0,);
+            return CheckOutOtpScreen(transactionId: "202432");
+            //return MyAccount();
 
           }
         },
