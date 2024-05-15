@@ -284,7 +284,7 @@ class _MyAccountState extends State<MyAccount> {
                       padding: EdgeInsets.all(10.0),
                       child: Container(
                         width: double.infinity,
-                        height: 50,
+                        height: 55,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(
@@ -323,6 +323,7 @@ class _MyAccountState extends State<MyAccount> {
                                             fontSize: 10, color: gryColor),
                                       ),
                                     ],
+
                                   ),
                                 ],
                               ),
