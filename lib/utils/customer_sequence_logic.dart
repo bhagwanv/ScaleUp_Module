@@ -3,6 +3,7 @@ import 'package:scale_up_module/utils/screen_type.dart';
 import 'package:scale_up_module/view/Bank_details_screen/BankDetailsScreen.dart';
 import 'package:scale_up_module/view/aadhaar_screen/aadhaar_screen.dart';
 import 'package:scale_up_module/view/business_details_screen/business_details_screen.dart';
+import 'package:scale_up_module/view/dashboard_screen/bottom_navigation.dart';
 import 'package:scale_up_module/view/pancard_screen/PancardScreen.dart';
 import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
 import 'package:scale_up_module/view/profile_screen/components/credit_line_approved.dart';
@@ -102,14 +103,15 @@ ScreenType? customerSequence(
       }
       else if (leadCurrentActivity.activityName == "Disbursement Completed") {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: true,)),
+          //MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: true,)),
+          MaterialPageRoute(builder: (context) => BottomNav()),
         );
         return ScreenType.DisbursementCompleted;
       } else if (leadCurrentActivity.activityName == "MyAccount") {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => const MyAccount()),
         );
-        return ScreenType.DisbursementCompleted;
+        return ScreenType.MyAccount;
       }
     } else {
       return null;

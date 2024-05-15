@@ -25,10 +25,10 @@ class CustomerTransactionListTwoRespModel {
   String? dueDate;
   String? orderId;
   String? status;
-  int? amount;
+  dynamic? amount;
   int? transactionId;
   int? invoiceId;
-  double? paidAmount;
+  dynamic? paidAmount;
   String? invoiceNo;
 
   Map<String, dynamic> toJson() {

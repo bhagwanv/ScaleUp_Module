@@ -14,4 +14,5 @@ enum ScreenType {
   showoOffer,
   Rejected,
   PrepareAgreement,
+  MyAccount,
 }

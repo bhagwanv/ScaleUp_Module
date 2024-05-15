@@ -14,7 +14,7 @@ class TransactionBreakupResModel {
       });
     }
   }
-  double? totalPayableAmount;
+  dynamic? totalPayableAmount;
   List<TransactionList>? transactionList;
 
   Map<String, dynamic> toJson() {

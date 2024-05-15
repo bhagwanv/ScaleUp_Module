@@ -17,7 +17,7 @@ class CustomerOrderSummaryResModel {
   }
   int? totalOutStanding;
   int? availableLimit;
-  double? totalPayableAmount;
+  dynamic totalPayableAmount;
   int? totalPendingInvoiceCount;
   dynamic customerInvoice;
   String? customerName;

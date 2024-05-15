@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/view/bank_details_screen/model/CreditDayAmountCals.dart';
 import 'package:scale_up_module/view/bank_details_screen/model/CreditDayWiseAmounts.dart';
+import 'package:scale_up_module/view/checkoutView/CongratulationScreen.dart';
 import 'package:scale_up_module/view/dashboard_screen/bottom_navigation.dart';
 
 import '../../../utils/constants.dart';
@@ -14,6 +15,7 @@ import '../../data_provider/DataProvider.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/loader.dart';
 import '../bank_details_screen/model/TransactionDetailModel.dart';
+import 'CheckOutOtpScreen.dart';
 import 'model/OrderPaymentModel.dart';
 import 'model/PayemtOrderPostRequestModel.dart';
 
@@ -526,7 +528,6 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
         return GestureDetector(
           onTap: () {
             creditDays =creditDayWiseAmounts[index].days!;
-            Utils.showToast("Bhagwan", context);
           },
           child: Card(
               borderOnForeground: true,
@@ -731,7 +732,7 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          creditDayAmountCals.interestAmount.toString(),
+                          creditDayAmountCals.interestAmount.toStringAsFixed(3),
                           textAlign: TextAlign.start,
                           style: TextStyle(
                               fontSize: 12,
@@ -811,7 +812,9 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
         orderPaymentModel = OrderPaymentModel;
         if(orderPaymentModel!=null){
           if(orderPaymentModel!.status!){
-
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => CongratulationScreen(transactionReqNo: payemtOrderPostRequestModel.transactionReqNo!,amount:payemtOrderPostRequestModel.amount,mobileNo:payemtOrderPostRequestModel.mobileNo!, loanAccountId: payemtOrderPostRequestModel.loanAccountId!,creditDay:payemtOrderPostRequestModel.creditDay!)),
+            );
           }else{
             Utils.showToast(orderPaymentModel!.message!, context);
           }

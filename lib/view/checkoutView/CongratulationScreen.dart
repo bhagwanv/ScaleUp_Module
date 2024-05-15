@@ -1,18 +1,27 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:scale_up_module/utils/Utils.dart';
+import 'package:scale_up_module/main.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
 import '../../utils/constants.dart';
+import '../bank_details_screen/model/TransactionDetailModel.dart';
 
 class CongratulationScreen extends StatefulWidget {
+   final String transactionReqNo;
+   final dynamic amount;
+  final String mobileNo;
+  final int loanAccountId;
+  final int creditDay;
+
+  const CongratulationScreen(
+      {super.key,required this.transactionReqNo,required this.amount,required this.mobileNo,required this.loanAccountId,required this.creditDay});
 
 
-  CongratulationScreen({Key? key,}) : super(key: key);
 
   @override
   State<CongratulationScreen> createState() => _CongratulationScreenState();
@@ -21,6 +30,7 @@ class CongratulationScreen extends StatefulWidget {
 class _CongratulationScreenState extends State<CongratulationScreen> {
   int _start = 5;
   static const platform = MethodChannel('com.ScaleUP');
+
 
   final CountdownController _controller = CountdownController(autoStart: true);
 
@@ -46,22 +56,29 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
       interval: Duration(seconds: 1),
       onFinished: () {
         setState(() {
-         // SystemNavigator.pop();
-          redirect();
+         redirect(widget.transactionReqNo,widget.amount,widget.mobileNo!,widget.loanAccountId!,widget.creditDay!);
+         SystemNavigator.pop();
         });
       },
     );
   }
 
-  static Future<void> redirect() async {
+  static Future<void> redirect(String? transactionReqNo,dynamic amount,String mobileNumber,int loanAccountId,int creditDay) async {
     try {
-      await platform.invokeMethod('returnToPayment');
+      await platform.invokeMethod('returnToPayment', {
+        'transactionReqNo': transactionReqNo,
+        'amount': amount,
+        'mobileNo': mobileNumber,
+        'loanAccountId': loanAccountId,
+        'creditDay': creditDay,
+      });
+
     } on PlatformException catch (e) {
       print("Failed to redirect: '${e.message}'.");
     }
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(

@@ -51,18 +51,44 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     userID = prefsUtil.getString(USER_ID);
-    await Provider.of<DataProvider>(context, listen: false).GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
-    getLeadNameApi(context, productCode!);
-   await getCheckStatus(context, leadId);
-  }
-
-  Future<void> getLeadNameApi(BuildContext context, String productCode) async {
     Provider.of<DataProvider>(context, listen: false)
-        .getLeadName(userID!, productCode);
+        .GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
+
+
+    // getLeadNameApi(context, productCode!);
+    // await getCheckStatus(context, leadId);
   }
 
-  Future<void> getCheckStatus(BuildContext context, int leadID) async {
-    CheckStatusModel checkStatus = await ApiService().checkStatus(leadID);
+  Future<void> getLeadNameApi(
+      BuildContext context, DataProvider productProvider) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    Utils.onLoading(context,"");
+    await Provider.of<DataProvider>(context, listen: false)
+        .getLeadName(userID!, productCode!);
+    Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.getLeadNameData != null) {
+      productProvider.getLeadNameData!.when(
+        success: (OfferPersonNameResponceModel) async {
+          offerPersonNameResponceModel = OfferPersonNameResponceModel;
+          await getCheckStatus(context,productProvider);
+        },
+        failure: (exception) {
+          print("Failure");
+        },
+      );
+    }
+  }
+
+  Future<void> getCheckStatus(BuildContext context, DataProvider productProvider,) async {
+
+    final prefsUtil = await SharedPref.getInstance();
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+    //final int? leadId = 52;
+    Utils.onLoading(context,"");
+    CheckStatusModel checkStatus = await ApiService().checkStatus(leadId!);
+    Navigator.of(context, rootNavigator: true).pop();
     if (checkStatus.isSuccess!) {
       isCheckStatus = checkStatus.isSuccess!;
       print("object Status $isCheckStatus");
@@ -77,7 +103,8 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false).getAcceptOffer(leadId!);
+    await Provider.of<DataProvider>(context, listen: false)
+        .getAcceptOffer(leadId!);
     Navigator.of(context, rootNavigator: true).pop();
 
     // var responce = await ApiService().getAcceptOffer(leadId!);
@@ -99,7 +126,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
             SizedBox(height: 20),
             Text.rich(TextSpan(
               text:
-                  'Interest Rate : ${offerResponceModel!.response?.convenionFeeRate} %',
+              'Interest Rate : ${offerResponceModel!.response?.convenionFeeRate} %',
             )),
             Text(
               "(will be charged on every transaction)",
@@ -116,8 +143,6 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
       return Container();
     }
   }
-
-  /*Show Offers*/
   Widget SetCutomerOfferWidget(DataProvider productProvider) {
     if (offerResponceModel != null) {
       if (offerResponceModel!.status!) {
@@ -138,7 +163,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
                 children: <InlineSpan>[
                   TextSpan(
                     text:
-                        '₹ ${offerResponceModel!.response!.processingFeeAmount}',
+                    '₹ ${offerResponceModel!.response!.processingFeeAmount}',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   )
                 ])),
@@ -150,7 +175,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
             SizedBox(height: 20),
             Text.rich(TextSpan(
                 text:
-                    'Interest Rate : ${offerResponceModel!.response?.convenionGSTAmount} ',
+                'Interest Rate : ${offerResponceModel!.response?.convenionGSTAmount} ',
                 style: TextStyle(color: Colors.black, fontSize: 15),
                 children: <InlineSpan>[
                   TextSpan(
@@ -195,6 +220,8 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
         },
         failure: (exception) {
           print("Failure!");
+
+
         },
       );
     }
@@ -217,8 +244,8 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
         isEditable: true,
       );
       leadCurrentActivityAsyncData =
-          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
-              as LeadCurrentResponseModel?;
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      as LeadCurrentResponseModel?;
 
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -237,104 +264,113 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return SafeArea(
+    return Scaffold(
+      body: SafeArea(
         top: true,
         bottom: true,
-        child:
-            Consumer<DataProvider>(builder: (context, productProvider, child) {
-          if (productProvider.getOfferResponceata == null && isLoading) {
-            return Center(child: Loader());
-          } else {
-            Navigator.of(context, rootNavigator: true).pop();
-            isLoading = false;
-          }
-          if (productProvider.getOfferResponceata != null) {
-            productProvider.getOfferResponceata!.when(
-              success: (OfferResponceModel) {
-                offerResponceModel = OfferResponceModel;
-              },
-              failure: (exception) {
-                print("Failure");
-              },
-            );
-          }
+        child: Consumer<DataProvider>(
+            builder: (context, productProvider, child) {
+              if (productProvider.getOfferResponceata == null && isLoading) {
+                return Loader();
+              } else {
+                if (productProvider.getOfferResponceata != null && isLoading) {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  Future.delayed(Duration(seconds: 1), () {
+                    setState(() {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      getLeadNameApi(context, productProvider);
+                    });
+                  });
+                  isLoading = false;
+                }
 
-          if (productProvider.getLeadNameData != null) {
-            productProvider.getLeadNameData!.when(
-              success: (OfferPersonNameResponceModel) {
-                offerPersonNameResponceModel = OfferPersonNameResponceModel;
-              },
-              failure: (exception) {
-                print("Failure");
-              },
-            );
-          }
+                if (productProvider.getOfferResponceata != null) {
+                  productProvider.getOfferResponceata!.when(
+                    success: (OfferResponceModel) {
+                      offerResponceModel = OfferResponceModel;
+                    },
+                    failure: (exception) {
+                      print("Failure");
+                    },
+                  );
+                }
 
-          return Scaffold(
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(30),
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  Container(
-                    alignment: Alignment.center,
-                    child: SvgPicture.asset(
-                        'assets/images/credit_line_approved.svg'),
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(height: 10),
-                      Text(
-                        textAlign: TextAlign.center,
-                        "Congratulations ${offerPersonNameResponceModel?.response ?? ''}!! ",
-                        style: TextStyle(color: kPrimaryColor, fontSize: 18),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "You are qualified for credit limit of",
-                        style: TextStyle(color: Colors.black, fontSize: 15),
-                        textAlign: TextAlign.center,
-                      ),
-                      offerResponceModel != null &&
-                              offerResponceModel!.response != null &&
-                              offerResponceModel!
-                                      .response!.processingFeePayableBy ==
-                                  "Anchor"
-                          ? SetOfferWidget(productProvider)
-                          : SetCutomerOfferWidget(productProvider),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  offerResponceModel != null && offerResponceModel!.response != null && offerResponceModel!.response!.processingFeePayableBy == "Customer" && !isCheckStatus
-                      ? CommonElevatedButton(
-                          onPressed: () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return Pwascreen(
-                                      activityId: widget.activityId,
-                                      subActivityId: widget.subActivityId);
-                                },
-                              ),
-                            );
-                          },
-                          text: "Pay Now",
-                          upperCase: true,
-                        )
-                      : CommonElevatedButton(
-                          onPressed: () async {
-                            await acceptOffer(context, productProvider);
-                          },
-                          text: "Proceed to e-Agreement",
-                          upperCase: true,
+                return Center(
+                    child: SingleChildScrollView(
+                      child:Padding(
+                        padding: const EdgeInsets.all(30.0),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            Container(
+                              alignment: Alignment.center,
+                              child: SvgPicture.asset(
+                                  'assets/images/credit_line_approved.svg'),
+                            ),
+                            Column(
+                              children: [
+                                SizedBox(height: 10),
+                                Text(
+                                  textAlign: TextAlign.center,
+                                  "Congratulations ${offerPersonNameResponceModel?.response ?? ''}!! ",
+                                  style: TextStyle(color: kPrimaryColor, fontSize: 18),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "You are qualified for credit limit of",
+                                  style: TextStyle(color: Colors.black, fontSize: 15),
+                                  textAlign: TextAlign.center,
+                                ),
+                                offerResponceModel != null &&
+                                    offerResponceModel!.response != null &&
+                                    offerResponceModel!
+                                        .response!.processingFeePayableBy ==
+                                        "Anchor"
+                                    ? SetOfferWidget(productProvider)
+                                    : SetCutomerOfferWidget(productProvider),
+                              ],
+                            ),
+                            const SizedBox(height: 30),
+                            offerResponceModel != null &&
+                                offerResponceModel!.response != null &&
+                                offerResponceModel!
+                                    .response!.processingFeePayableBy ==
+                                    "Customer" &&
+                                !isCheckStatus
+                                ? CommonElevatedButton(
+                              onPressed: () async {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return Pwascreen(
+                                          activityId: widget.activityId,
+                                          subActivityId: widget.subActivityId);
+                                    },
+                                  ),
+                                );
+                              },
+                              text: "Pay Now",
+                              upperCase: true,
+                            )
+                                : CommonElevatedButton(
+                              onPressed: () async {
+                                await acceptOffer(context, productProvider);
+                              },
+                              text: "Proceed to e-Agreement",
+                              upperCase: true,
+                            ),
+                            const SizedBox(height: 10),
+                          ],
                         ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            ),
-          );
-        }));
+                      ),
+                    )
+                );
+              }
+            }),
+      ),
+    );
+
+    // Widget loadingWidget = Utils.onLoading(context, "Loading....");
   }
 }

@@ -67,8 +67,10 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
               isLoading) {
             return Center(child: Loader());
           } else {
-            Navigator.of(context, rootNavigator: true).pop();
-            isLoading = false;
+            if (productProvider.getDisbursementProposalData != null && isLoading) {
+              Navigator.of(context, rootNavigator: true).pop();
+              isLoading = false;
+            }
           }
         } else {
           /* if (productProvider.getOfferResponceata == null && isLoading) {
@@ -131,6 +133,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                 ),
                 widget.isDisbursement
                     ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(height: 10),
                           Center(
@@ -159,11 +162,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                             style: TextStyle(color: Colors.black, fontSize: 15),
                             textAlign: TextAlign.center,
                           ),
-                          offerResponceModel != null &&
-                                  offerResponceModel!.response != null &&
-                                  offerResponceModel!
-                                          .response!.processingFeePayableBy ==
-                                      "Anchor"
+                          offerResponceModel != null && offerResponceModel!.response != null && offerResponceModel!.response!.processingFeePayableBy == "Anchor"
                               ? SetOfferWidget(productProvider)
                               : SetCutomerOfferWidget(productProvider),
                         ],
@@ -219,8 +218,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
   void callDisbursementApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    Provider.of<DataProvider>(context, listen: false)
-        .getDisbursementProposal(leadId!);
+    Provider.of<DataProvider>(context, listen: false).getDisbursementProposal(leadId!);
   }
 
   void callApi(BuildContext context) async {
@@ -229,8 +227,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     userID = prefsUtil.getString(USER_ID);
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
-        .GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
+    await Provider.of<DataProvider>(context, listen: false).GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
     Navigator.of(context, rootNavigator: true).pop();
     getLeadNameApi(context, productCode!);
    // getCheckStatus(context, leadId);

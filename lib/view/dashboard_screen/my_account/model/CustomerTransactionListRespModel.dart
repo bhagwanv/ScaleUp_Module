@@ -25,10 +25,10 @@ class CustomerTransactionListRespModel {
   dynamic dueDate;
   String? orderId;
   String? status;
-  int? amount;
+  dynamic? amount;
   int? transactionId;
   int? invoiceId;
-  double? paidAmount;
+  dynamic paidAmount;
   dynamic invoiceNo;
 
   Map<String, dynamic> toJson() {

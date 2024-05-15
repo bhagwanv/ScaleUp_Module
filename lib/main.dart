@@ -9,6 +9,7 @@ import 'package:scale_up_module/view/checkoutView/CongratulationScreen.dart';
 import 'package:scale_up_module/view/profile_screen/components/ShowOffersScreen.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'data_provider/DataProvider.dart';
+import 'view/agreement_screen/Agreementscreen.dart';
 
 var mobileNumber = "";
 var company = "";
@@ -87,11 +88,12 @@ class _MyAppState extends State<MyApp> {
           } else if (snapshot.hasError) {
             return Scaffold(body: Center(child: Text('Error: ${snapshot.error}')));
           } else {
-           //return _buildHome();
-            //return CheckOutOtpScreen(transactionId: "202423");
-           //return CongratulationScreen();
-          return SplashScreen(mobileNumber: "6263246384", companyID: "CN_1", ProductID: "CreditLine",);
-         // return ShowOffersScreen(activityId: 0, subActivityId: 0,);
+            return _buildHome();
+            //return CheckOutOtpScreen(transactionId: "202432");
+            //return CongratulationScreen();
+            //return SplashScreen(mobileNumber: "6263246384", companyID: "CN_1", ProductID: "CreditLine",);
+            //return SplashScreen(mobileNumber: "9179173021", companyID: "CN_1", ProductID: "CreditLine",);
+            //return ShowOffersScreen(activityId: 2, subActivityId: 2);
 
 
           }
@@ -119,7 +121,7 @@ class _MyAppState extends State<MyApp> {
         product = jData['productID'] ?? "";
         isPayNow = jData['isPayNow'] ?? false;
         transactionId = jData['transactionId'] ?? jData['transactionId'];
-       // transactionId = "202420" ?? "202420";
+        // transactionId = "202420" ?? "202420";
       });
     }
   }

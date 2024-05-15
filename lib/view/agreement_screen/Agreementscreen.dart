@@ -193,14 +193,12 @@ class _AgreementScreenState extends State<AgreementScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final int? companyID = prefsUtil.getInt(COMPANY_ID);
-    Utils.onLoading(context,"");
+   // Utils.onLoading(context,"");
     aggrementDetails = await ApiService().GetAgreemetDetail(leadId!, accept, companyID!);
-
-    Navigator.of(context, rootNavigator: true).pop();
-
+  //  Navigator.of(context, rootNavigator: true).pop();
 
     if(isSubmit){
-      await  fetchData(context);
+      await fetchData(context);
     }else{
       /*setState(() {
       });*/
