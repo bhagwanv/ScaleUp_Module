@@ -137,8 +137,8 @@ class LoginScreenTopImage extends StatelessWidget {
             SizedBox(height: 16),
             GestureDetector(
               onTap: () async {
-                SharedPref preferences = await SharedPref.getInstance();
-                await preferences.clear();
+                /*SharedPref preferences = await SharedPref.getInstance();
+                await preferences.clear();*/
                 Navigator.of(context).pop(true);
               },
               child: Text("YES"),
