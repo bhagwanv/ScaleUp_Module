@@ -495,7 +495,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');

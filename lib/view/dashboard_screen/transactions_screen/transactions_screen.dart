@@ -26,6 +26,7 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> {
   var isLoading = true;
   var customerName = "";
+  var customerImage = "";
   ScrollController _scrollController = ScrollController();
   int skip = 0;
   bool loading = false;
@@ -110,11 +111,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       Container(
                         width: 44,
                         height: 44,
-                        decoration: const BoxDecoration(
+                        decoration:  BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              image: NetworkImage(
-                                  'https://googleflutter.com/sample_image.jpg'),
+                              image: NetworkImage(customerImage),
                               fit: BoxFit.fill),
                         ),
                       ),
@@ -336,6 +336,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Future<void> getCustomerTransactionListTwo(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     customerName = prefsUtil.getString(CUSTOMERNAME)!;
+    customerImage = prefsUtil.getString(CUSTOMER_IMAGE)!;
     var leadeId = prefsUtil.getInt(LEADE_ID)!;
     //var leadeId = 257;
     if (isLoading) {

@@ -42,6 +42,7 @@ class _MyAccountState extends State<MyAccount> {
   ];
 
   var customerName = "";
+  var customerImage = "";
   var totalOutStanding = "0";
   var availableLimit = "0";
   var totalPayableAmount = "0";
@@ -61,6 +62,8 @@ class _MyAccountState extends State<MyAccount> {
     //Api Call
     getCustomerOrderSummary(context);
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +101,16 @@ class _MyAccountState extends State<MyAccount> {
                       customerOrderSummaryResModel!.customerName!);
                 }
 
+                if (customerOrderSummaryResModel!.customerImage != null) {
+                  customerImage = customerOrderSummaryResModel!.customerImage!;
+                  final prefsUtil = await SharedPref.getInstance();
+                  prefsUtil.saveString(CUSTOMER_IMAGE,
+                      customerOrderSummaryResModel!.customerImage!);
+                }
+
+
+
+
                 if (customerOrderSummaryResModel!.totalOutStanding != null) {
                   totalOutStanding = customerOrderSummaryResModel!
                       .totalOutStanding!
@@ -116,9 +129,10 @@ class _MyAccountState extends State<MyAccount> {
                 }
                 if (customerOrderSummaryResModel!.totalPendingInvoiceCount !=
                     null) {
-                  totalPendingInvoiceCount = customerOrderSummaryResModel!
-                      .totalPendingInvoiceCount!
-                      .toStringAsFixed(2);
+
+
+                  totalPendingInvoiceCount = customerOrderSummaryResModel!.totalPendingInvoiceCount.toString();
+                 Utils.removeTrailingZeros(totalPendingInvoiceCount);
                 }
               },
               failure: (exception) {
@@ -161,11 +175,10 @@ class _MyAccountState extends State<MyAccount> {
                           Container(
                             width: 44,
                             height: 44,
-                            decoration: const BoxDecoration(
+                            decoration:  BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://googleflutter.com/sample_image.jpg'),
+                                  image: NetworkImage(customerImage),
                                   fit: BoxFit.fill),
                             ),
                           ),
@@ -230,7 +243,7 @@ class _MyAccountState extends State<MyAccount> {
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Text(
+                                     /* Text(
                                         'Total Balance',
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
@@ -242,7 +255,7 @@ class _MyAccountState extends State<MyAccount> {
                                         style: TextStyle(
                                             fontSize: 15,
                                             color: text_green_color),
-                                      ),
+                                      ),*/
                                       SizedBox(height: 15),
                                       Text(
                                         'Available to spend',
@@ -258,7 +271,7 @@ class _MyAccountState extends State<MyAccount> {
                                       ),
                                       SizedBox(height: 15),
                                       Text(
-                                        'Total Outstanding ',
+                                        'Total Utilized Limit ',
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                             fontSize: 10, color: gryColor),
@@ -314,7 +327,7 @@ class _MyAccountState extends State<MyAccount> {
                                         '₹ $totalPayableAmount  Payable Today',
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                            fontSize: 12, color: Colors.black),
+                                            fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold,),
                                       ),
                                       Text(
                                         'Total Pending Invoice Count : $totalPendingInvoiceCount  ',
@@ -457,7 +470,7 @@ class _MyAccountState extends State<MyAccount> {
           String anchorName = transaction.anchorName ??
               ''; // Default value if anchorName is null
           String dueDate = transaction.dueDate != null
-              ? Utils.dateMonthFormate(transaction.dueDate!)
+              ? Utils.dateMonthAndYearFormat(transaction.dueDate!)
               : "Not generated yet.";
           String orderId = transaction.orderId ?? '';
           String status = transaction.status ?? '';
@@ -468,7 +481,7 @@ class _MyAccountState extends State<MyAccount> {
           String invoiceNo = transaction.invoiceNo ?? '';
 
           return Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 5.0),
             child: Card(
               child: Container(
                 decoration: BoxDecoration(
@@ -536,7 +549,7 @@ class _MyAccountState extends State<MyAccount> {
                               ],
                             ),
                             SizedBox(
-                              height: 32,
+                              height: 12,
                             ),
                             Text(
                               anchorName,
@@ -544,6 +557,9 @@ class _MyAccountState extends State<MyAccount> {
                                   fontSize: 15,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 5,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -555,13 +571,14 @@ class _MyAccountState extends State<MyAccount> {
                                       color: Colors.white,
                                       fontWeight: FontWeight.normal),
                                 ),
+                                invoiceNo.isNotEmpty?
                                 Text(
-                                  "Invoice No : $orderId",
+                                  "Invoice No : $invoiceNo",
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.white,
                                       fontWeight: FontWeight.normal),
-                                ),
+                                ):Container()
                               ],
                             ),
                             Padding(
@@ -585,7 +602,7 @@ class _MyAccountState extends State<MyAccount> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  'Order Amount',
+                                  'Payable Amount',
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                       fontSize: 15,

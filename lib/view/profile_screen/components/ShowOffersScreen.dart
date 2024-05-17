@@ -254,7 +254,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData,"push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');
@@ -277,7 +277,6 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
                   Navigator.of(context, rootNavigator: true).pop();
                   Future.delayed(Duration(seconds: 1), () {
                     setState(() {
-                      Navigator.of(context, rootNavigator: true).pop();
                       getLeadNameApi(context, productProvider);
                     });
                   });

@@ -285,8 +285,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         width: double.infinity,
                         child: GestureDetector(
                           onTap: () async {
-                            FilePickerResult? result =
-                                await FilePicker.platform.pickFiles();
+                            FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom,
+                              allowedExtensions: ['pdf']);
                             if (result != null) {
                               File file = File(result.files.single.path!);
                               print(file.path);
@@ -846,7 +846,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');

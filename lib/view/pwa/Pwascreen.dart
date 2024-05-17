@@ -72,7 +72,12 @@ class _AgreementScreenState extends State<Pwascreen> {
                               ),
                             )
                             ..loadRequest(
-                                Uri.parse(pwaModel!.result!)))) : Container(),
+                                Uri.parse(pwaModel!.result!)))) :  Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(child: Image.asset('assets/images/scalup_gif_logo.gif')),
+                  ],
+                ),
               SizedBox(
                 height: 30.0,
               ),
@@ -132,7 +137,7 @@ class _AgreementScreenState extends State<Pwascreen> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');

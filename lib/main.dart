@@ -41,6 +41,7 @@ class _MyAppState extends State<MyApp> {
   var product = "";
   var isPayNow = false;
   var transactionId = "";
+  var isLoggedIn = true;
 
   @override
   void initState() {
@@ -61,11 +62,17 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+
   Widget _buildHome() {
     if (transactionId.isNotEmpty) {
       return CheckOutOtpScreen(transactionId: transactionId);
     } else if (mobileNumber.isNotEmpty) {
-      return SplashScreen(mobileNumber: mobileNumber, companyID: company, ProductID: product,);
+      return SplashScreen(
+        mobileNumber: mobileNumber,
+        companyID: company,
+        productID: product,
+        isLoggedIn: isLoggedIn
+      );
     } else {
       return EmptyContainer();
     }
@@ -86,24 +93,22 @@ class _MyAppState extends State<MyApp> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(body: Center(child: CircularProgressIndicator()));
           } else if (snapshot.hasError) {
-            return Scaffold(body: Center(child: Text('Error: ${snapshot.error}')));
+            return Scaffold(
+                body: Center(child: Text('Error: ${snapshot.error}')));
           } else {
-           // return _buildHome();
+            return _buildHome();
+
+          //  SplashScreen(mobileNumber: "7803994667", companyID: "CN_1", productID: "CreditLine", isLoggedIn: true));
             //return CheckOutOtpScreen(transactionId: "202432");
             //return CongratulationScreen();
             //return SplashScreen(mobileNumber: "6263246384", companyID: "CN_1", ProductID: "CreditLine",);
-            //return SplashScreen(mobileNumber: "9179173021", companyID: "CN_1", ProductID: "CreditLine",);
+            //return SplashScreen(mobileNumber: "8827535006", companyID: "CN_1", ProductID: "CreditLine",);
             //return ShowOffersScreen(activityId: 2, subActivityId: 2);
-
-            return SplashScreen(mobileNumber: "9399927443", companyID: "CN_1", ProductID: "CreditLine",);
-
-
           }
         },
       ),
     );
   }
-
 
   Future<void> _receiveFromHost(MethodCall call) async {
     var jData;
@@ -123,11 +128,12 @@ class _MyAppState extends State<MyApp> {
         product = jData['productID'] ?? "";
         isPayNow = jData['isPayNow'] ?? false;
         transactionId = jData['transactionId'] ?? jData['transactionId'];
-        // transactionId = "202420" ?? "202420";
+        isLoggedIn = jData['isLoggedIn'] ?? jData['isLoggedIn'];
       });
     }
   }
 }
+
 class EmptyContainer extends StatelessWidget {
   const EmptyContainer({Key? key}) : super(key: key);
 

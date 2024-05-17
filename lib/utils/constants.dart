@@ -34,3 +34,4 @@ const String VERIFYED_EMAIL = "verifay_email";
 const String VALIDACTION_IMAGE_PATH = 'assets/images/valid_otp.png';
 const String KYC_FAild_PATH = 'assets/images/kyc_faild.png';
 const String CUSTOMERNAME = "CUSTOMER_NAME";
+const String CUSTOMER_IMAGE = "CUSTOMER_Image";
