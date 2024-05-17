@@ -536,7 +536,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
           String anchorName = transaction.anchorName ??
               ''; // Default value if anchorName is null
           String dueDate = transaction.dueDate != null
-              ? Utils.dateMonthFormate(transaction.dueDate!)
+              ? Utils.dateMonthAndYearFormat(transaction.dueDate!)
               : "Not generated yet.";
           String orderId = transaction.orderId ?? '';
           String status = transaction.status ?? '';

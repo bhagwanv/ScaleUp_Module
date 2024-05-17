@@ -103,8 +103,8 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                    //image: NetworkImage(widget.imageUrl),
-                                    image: NetworkImage("https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/d1e100eb-626f-4e19-b611-e87694de6467.jpg"),
+                                    image: NetworkImage(widget.imageUrl),
+                                    //image: NetworkImage("https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/d1e100eb-626f-4e19-b611-e87694de6467.jpg"),
                                     fit: BoxFit.fill),
                               ),
                             ),
@@ -152,7 +152,7 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                 10), // Adjust the value to change the roundness
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.only(right: 10.0,left: 10.0,top: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -254,7 +254,7 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                               10), // Adjust the value to change the roundness
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(10.0),
+                                          padding: const EdgeInsets.only(left: 10,right: 10),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,

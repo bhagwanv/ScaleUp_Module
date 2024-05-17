@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/view/checkoutView/CheckOutOtpScreen.dart';
 import 'package:scale_up_module/view/checkoutView/CongratulationScreen.dart';
+import 'package:scale_up_module/view/checkoutView/PaymentConfirmation.dart';
 import 'package:scale_up_module/view/profile_screen/components/ShowOffersScreen.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'data_provider/DataProvider.dart';
@@ -52,6 +54,7 @@ class _MyAppState extends State<MyApp> {
   void _initPlatform() {
     MyApp.platform.setMethodCallHandler(_receiveFromHost);
     _initializeData();
+
   }
 
   Future<void> _initializeData() async {
@@ -60,6 +63,13 @@ class _MyAppState extends State<MyApp> {
     } catch (e) {
       print("Error initializing data: $e");
     }
+  }
+
+  Future<String> doSomething() async {
+    print("Flutter function is called!");
+    final prefsUtil = await SharedPref.getInstance();
+    prefsUtil.clear();
+    return "Success";
   }
 
 
@@ -80,6 +90,14 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    MyApp.platform.setMethodCallHandler((MethodCall call) async {
+      if (call.method == "logout") {
+        return doSomething();
+      }
+      return null;
+    });
+
+
     return MaterialApp(
       title: 'Scaleup',
       debugShowCheckedModeBanner: false,
@@ -98,8 +116,9 @@ class _MyAppState extends State<MyApp> {
           } else {
             return _buildHome();
 
-          //  SplashScreen(mobileNumber: "7803994667", companyID: "CN_1", productID: "CreditLine", isLoggedIn: true));
-            //return CheckOutOtpScreen(transactionId: "202432");
+          // SplashScreen(mobileNumber: "7803994667", companyID: "CN_1", productID: "CreditLine", isLoggedIn: true));
+            //return CheckOutOtpScreen(transactionId: "202457");
+           // return PaymentConfirmation(transactionReqNo: "202457",customerName: "Aarti Mukati",imageUrl:"https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/0d625556-7f61-47c9-a522-8fef21215b14.jpg",customerCareMoblie: "6263246384",customerCareEmail: "customer.care@scaleupfin.com");
             //return CongratulationScreen();
             //return SplashScreen(mobileNumber: "6263246384", companyID: "CN_1", ProductID: "CreditLine",);
             //return SplashScreen(mobileNumber: "8827535006", companyID: "CN_1", ProductID: "CreditLine",);
