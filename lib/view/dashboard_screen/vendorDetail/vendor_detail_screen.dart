@@ -33,6 +33,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
   List<TransactionList> transactionList = [];
 
   var customerName = "";
+  var customerImage = "";
   var totalOutStanding = "0";
   var availableLimit = "0";
   var totalPayableAmount = "0";
@@ -98,6 +99,10 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                   customerName = customerOrderSummaryResModel!.customerName!;
                 }
 
+                if (customerOrderSummaryResModel!.customerImage != null) {
+                  customerImage = customerOrderSummaryResModel!.customerImage!;
+                }
+
                 if (customerOrderSummaryResModel!.totalOutStanding != null) {
                   totalOutStanding = customerOrderSummaryResModel!
                       .totalOutStanding!
@@ -118,7 +123,8 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                     null) {
                   totalPendingInvoiceCount = customerOrderSummaryResModel!
                       .totalPendingInvoiceCount!
-                      .toStringAsFixed(2);
+                      .toString();
+                  Utils.removeTrailingZeros(totalPendingInvoiceCount);
                 }
               },
               failure: (exception) {
@@ -158,11 +164,10 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                             Container(
                               width: 44,
                               height: 44,
-                              decoration: const BoxDecoration(
+                              decoration:  BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                    image: NetworkImage(
-                                        'https://googleflutter.com/sample_image.jpg'),
+                                    image: NetworkImage(customerImage),
                                     fit: BoxFit.fill),
                               ),
                             ),
@@ -237,7 +242,8 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                                 'Shopkirana'.toUpperCase(),
                                                 style: TextStyle(
                                                   fontSize: 12,
-                                                  color: whiteColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: text_orange_color,
                                                 ),
                                               ),
                                             ],
@@ -255,7 +261,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.end,
                                           children: [
-                                            Text(
+                                           /* Text(
                                               'Total Balance',
                                               textAlign: TextAlign.end,
                                               style: TextStyle(
@@ -269,7 +275,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                                   fontSize: 15,
                                                   color: text_green_color,
                                                   fontWeight: FontWeight.bold),
-                                            ),
+                                            ),*/
                                             SizedBox(height: 10),
                                             Text(
                                               'Available to spend',
@@ -349,10 +355,10 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                               fontSize: 12,
-                                              color: Colors.black),
+                                              color: Colors.black,fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          '$totalPendingInvoiceCount Total Pending Invoice Count ',
+                                          'Total Pending Invoice Count: $totalPendingInvoiceCount',
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
                                               fontSize: 10, color: gryColor),

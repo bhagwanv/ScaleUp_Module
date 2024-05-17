@@ -50,8 +50,10 @@ import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
 import '../view/profile_screen/model/AcceptedResponceModel.dart';
+import '../view/profile_screen/model/CheckStatusModel.dart';
 import '../view/profile_screen/model/DisbursementCompletedResponse.dart';
 import '../view/profile_screen/model/DisbursementResponce.dart';
+import '../view/profile_screen/model/InProgressScreenModel.dart';
 import '../view/profile_screen/model/OfferPersonNameResponceModel.dart';
 import '../view/profile_screen/model/OfferResponceModel.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
@@ -245,6 +247,9 @@ class DataProvider extends ChangeNotifier {
 
   Result<AcceptedResponceModel,Exception>? _getNextCallData;
   Result<AcceptedResponceModel,Exception>? get getNextCallData => _getNextCallData;
+
+  Result<InProgressScreenModel,Exception>? _InProgressScreen;
+  Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -546,6 +551,12 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getCallNext(int leadId) async {
     _getNextCallData = await apiService.getNextCall(leadId);
+    notifyListeners();
+  }
+
+
+  Future<void> leadDataOnInProgressScreen(int leadId) async {
+    _InProgressScreen = await apiService.leadDataOnInProgressScreen(leadId);
     notifyListeners();
   }
 

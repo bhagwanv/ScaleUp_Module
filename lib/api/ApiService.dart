@@ -56,6 +56,7 @@ import '../view/profile_screen/model/AcceptedResponceModel.dart';
 import '../view/profile_screen/model/CheckStatusModel.dart';
 import '../view/profile_screen/model/DisbursementCompletedResponse.dart';
 import '../view/profile_screen/model/DisbursementResponce.dart';
+import '../view/profile_screen/model/InProgressScreenModel.dart';
 import '../view/profile_screen/model/OfferResponceModel.dart';
 import '../view/pwa/model/PwaModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
@@ -1485,6 +1486,34 @@ class ApiService {
       throw Exception('No internet connection');
     }
   }
+
+
+  Future<Result<InProgressScreenModel,Exception>> leadDataOnInProgressScreen(int leadId) async {
+    if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+      var token = prefsUtil.getString(TOKEN);
+      final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl +
+          apiUrls.LeadDataOnInProgressScreen}?leadId=$leadId'), headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },);
+      print(response.body); // Print the response body once here
+      if (response.statusCode == 200) {
+        final dynamic jsonData = json.decode(response.body);
+        final InProgressScreenModel responseModel =
+        InProgressScreenModel.fromJson(jsonData);
+        return Success(responseModel);
+      }
+      if (response.statusCode == 401) {
+        throw Exception('Failed to load products');
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } else {
+      throw Exception('No internet connection');
+    }
+  }
+
 
 
 }

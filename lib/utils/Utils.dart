@@ -51,6 +51,10 @@ class Utils {
     );
   }
 
+  static removeTrailingZeros(String n) {
+    return n.replaceAll(RegExp(r"([.]*0+)(?!.*\d)"), "");
+  }
+
   static void showBottomSheet(BuildContext context,String msg,String imagePath) {
     showModalBottomSheet(
         context: context,
@@ -159,15 +163,9 @@ class Utils {
 
   static String dateFormate(BuildContext context,String date){
     String inputString = date;
-
-    // Parse the input string into a DateTime object
     DateTime dateTime = DateTime.parse(inputString);
-
-    // Format the DateTime into "dd/MM/yyyy" using intl package
     String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
-
     return formattedDate;
-
   }
 
   static String convertDateTime(String dateTimeString) {
@@ -193,5 +191,15 @@ class Utils {
 
     return formattedDate;
 
+  }
+
+  static String dateMonthAndYearFormat(String date) {
+    // Parse the input string into a DateTime object
+    DateTime dateTime = DateTime.parse(date);
+
+    // Format the DateTime into "MMMM d, yyyy"
+    String formattedDate = DateFormat('MMMM d, yyyy').format(dateTime);
+
+    return formattedDate;
   }
 }

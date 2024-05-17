@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import '../../data_provider/DataProvider.dart';
+import '../../shared_preferences/SharedPref.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
+import '../../utils/loader.dart';
+import 'model/InProgressScreenModel.dart';
 
 class ProfileReview extends StatefulWidget {
   const ProfileReview({super.key});
@@ -11,60 +16,123 @@ class ProfileReview extends StatefulWidget {
   State<ProfileReview> createState() => _ProfileReviewState();
 }
 
+
 class _ProfileReviewState extends State<ProfileReview> {
+  var isLoading = true;
+  InProgressScreenModel? inProgressScreenModel=null;
+  String leadCode="";
+
+  @override
+  void initState() {
+   callApi(context);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: true,
       bottom: true,
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(30),
-            child: Column(
-              children: [
-                const SizedBox(height: 50),
-                Container(
-                  alignment: Alignment.center,
-                  child: SvgPicture.asset('assets/images/profile_review.svg'),
-                ),
-                const SizedBox(height: 60),
-                const Padding(
-                  padding: EdgeInsets.only(left: 5, right: 5),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Your profile is under review",
-                        style: TextStyle(color: kPrimaryColor, fontSize: 20),
-                      ),
-                    ],
+        body:   Consumer<DataProvider>(
+            builder: (context, productProvider, child) {
+              if (productProvider.InProgressScreenData == null && isLoading) {
+                return Center(child: Loader());
+              } else {
+                if (productProvider.InProgressScreenData != null && isLoading) {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  isLoading = false;
+                }
+
+
+                if (productProvider.InProgressScreenData != null) {
+                  productProvider.InProgressScreenData!.when(
+                    success: (InProgressScreenData) async {
+                      if(InProgressScreenData!=null&&InProgressScreenData.isSuccess!) {
+                        inProgressScreenModel = InProgressScreenData;
+                        if(inProgressScreenModel!.result!.leadCode!=null){
+                          leadCode =inProgressScreenModel!.result!.leadCode!;
+                        }
+                      }
+                    },
+                    failure: (exception) {
+                      // Handle failure
+                      print("Failure");
+                    },
+                  );
+                }
+
+                return  SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 50),
+                        Container(
+                          alignment: Alignment.center,
+                          child: SvgPicture.asset('assets/images/profile_view_pendding.svg'),
+                        ),
+                        const SizedBox(height: 60),
+                         Padding(
+                          padding: EdgeInsets.only(left: 5, right: 5),
+                          child: Column(
+                            children: [
+                              Text(
+                                leadCode,
+                                style: TextStyle(color: kPrimaryColor, fontSize: 20),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 5, right: 5),
+                          child: Column(
+                            children: [
+                              Text(
+                                "Your profile is under review",
+                                style: TextStyle(color: kPrimaryColor, fontSize: 20),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 50, right: 50, top: 10),
+                          child: Column(
+                            children: [
+                              Text(
+                                "Your profile has been submitted & will be reviewed by our team You will be notified if any additional information is required ",
+                                style: TextStyle(color: Colors.black, fontSize: 14),
+                                textAlign: TextAlign.justify,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 70),
+                        CommonElevatedButton(
+                          onPressed: () {
+                            SystemNavigator.pop();
+                          },
+                          text: "Back to home",
+                          upperCase: true,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 50, right: 50, top: 10),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Thank you for showing your interest \n our team will review your application \nand contact you within 48 Hrs.",
-                        style: TextStyle(color: Colors.black, fontSize: 14),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 80),
-                CommonElevatedButton(
-                  onPressed: () {
-                    SystemNavigator.pop();
-                  },
-                  text: "Back to home",
-                  upperCase: true,
-                ),
-              ],
-            ),
-          ),
-        ),
+                );
+              }
+            }),
       ),
     );
+  }
+
+  Future<void> callApi(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+
+    Provider.of<DataProvider>(context, listen: false).leadDataOnInProgressScreen(leadId!);
+
+
+
   }
 }

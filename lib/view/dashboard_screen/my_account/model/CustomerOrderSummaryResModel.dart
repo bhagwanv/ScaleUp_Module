@@ -5,7 +5,9 @@ class CustomerOrderSummaryResModel {
       this.totalPayableAmount, 
       this.totalPendingInvoiceCount, 
       this.customerInvoice, 
-      this.customerName,});
+      this.customerName,
+    this.customerImage,
+  });
 
   CustomerOrderSummaryResModel.fromJson(dynamic json) {
     totalOutStanding = json['totalOutStanding'];
@@ -14,6 +16,7 @@ class CustomerOrderSummaryResModel {
     totalPendingInvoiceCount = json['totalPendingInvoiceCount'];
     customerInvoice = json['customerInvoice'];
     customerName = json['customerName'];
+    customerImage = json['customerImage'];
   }
   int? totalOutStanding;
   int? availableLimit;
@@ -21,6 +24,7 @@ class CustomerOrderSummaryResModel {
   int? totalPendingInvoiceCount;
   dynamic customerInvoice;
   String? customerName;
+  String? customerImage;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -30,6 +34,7 @@ class CustomerOrderSummaryResModel {
     map['totalPendingInvoiceCount'] = totalPendingInvoiceCount;
     map['customerInvoice'] = customerInvoice;
     map['customerName'] = customerName;
+    map['customerImage'] = customerImage;
     return map;
   }
 
