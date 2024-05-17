@@ -88,12 +88,14 @@ class _MyAppState extends State<MyApp> {
           } else if (snapshot.hasError) {
             return Scaffold(body: Center(child: Text('Error: ${snapshot.error}')));
           } else {
-            return _buildHome();
+           // return _buildHome();
             //return CheckOutOtpScreen(transactionId: "202432");
             //return CongratulationScreen();
             //return SplashScreen(mobileNumber: "6263246384", companyID: "CN_1", ProductID: "CreditLine",);
             //return SplashScreen(mobileNumber: "9179173021", companyID: "CN_1", ProductID: "CreditLine",);
             //return ShowOffersScreen(activityId: 2, subActivityId: 2);
+
+            return SplashScreen(mobileNumber: "9399927443", companyID: "CN_1", ProductID: "CreditLine",);
 
 
           }

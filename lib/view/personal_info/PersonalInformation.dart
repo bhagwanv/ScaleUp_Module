@@ -3,6 +3,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/api/ApiService.dart';
@@ -12,6 +13,7 @@ import 'package:scale_up_module/utils/constants.dart';
 import 'package:scale_up_module/view/personal_info/EmailOtpScreen.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
+import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
 import '../../utils/ImagePicker.dart';
@@ -23,6 +25,9 @@ import '../splash_screen/model/GetLeadResponseModel.dart';
 import '../splash_screen/model/LeadCurrentRequestModel.dart';
 import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'model/CityResponce.dart';
+import 'model/ElectricityAuthenticationReqModel.dart';
+import 'model/ElectricityServiceProviderListResModel.dart';
+import 'model/ElectricityStateResModel.dart';
 import 'model/EmailExistRespoce.dart';
 import 'model/PersonalDetailsRequestModel.dart';
 import 'model/PersonalDetailsResponce.dart';
@@ -50,8 +55,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
   final TextEditingController _emailIDCl = TextEditingController();
   final TextEditingController _alternatePhoneNumberCl = TextEditingController();
   final TextEditingController _countryCl = TextEditingController();
+  final TextEditingController _customerIvrsCl = TextEditingController();
   String? selectedGenderValue;
   String? selectedMaritalStatusValue;
+  var isVerifyIVRSNumber = false;
   final List<String> genderList = [
     'Male',
     'Female',
@@ -100,7 +107,16 @@ class _PersonalInformationState extends State<PersonalInformation> {
   String? selectOwnershipProofValue;
   final List<String> ownershipProofList = [
     'Electricity Manual Bill Upload',
+    'Digital Bill Verification'
   ];
+
+  String? selectServiceProviderValue = "";
+  String? selectServiceProviderCode = "";
+  String? selectedStateValue = "";
+  List<ElectricityServiceProviderListResModel> selectServiceProviderList = [];
+
+  String? selectDistrictValue = "";
+  final List<ElectricityStateResModel> selectDistrictList = [];
 
   bool ischeckCurrentAdress = true;
   var isLoading = true;
@@ -113,6 +129,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
   var updateData = false;
   PersonalDetailsResponce? personalDetailsResponce = null;
   var isImageDelete = false;
+
+  var customerName = "";
+  var customerAddress = "";
+  var consumerNumber = "";
+  var ivrsNumber = "";
+  var electricityServiceProvider = "";
+  var electricityState = "";
 
   @override
   void initState() {
@@ -168,9 +191,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             personalDetailsResponce!.manulaElectrictyBillImage!;
                       }
 
-                      if (personalDetailsResponce!.gender == "Male"||personalDetailsResponce!.gender == "M") {
+                      if (personalDetailsResponce!.gender == "Male" ||
+                          personalDetailsResponce!.gender == "M") {
                         _genderCl.text = "Male";
-                      } else if (personalDetailsResponce!.gender == "Female"||personalDetailsResponce!.gender == "F") {
+                      } else if (personalDetailsResponce!.gender == "Female" ||
+                          personalDetailsResponce!.gender == "F") {
                         _genderCl.text = "Female";
                       } else {
                         _genderCl.text = "Other";
@@ -178,14 +203,19 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
                       if (personalDetailsResponce!.marital != null) {
                         if (personalDetailsResponce!.marital!.isNotEmpty) {
-                          if (personalDetailsResponce!.marital == "Married") {selectedMaritalStatusValue = "Married";
-                          } else if (personalDetailsResponce!.marital == "Single") {
+                          if (personalDetailsResponce!.marital == "Married") {
+                            selectedMaritalStatusValue = "Married";
+                          } else if (personalDetailsResponce!.marital ==
+                              "Single") {
                             selectedMaritalStatusValue = "Single";
-                          } else if (personalDetailsResponce!.marital == "Others") {
+                          } else if (personalDetailsResponce!.marital ==
+                              "Others") {
                             selectedMaritalStatusValue = "Others";
-                          } else if (personalDetailsResponce!.marital == "Divorced") {
+                          } else if (personalDetailsResponce!.marital ==
+                              "Divorced") {
                             selectedMaritalStatusValue = "Divorced";
-                          } else if (personalDetailsResponce!.marital == "Widow") {
+                          } else if (personalDetailsResponce!.marital ==
+                              "Widow") {
                             selectedMaritalStatusValue = "Widow";
                           }
                         }
@@ -450,9 +480,22 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                     items:
                                         getDropDownOption(ownershipProofList),
                                     value: selectOwnershipProofValue,
-                                    onChanged: (String? value) {
+                                    onChanged: (String? value) async {
                                       setState(() {
                                         selectOwnershipProofValue = value;
+                                        if(selectOwnershipProofValue == "Digital Bill Verification"){
+                                           customerName = "";
+                                           customerAddress = "";
+                                           consumerNumber = "";
+                                           ivrsNumber = "";
+                                           electricityServiceProvider = "";
+                                           _customerIvrsCl.text="";
+                                           electricityState = "";
+                                           selectDistrictList.clear();
+                                           selectServiceProviderList.clear();
+
+                                        }
+
                                       });
                                     },
                                     buttonStyleData: const ButtonStyleData(
@@ -471,110 +514,435 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                       openMenuIcon: Icon(Icons.arrow_drop_up),
                                     ),
                                   ),
-                                  SizedBox(height: 15),
-                                  Stack(
-                                    children: [
-                                      Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                  color: Color(0xff0196CE))),
-                                          width: double.infinity,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              bottomSheetMenu(context);
-                                            },
-                                            child: Container(
-                                              height: 148,
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                color: Color(0xffEFFAFF),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
+                                  const SizedBox(height: 15),
+                                  selectOwnershipProofValue ==
+                                          "Digital Bill Verification"
+                                      ? Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0),
+                                              child: Text(
+                                                "Digital Verification",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18),
                                               ),
-                                              child: (widget.image.isNotEmpty)
-                                                  ? ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      child: Image.network(
-                                                        widget.image,
-                                                        fit: BoxFit.cover,
-                                                        width: double.infinity,
+                                            ),
+                                            SizedBox(height: 15),
+                                            Stack(
+                                              children: [
+                                                TextField(
+                                                  enabled: true,
+                                                  keyboardType:
+                                                      TextInputType.text,
+                                                  textInputAction:
+                                                      TextInputAction.next,
+                                                  controller: _customerIvrsCl,
+                                                  maxLines: 1,
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .allow(RegExp(
+                                                            (r'[A-Z0-9]'))),
+                                                    LengthLimitingTextInputFormatter(
+                                                        15)
+                                                  ],
+                                                  cursorColor: Colors.black,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                          enabledBorder:
+                                                              OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                              color:
+                                                                  kPrimaryColor,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius.all(
+                                                                    Radius.circular(
+                                                                        10.0)),
+                                                          ),
+                                                          hintText:
+                                                              "Customer IVRS",
+                                                          labelText:
+                                                              "Customer IVRS  ",
+                                                          fillColor:
+                                                              textFiledBackgroundColour,
+                                                          filled: true,
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color:
+                                                                    kPrimaryColor,
+                                                                width: 1.0),
+                                                            borderRadius:
+                                                                BorderRadius.all(
+                                                                    Radius.circular(
+                                                                        10.0)),
+                                                          )),
+                                                  onChanged: (text) async {
+                                                    print(
+                                                        'TextField value: $text (${text.length})');
+                                                    if (text.length == 11) {
+                                                      // Make API Call to validate PAN card
+                                                      await getIvrsNumberExist(
+                                                        context,
+                                                        productProvider,
+                                                        _customerIvrsCl,
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 15),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0),
+                                              child: Text(
+                                                "Select Service Provider",
+                                                style: TextStyle(
+                                                    color: Colors.grey),
+                                              ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            DropdownButtonFormField2<
+                                                ElectricityServiceProviderListResModel>(
+                                              isExpanded: true,
+                                              decoration: InputDecoration(
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 16),
+                                                fillColor:
+                                                    textFiledBackgroundColour,
+                                                filled: true,
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: const BorderSide(
+                                                      color: kPrimaryColor,
+                                                      width: 1),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: const BorderSide(
+                                                      color: kPrimaryColor,
+                                                      width: 1),
+                                                ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: BorderSide(
+                                                      color: kPrimaryColor,
+                                                      width: 1),
+                                                ),
+                                              ),
+                                              hint: const Text(
+                                                'Select service provider',
+                                                style: TextStyle(
+                                                  color: blueColor,
+                                                  fontSize: 14.0,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              items:
+                                                  getDropDownOptionServiceList(
+                                                      selectServiceProviderList),
+                                              onChanged:
+                                                  (ElectricityServiceProviderListResModel?
+                                                      value) async {
+                                                setState(() {
+                                                  selectServiceProviderValue =
+                                                      value!.serviceProvider;
+                                                   selectServiceProviderCode = value!.code;
+                                                   selectedStateValue=value.state.toString();
+                                                });
+
+                                                await getKarzaElectricityState(
+                                                    context,
+                                                    productProvider);
+                                                setState(() {});
+                                              },
+                                              buttonStyleData:
+                                                  const ButtonStyleData(
+                                                padding:
+                                                    EdgeInsets.only(right: 8),
+                                              ),
+                                              dropdownStyleData:
+                                                  const DropdownStyleData(
+                                                maxHeight: 200,
+                                              ),
+                                              menuItemStyleData:
+                                                  MenuItemStyleData(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8.0),
+                                                customHeights:
+                                                    _getCustomItemsHeightsService(
+                                                        selectServiceProviderList),
+                                              ),
+                                              iconStyleData:
+                                                  const IconStyleData(
+                                                openMenuIcon:
+                                                    Icon(Icons.arrow_drop_up),
+                                              ),
+                                            ),
+                                            SizedBox(height: 15),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0),
+                                              child: Text(
+                                                "Select District",
+                                                style: TextStyle(
+                                                    color: Colors.grey),
+                                              ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            DropdownButtonFormField2<
+                                                ElectricityStateResModel>(
+                                              isExpanded: true,
+                                              decoration: InputDecoration(
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 16),
+                                                fillColor:
+                                                    textFiledBackgroundColour,
+                                                filled: true,
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: const BorderSide(
+                                                      color: kPrimaryColor,
+                                                      width: 1),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: const BorderSide(
+                                                      color: kPrimaryColor,
+                                                      width: 1),
+                                                ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: BorderSide(
+                                                      color: kPrimaryColor,
+                                                      width: 1),
+                                                ),
+                                              ),
+                                              hint: const Text(
+                                                'Select service provider',
+                                                style: TextStyle(
+                                                  color: blueColor,
+                                                  fontSize: 14.0,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              items: getDropDownOptionStateList(
+                                                  selectDistrictList),
+                                              onChanged:
+                                                  (ElectricityStateResModel?
+                                                      value) async {
+                                                setState(() {
+                                                  selectDistrictValue = value!.districtName;
+                                                });
+                                                await getKarzaElectricityAuthentication(
+                                                    context,
+                                                    productProvider,
+                                                    selectDistrictValue.toString());
+                                                setState(() {});
+                                              },
+                                              buttonStyleData:
+                                                  const ButtonStyleData(
+                                                padding:
+                                                    EdgeInsets.only(right: 8),
+                                              ),
+                                              dropdownStyleData:
+                                                  const DropdownStyleData(
+                                                maxHeight: 200,
+                                              ),
+                                              menuItemStyleData:
+                                                  MenuItemStyleData(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8.0),
+                                                customHeights:
+                                                    _getCustomItemsHeightsState(
+                                                        selectDistrictList),
+                                              ),
+                                              iconStyleData:
+                                                  const IconStyleData(
+                                                openMenuIcon:
+                                                    Icon(Icons.arrow_drop_up),
+                                              ),
+                                            ),
+                                            SizedBox(height: 15),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0),
+                                              child: Text(
+                                                "Name (As per IVRS No.)",
+                                                style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 15),
+                                              ),
+                                            ),
+                                            SizedBox(height: 8),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0),
+                                              child: Text(
+                                                "$customerName",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15),
+                                              ),
+                                            ),
+                                            SizedBox(height: 15),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0),
+                                              child: Text(
+                                                "Address : $customerAddress",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : selectOwnershipProofValue ==
+                                              "Electricity Manual Bill Upload"
+                                          ? Stack(
+                                              children: [
+                                                Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        border: Border.all(
+                                                            color: Color(
+                                                                0xff0196CE))),
+                                                    width: double.infinity,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        bottomSheetMenu(
+                                                            context);
+                                                      },
+                                                      child: Container(
                                                         height: 148,
-                                                      ),
-                                                    )
-                                                  : (widget.image.isNotEmpty)
-                                                      ? ClipRRect(
+                                                        width: double.infinity,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color:
+                                                              Color(0xffEFFAFF),
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(
-                                                                      8.0),
-                                                          child: Image.network(
-                                                            widget.image,
-                                                            fit: BoxFit.cover,
-                                                            width:
-                                                                double.infinity,
-                                                            height: 148,
-                                                          ),
-                                                        )
-                                                      : Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                                'assets/images/gallery.svg'),
-                                                            const Text(
-                                                              'Upload PAN Image',
-                                                              style: TextStyle(
-                                                                  color: Color(
-                                                                      0xff0196CE),
-                                                                  fontSize: 12),
-                                                            ),
-                                                            const Text(
-                                                                'Supports : JPEG, PNG',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        12,
-                                                                    color: Color(
-                                                                        0xffCACACA))),
-                                                          ],
+                                                                  .circular(10),
                                                         ),
-                                            ),
-                                          )),
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            isImageDelete = true;
-                                            widget.image = "";
-                                          });
-                                        },
-                                        child: widget.image.isNotEmpty
-                                            ? Container(
-                                                padding: EdgeInsets.all(4),
-                                                alignment: Alignment.topRight,
-                                                child: SvgPicture.asset(
-                                                    'assets/icons/delete_icon.svg'),
-                                              )
-                                            : Container(),
-                                      )
-                                    ],
-                                  ),
+                                                        child: (widget.image
+                                                                .isNotEmpty)
+                                                            ? ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8.0),
+                                                                child: Image
+                                                                    .network(
+                                                                  widget.image,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  width: double
+                                                                      .infinity,
+                                                                  height: 148,
+                                                                ),
+                                                              )
+                                                            : (widget.image
+                                                                    .isNotEmpty)
+                                                                ? ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            8.0),
+                                                                    child: Image
+                                                                        .network(
+                                                                      widget
+                                                                          .image,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      width: double
+                                                                          .infinity,
+                                                                      height:
+                                                                          148,
+                                                                    ),
+                                                                  )
+                                                                : Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .center,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      SvgPicture
+                                                                          .asset(
+                                                                              'assets/images/gallery.svg'),
+                                                                      const Text(
+                                                                        'Upload Electry City Bill Image',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Color(0xff0196CE),
+                                                                            fontSize: 12),
+                                                                      ),
+                                                                      const Text(
+                                                                          'Supports : JPEG, PNG',
+                                                                          style: TextStyle(
+                                                                              fontSize: 12,
+                                                                              color: Color(0xffCACACA))),
+                                                                    ],
+                                                                  ),
+                                                      ),
+                                                    )),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      isImageDelete = true;
+                                                      widget.image = "";
+                                                    });
+                                                  },
+                                                  child: widget.image.isNotEmpty
+                                                      ? Container(
+                                                          padding:
+                                                              EdgeInsets.all(4),
+                                                          alignment: Alignment
+                                                              .topRight,
+                                                          child: SvgPicture.asset(
+                                                              'assets/icons/delete_icon.svg'),
+                                                        )
+                                                      : Container(),
+                                                )
+                                              ],
+                                            )
+                                          : Container(),
                                 ],
                               ),
                         const SizedBox(height: 50),
                         CommonElevatedButton(
                           onPressed: () async {
-                            ValidationResult result = await validateData(context, productProvider);
-                            PersonalDetailsRequestModel postData = result.postData;
+                            ValidationResult result =
+                                await validateData(context, productProvider);
+                            PersonalDetailsRequestModel postData =
+                                result.postData;
                             bool isValid = result.isValid;
                             if (isValid) {
-                              submitPersonalInformationApi(context, productProvider, postData);
+                              submitPersonalInformationApi(
+                                  context, productProvider, postData);
                             } else {
                               print("unValid");
                             }
@@ -728,7 +1096,98 @@ class _PersonalInformationState extends State<PersonalInformation> {
     return menuItems;
   }
 
+  List<DropdownMenuItem<ElectricityServiceProviderListResModel>>
+      getDropDownOptionServiceList(
+          List<ElectricityServiceProviderListResModel?> items) {
+    final List<DropdownMenuItem<ElectricityServiceProviderListResModel>>
+        menuItems = [];
+    for (final ElectricityServiceProviderListResModel? item in items) {
+      menuItems.addAll(
+        [
+          DropdownMenuItem<ElectricityServiceProviderListResModel>(
+            value: item,
+            child: Text(
+              item!.serviceProvider!,
+              // Assuming 'name' is the property to display
+              style: const TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          // If it's not the last item, add Divider after it.
+          if (item != items.last)
+            const DropdownMenuItem<ElectricityServiceProviderListResModel>(
+              enabled: false,
+              child: Divider(
+                height: 0.1,
+              ),
+            ),
+        ],
+      );
+    }
+    return menuItems;
+  }
+
+  List<DropdownMenuItem<ElectricityStateResModel>> getDropDownOptionStateList(
+      List<ElectricityStateResModel?> items) {
+    final List<DropdownMenuItem<ElectricityStateResModel>> menuItems = [];
+    for (final ElectricityStateResModel? item in items) {
+      menuItems.addAll(
+        [
+          DropdownMenuItem<ElectricityStateResModel>(
+            value: item,
+            child: Text(
+              item!.districtName!, // Assuming 'name' is the property to display
+              style: const TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          // If it's not the last item, add Divider after it.
+          if (item != items.last)
+            const DropdownMenuItem<ElectricityStateResModel>(
+              enabled: false,
+              child: Divider(
+                height: 0.1,
+              ),
+            ),
+        ],
+      );
+    }
+    return menuItems;
+  }
+
   List<double> _getCustomItemsHeights(List<String> items) {
+    final List<double> itemsHeights = [];
+    for (int i = 0; i < (items.length * 2) - 1; i++) {
+      if (i.isEven) {
+        itemsHeights.add(40);
+      }
+      //Dividers indexes will be the odd indexes
+      if (i.isOdd) {
+        itemsHeights.add(4);
+      }
+    }
+    return itemsHeights;
+  }
+
+  List<double> _getCustomItemsHeightsService(
+      List<ElectricityServiceProviderListResModel> items) {
+    final List<double> itemsHeights = [];
+    for (int i = 0; i < (items.length * 2) - 1; i++) {
+      if (i.isEven) {
+        itemsHeights.add(40);
+      }
+      //Dividers indexes will be the odd indexes
+      if (i.isOdd) {
+        itemsHeights.add(4);
+      }
+    }
+    return itemsHeights;
+  }
+
+  List<double> _getCustomItemsHeightsState(
+      List<ElectricityStateResModel> items) {
     final List<double> itemsHeights = [];
     for (int i = 0; i < (items.length * 2) - 1; i++) {
       if (i.isEven) {
@@ -945,7 +1404,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false).getLeadPersonalDetails(userId!,productCode!);
+    Provider.of<DataProvider>(context, listen: false)
+        .getLeadPersonalDetails(userId!, productCode!);
     Provider.of<DataProvider>(context, listen: false).getAllState();
   }
 
@@ -1639,6 +2099,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
           productProvider.getpostElectricityBillDocumentSingleFileData!.docId!;
     }
 
+    {}
+
     PersonalDetailsRequestModel postData = PersonalDetailsRequestModel(
         firstName: _firstNameCl.text.toString(),
         lastName: _lastNameCl.text.toString(),
@@ -1674,7 +2136,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
         gender: _genderCl.text.toString(),
         marital: selectedMaritalStatusValue,
         resAddress1: _currentAddressLineOneCl.text.toString(),
-        resAddress2: _currentAddressLineTwoCl.text.toString());
+        resAddress2: _currentAddressLineTwoCl.text.toString(),
+        ivrsNumber: consumerNumber,
+        electricityServiceProvider: electricityServiceProvider,
+        electricityState: electricityState);
 
     bool isValid = false;
     String errorMessage = "";
@@ -1706,6 +2171,19 @@ class _PersonalInformationState extends State<PersonalInformation> {
     } else if (!isValidEmail) {
       errorMessage = "Verify Email ";
       isValid = false;
+    } else if (selectOwnershipProofValue == "Digital Bill Verification") {
+      if (consumerNumber.isEmpty) {
+        errorMessage = "ivrsNumber should not be empty";
+        isValid = false;
+      } else if (electricityServiceProvider.isEmpty) {
+        errorMessage = "Electricity Service Provider should not be empty";
+        isValid = false;
+      } else if (electricityState.isEmpty) {
+        errorMessage = "Electricity State should not be empty";
+        isValid = false;
+      } else {
+        isValid = true;
+      }
     } else {
       isValid = true;
     }
@@ -1734,6 +2212,134 @@ class _PersonalInformationState extends State<PersonalInformation> {
     await Provider.of<DataProvider>(context, listen: false)
         .postElectricityBillDocumentSingleFile(imageFile, true, "", "");
     Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future<void> getIvrsNumberExist(
+    BuildContext context,
+    DataProvider productProvider,
+    TextEditingController customerIvrsCl,
+  ) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final String? userId = prefsUtil.getString(USER_ID);
+
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .getIvrsNumberExist(userId!, customerIvrsCl.text);
+    Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.getIvrsData != null) {
+      productProvider.getIvrsData!.when(
+        success: (data) async {
+          // Handle successful response
+
+          if (data.result!) {
+            Utils.showToast("Data Already Exists", context);
+          } else {
+            await getKarzaElectricityServiceProviderList(
+                context, productProvider);
+            // await getKarzaElectricityState(context,productProvider);
+          }
+        },
+        failure: (exception) {
+          // Handle failure
+          print("Failure");
+        },
+      );
+    }
+  }
+
+  Future<void> getKarzaElectricityServiceProviderList(
+      BuildContext context, DataProvider productProvider) async {
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .getKarzaElectricityServiceProviderList();
+    Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.getElectricityServiceProviderData != null) {
+      productProvider.getElectricityServiceProviderData!.when(
+        success: (data) {
+          // Handle successful response
+          selectServiceProviderList.clear();
+          if (data.isNotEmpty) {
+            selectServiceProviderList.addAll(data!);
+          }
+        },
+        failure: (exception) {
+          // Handle failure
+          print("Failure");
+        },
+      );
+    }
+    setState(() {});
+  }
+
+  Future<void> getKarzaElectricityState(BuildContext context,
+      DataProvider productProvider) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final String? userId = prefsUtil.getString(USER_ID);
+
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .getKarzaElectricityState(selectedStateValue!);
+    Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.getElectricityStateListData != null) {
+      productProvider.getElectricityStateListData!.when(
+        success: (data) {
+          // Handle successful response
+          selectDistrictList.clear();
+          if (data.isNotEmpty) {
+            selectDistrictList.addAll(data!);
+          }
+        },
+        failure: (exception) {
+          // Handle failure
+          print("Failure");
+        },
+      );
+    }
+  }
+
+  Future<void> getKarzaElectricityAuthentication(BuildContext context,
+      DataProvider productProvider, String districtName) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final int? leadeId = prefsUtil.getInt(LEADE_ID);
+
+    var clientData = ClientData(caseId: leadeId.toString());
+    var electricityAuthenticationReqModel = ElectricityAuthenticationReqModel(
+        consumerId: _customerIvrsCl.text,
+        consent: "Y",
+        district: districtName,
+        serviceProvider: selectServiceProviderCode,
+        clientData: clientData);
+
+    Utils.onLoading(context, "");
+    await Provider.of<DataProvider>(context, listen: false)
+        .getKarzaElectricityAuthentication(electricityAuthenticationReqModel);
+    Navigator.of(context, rootNavigator: true).pop();
+    if (productProvider.getElectricityAuthenticationData != null) {
+      productProvider.getElectricityAuthenticationData!.when(
+        success: (data) {
+            // Handle successful response
+            if (data.result!.consumerName != null) {
+              customerName = data.result!.consumerName!;
+
+              if (data.result!.consumerName != null) {
+                customerAddress = data.result!.consumerName!;
+              }
+              if (data.result!.consumerNumber != null) {
+                consumerNumber = data.result!.consumerNumber!;
+              }
+            } else{
+              Utils.showToast("Service Provider Incorrect", context);
+            }
+        },
+        failure: (exception) {
+          // Handle failure
+          print("Failure");
+        },
+      );
+    }
   }
 }
 

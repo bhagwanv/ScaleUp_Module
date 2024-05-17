@@ -43,7 +43,12 @@ import '../view/pancard_screen/model/PostLeadPANResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
 import '../view/personal_info/model/AllStateResponce.dart';
 import '../view/personal_info/model/CityResponce.dart';
+import '../view/personal_info/model/ElectricityAuthenticationReqModel.dart';
+import '../view/personal_info/model/ElectricityAuthenticationResModel.dart';
+import '../view/personal_info/model/ElectricityServiceProviderListResModel.dart';
+import '../view/personal_info/model/ElectricityStateResModel.dart';
 import '../view/personal_info/model/EmailExistRespoce.dart';
+import '../view/personal_info/model/IvrsResModel.dart';
 import '../view/personal_info/model/OTPValidateForEmailRequest.dart';
 import '../view/personal_info/model/PersonalDetailsRequestModel.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
@@ -245,6 +250,21 @@ class DataProvider extends ChangeNotifier {
 
   Result<AcceptedResponceModel,Exception>? _getNextCallData;
   Result<AcceptedResponceModel,Exception>? get getNextCallData => _getNextCallData;
+
+  /*Result<IvrsNumberExistResModel,Exception>? _getIvrsNumberExistData;
+  Result<IvrsNumberExistResModel,Exception>? get getIvrsNumberExistData => _getIvrsNumberExistData;*/
+
+  Result<IvrsResModel,Exception>? _getIvrsData;
+  Result<IvrsResModel,Exception>? get getIvrsData => _getIvrsData;
+
+  Result<List<ElectricityServiceProviderListResModel>,Exception>? _getElectricityServiceProviderListData;
+  Result<List<ElectricityServiceProviderListResModel>,Exception>? get getElectricityServiceProviderData => _getElectricityServiceProviderListData;
+
+  Result<List<ElectricityStateResModel>,Exception>? _getElectricityStateListData;
+  Result<List<ElectricityStateResModel>,Exception>? get getElectricityStateListData => _getElectricityStateListData;
+
+  Result<ElectricityAuthenticationResModel,Exception>? _getElectricityAuthenticationData;
+  Result<ElectricityAuthenticationResModel,Exception>? get getElectricityAuthenticationData => _getElectricityAuthenticationData;
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -549,7 +569,27 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getIvrsNumberExist(String UserId,String IvrsNumber) async {
+    _getIvrsData = await apiService.getIvrsNumberExist(UserId,IvrsNumber);
+    notifyListeners();
+  }
 
+  Future<void> getKarzaElectricityServiceProviderList() async {
+    _getElectricityServiceProviderListData =
+    await apiService.getKarzaElectricityServiceProviderList();
+
+  }
+
+  Future<void> getKarzaElectricityState(String state) async {
+    _getElectricityStateListData =
+    (await apiService.getKarzaElectricityState(state)) ;
+
+  }
+
+  Future<void> getKarzaElectricityAuthentication(ElectricityAuthenticationReqModel electricityAuthenticationReqModel) async {
+    _getElectricityAuthenticationData = await apiService.getKarzaElectricityAuthentication(electricityAuthenticationReqModel) ;
+
+  }
 
 }
 

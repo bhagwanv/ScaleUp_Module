@@ -44,7 +44,12 @@ import '../view/pancard_screen/model/PostSingleFileResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
 import '../view/personal_info/model/AllStateResponce.dart';
 import '../view/personal_info/model/CityResponce.dart';
+import '../view/personal_info/model/ElectricityAuthenticationReqModel.dart';
+import '../view/personal_info/model/ElectricityAuthenticationResModel.dart';
+import '../view/personal_info/model/ElectricityServiceProviderListResModel.dart';
+import '../view/personal_info/model/ElectricityStateResModel.dart';
 import '../view/personal_info/model/EmailExistRespoce.dart';
+import '../view/personal_info/model/IvrsResModel.dart';
 import '../view/personal_info/model/OTPValidateForEmailRequest.dart';
 import '../view/personal_info/model/PersonalDetailsRequestModel.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
@@ -1486,5 +1491,121 @@ class ApiService {
     }
   }
 
+  Future<Result<IvrsResModel, Exception>>? getIvrsNumberExist(String userId,
+      String IvrsNumber) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl +
+                apiUrls.getIvrsNumberExist}?UserId=$userId&IVRSNumber=$IvrsNumber'));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final IvrsResModel responseModel =
+            IvrsResModel.fromJson(jsonData);
+            return Success(responseModel);
 
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<List<ElectricityServiceProviderListResModel>,
+      Exception>> getKarzaElectricityServiceProviderList() async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl +
+                apiUrls.getKarzaElectricityServiceProviderList}'));
+        print(response.body);
+        // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final List<ElectricityServiceProviderListResModel> responseModel = List<
+                ElectricityServiceProviderListResModel>.from(
+                jsonData.map((model) =>
+                    ElectricityServiceProviderListResModel.fromJson(model)));
+            return Success(responseModel);
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<List<ElectricityStateResModel>, Exception>> getKarzaElectricityState(String state) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl +
+                apiUrls.getKarzaElectricityState}?state=$state'));
+        print(response.body);
+        // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final List<ElectricityStateResModel> responseModel = List<
+                ElectricityStateResModel>.from(
+                jsonData.map((model) =>
+                    ElectricityStateResModel.fromJson(model)));
+            return Success(responseModel);
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+
+  Future<Result<ElectricityAuthenticationResModel, Exception>> getKarzaElectricityAuthentication(
+      ElectricityAuthenticationReqModel electricityAuthenticationReqModel) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse('${apiUrls.baseUrl + apiUrls.getKarzaElectricityAuthentication}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(electricityAuthenticationReqModel ));
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final ElectricityAuthenticationResModel responseModel =
+            ElectricityAuthenticationResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 }
