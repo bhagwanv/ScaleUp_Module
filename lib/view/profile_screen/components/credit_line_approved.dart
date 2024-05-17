@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
@@ -25,11 +26,13 @@ class CreditLineApproved extends StatefulWidget {
   final int activityId;
   final int subActivityId;
   final bool isDisbursement;
+  final String? pageType;
 
   const CreditLineApproved(
       {super.key,
       required this.activityId,
       required this.subActivityId,
+      this.pageType,
       required this.isDisbursement});
 
   @override
@@ -58,160 +61,177 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      bottom: true,
-      child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-        if (widget.isDisbursement) {
-          if (productProvider.getDisbursementProposalData == null &&
-              isLoading) {
-            return Center(child: Loader());
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        debugPrint("didPop1: $didPop");
+        if (didPop) {
+          return;
+        }
+        if(widget.pageType == "pushReplacement" ) {
+          final bool shouldPop = await Utils().onback(context);
+          if (shouldPop) {
+            SystemNavigator.pop();
+          }
+        } else {
+          SystemNavigator.pop();
+        }
+      },
+      child: SafeArea(
+        top: true,
+        bottom: true,
+        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+          if (widget.isDisbursement) {
+            if (productProvider.getDisbursementProposalData == null &&
+                isLoading) {
+              return Center(child: Loader());
+            } else {
+              if (productProvider.getDisbursementProposalData != null && isLoading) {
+                Navigator.of(context, rootNavigator: true).pop();
+                isLoading = false;
+              }
+            }
           } else {
-            if (productProvider.getDisbursementProposalData != null && isLoading) {
-              Navigator.of(context, rootNavigator: true).pop();
+            /* if (productProvider.getOfferResponceata == null && isLoading) {
               isLoading = false;
+              return Center(child: Loader());
+            }else {
+            //  Navigator.of(context, rootNavigator: true).pop();
+              isLoading = false;
+            }*/
+          }
+
+          if (widget.isDisbursement) {
+            if (productProvider.getDisbursementProposalData != null) {
+              productProvider.getDisbursementProposalData!.when(
+                success: (DisbursementResponce) {
+                  disbursementResponce = DisbursementResponce;
+                },
+                failure: (exception) {
+                  // Handle failure
+                  print("Failure");
+                  //print('Failure! Error: ${exception.message}');
+                },
+              );
+            }
+          } else {
+            if (productProvider.getOfferResponceata != null) {
+              productProvider.getOfferResponceata!.when(
+                success: (OfferResponceModel) {
+                  offerResponceModel = OfferResponceModel;
+                },
+                failure: (exception) {
+                  // Handle failure
+                  print("Failure");
+                  //print('Failure! Error: ${exception.message}');
+                },
+              );
             }
           }
-        } else {
-          /* if (productProvider.getOfferResponceata == null && isLoading) {
-            isLoading = false;
-            return Center(child: Loader());
-          }else {
-          //  Navigator.of(context, rootNavigator: true).pop();
-            isLoading = false;
-          }*/
-        }
 
-        if (widget.isDisbursement) {
-          if (productProvider.getDisbursementProposalData != null) {
-            productProvider.getDisbursementProposalData!.when(
-              success: (DisbursementResponce) {
-                disbursementResponce = DisbursementResponce;
+          if (productProvider.getLeadNameData != null) {
+            productProvider.getLeadNameData!.when(
+              success: (OfferPersonNameResponceModel) {
+                offerPersonNameResponceModel = OfferPersonNameResponceModel;
               },
               failure: (exception) {
-                // Handle failure
                 print("Failure");
-                //print('Failure! Error: ${exception.message}');
               },
             );
           }
-        } else {
-          if (productProvider.getOfferResponceata != null) {
-            productProvider.getOfferResponceata!.when(
-              success: (OfferResponceModel) {
-                offerResponceModel = OfferResponceModel;
-              },
-              failure: (exception) {
-                // Handle failure
-                print("Failure");
-                //print('Failure! Error: ${exception.message}');
-              },
-            );
-          }
-        }
-
-        if (productProvider.getLeadNameData != null) {
-          productProvider.getLeadNameData!.when(
-            success: (OfferPersonNameResponceModel) {
-              offerPersonNameResponceModel = OfferPersonNameResponceModel;
-            },
-            failure: (exception) {
-              print("Failure");
-            },
-          );
-        }
-        return Scaffold(
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(30),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Container(
-                  alignment: Alignment.center,
-                  child: SvgPicture.asset(
-                      'assets/images/credit_line_approved.svg'),
-                ),
-                widget.isDisbursement
-                    ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 10),
-                          Center(
-                            child: Text(
-                              " Thank You For Choosing Us!Your Account Setup has been successfully Completed for Credit Limit",
+          return Scaffold(
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(30),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  Container(
+                    alignment: Alignment.center,
+                    child: SvgPicture.asset(
+                        'assets/images/credit_line_approved.svg'),
+                  ),
+                  widget.isDisbursement
+                      ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 10),
+                            Center(
+                              child: Text(
+                                " Thank You For Choosing Us!Your Account Setup has been successfully Completed for Credit Limit",
+                                style:
+                                    TextStyle(color: kPrimaryColor, fontSize: 18),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            disbusmentWidget(),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            SizedBox(height: 10),
+                            Text(
+                              textAlign: TextAlign.center,
+                              "Congratulations ${offerPersonNameResponceModel?.response ?? ''}!! ",
                               style:
                                   TextStyle(color: kPrimaryColor, fontSize: 18),
                             ),
-                          ),
-                          SizedBox(height: 10),
-                          disbusmentWidget(),
-                        ],
-                      )
-                    : Column(
-                        children: [
-                          SizedBox(height: 10),
-                          Text(
-                            textAlign: TextAlign.center,
-                            "Congratulations ${offerPersonNameResponceModel?.response ?? ''}!! ",
-                            style:
-                                TextStyle(color: kPrimaryColor, fontSize: 18),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "You are qualified for credit limit of",
-                            style: TextStyle(color: Colors.black, fontSize: 15),
-                            textAlign: TextAlign.center,
-                          ),
-                          offerResponceModel != null && offerResponceModel!.response != null && offerResponceModel!.response!.processingFeePayableBy == "Anchor"
-                              ? SetOfferWidget(productProvider)
-                              : SetCutomerOfferWidget(productProvider),
-                        ],
+                            SizedBox(height: 10),
+                            Text(
+                              "You are qualified for credit limit of",
+                              style: TextStyle(color: Colors.black, fontSize: 15),
+                              textAlign: TextAlign.center,
+                            ),
+                            offerResponceModel != null && offerResponceModel!.response != null && offerResponceModel!.response!.processingFeePayableBy == "Anchor"
+                                ? SetOfferWidget(productProvider)
+                                : SetCutomerOfferWidget(productProvider),
+                          ],
+                        ),
+                  const SizedBox(height: 30),
+                  widget.isDisbursement
+                      ? Container()
+                      : offerResponceModel != null &&
+                              offerResponceModel!.response != null &&
+                              offerResponceModel!
+                                      .response!.processingFeePayableBy ==
+                                  "Customer" && !isCheckStatus
+                          ? CommonElevatedButton(
+                              onPressed: () async {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return Pwascreen(
+                                          activityId: widget.activityId,
+                                          subActivityId: widget.subActivityId);
+                                    },
+                                  ),
+                                );
+                              },
+                              text: "Pay Now",
+                              upperCase: true,
+                            )
+                          : CommonElevatedButton(
+                              onPressed: () async {
+                                await acceptOffer(context, productProvider);
+                                /* Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const BankDetailsScreen();
+                        },
                       ),
-                const SizedBox(height: 30),
-                widget.isDisbursement
-                    ? Container()
-                    : offerResponceModel != null &&
-                            offerResponceModel!.response != null &&
-                            offerResponceModel!
-                                    .response!.processingFeePayableBy ==
-                                "Customer" && !isCheckStatus
-                        ? CommonElevatedButton(
-                            onPressed: () async {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return Pwascreen(
-                                        activityId: widget.activityId,
-                                        subActivityId: widget.subActivityId);
-                                  },
-                                ),
-                              );
-                            },
-                            text: "Pay Now",
-                            upperCase: true,
-                          )
-                        : CommonElevatedButton(
-                            onPressed: () async {
-                              await acceptOffer(context, productProvider);
-                              /* Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const BankDetailsScreen();
-                      },
-                    ),
-                  );*/
-                            },
-                            text: "Proceed to e-mandate",
-                            upperCase: true,
-                          ),
-                const SizedBox(height: 10),
-              ],
+                    );*/
+                              },
+                              text: "Proceed to e-mandate",
+                              upperCase: true,
+                            ),
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 

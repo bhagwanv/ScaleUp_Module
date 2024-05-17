@@ -23,9 +23,10 @@ import 'model/AggrementDetailsResponce.dart';
 class AgreementScreen extends StatefulWidget {
   final int activityId;
   final int subActivityId;
+  final String? pageType;
 
   const AgreementScreen(
-      {super.key, required this.activityId, required this.subActivityId});
+      {super.key, required this.activityId, required this.subActivityId, this.pageType});
 
   @override
   State<AgreementScreen> createState() => _AgreementScreenState();

@@ -33,6 +33,9 @@ class PersonalDetailsRequestModel {
   int? electricityBillDocumentId;
   String? ownershipTypeName;
   String? ownershipTypeResponseId;
+  String? ivrsNumber;
+  String? electricityServiceProvider;
+  String? electricityState;
 
   PersonalDetailsRequestModel(
       {this.firstName,
@@ -68,7 +71,12 @@ class PersonalDetailsRequestModel {
         this.ownershipTypeProof,
         this.electricityBillDocumentId,
         this.ownershipTypeName,
-        this.ownershipTypeResponseId});
+        this.ownershipTypeResponseId,
+        this.ivrsNumber,
+        this.electricityServiceProvider,
+        this.electricityState
+
+      });
 
   PersonalDetailsRequestModel.fromJson(Map<String, dynamic> json) {
     firstName = json['FirstName'];
@@ -105,6 +113,9 @@ class PersonalDetailsRequestModel {
     electricityBillDocumentId = json['ElectricityBillDocumentId'];
     ownershipTypeName = json['OwnershipTypeName'];
     ownershipTypeResponseId = json['OwnershipTypeResponseId'];
+    ivrsNumber = json['ivrsNumber'];
+    electricityServiceProvider = json['electricityServiceProvider'];
+    electricityState = json['electricityState'];
   }
 
   Map<String, dynamic> toJson() {
@@ -142,7 +153,10 @@ class PersonalDetailsRequestModel {
     data['OwnershipTypeProof'] = this.ownershipTypeProof;
     data['ElectricityBillDocumentId'] = this.electricityBillDocumentId;
     data['OwnershipTypeName'] = this.ownershipTypeName;
-    data['OwnershipTypeResponseId'] = this.ownershipTypeResponseId;
+    data['OwnershipTypeResponseId'] = this.ivrsNumber;
+    data['ivrsNumber'] = this.ivrsNumber;
+    data['electricityServiceProvider'] = this.electricityServiceProvider;
+    data['electricityState'] = this.electricityState;
     return data;
   }
 }

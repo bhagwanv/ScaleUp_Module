@@ -202,4 +202,33 @@ class Utils {
 
     return formattedDate;
   }
+
+  Future<bool> onback(BuildContext context) async {
+    bool? exitApp = await showDialog(
+      context: context,
+      builder: ((context) {
+        return AlertDialog(
+          title: Text('Are you sure?'),
+          content: Text('Do you want to exit an App'),
+          actions: <Widget>[
+            GestureDetector(
+              onTap: () => Navigator.of(context).pop(false),
+              child: Text("NO"),
+            ),
+            SizedBox(height: 16),
+            GestureDetector(
+              onTap: () async {
+                /*SharedPref preferences = await SharedPref.getInstance();
+                await preferences.clear();*/
+                Navigator.of(context).pop(true);
+              },
+              child: Text("YES"),
+            ),
+          ],
+        );
+      }),
+    );
+
+    return exitApp ?? false;
+  }
 }

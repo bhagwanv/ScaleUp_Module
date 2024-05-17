@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:scale_up_module/api/ApiUrls.dart';
 import 'package:scale_up_module/utils/InternetConnectivity.dart';
 import 'package:scale_up_module/utils/constants.dart';
 import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
 import 'package:scale_up_module/view/login_screen/model/GenrateOptResponceModel.dart';
 import 'package:scale_up_module/view/profile_screen/model/OfferPersonNameResponceModel.dart';
+import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
 import '../shared_preferences/SharedPref.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
@@ -32,6 +34,7 @@ import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespMod
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
 import '../view/dashboard_screen/vendorDetail/model/TransactionBreakupResModel.dart';
+import '../view/login_screen/login_screen.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
@@ -44,7 +47,12 @@ import '../view/pancard_screen/model/PostSingleFileResponseModel.dart';
 import '../view/pancard_screen/model/ValidPanCardResponsModel.dart';
 import '../view/personal_info/model/AllStateResponce.dart';
 import '../view/personal_info/model/CityResponce.dart';
+import '../view/personal_info/model/ElectricityAuthenticationReqModel.dart';
+import '../view/personal_info/model/ElectricityAuthenticationResModel.dart';
+import '../view/personal_info/model/ElectricityServiceProviderListResModel.dart';
+import '../view/personal_info/model/ElectricityStateResModel.dart';
 import '../view/personal_info/model/EmailExistRespoce.dart';
+import '../view/personal_info/model/IvrsResModel.dart';
 import '../view/personal_info/model/OTPValidateForEmailRequest.dart';
 import '../view/personal_info/model/PersonalDetailsRequestModel.dart';
 import '../view/personal_info/model/PersonalDetailsResponce.dart';
@@ -74,6 +82,19 @@ class ApiService {
   final interceptor = Interceptor();
   final internetConnectivity = InternetConnectivity();
 
+  Future<void> handle401(BuildContext context, String pageType) async {
+    final prefsUtil = await SharedPref.getInstance();
+    prefsUtil.clear();
+    /*Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => SplashScreen(
+            mobileNumber: mobileNumber,
+            companyID: company,
+            productID: product
+        ),
+      ),
+    );*/
+  }
 
   Future<ProductCompanyDetailResponseModel> productCompanyDetail(String product,
       String company) async {
@@ -159,6 +180,10 @@ class ApiService {
             GenrateOptResponceModel.fromJson(jsonData);
             return Success(responseModel);
 
+          case 401:
+            // Handle 401 unauthorized error
+            await handle401(context, "pushReplacement");
+            return Failure(ApiException(response.statusCode, "Unauthorized"));
           default:
           // 3. return Failure with the desired exception
             return Failure(ApiException(response.statusCode, ""));
@@ -1487,6 +1512,32 @@ class ApiService {
     }
   }
 
+  Future<Result<IvrsResModel, Exception>>? getIvrsNumberExist(String userId,
+      String IvrsNumber) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl +
+                apiUrls.getIvrsNumberExist}?UserId=$userId&IVRSNumber=$IvrsNumber'));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final IvrsResModel responseModel =
+            IvrsResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 
   Future<Result<InProgressScreenModel,Exception>> leadDataOnInProgressScreen(int leadId) async {
     if (await internetConnectivity.networkConnectivity()) {
@@ -1516,4 +1567,94 @@ class ApiService {
 
 
 
+  Future<Result<List<ElectricityServiceProviderListResModel>,
+      Exception>> getKarzaElectricityServiceProviderList() async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl +
+                apiUrls.getKarzaElectricityServiceProviderList}'));
+        print(response.body);
+        // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final List<ElectricityServiceProviderListResModel> responseModel = List<
+                ElectricityServiceProviderListResModel>.from(
+                jsonData.map((model) =>
+                    ElectricityServiceProviderListResModel.fromJson(model)));
+            return Success(responseModel);
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<List<ElectricityStateResModel>, Exception>> getKarzaElectricityState(String state) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final response = await interceptor.get(Uri.parse(
+            '${apiUrls.baseUrl +
+                apiUrls.getKarzaElectricityState}?state=$state'));
+        print(response.body);
+        // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final List<ElectricityStateResModel> responseModel = List<
+                ElectricityStateResModel>.from(
+                jsonData.map((model) =>
+                    ElectricityStateResModel.fromJson(model)));
+            return Success(responseModel);
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+
+  Future<Result<ElectricityAuthenticationResModel, Exception>> getKarzaElectricityAuthentication(
+      ElectricityAuthenticationReqModel electricityAuthenticationReqModel) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse('${apiUrls.baseUrl + apiUrls.getKarzaElectricityAuthentication}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(electricityAuthenticationReqModel ));
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final ElectricityAuthenticationResModel responseModel =
+            ElectricityAuthenticationResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 }

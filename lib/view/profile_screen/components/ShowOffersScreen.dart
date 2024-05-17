@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/profile_screen/model/AcceptedResponceModel.dart';
@@ -24,9 +25,10 @@ import '../model/CheckStatusModel.dart';
 class ShowOffersScreen extends StatefulWidget {
   final int activityId;
   final int subActivityId;
+  final String? pageType;
 
   const ShowOffersScreen(
-      {super.key, required this.activityId, required this.subActivityId});
+      {super.key, required this.activityId, required this.subActivityId, this.pageType});
 
   @override
   State<ShowOffersScreen> createState() => _DisbursementScreenState();
@@ -264,109 +266,126 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        top: true,
-        bottom: true,
-        child: Consumer<DataProvider>(
-            builder: (context, productProvider, child) {
-              if (productProvider.getOfferResponceata == null && isLoading) {
-                return Loader();
-              } else {
-                if (productProvider.getOfferResponceata != null && isLoading) {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  Future.delayed(Duration(seconds: 1), () {
-                    setState(() {
-                      getLeadNameApi(context, productProvider);
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        debugPrint("didPop1: $didPop");
+        if (didPop) {
+          return;
+        }
+        if(widget.pageType == "pushReplacement" ) {
+          final bool shouldPop = await Utils().onback(context);
+          if (shouldPop) {
+            SystemNavigator.pop();
+          }
+        } else {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
+          top: true,
+          bottom: true,
+          child: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
+                if (productProvider.getOfferResponceata == null && isLoading) {
+                  return Loader();
+                } else {
+                  if (productProvider.getOfferResponceata != null && isLoading) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    Future.delayed(Duration(seconds: 1), () {
+                      setState(() {
+                        getLeadNameApi(context, productProvider);
+                      });
                     });
-                  });
-                  isLoading = false;
-                }
+                    isLoading = false;
+                  }
 
-                if (productProvider.getOfferResponceata != null) {
-                  productProvider.getOfferResponceata!.when(
-                    success: (OfferResponceModel) {
-                      offerResponceModel = OfferResponceModel;
-                    },
-                    failure: (exception) {
-                      print("Failure");
-                    },
+                  if (productProvider.getOfferResponceata != null) {
+                    productProvider.getOfferResponceata!.when(
+                      success: (OfferResponceModel) {
+                        offerResponceModel = OfferResponceModel;
+                      },
+                      failure: (exception) {
+                        print("Failure");
+                      },
+                    );
+                  }
+
+                  return Center(
+                      child: SingleChildScrollView(
+                        child:Padding(
+                          padding: const EdgeInsets.all(30.0),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 10),
+                              Container(
+                                alignment: Alignment.center,
+                                child: SvgPicture.asset(
+                                    'assets/images/credit_line_approved.svg'),
+                              ),
+                              Column(
+                                children: [
+                                  SizedBox(height: 10),
+                                  Text(
+                                    textAlign: TextAlign.center,
+                                    "Congratulations ${offerPersonNameResponceModel?.response ?? ''}!! ",
+                                    style: TextStyle(color: kPrimaryColor, fontSize: 18),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    "You are qualified for credit limit of",
+                                    style: TextStyle(color: Colors.black, fontSize: 15),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  offerResponceModel != null &&
+                                      offerResponceModel!.response != null &&
+                                      offerResponceModel!
+                                          .response!.processingFeePayableBy ==
+                                          "Anchor"
+                                      ? SetOfferWidget(productProvider)
+                                      : SetCutomerOfferWidget(productProvider),
+                                ],
+                              ),
+                              const SizedBox(height: 30),
+                              offerResponceModel != null &&
+                                  offerResponceModel!.response != null &&
+                                  offerResponceModel!
+                                      .response!.processingFeePayableBy ==
+                                      "Customer" &&
+                                  !isCheckStatus
+                                  ? CommonElevatedButton(
+                                onPressed: () async {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return Pwascreen(
+                                            activityId: widget.activityId,
+                                            subActivityId: widget.subActivityId);
+                                      },
+                                    ),
+                                  );
+                                },
+                                text: "Pay Now",
+                                upperCase: true,
+                              )
+                                  : CommonElevatedButton(
+                                onPressed: () async {
+                                  await acceptOffer(context, productProvider);
+                                },
+                                text: "Proceed to e-Agreement",
+                                upperCase: true,
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                      )
                   );
                 }
-
-                return Center(
-                    child: SingleChildScrollView(
-                      child:Padding(
-                        padding: const EdgeInsets.all(30.0),
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 10),
-                            Container(
-                              alignment: Alignment.center,
-                              child: SvgPicture.asset(
-                                  'assets/images/credit_line_approved.svg'),
-                            ),
-                            Column(
-                              children: [
-                                SizedBox(height: 10),
-                                Text(
-                                  textAlign: TextAlign.center,
-                                  "Congratulations ${offerPersonNameResponceModel?.response ?? ''}!! ",
-                                  style: TextStyle(color: kPrimaryColor, fontSize: 18),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "You are qualified for credit limit of",
-                                  style: TextStyle(color: Colors.black, fontSize: 15),
-                                  textAlign: TextAlign.center,
-                                ),
-                                offerResponceModel != null &&
-                                    offerResponceModel!.response != null &&
-                                    offerResponceModel!
-                                        .response!.processingFeePayableBy ==
-                                        "Anchor"
-                                    ? SetOfferWidget(productProvider)
-                                    : SetCutomerOfferWidget(productProvider),
-                              ],
-                            ),
-                            const SizedBox(height: 30),
-                            offerResponceModel != null &&
-                                offerResponceModel!.response != null &&
-                                offerResponceModel!
-                                    .response!.processingFeePayableBy ==
-                                    "Customer" &&
-                                !isCheckStatus
-                                ? CommonElevatedButton(
-                              onPressed: () async {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return Pwascreen(
-                                          activityId: widget.activityId,
-                                          subActivityId: widget.subActivityId);
-                                    },
-                                  ),
-                                );
-                              },
-                              text: "Pay Now",
-                              upperCase: true,
-                            )
-                                : CommonElevatedButton(
-                              onPressed: () async {
-                                await acceptOffer(context, productProvider);
-                              },
-                              text: "Proceed to e-Agreement",
-                              upperCase: true,
-                            ),
-                            const SizedBox(height: 10),
-                          ],
-                        ),
-                      ),
-                    )
-                );
-              }
-            }),
+              }),
+        ),
       ),
     );
 

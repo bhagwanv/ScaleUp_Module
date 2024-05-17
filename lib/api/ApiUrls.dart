@@ -56,4 +56,10 @@ class ApiUrls{
   final String getTransactionBreakup="/services/loanaccount/v1/GetTransactionBreakup";
   final String LeadDataOnInProgressScreen="/services/lead/v1/LeadDataOnInProgressScreen";
 
+  final String getIvrsNumberExist="/services/kyc/v1/KYCDoc/IVRSNumberExist";
+  final String getKarzaElectricityServiceProviderList="/services/kyc/v1/KYCDoc/GetKarzaElectricityServiceProviderList";
+  final String getKarzaElectricityState="/services/kyc/v1/KYCDoc/GetKarzaElectricityState";
+  final String getKarzaElectricityAuthentication="/services/kyc/v1/KYCDoc/KarzaElectricityAuthentication";
+
+
 }
