@@ -164,7 +164,7 @@ class ApiService {
   }
 
   Future<Result<GenrateOptResponceModel, Exception>> genrateOtp(
-      String mobileNumber, int CompanyID) async {
+      BuildContext context, String mobileNumber, int CompanyID) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final response = await interceptor.get(Uri.parse(

@@ -1,7 +1,4 @@
-
 import 'dart:io';
-import 'dart:js';
-
 import 'package:flutter/cupertino.dart';
 import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
 import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';

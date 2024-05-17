@@ -2094,6 +2094,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     final String? userId = prefsUtil.getString(USER_ID);
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final int? companyId = prefsUtil.getInt(COMPANY_ID);
+    final String? mobileNo = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
 
     var currentStateId = "";
     var currentCityId = "";
@@ -2116,8 +2117,6 @@ class _PersonalInformationState extends State<PersonalInformation> {
       billDocId =
           productProvider.getpostElectricityBillDocumentSingleFileData!.docId!;
     }
-
-    {}
 
     PersonalDetailsRequestModel postData = PersonalDetailsRequestModel(
         firstName: _firstNameCl.text.toString(),
@@ -2143,8 +2142,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
         subActivityId: widget.subActivityId!,
         middleName: _middleNameCl.text.toString(),
         companyId: companyId,
-        mobileNo: personalDetailsResponce!.mobileNo ??
-            _alternatePhoneNumberCl.text.toString(),
+        mobileNo: personalDetailsResponce!.mobileNo ?? mobileNo,
         ownershipType: selectedOwnershipTypeValue,
         ownershipTypeAddress: "",
         ownershipTypeProof: selectOwnershipProofValue,
@@ -2198,6 +2196,16 @@ class _PersonalInformationState extends State<PersonalInformation> {
         isValid = false;
       } else if (electricityState.isEmpty) {
         errorMessage = "Electricity State should not be empty";
+        isValid = false;
+      } else {
+        isValid = true;
+      }
+    } else if (selectOwnershipProofValue == "Electricity Manual Bill Upload") {
+      if (billDocId == null) {
+        errorMessage = "Please Add Bill Document";
+        isValid = false;
+      } else if (billDocId == 0) {
+        errorMessage = "Please Add Bill Document";
         isValid = false;
       } else {
         isValid = true;
