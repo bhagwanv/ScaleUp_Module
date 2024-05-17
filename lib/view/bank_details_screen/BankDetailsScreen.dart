@@ -28,8 +28,7 @@ class BankDetailsScreen extends StatefulWidget {
   final int activityId;
   final int subActivityId;
 
-  BankDetailsScreen(
-      {super.key, required this.activityId, required this.subActivityId});
+  BankDetailsScreen({super.key, required this.activityId, required this.subActivityId,});
 
   @override
   State<BankDetailsScreen> createState() => _BankDetailsScreenState();

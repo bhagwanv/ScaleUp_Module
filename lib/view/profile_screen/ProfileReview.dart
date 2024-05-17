@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import '../../utils/Utils.dart';
 import 'package:provider/provider.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
-import '../../utils/loader.dart';
-import 'model/InProgressScreenModel.dart';
 
 class ProfileReview extends StatefulWidget {
-  const ProfileReview({super.key});
+  final String? pageType;
+   ProfileReview({super.key, this.pageType});
 
   @override
   State<ProfileReview> createState() => _ProfileReviewState();
 }
-
 
 class _ProfileReviewState extends State<ProfileReview> {
   var isLoading = true;
@@ -29,9 +28,22 @@ class _ProfileReviewState extends State<ProfileReview> {
   }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      bottom: true,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        debugPrint("didPop1: $didPop");
+        if (didPop) {
+          return;
+        }
+        if(widget.pageType == "pushReplacement" ) {
+          final bool shouldPop = await Utils().onback(context);
+          if (shouldPop) {
+            SystemNavigator.pop();
+          }
+        } else {
+          SystemNavigator.pop();
+        }
+      },
       child: Scaffold(
         body:   Consumer<DataProvider>(
             builder: (context, productProvider, child) {
@@ -131,8 +143,5 @@ class _ProfileReviewState extends State<ProfileReview> {
     final int? leadId = prefsUtil.getInt(LEADE_ID);
 
     Provider.of<DataProvider>(context, listen: false).leadDataOnInProgressScreen(leadId!);
-
-
-
   }
 }

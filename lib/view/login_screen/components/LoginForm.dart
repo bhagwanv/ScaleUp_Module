@@ -134,7 +134,7 @@ class _LoginFormState extends State<LoginForm> {
 
                     final prefsUtil = await SharedPref.getInstance();
                     Utils.onLoading(context, "");
-                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(_mobileNumberCl.text, widget.companyID!);
+                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(context, _mobileNumberCl.text, widget.companyID!);
 
                     if (widget.productProvider!.genrateOptData != null) {
                       widget.productProvider!.genrateOptData!.when(

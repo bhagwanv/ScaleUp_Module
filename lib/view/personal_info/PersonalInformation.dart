@@ -38,9 +38,10 @@ class PersonalInformation extends StatefulWidget {
   int? activityId;
   int? subActivityId;
   String image = "";
+  final String?  pageType;
 
   PersonalInformation(
-      {required this.activityId, required this.subActivityId, super.key});
+      {required this.activityId, required this.subActivityId, this.pageType, super.key});
 
   @override
   State<PersonalInformation> createState() => _PersonalInformationState();

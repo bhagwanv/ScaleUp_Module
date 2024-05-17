@@ -24,9 +24,10 @@ import 'models/AadhaarGenerateOTPResponseModel.dart';
 class AadhaarScreen extends StatefulWidget {
   final int activityId;
   final int subActivityId;
+  final String?  pageType;
 
   const AadhaarScreen(
-      {super.key, required this.activityId, required this.subActivityId});
+      {super.key, required this.activityId, required this.subActivityId, this.pageType});
 
   @override
   State<AadhaarScreen> createState() => _AadhaarScreenState();
@@ -80,223 +81,328 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
   @override
   Widget build(BuildContext context) {
     LeadAadhaarResponse? leadAadhaarResponse = null;
-    return Scaffold(
-        body: SafeArea(
-      top: true,
-      bottom: true,
-      child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-        if (productProvider.getLeadAadhaar != null) {
-          productProvider.getLeadAadhaar!.when(
-            success: (LeadAadhaarResponse) async {
-              leadAadhaarResponse = LeadAadhaarResponse;
-              if(leadAadhaarResponse != null) {
-                if (leadAadhaarResponse!.documentNumber != null) {
-                  _aadhaarController.text = leadAadhaarResponse!.documentNumber!;
-                }
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        debugPrint("didPop1: $didPop");
+        if (didPop) {
+          return;
+        }
+        if(widget.pageType == "pushReplacement" ) {
+          final bool shouldPop = await Utils().onback(context);
+          if (shouldPop) {
+            SystemNavigator.pop();
+          }
+        } else {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+          body: SafeArea(
+        top: true,
+        bottom: true,
+        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+          if (productProvider.getLeadAadhaar != null) {
+            productProvider.getLeadAadhaar!.when(
+              success: (LeadAadhaarResponse) async {
+                leadAadhaarResponse = LeadAadhaarResponse;
+                if(leadAadhaarResponse != null) {
+                  if (leadAadhaarResponse!.documentNumber != null) {
+                    _aadhaarController.text = leadAadhaarResponse!.documentNumber!;
+                  }
 
-                if (leadAadhaarResponse!.frontDocumentId != null) {
-                  frontDocumentId =
-                      leadAadhaarResponse!.frontDocumentId!.toString();
-                }
+                  if (leadAadhaarResponse!.frontDocumentId != null) {
+                    frontDocumentId =
+                        leadAadhaarResponse!.frontDocumentId!.toString();
+                  }
 
-                if (leadAadhaarResponse!.backDocumentId != null) {
-                  backDocumentId =
-                      leadAadhaarResponse!.backDocumentId!.toString();
-                }
+                  if (leadAadhaarResponse!.backDocumentId != null) {
+                    backDocumentId =
+                        leadAadhaarResponse!.backDocumentId!.toString();
+                  }
 
-                if (leadAadhaarResponse!.frontImageUrl != null &&
-                    !isFrontImageDelete) {
-                  frontFileUrl = leadAadhaarResponse!.frontImageUrl!.toString();
-                }
+                  if (leadAadhaarResponse!.frontImageUrl != null &&
+                      !isFrontImageDelete) {
+                    frontFileUrl = leadAadhaarResponse!.frontImageUrl!.toString();
+                  }
 
-                if (leadAadhaarResponse!.backImageUrl != null &&
-                    !isBackImageDelete) {
-                  backFileUrl = leadAadhaarResponse!.backImageUrl!.toString();
+                  if (leadAadhaarResponse!.backImageUrl != null &&
+                      !isBackImageDelete) {
+                    backFileUrl = leadAadhaarResponse!.backImageUrl!.toString();
+                  }
                 }
+              },
+              failure: (exception) {
+                print("Failure");
+              },
+            );
+
+            if (productProvider.getPostFrontAadhaarSingleFileData != null &&
+                !isFrontImageDelete) {
+              if (productProvider.getPostFrontAadhaarSingleFileData!.filePath !=
+                  null) {
+                frontFileUrl =
+                    productProvider.getPostFrontAadhaarSingleFileData!.filePath!;
+                frontDocumentId = productProvider
+                    .getPostFrontAadhaarSingleFileData!.docId!
+                    .toString();
               }
-            },
-            failure: (exception) {
-              print("Failure");
-            },
-          );
-
-          if (productProvider.getPostFrontAadhaarSingleFileData != null &&
-              !isFrontImageDelete) {
-            if (productProvider.getPostFrontAadhaarSingleFileData!.filePath !=
-                null) {
-              frontFileUrl =
-                  productProvider.getPostFrontAadhaarSingleFileData!.filePath!;
-              frontDocumentId = productProvider
-                  .getPostFrontAadhaarSingleFileData!.docId!
-                  .toString();
             }
-          }
-          if (productProvider.getPostBackAadhaarSingleFileData != null &&
-              !isBackImageDelete) {
-            if (productProvider.getPostBackAadhaarSingleFileData!.filePath !=
-                null) {
-              backFileUrl =
-                  productProvider.getPostBackAadhaarSingleFileData!.filePath!;
-              backDocumentId = productProvider
-                  .getPostBackAadhaarSingleFileData!.docId!
-                  .toString();
+            if (productProvider.getPostBackAadhaarSingleFileData != null &&
+                !isBackImageDelete) {
+              if (productProvider.getPostBackAadhaarSingleFileData!.filePath !=
+                  null) {
+                backFileUrl =
+                    productProvider.getPostBackAadhaarSingleFileData!.filePath!;
+                backDocumentId = productProvider
+                    .getPostBackAadhaarSingleFileData!.docId!
+                    .toString();
+              }
             }
-          }
-          return SingleChildScrollView(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30, top: 50),
-                  child: SizedBox(
-                    height: 70,
-                    width: 52,
-                    child: Image.asset(
-                      'assets/images/scale.png',
-                      fit: BoxFit.fill,
+            return SingleChildScrollView(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.only(left: 30, right: 30, top: 50),
+                    child: SizedBox(
+                      height: 70,
+                      width: 52,
+                      child: Image.asset(
+                        'assets/images/scale.png',
+                        fit: BoxFit.fill,
+                      ),
+                    )),
+                const Padding(
+                  padding: EdgeInsets.only(left: 30, right: 30, top: 50),
+                  child: Text(
+                    "Verify Aadhaar",
+                    style: TextStyle(
+                      fontSize: 40.0,
+                      color: blackSmall,
+                      fontWeight: FontWeight.w400,
                     ),
-                  )),
-              const Padding(
-                padding: EdgeInsets.only(left: 30, right: 30, top: 50),
-                child: Text(
-                  "Verify Aadhaar",
-                  style: TextStyle(
-                    fontSize: 40.0,
-                    color: blackSmall,
-                    fontWeight: FontWeight.w400,
                   ),
                 ),
-              ),
-              const Padding(
-                padding:
-                    EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 44),
-                child: Text(
-                  "Please validate your Aadhaar number",
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    color: blackSmall,
-                    fontWeight: FontWeight.w500,
+                const Padding(
+                  padding:
+                      EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 44),
+                  child: Text(
+                    "Please validate your Aadhaar number",
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      color: blackSmall,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.start,
                   ),
-                  textAlign: TextAlign.start,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30),
-                child: TextFormField(
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    AadhaarNumberFormatter(),
-                  ],
-                  controller: _aadhaarController,
-                  textInputAction: TextInputAction.done,
-                  keyboardType: TextInputType.number,
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    color: blackSmall,
-                    fontWeight: FontWeight.w500,
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, right: 30),
+                  child: TextFormField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      AadhaarNumberFormatter(),
+                    ],
+                    controller: _aadhaarController,
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.number,
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                      color: blackSmall,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    decoration: const InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      fillColor: textFiledBackgroundColour,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        borderSide: BorderSide(color: kPrimaryColor, width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        borderSide: BorderSide(color: kPrimaryColor, width: 1),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        borderSide: BorderSide(color: kPrimaryColor, width: 1),
+                      ),
+                      hintText: 'XXXX XXXX XXXX',
+                      labelText: 'Aadhaar Card Number',
+                      labelStyle: TextStyle(color: blackSmall),
+                    ),
+                    onChanged: (value) {},
                   ),
-                  decoration: const InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    fillColor: textFiledBackgroundColour,
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      borderSide: BorderSide(color: kPrimaryColor, width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      borderSide: BorderSide(color: kPrimaryColor, width: 1),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      borderSide: BorderSide(color: kPrimaryColor, width: 1),
-                    ),
-                    hintText: 'XXXX XXXX XXXX',
-                    labelText: 'Aadhaar Card Number',
-                    labelStyle: TextStyle(color: blackSmall),
-                  ),
-                  onChanged: (value) {},
                 ),
-              ),
-              const SizedBox(height: 26),
-              Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [kPrimaryColor, kPrimaryColor],
+                const SizedBox(height: 26),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, right: 30),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [kPrimaryColor, kPrimaryColor],
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
+                    height: 148,
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(1),
+                          child: InkWell(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: textFiledBackgroundColour,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: (frontFileUrl.isNotEmpty)
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: Image.network(
+                                        frontFileUrl,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 148,
+                                      ),
+                                    )
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Center(
+                                            child: SvgPicture.asset(
+                                                "assets/icons/gallery.svg",
+                                                colorFilter:
+                                                    const ColorFilter.mode(
+                                                        kPrimaryColor,
+                                                        BlendMode.srcIn))),
+                                        const Text(
+                                          'Upload Aadhar Front Image',
+                                          style: TextStyle(
+                                            color: kPrimaryColor,
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        const Text(
+                                          'Supports : JPEG, PNG',
+                                          style: TextStyle(
+                                            color: blackSmall,
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                            ),
+                            onTap: () {
+                              Utils.hideKeyBored(context);
+                              bottomSheetMenu(context, "AADHAAR_FRONT_IMAGE");
+                            },
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isFrontImageDelete = true;
+                              frontFileUrl = "";
+                            });
+                          },
+                          child: !frontFileUrl.isEmpty
+                              ? Container(
+                                  padding: EdgeInsets.all(4),
+                                  alignment: Alignment.topRight,
+                                  child: SvgPicture.asset(
+                                      'assets/icons/delete_icon.svg'),
+                                )
+                              : Container(),
+                        )
+                      ],
+                    ),
                   ),
-                  height: 148,
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, right: 30),
                   child: Stack(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(1),
-                        child: InkWell(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: textFiledBackgroundColour,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: (frontFileUrl.isNotEmpty)
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      frontFileUrl,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: 148,
-                                    ),
-                                  )
-                                : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Center(
-                                          child: SvgPicture.asset(
-                                              "assets/icons/gallery.svg",
-                                              colorFilter:
-                                                  const ColorFilter.mode(
-                                                      kPrimaryColor,
-                                                      BlendMode.srcIn))),
-                                      const Text(
-                                        'Upload Aadhar Front Image',
-                                        style: TextStyle(
-                                          color: kPrimaryColor,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      const Text(
-                                        'Supports : JPEG, PNG',
-                                        style: TextStyle(
-                                          color: blackSmall,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [kPrimaryColor, kPrimaryColor],
                           ),
-                          onTap: () {
-                            Utils.hideKeyBored(context);
-                            bottomSheetMenu(context, "AADHAAR_FRONT_IMAGE");
-                          },
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        height: 148,
+                        child: Padding(
+                          padding: const EdgeInsets.all(1),
+                          child: InkWell(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: textFiledBackgroundColour,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: (backFileUrl.isNotEmpty)
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: Image.network(
+                                        backFileUrl,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 148,
+                                      ),
+                                    )
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Center(
+                                            child: SvgPicture.asset(
+                                                "assets/icons/gallery.svg",
+                                                colorFilter:
+                                                    const ColorFilter.mode(
+                                                        kPrimaryColor,
+                                                        BlendMode.srcIn))),
+                                        const Text(
+                                          'Upload Aadhar Back Image',
+                                          style: TextStyle(
+                                            color: kPrimaryColor,
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        const Text(
+                                          'Supports : JPEG, PNG',
+                                          style: TextStyle(
+                                            color: blackSmall,
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                            ),
+                            onTap: () {
+                              Utils.hideKeyBored(context);
+                              bottomSheetMenu(context, "AADHAAR_BACK_IMAGE");
+                            },
+                          ),
                         ),
                       ),
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            isFrontImageDelete = true;
-                            frontFileUrl = "";
+                            isBackImageDelete = true;
+                            backFileUrl = "";
                           });
                         },
-                        child: !frontFileUrl.isEmpty
+                        child: !backFileUrl.isEmpty
                             ? Container(
-                                padding: EdgeInsets.all(4),
+                                padding: const EdgeInsets.all(4),
                                 alignment: Alignment.topRight,
                                 child: SvgPicture.asset(
                                     'assets/icons/delete_icon.svg'),
@@ -306,176 +412,88 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30),
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [kPrimaryColor, kPrimaryColor],
-                        ),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      height: 148,
-                      child: Padding(
-                        padding: const EdgeInsets.all(1),
-                        child: InkWell(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: textFiledBackgroundColour,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: (backFileUrl.isNotEmpty)
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      backFileUrl,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: 148,
-                                    ),
-                                  )
-                                : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Center(
-                                          child: SvgPicture.asset(
-                                              "assets/icons/gallery.svg",
-                                              colorFilter:
-                                                  const ColorFilter.mode(
-                                                      kPrimaryColor,
-                                                      BlendMode.srcIn))),
-                                      const Text(
-                                        'Upload Aadhar Back Image',
-                                        style: TextStyle(
-                                          color: kPrimaryColor,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      const Text(
-                                        'Supports : JPEG, PNG',
-                                        style: TextStyle(
-                                          color: blackSmall,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                          ),
-                          onTap: () {
-                            Utils.hideKeyBored(context);
-                            bottomSheetMenu(context, "AADHAAR_BACK_IMAGE");
-                          },
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isBackImageDelete = true;
-                          backFileUrl = "";
-                        });
-                      },
-                      child: !backFileUrl.isEmpty
-                          ? Container(
-                              padding: const EdgeInsets.all(4),
-                              alignment: Alignment.topRight,
-                              child: SvgPicture.asset(
-                                  'assets/icons/delete_icon.svg'),
-                            )
-                          : Container(),
-                    )
-                  ],
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 30),
+                  child: CheckboxTerm(
+                    content:
+                        "I hereby agree to provide my Aadhaar Number and One Time Password (OTP) data for Aadhaar based authentication for KYC purpose in establishing my identity with Scaleupfincap Private Limited.",
+                    onChanged: (bool? value) {
+                      tcChecked = value!;
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.only(left: 15, right: 30),
-                child: CheckboxTerm(
-                  content:
-                      "I hereby agree to provide my Aadhaar Number and One Time Password (OTP) data for Aadhaar based authentication for KYC purpose in establishing my identity with Scaleupfincap Private Limited.",
-                  onChanged: (bool? value) {
-                    tcChecked = value!;
-                  },
-                ),
-              ),
-              const SizedBox(height: 46),
-              Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30),
-                child: CommonElevatedButton(
-                  onPressed: () {
-                    //validate data
-                    if (productProvider.getPostFrontAadhaarSingleFileData !=
-                        null) {
-                      if (productProvider
-                              .getPostFrontAadhaarSingleFileData!.filePath !=
+                const SizedBox(height: 46),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, right: 30),
+                  child: CommonElevatedButton(
+                    onPressed: () {
+                      //validate data
+                      if (productProvider.getPostFrontAadhaarSingleFileData !=
                           null) {
-                        frontFileUrl = productProvider
-                            .getPostFrontAadhaarSingleFileData!.filePath!;
-                        frontDocumentId = productProvider
-                            .getPostFrontAadhaarSingleFileData!.docId!
-                            .toString();
+                        if (productProvider
+                                .getPostFrontAadhaarSingleFileData!.filePath !=
+                            null) {
+                          frontFileUrl = productProvider
+                              .getPostFrontAadhaarSingleFileData!.filePath!;
+                          frontDocumentId = productProvider
+                              .getPostFrontAadhaarSingleFileData!.docId!
+                              .toString();
+                        }
                       }
-                    }
-                    if (productProvider.getPostBackAadhaarSingleFileData !=
-                        null) {
-                      if (productProvider
-                              .getPostBackAadhaarSingleFileData!.filePath !=
+                      if (productProvider.getPostBackAadhaarSingleFileData !=
                           null) {
-                        backFileUrl = productProvider
-                            .getPostBackAadhaarSingleFileData!.filePath!;
-                        backDocumentId = productProvider
-                            .getPostBackAadhaarSingleFileData!.docId!
-                            .toString();
+                        if (productProvider
+                                .getPostBackAadhaarSingleFileData!.filePath !=
+                            null) {
+                          backFileUrl = productProvider
+                              .getPostBackAadhaarSingleFileData!.filePath!;
+                          backDocumentId = productProvider
+                              .getPostBackAadhaarSingleFileData!.docId!
+                              .toString();
+                        }
                       }
-                    }
 
-                    //call api
-                    if (_aadhaarController.text == "") {
-                      Utils.showToast("Please Enter Aadhaar Number",context);
-                    } else if (frontFileUrl == "" || frontDocumentId == "") {
-                      Utils.showToast("Please select Aadhaar Front Image",context);
-                    } else if (backFileUrl == "" || backDocumentId == "") {
-                      Utils.showToast("Please select Aadhaar Back Image",context);
-                    } else if (!tcChecked) {
-                      Utils.showToast("Please Check Terms and Conditions",context);
-                    } else {
-                      String stringWithSpaces = _aadhaarController.text;
-                      print("normal" + stringWithSpaces);
-                      String stringWithoutSpaces =
-                          stringWithSpaces.replaceAll(RegExp(r'\s+'), '');
-                      print("stringWithSpaces" + stringWithoutSpaces);
-                      generateAadhaarOTPAPI(
-                          context,
-                          productProvider,
-                          stringWithoutSpaces,
-                          frontFileUrl,
-                          frontDocumentId,
-                          backFileUrl,
-                          backDocumentId);
-                    }
-                  },
-                  text: 'Proceed to E-Aadhaar',
-                  upperCase: true,
+                      //call api
+                      if (_aadhaarController.text == "") {
+                        Utils.showToast("Please Enter Aadhaar Number",context);
+                      } else if (frontFileUrl == "" || frontDocumentId == "") {
+                        Utils.showToast("Please select Aadhaar Front Image",context);
+                      } else if (backFileUrl == "" || backDocumentId == "") {
+                        Utils.showToast("Please select Aadhaar Back Image",context);
+                      } else if (!tcChecked) {
+                        Utils.showToast("Please Check Terms and Conditions",context);
+                      } else {
+                        String stringWithSpaces = _aadhaarController.text;
+                        print("normal" + stringWithSpaces);
+                        String stringWithoutSpaces =
+                            stringWithSpaces.replaceAll(RegExp(r'\s+'), '');
+                        print("stringWithSpaces" + stringWithoutSpaces);
+                        generateAadhaarOTPAPI(
+                            context,
+                            productProvider,
+                            stringWithoutSpaces,
+                            frontFileUrl,
+                            frontDocumentId,
+                            backFileUrl,
+                            backDocumentId);
+                      }
+                    },
+                    text: 'Proceed to E-Aadhaar',
+                    upperCase: true,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 50),
-            ],
-          ));
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      }),
-    ));
+                const SizedBox(height: 50),
+              ],
+            ));
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        }),
+      )),
+    );
   }
 
   @override

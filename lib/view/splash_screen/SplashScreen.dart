@@ -16,16 +16,15 @@ class SplashScreen extends StatefulWidget {
   final String mobileNumber;
   final String companyID;
   final String productID;
-  final bool isLoggedIn;
   LeadCurrentResponseModel? leadCurrentActivityAsyncData;
   GetLeadResponseModel? getLeadData;
+  bool isLoggedIn = false;
 
   SplashScreen({
     Key? key,
     required this.mobileNumber,
     required this.productID,
     required this.companyID,
-    required this.isLoggedIn,
   }) : super(key: key);
 
   @override
@@ -37,7 +36,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
       productCompanyDetail(widget.productID, widget.companyID);
-
   }
 
   @override
@@ -113,6 +111,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> productCompanyDetail(product, company) async {
+    final prefsUtil = await SharedPref.getInstance();
+    if(prefsUtil.getBool(IS_LOGGED_IN) != null) {
+      widget.isLoggedIn =  prefsUtil.getBool(IS_LOGGED_IN)!;
+    }
     Provider.of<DataProvider>(context, listen: false).productCompanyDetail(product, company);
 
   }

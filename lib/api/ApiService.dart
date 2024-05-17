@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:scale_up_module/api/ApiUrls.dart';
 import 'package:scale_up_module/utils/InternetConnectivity.dart';
 import 'package:scale_up_module/utils/constants.dart';
 import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
 import 'package:scale_up_module/view/login_screen/model/GenrateOptResponceModel.dart';
 import 'package:scale_up_module/view/profile_screen/model/OfferPersonNameResponceModel.dart';
+import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
 import '../shared_preferences/SharedPref.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
@@ -32,6 +34,7 @@ import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespMod
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
 import '../view/dashboard_screen/vendorDetail/model/TransactionBreakupResModel.dart';
+import '../view/login_screen/login_screen.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
@@ -79,6 +82,19 @@ class ApiService {
   final interceptor = Interceptor();
   final internetConnectivity = InternetConnectivity();
 
+  Future<void> handle401(BuildContext context, String pageType) async {
+    final prefsUtil = await SharedPref.getInstance();
+    prefsUtil.clear();
+    /*Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => SplashScreen(
+            mobileNumber: mobileNumber,
+            companyID: company,
+            productID: product
+        ),
+      ),
+    );*/
+  }
 
   Future<ProductCompanyDetailResponseModel> productCompanyDetail(String product,
       String company) async {
@@ -164,6 +180,10 @@ class ApiService {
             GenrateOptResponceModel.fromJson(jsonData);
             return Success(responseModel);
 
+          case 401:
+            // Handle 401 unauthorized error
+            await handle401(context, "pushReplacement");
+            return Failure(ApiException(response.statusCode, "Unauthorized"));
           default:
           // 3. return Failure with the desired exception
             return Failure(ApiException(response.statusCode, ""));

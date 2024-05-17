@@ -312,6 +312,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                   USER_ID, verifyOtpResponce.userId.toString());
               await prefsUtil.saveString(TOKEN, verifyOtpResponce.userTokan.toString());
               await prefsUtil.saveInt(LEADE_ID, verifyOtpResponce.leadId!);
+              await prefsUtil.saveBool(IS_LOGGED_IN, true);
 
               fetchData(context, userLoginMobile);
             }
@@ -353,7 +354,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "pushReplacement");
     } catch (error) {
       Navigator.of(context, rootNavigator: true).pop();
       if (kDebugMode) {
@@ -368,7 +369,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
-        .genrateOtp(userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
+        .genrateOtp(context, userLoginMobile, prefsUtil.getInt(COMPANY_ID)!, widget.activityId, widget.subActivityId);
     Navigator.of(context, rootNavigator: true).pop();
 
     if (productProvider.genrateOptData != null) {

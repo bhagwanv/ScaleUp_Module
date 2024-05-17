@@ -41,7 +41,6 @@ class _MyAppState extends State<MyApp> {
   var product = "";
   var isPayNow = false;
   var transactionId = "";
-  var isLoggedIn = true;
 
   @override
   void initState() {
@@ -70,9 +69,7 @@ class _MyAppState extends State<MyApp> {
       return SplashScreen(
         mobileNumber: mobileNumber,
         companyID: company,
-        productID: product,
-        isLoggedIn: isLoggedIn
-      );
+        productID: product);
     } else {
       return EmptyContainer();
     }
@@ -128,7 +125,6 @@ class _MyAppState extends State<MyApp> {
         product = jData['productID'] ?? "";
         isPayNow = jData['isPayNow'] ?? false;
         transactionId = jData['transactionId'] ?? jData['transactionId'];
-        isLoggedIn = jData['isLoggedIn'] ?? jData['isLoggedIn'];
       });
     }
   }
