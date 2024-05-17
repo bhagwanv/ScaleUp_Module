@@ -353,7 +353,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData);
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       Navigator.of(context, rootNavigator: true).pop();
       if (kDebugMode) {
