@@ -369,7 +369,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
-        .genrateOtp(context, userLoginMobile, prefsUtil.getInt(COMPANY_ID)!, widget.activityId, widget.subActivityId);
+        .genrateOtp(context, userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
     Navigator.of(context, rootNavigator: true).pop();
 
     if (productProvider.genrateOptData != null) {

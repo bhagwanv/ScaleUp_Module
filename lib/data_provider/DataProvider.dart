@@ -1,6 +1,5 @@
 
 import 'dart:io';
-import 'dart:js';
 
 import 'package:flutter/cupertino.dart';
 import 'package:scale_up_module/view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
@@ -292,7 +291,7 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> genrateOtp(BuildContext context, String mobileNumber, int CompanyID, ) async {
-    _genrateOptData = await apiService.genrateOtp(context, mobileNumber, CompanyID);
+    _genrateOptData = await apiService.genrateOtp(context, mobileNumber,CompanyID);
     notifyListeners();
   }
 

@@ -164,13 +164,10 @@ class ApiService {
   }
 
   Future<Result<GenrateOptResponceModel, Exception>> genrateOtp(
-      String mobileNumber, int CompanyID) async {
+      BuildContext context, String mobileNumber, int CompanyID) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
-        final response = await interceptor.get(Uri.parse(
-            '${apiUrls.baseUrl + apiUrls
-                .generateOtp}?MobileNo=$mobileNumber&companyId=$CompanyID'));
-
+        final response = await interceptor.get(Uri.parse('${apiUrls.baseUrl + apiUrls.generateOtp}?MobileNo=$mobileNumber&companyId=$CompanyID'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:

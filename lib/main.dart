@@ -90,6 +90,8 @@ class _MyAppState extends State<MyApp> {
     MyApp.platform.setMethodCallHandler((MethodCall call) async {
       if (call.method == "logout") {
         return doSomething();
+      }else{
+        MyApp.platform.setMethodCallHandler(_receiveFromHost);
       }
       return null;
     });
@@ -145,6 +147,7 @@ class _MyAppState extends State<MyApp> {
         isPayNow = jData['isPayNow'] ?? false;
         transactionId = jData['transactionId'] ?? jData['transactionId'];
       });
+
     }
   }
 }
