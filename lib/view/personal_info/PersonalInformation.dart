@@ -146,819 +146,836 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child:
-            Consumer<DataProvider>(builder: (context, productProvider, child) {
-          if (productProvider.getPersonalDetailsData == null && isLoading) {
-            return Center(child: Loader());
-          } else {
-            if (productProvider.getPersonalDetailsData != null && isLoading) {
-              Navigator.of(context, rootNavigator: true).pop();
-              isLoading = false;
-            }
-
-            if (!updateData) {
-              _countryCl.text = "India";
-
-              if (productProvider.getPersonalDetailsData != null) {
-                productProvider.getPersonalDetailsData!.when(
-                  success: (PersonalDetailsResponce) async {
-                    personalDetailsResponce = PersonalDetailsResponce;
-                    if (personalDetailsResponce != null) {
-                      _firstNameCl.text = personalDetailsResponce!.firstName!;
-                      if (personalDetailsResponce!.middleName != null) {
-                        _middleNameCl.text =
-                            personalDetailsResponce!.middleName!;
-                      }
-                      _lastNameCl.text = personalDetailsResponce!.lastName!;
-
-                      if (personalDetailsResponce!.emailId!.isNotEmpty &&
-                          !isValidEmail &&
-                          !isEmailClear) {
-                        isValidEmail = true;
-                        _emailIDCl.text = personalDetailsResponce!.emailId!;
-                      }
-
-                      if (personalDetailsResponce!.alternatePhoneNo != null) {
-                        _alternatePhoneNumberCl.text =
-                            personalDetailsResponce!.alternatePhoneNo!;
-                      }
-
-                      if (personalDetailsResponce!.manulaElectrictyBillImage !=
-                              null &&
-                          !isImageDelete) {
-                        widget.image =
-                            personalDetailsResponce!.manulaElectrictyBillImage!;
-                      }
-
-                      if (personalDetailsResponce!.gender == "Male" ||
-                          personalDetailsResponce!.gender == "M") {
-                        _genderCl.text = "Male";
-                      } else if (personalDetailsResponce!.gender == "Female" ||
-                          personalDetailsResponce!.gender == "F") {
-                        _genderCl.text = "Female";
-                      } else {
-                        _genderCl.text = "Other";
-                      }
-
-                      if (personalDetailsResponce!.marital != null) {
-                        if (personalDetailsResponce!.marital!.isNotEmpty) {
-                          if (personalDetailsResponce!.marital == "Married") {
-                            selectedMaritalStatusValue = "Married";
-                          } else if (personalDetailsResponce!.marital ==
-                              "Single") {
-                            selectedMaritalStatusValue = "Single";
-                          } else if (personalDetailsResponce!.marital ==
-                              "Others") {
-                            selectedMaritalStatusValue = "Others";
-                          } else if (personalDetailsResponce!.marital ==
-                              "Divorced") {
-                            selectedMaritalStatusValue = "Divorced";
-                          } else if (personalDetailsResponce!.marital ==
-                              "Widow") {
-                            selectedMaritalStatusValue = "Widow";
-                          }
-                        }
-                      }
-
-                      if (personalDetailsResponce!.ownershipType != null) {
-                        if (personalDetailsResponce!
-                                .ownershipType!.isNotEmpty &&
-                            !selectedOwnershipEditable) {
-                          if (personalDetailsResponce!.ownershipType ==
-                              "Owned") {
-                            selectedOwnershipTypeValue = "Owned";
-                          } else if (personalDetailsResponce!.ownershipType ==
-                              "Owned by parents") {
-                            selectedOwnershipTypeValue = "Owned by parents";
-                          } else if (personalDetailsResponce!.ownershipType ==
-                              "Owned by Spouse") {
-                            selectedOwnershipTypeValue = "Owned by Spouse";
-                          } else {
-                            selectedOwnershipTypeValue = "Rented";
-                          }
-                        }
-                      }
-
-                      if (personalDetailsResponce!.ownershipTypeProof != null) {
-                        if (personalDetailsResponce!
-                            .ownershipTypeProof!.isNotEmpty) {
-                          if (personalDetailsResponce!.ownershipTypeProof ==
-                              "Electricity Manual Bill Upload") {
-                            selectOwnershipProofValue =
-                                "Electricity Manual Bill Upload";
-                          }
-                        }
-                      }
-
-                      //set permanent Address
-                      if (personalDetailsResponce!
-                          .permanentAddressLine1!.isNotEmpty) {
-                        _permanentAddresslineOneCl.text =
-                            personalDetailsResponce!.permanentAddressLine1!;
-                      }
-
-                      if (personalDetailsResponce!
-                          .permanentAddressLine2!.isNotEmpty) {
-                        _permanentAddresslineTwoCl.text =
-                            personalDetailsResponce!.permanentAddressLine2!;
-                      }
-
-                      if (personalDetailsResponce!.permanentPincode != null) {
-                        _permanentAddressPinCodeCl.text =
-                            personalDetailsResponce!.permanentPincode!
-                                .toString();
-                      }
-
-                      if (personalDetailsResponce!.permanentAddressLine1 ==
-                              personalDetailsResponce!.resAddress1 &&
-                          personalDetailsResponce!.permanentAddressLine2 ==
-                              personalDetailsResponce!.resAddress2) {
-                        isCurrentAddSame = true;
-                      }
-
-                      //set Current Address
-                      if (personalDetailsResponce!.resAddress1!.isNotEmpty) {
-                        _currentAddressLineOneCl.text =
-                            personalDetailsResponce!.resAddress1!;
-                      }
-                      if (personalDetailsResponce!.resAddress2!.isNotEmpty) {
-                        _currentAddressLineTwoCl.text =
-                            personalDetailsResponce!.resAddress2!;
-                      }
-                      if (personalDetailsResponce!.pincode != null) {
-                        _currentAddressPinCodeCl.text =
-                            personalDetailsResponce!.pincode!.toString();
-                      }
-
-                      if (personalDetailsResponce!.state != null) {
-                        stateId = personalDetailsResponce!.state!;
-                      }
-
-                      if (personalDetailsResponce!.electricityBillDocumentId !=
-                          null) {
-                        billDocId =
-                            personalDetailsResponce!.electricityBillDocumentId!;
-                      }
-                      if (productProvider.getAllCityData != null) {
-                        permanentCitylist = productProvider.getAllCityData!;
-                      }
-
-                      if (productProvider.getCurrentAllCityData != null) {
-                        citylist = productProvider.getCurrentAllCityData!;
-                      }
-                    } else {
-                      if (!isEmailClear && !isValidEmail) {
-                        _emailIDCl.text = personalDetailsResponce!.emailId!;
-                      } else if (!isValidEmail) {
-                        _emailIDCl.clear();
-                      }
-
-                      if (productProvider.getAllCityData != null) {
-                        permanentCitylist = productProvider.getAllCityData!;
-                      }
-
-                      if (productProvider.getCurrentAllCityData != null) {
-                        citylist = productProvider.getCurrentAllCityData!;
-                      }
-                      if (citylist.isNotEmpty) {
-                        selectedCurrentCity = citylist.first;
-                        print("dsds" + selectedCurrentCity!.name!);
-                      }
-                    }
-                  },
-                  failure: (exception) {
-                    print("Failure");
-                  },
-                );
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        debugPrint("didPop1: $didPop");
+        if (didPop) {
+          return;
+        }
+        if(widget.pageType == "pushReplacement" ) {
+          final bool shouldPop = await Utils().onback(context);
+          if (shouldPop) {
+            SystemNavigator.pop();
+          }
+        } else {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child:
+              Consumer<DataProvider>(builder: (context, productProvider, child) {
+            if (productProvider.getPersonalDetailsData == null && isLoading) {
+              return Center(child: Loader());
+            } else {
+              if (productProvider.getPersonalDetailsData != null && isLoading) {
+                Navigator.of(context, rootNavigator: true).pop();
+                isLoading = false;
               }
-            }
-            if (productProvider.getpostElectricityBillDocumentSingleFileData !=
-                    null &&
-                !isImageDelete) {
-              billDocId = productProvider
-                  .getpostElectricityBillDocumentSingleFileData!.docId!;
-              widget.image = productProvider
-                  .getpostElectricityBillDocumentSingleFileData!.filePath!;
-            }
-            return SingleChildScrollView(
-                child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 50),
-                  const Text(
-                    'Personal Information',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 35, color: Colors.black),
-                  ),
-                  const SizedBox(height: 15),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        basicDetailsFields(productProvider),
-                        const SizedBox(height: 20),
-                        permanentAddressField(productProvider),
-                        currentAddressFields(productProvider),
-                        const SizedBox(height: 15),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4.0),
-                          child: Text(
-                            "Ownership Type",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        DropdownButtonFormField2<String>(
-                          isExpanded: true,
-                          decoration: InputDecoration(
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 16),
-                            fillColor: textFiledBackgroundColour,
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                  color: kPrimaryColor, width: 1),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                  color: kPrimaryColor, width: 1),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                  color: kPrimaryColor, width: 1),
-                            ),
-                          ),
-                          hint: const Text(
-                            'Ownership Type',
-                            style: TextStyle(
-                              color: blueColor,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          items: getDropDownOption(ownershipTypeList),
-                          value: selectedOwnershipTypeValue!.isNotEmpty
-                              ? selectedOwnershipTypeValue
-                              : null,
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedOwnershipEditable = true;
-                              selectedOwnershipTypeValue = value;
-                            });
-                          },
-                          buttonStyleData: const ButtonStyleData(
-                            padding: EdgeInsets.only(right: 8),
-                          ),
-                          dropdownStyleData: const DropdownStyleData(
-                            maxHeight: 200,
-                          ),
-                          menuItemStyleData: MenuItemStyleData(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            customHeights:
-                                _getCustomItemsHeights(ownershipTypeList),
-                          ),
-                          iconStyleData: const IconStyleData(
-                            openMenuIcon: Icon(Icons.arrow_drop_up),
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        (selectedOwnershipTypeValue!.isNotEmpty &&
-                                selectedOwnershipTypeValue == "Rented")
-                            ? Container()
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 4.0),
-                                    child: Text(
-                                      "Ownership Proof",
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  DropdownButtonFormField2<String>(
-                                    isExpanded: true,
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              vertical: 16),
-                                      fillColor: textFiledBackgroundColour,
-                                      filled: true,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: kPrimaryColor, width: 1),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color: kPrimaryColor, width: 1),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide(
-                                            color: kPrimaryColor, width: 1),
-                                      ),
-                                    ),
-                                    hint: const Text(
-                                      'Select Ownership Proof',
-                                      style: TextStyle(
-                                        color: blueColor,
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    items:
-                                        getDropDownOption(ownershipProofList),
-                                    value: selectOwnershipProofValue,
-                                    onChanged: (String? value) async {
-                                      setState(() {
-                                        selectOwnershipProofValue = value;
-                                        if(selectOwnershipProofValue == "Digital Bill Verification"){
-                                           customerName = "";
-                                           customerAddress = "";
-                                           consumerNumber = "";
-                                           ivrsNumber = "";
-                                           electricityServiceProvider = "";
-                                           _customerIvrsCl.text="";
-                                           electricityState = "";
-                                           selectDistrictList.clear();
-                                           selectServiceProviderList.clear();
 
-                                        }
+              if (!updateData) {
+                _countryCl.text = "India";
 
-                                      });
-                                    },
-                                    buttonStyleData: const ButtonStyleData(
-                                      padding: EdgeInsets.only(right: 8),
+                if (productProvider.getPersonalDetailsData != null) {
+                  productProvider.getPersonalDetailsData!.when(
+                    success: (PersonalDetailsResponce) async {
+                      personalDetailsResponce = PersonalDetailsResponce;
+                      if (personalDetailsResponce != null) {
+                        _firstNameCl.text = personalDetailsResponce!.firstName!;
+                        if (personalDetailsResponce!.middleName != null) {
+                          _middleNameCl.text =
+                              personalDetailsResponce!.middleName!;
+                        }
+                        _lastNameCl.text = personalDetailsResponce!.lastName!;
+
+                        if (personalDetailsResponce!.emailId!.isNotEmpty &&
+                            !isValidEmail &&
+                            !isEmailClear) {
+                          isValidEmail = true;
+                          _emailIDCl.text = personalDetailsResponce!.emailId!;
+                        }
+
+                        if (personalDetailsResponce!.alternatePhoneNo != null) {
+                          _alternatePhoneNumberCl.text =
+                              personalDetailsResponce!.alternatePhoneNo!;
+                        }
+
+                        if (personalDetailsResponce!.manulaElectrictyBillImage !=
+                                null &&
+                            !isImageDelete) {
+                          widget.image =
+                              personalDetailsResponce!.manulaElectrictyBillImage!;
+                        }
+
+                        if (personalDetailsResponce!.gender == "Male" ||
+                            personalDetailsResponce!.gender == "M") {
+                          _genderCl.text = "Male";
+                        } else if (personalDetailsResponce!.gender == "Female" ||
+                            personalDetailsResponce!.gender == "F") {
+                          _genderCl.text = "Female";
+                        } else {
+                          _genderCl.text = "Other";
+                        }
+
+                        if (personalDetailsResponce!.marital != null) {
+                          if (personalDetailsResponce!.marital!.isNotEmpty) {
+                            if (personalDetailsResponce!.marital == "Married") {
+                              selectedMaritalStatusValue = "Married";
+                            } else if (personalDetailsResponce!.marital ==
+                                "Single") {
+                              selectedMaritalStatusValue = "Single";
+                            } else if (personalDetailsResponce!.marital ==
+                                "Others") {
+                              selectedMaritalStatusValue = "Others";
+                            } else if (personalDetailsResponce!.marital ==
+                                "Divorced") {
+                              selectedMaritalStatusValue = "Divorced";
+                            } else if (personalDetailsResponce!.marital ==
+                                "Widow") {
+                              selectedMaritalStatusValue = "Widow";
+                            }
+                          }
+                        }
+
+                        if (personalDetailsResponce!.ownershipType != null) {
+                          if (personalDetailsResponce!
+                                  .ownershipType!.isNotEmpty &&
+                              !selectedOwnershipEditable) {
+                            if (personalDetailsResponce!.ownershipType ==
+                                "Owned") {
+                              selectedOwnershipTypeValue = "Owned";
+                            } else if (personalDetailsResponce!.ownershipType ==
+                                "Owned by parents") {
+                              selectedOwnershipTypeValue = "Owned by parents";
+                            } else if (personalDetailsResponce!.ownershipType ==
+                                "Owned by Spouse") {
+                              selectedOwnershipTypeValue = "Owned by Spouse";
+                            } else {
+                              selectedOwnershipTypeValue = "Rented";
+                            }
+                          }
+                        }
+
+                        if (personalDetailsResponce!.ownershipTypeProof != null) {
+                          if (personalDetailsResponce!
+                              .ownershipTypeProof!.isNotEmpty) {
+                            if (personalDetailsResponce!.ownershipTypeProof ==
+                                "Electricity Manual Bill Upload") {
+                              selectOwnershipProofValue =
+                                  "Electricity Manual Bill Upload";
+                            }
+                          }
+                        }
+
+                        //set permanent Address
+                        if (personalDetailsResponce!
+                            .permanentAddressLine1!.isNotEmpty) {
+                          _permanentAddresslineOneCl.text =
+                              personalDetailsResponce!.permanentAddressLine1!;
+                        }
+
+                        if (personalDetailsResponce!
+                            .permanentAddressLine2!.isNotEmpty) {
+                          _permanentAddresslineTwoCl.text =
+                              personalDetailsResponce!.permanentAddressLine2!;
+                        }
+
+                        if (personalDetailsResponce!.permanentPincode != null) {
+                          _permanentAddressPinCodeCl.text =
+                              personalDetailsResponce!.permanentPincode!
+                                  .toString();
+                        }
+
+                        if (personalDetailsResponce!.permanentAddressLine1 ==
+                                personalDetailsResponce!.resAddress1 &&
+                            personalDetailsResponce!.permanentAddressLine2 ==
+                                personalDetailsResponce!.resAddress2) {
+                          isCurrentAddSame = true;
+                        }
+
+                        //set Current Address
+                        if (personalDetailsResponce!.resAddress1!.isNotEmpty) {
+                          _currentAddressLineOneCl.text =
+                              personalDetailsResponce!.resAddress1!;
+                        }
+                        if (personalDetailsResponce!.resAddress2!.isNotEmpty) {
+                          _currentAddressLineTwoCl.text =
+                              personalDetailsResponce!.resAddress2!;
+                        }
+                        if (personalDetailsResponce!.pincode != null) {
+                          _currentAddressPinCodeCl.text =
+                              personalDetailsResponce!.pincode!.toString();
+                        }
+
+                        if (personalDetailsResponce!.state != null) {
+                          stateId = personalDetailsResponce!.state!;
+                        }
+
+                        if (personalDetailsResponce!.electricityBillDocumentId !=
+                            null) {
+                          billDocId =
+                              personalDetailsResponce!.electricityBillDocumentId!;
+                        }
+                        if (productProvider.getAllCityData != null) {
+                          permanentCitylist = productProvider.getAllCityData!;
+                        }
+
+                        if (productProvider.getCurrentAllCityData != null) {
+                          citylist = productProvider.getCurrentAllCityData!;
+                        }
+                      } else {
+                        if (!isEmailClear && !isValidEmail) {
+                          _emailIDCl.text = personalDetailsResponce!.emailId!;
+                        } else if (!isValidEmail) {
+                          _emailIDCl.clear();
+                        }
+
+                        if (productProvider.getAllCityData != null) {
+                          permanentCitylist = productProvider.getAllCityData!;
+                        }
+
+                        if (productProvider.getCurrentAllCityData != null) {
+                          citylist = productProvider.getCurrentAllCityData!;
+                        }
+                        if (citylist.isNotEmpty) {
+                          selectedCurrentCity = citylist.first;
+                          print("dsds" + selectedCurrentCity!.name!);
+                        }
+                      }
+                    },
+                    failure: (exception) {
+                      print("Failure");
+                    },
+                  );
+                }
+              }
+              if (productProvider.getpostElectricityBillDocumentSingleFileData !=
+                      null &&
+                  !isImageDelete) {
+                billDocId = productProvider
+                    .getpostElectricityBillDocumentSingleFileData!.docId!;
+                widget.image = productProvider
+                    .getpostElectricityBillDocumentSingleFileData!.filePath!;
+              }
+              return SingleChildScrollView(
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 50),
+                    const Text(
+                      'Personal Information',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 35, color: Colors.black),
+                    ),
+                    const SizedBox(height: 15),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          basicDetailsFields(productProvider),
+                          const SizedBox(height: 20),
+                          permanentAddressField(productProvider),
+                          currentAddressFields(productProvider),
+                          const SizedBox(height: 15),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: Text(
+                              "Ownership Type",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          DropdownButtonFormField2<String>(
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  const EdgeInsets.symmetric(vertical: 16),
+                              fillColor: textFiledBackgroundColour,
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                    color: kPrimaryColor, width: 1),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                    color: kPrimaryColor, width: 1),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                    color: kPrimaryColor, width: 1),
+                              ),
+                            ),
+                            hint: const Text(
+                              'Ownership Type',
+                              style: TextStyle(
+                                color: blueColor,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            items: getDropDownOption(ownershipTypeList),
+                            value: selectedOwnershipTypeValue!.isNotEmpty
+                                ? selectedOwnershipTypeValue
+                                : null,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedOwnershipEditable = true;
+                                selectedOwnershipTypeValue = value;
+                              });
+                            },
+                            buttonStyleData: const ButtonStyleData(
+                              padding: EdgeInsets.only(right: 8),
+                            ),
+                            dropdownStyleData: const DropdownStyleData(
+                              maxHeight: 200,
+                            ),
+                            menuItemStyleData: MenuItemStyleData(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              customHeights:
+                                  _getCustomItemsHeights(ownershipTypeList),
+                            ),
+                            iconStyleData: const IconStyleData(
+                              openMenuIcon: Icon(Icons.arrow_drop_up),
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          (selectedOwnershipTypeValue!.isNotEmpty &&
+                                  selectedOwnershipTypeValue == "Rented")
+                              ? Container()
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 4.0),
+                                      child: Text(
+                                        "Ownership Proof",
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
                                     ),
-                                    dropdownStyleData: const DropdownStyleData(
-                                      maxHeight: 200,
+                                    SizedBox(height: 8),
+                                    DropdownButtonFormField2<String>(
+                                      isExpanded: true,
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 16),
+                                        fillColor: textFiledBackgroundColour,
+                                        filled: true,
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                          borderSide: const BorderSide(
+                                              color: kPrimaryColor, width: 1),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                          borderSide: const BorderSide(
+                                              color: kPrimaryColor, width: 1),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide(
+                                              color: kPrimaryColor, width: 1),
+                                        ),
+                                      ),
+                                      hint: const Text(
+                                        'Select Ownership Proof',
+                                        style: TextStyle(
+                                          color: blueColor,
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      items:
+                                          getDropDownOption(ownershipProofList),
+                                      value: selectOwnershipProofValue,
+                                      onChanged: (String? value) async {
+                                        setState(() {
+                                          selectOwnershipProofValue = value;
+                                          if(selectOwnershipProofValue == "Digital Bill Verification"){
+                                             customerName = "";
+                                             customerAddress = "";
+                                             consumerNumber = "";
+                                             ivrsNumber = "";
+                                             electricityServiceProvider = "";
+                                             _customerIvrsCl.text="";
+                                             electricityState = "";
+                                             selectDistrictList.clear();
+                                             selectServiceProviderList.clear();
+
+                                          }
+
+                                        });
+                                      },
+                                      buttonStyleData: const ButtonStyleData(
+                                        padding: EdgeInsets.only(right: 8),
+                                      ),
+                                      dropdownStyleData: const DropdownStyleData(
+                                        maxHeight: 200,
+                                      ),
+                                      menuItemStyleData: MenuItemStyleData(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        customHeights: _getCustomItemsHeights(
+                                            ownershipProofList),
+                                      ),
+                                      iconStyleData: const IconStyleData(
+                                        openMenuIcon: Icon(Icons.arrow_drop_up),
+                                      ),
                                     ),
-                                    menuItemStyleData: MenuItemStyleData(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      customHeights: _getCustomItemsHeights(
-                                          ownershipProofList),
-                                    ),
-                                    iconStyleData: const IconStyleData(
-                                      openMenuIcon: Icon(Icons.arrow_drop_up),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 15),
-                                  selectOwnershipProofValue ==
-                                          "Digital Bill Verification"
-                                      ? Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4.0),
-                                              child: Text(
-                                                "Digital Verification",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 18),
+                                    const SizedBox(height: 15),
+                                    selectOwnershipProofValue ==
+                                            "Digital Bill Verification"
+                                        ? Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 4.0),
+                                                child: Text(
+                                                  "Digital Verification",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 18),
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(height: 15),
-                                            Stack(
-                                              children: [
-                                                TextField(
-                                                  enabled: true,
-                                                  keyboardType:
-                                                      TextInputType.text,
-                                                  textInputAction:
-                                                      TextInputAction.next,
-                                                  controller: _customerIvrsCl,
-                                                  maxLines: 1,
-                                                  inputFormatters: [
-                                                    FilteringTextInputFormatter
-                                                        .allow(RegExp(
-                                                            (r'[A-Z0-9]'))),
-                                                    LengthLimitingTextInputFormatter(
-                                                        15)
-                                                  ],
-                                                  cursorColor: Colors.black,
-                                                  decoration:
-                                                      const InputDecoration(
-                                                          enabledBorder:
-                                                              OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                              color:
-                                                                  kPrimaryColor,
-                                                            ),
-                                                            borderRadius:
-                                                                BorderRadius.all(
-                                                                    Radius.circular(
-                                                                        10.0)),
-                                                          ),
-                                                          hintText:
-                                                              "Customer IVRS",
-                                                          labelText:
-                                                              "Customer IVRS  ",
-                                                          fillColor:
-                                                              textFiledBackgroundColour,
-                                                          filled: true,
-                                                          border:
-                                                              OutlineInputBorder(
-                                                            borderSide: BorderSide(
+                                              SizedBox(height: 15),
+                                              Stack(
+                                                children: [
+                                                  TextField(
+                                                    enabled: true,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    textInputAction:
+                                                        TextInputAction.next,
+                                                    controller: _customerIvrsCl,
+                                                    maxLines: 1,
+                                                    inputFormatters: [
+                                                      FilteringTextInputFormatter
+                                                          .allow(RegExp(
+                                                              (r'[A-Z0-9]'))),
+                                                      LengthLimitingTextInputFormatter(
+                                                          15)
+                                                    ],
+                                                    cursorColor: Colors.black,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                            enabledBorder:
+                                                                OutlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide(
                                                                 color:
                                                                     kPrimaryColor,
-                                                                width: 1.0),
-                                                            borderRadius:
-                                                                BorderRadius.all(
-                                                                    Radius.circular(
-                                                                        10.0)),
-                                                          )),
-                                                  onChanged: (text) async {
-                                                    print(
-                                                        'TextField value: $text (${text.length})');
-                                                    if (text.length == 11) {
-                                                      // Make API Call to validate PAN card
-                                                      await getIvrsNumberExist(
-                                                        context,
-                                                        productProvider,
-                                                        _customerIvrsCl,
-                                                      );
-                                                    }
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 15),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4.0),
-                                              child: Text(
-                                                "Select Service Provider",
-                                                style: TextStyle(
-                                                    color: Colors.grey),
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius.all(
+                                                                      Radius.circular(
+                                                                          10.0)),
+                                                            ),
+                                                            hintText:
+                                                                "Customer IVRS",
+                                                            labelText:
+                                                                "Customer IVRS  ",
+                                                            fillColor:
+                                                                textFiledBackgroundColour,
+                                                            filled: true,
+                                                            border:
+                                                                OutlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color:
+                                                                      kPrimaryColor,
+                                                                  width: 1.0),
+                                                              borderRadius:
+                                                                  BorderRadius.all(
+                                                                      Radius.circular(
+                                                                          10.0)),
+                                                            )),
+                                                    onChanged: (text) async {
+                                                      print(
+                                                          'TextField value: $text (${text.length})');
+                                                      if (text.length == 11) {
+                                                        // Make API Call to validate PAN card
+                                                        await getIvrsNumberExist(
+                                                          context,
+                                                          productProvider,
+                                                          _customerIvrsCl,
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                ],
                                               ),
-                                            ),
-                                            SizedBox(height: 8),
-                                            DropdownButtonFormField2<
-                                                ElectricityServiceProviderListResModel>(
-                                              isExpanded: true,
-                                              decoration: InputDecoration(
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 16),
-                                                fillColor:
-                                                    textFiledBackgroundColour,
-                                                filled: true,
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  borderSide: const BorderSide(
-                                                      color: kPrimaryColor,
-                                                      width: 1),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  borderSide: const BorderSide(
-                                                      color: kPrimaryColor,
-                                                      width: 1),
-                                                ),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  borderSide: BorderSide(
-                                                      color: kPrimaryColor,
-                                                      width: 1),
+                                              SizedBox(height: 15),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 4.0),
+                                                child: Text(
+                                                  "Select Service Provider",
+                                                  style: TextStyle(
+                                                      color: Colors.grey),
                                                 ),
                                               ),
-                                              hint: const Text(
-                                                'Select service provider',
-                                                style: TextStyle(
-                                                  color: blueColor,
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w500,
+                                              SizedBox(height: 8),
+                                              DropdownButtonFormField2<
+                                                  ElectricityServiceProviderListResModel>(
+                                                isExpanded: true,
+                                                decoration: InputDecoration(
+                                                  contentPadding:
+                                                      const EdgeInsets.symmetric(
+                                                          vertical: 16),
+                                                  fillColor:
+                                                      textFiledBackgroundColour,
+                                                  filled: true,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(10),
+                                                    borderSide: const BorderSide(
+                                                        color: kPrimaryColor,
+                                                        width: 1),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(10),
+                                                    borderSide: const BorderSide(
+                                                        color: kPrimaryColor,
+                                                        width: 1),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(10),
+                                                    borderSide: BorderSide(
+                                                        color: kPrimaryColor,
+                                                        width: 1),
+                                                  ),
                                                 ),
-                                              ),
-                                              items:
-                                                  getDropDownOptionServiceList(
-                                                      selectServiceProviderList),
-                                              onChanged:
-                                                  (ElectricityServiceProviderListResModel?
-                                                      value) async {
-                                                setState(() {
-                                                  selectServiceProviderValue =
-                                                      value!.serviceProvider;
-                                                   selectServiceProviderCode = value!.code;
-                                                   selectedStateValue=value.state.toString();
-                                                });
-
-                                                await getKarzaElectricityState(
-                                                    context,
-                                                    productProvider);
-                                                setState(() {});
-                                              },
-                                              buttonStyleData:
-                                                  const ButtonStyleData(
-                                                padding:
-                                                    EdgeInsets.only(right: 8),
-                                              ),
-                                              dropdownStyleData:
-                                                  const DropdownStyleData(
-                                                maxHeight: 200,
-                                              ),
-                                              menuItemStyleData:
-                                                  MenuItemStyleData(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8.0),
-                                                customHeights:
-                                                    _getCustomItemsHeightsService(
+                                                hint: const Text(
+                                                  'Select service provider',
+                                                  style: TextStyle(
+                                                    color: blueColor,
+                                                    fontSize: 14.0,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                items:
+                                                    getDropDownOptionServiceList(
                                                         selectServiceProviderList),
-                                              ),
-                                              iconStyleData:
-                                                  const IconStyleData(
-                                                openMenuIcon:
-                                                    Icon(Icons.arrow_drop_up),
-                                              ),
-                                            ),
-                                            SizedBox(height: 15),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4.0),
-                                              child: Text(
-                                                "Select District",
-                                                style: TextStyle(
-                                                    color: Colors.grey),
-                                              ),
-                                            ),
-                                            SizedBox(height: 8),
-                                            DropdownButtonFormField2<
-                                                ElectricityStateResModel>(
-                                              isExpanded: true,
-                                              decoration: InputDecoration(
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 16),
-                                                fillColor:
-                                                    textFiledBackgroundColour,
-                                                filled: true,
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  borderSide: const BorderSide(
-                                                      color: kPrimaryColor,
-                                                      width: 1),
+                                                onChanged:
+                                                    (ElectricityServiceProviderListResModel?
+                                                        value) async {
+                                                  setState(() {
+                                                    selectServiceProviderValue =
+                                                        value!.serviceProvider;
+                                                     selectServiceProviderCode = value!.code;
+                                                     selectedStateValue=value.state.toString();
+                                                  });
+
+                                                  await getKarzaElectricityState(
+                                                      context,
+                                                      productProvider);
+                                                  setState(() {});
+                                                },
+                                                buttonStyleData:
+                                                    const ButtonStyleData(
+                                                  padding:
+                                                      EdgeInsets.only(right: 8),
                                                 ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  borderSide: const BorderSide(
-                                                      color: kPrimaryColor,
-                                                      width: 1),
+                                                dropdownStyleData:
+                                                    const DropdownStyleData(
+                                                  maxHeight: 200,
                                                 ),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  borderSide: BorderSide(
-                                                      color: kPrimaryColor,
-                                                      width: 1),
+                                                menuItemStyleData:
+                                                    MenuItemStyleData(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                          horizontal: 8.0),
+                                                  customHeights:
+                                                      _getCustomItemsHeightsService(
+                                                          selectServiceProviderList),
+                                                ),
+                                                iconStyleData:
+                                                    const IconStyleData(
+                                                  openMenuIcon:
+                                                      Icon(Icons.arrow_drop_up),
                                                 ),
                                               ),
-                                              hint: const Text(
-                                                'Select service provider',
-                                                style: TextStyle(
-                                                  color: blueColor,
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w500,
+                                              SizedBox(height: 15),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 4.0),
+                                                child: Text(
+                                                  "Select District",
+                                                  style: TextStyle(
+                                                      color: Colors.grey),
                                                 ),
                                               ),
-                                              items: getDropDownOptionStateList(
-                                                  selectDistrictList),
-                                              onChanged:
-                                                  (ElectricityStateResModel?
-                                                      value) async {
-                                                setState(() {
-                                                  selectDistrictValue = value!.districtName;
-                                                });
-                                                await getKarzaElectricityAuthentication(
-                                                    context,
-                                                    productProvider,
-                                                    selectDistrictValue.toString());
-                                                setState(() {});
-                                              },
-                                              buttonStyleData:
-                                                  const ButtonStyleData(
-                                                padding:
-                                                    EdgeInsets.only(right: 8),
+                                              SizedBox(height: 8),
+                                              DropdownButtonFormField2<
+                                                  ElectricityStateResModel>(
+                                                isExpanded: true,
+                                                decoration: InputDecoration(
+                                                  contentPadding:
+                                                      const EdgeInsets.symmetric(
+                                                          vertical: 16),
+                                                  fillColor:
+                                                      textFiledBackgroundColour,
+                                                  filled: true,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(10),
+                                                    borderSide: const BorderSide(
+                                                        color: kPrimaryColor,
+                                                        width: 1),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(10),
+                                                    borderSide: const BorderSide(
+                                                        color: kPrimaryColor,
+                                                        width: 1),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(10),
+                                                    borderSide: BorderSide(
+                                                        color: kPrimaryColor,
+                                                        width: 1),
+                                                  ),
+                                                ),
+                                                hint: const Text(
+                                                  'Select service provider',
+                                                  style: TextStyle(
+                                                    color: blueColor,
+                                                    fontSize: 14.0,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                items: getDropDownOptionStateList(
+                                                    selectDistrictList),
+                                                onChanged:
+                                                    (ElectricityStateResModel?
+                                                        value) async {
+                                                  setState(() {
+                                                    selectDistrictValue = value!.districtName;
+                                                  });
+                                                  await getKarzaElectricityAuthentication(
+                                                      context,
+                                                      productProvider,
+                                                      selectDistrictValue.toString());
+                                                  setState(() {});
+                                                },
+                                                buttonStyleData:
+                                                    const ButtonStyleData(
+                                                  padding:
+                                                      EdgeInsets.only(right: 8),
+                                                ),
+                                                dropdownStyleData:
+                                                    const DropdownStyleData(
+                                                  maxHeight: 200,
+                                                ),
+                                                menuItemStyleData:
+                                                    MenuItemStyleData(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                          horizontal: 8.0),
+                                                  customHeights:
+                                                      _getCustomItemsHeightsState(
+                                                          selectDistrictList),
+                                                ),
+                                                iconStyleData:
+                                                    const IconStyleData(
+                                                  openMenuIcon:
+                                                      Icon(Icons.arrow_drop_up),
+                                                ),
                                               ),
-                                              dropdownStyleData:
-                                                  const DropdownStyleData(
-                                                maxHeight: 200,
+                                              SizedBox(height: 15),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 4.0),
+                                                child: Text(
+                                                  "Name (As per IVRS No.)",
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 15),
+                                                ),
                                               ),
-                                              menuItemStyleData:
-                                                  MenuItemStyleData(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8.0),
-                                                customHeights:
-                                                    _getCustomItemsHeightsState(
-                                                        selectDistrictList),
+                                              SizedBox(height: 8),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 4.0),
+                                                child: Text(
+                                                  "$customerName",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 15),
+                                                ),
                                               ),
-                                              iconStyleData:
-                                                  const IconStyleData(
-                                                openMenuIcon:
-                                                    Icon(Icons.arrow_drop_up),
+                                              SizedBox(height: 15),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 4.0),
+                                                child: Text(
+                                                  "Address : $customerAddress",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 15),
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(height: 15),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4.0),
-                                              child: Text(
-                                                "Name (As per IVRS No.)",
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 15),
-                                              ),
-                                            ),
-                                            SizedBox(height: 8),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4.0),
-                                              child: Text(
-                                                "$customerName",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 15),
-                                              ),
-                                            ),
-                                            SizedBox(height: 15),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4.0),
-                                              child: Text(
-                                                "Address : $customerAddress",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 15),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      : selectOwnershipProofValue ==
-                                              "Electricity Manual Bill Upload"
-                                          ? Stack(
-                                              children: [
-                                                Container(
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        border: Border.all(
-                                                            color: Color(
-                                                                0xff0196CE))),
-                                                    width: double.infinity,
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        bottomSheetMenu(
-                                                            context);
-                                                      },
-                                                      child: Container(
-                                                        height: 148,
-                                                        width: double.infinity,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color:
-                                                              Color(0xffEFFAFF),
+                                            ],
+                                          )
+                                        : selectOwnershipProofValue ==
+                                                "Electricity Manual Bill Upload"
+                                            ? Stack(
+                                                children: [
+                                                  Container(
+                                                      decoration: BoxDecoration(
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(10),
-                                                        ),
-                                                        child: (widget.image
-                                                                .isNotEmpty)
-                                                            ? ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8.0),
-                                                                child: Image
-                                                                    .network(
-                                                                  widget.image,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  width: double
-                                                                      .infinity,
-                                                                  height: 148,
-                                                                ),
-                                                              )
-                                                            : (widget.image
-                                                                    .isNotEmpty)
-                                                                ? ClipRRect(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            8.0),
-                                                                    child: Image
-                                                                        .network(
-                                                                      widget
-                                                                          .image,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      width: double
-                                                                          .infinity,
-                                                                      height:
-                                                                          148,
-                                                                    ),
-                                                                  )
-                                                                : Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .center,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .center,
-                                                                    children: [
-                                                                      SvgPicture
-                                                                          .asset(
-                                                                              'assets/images/gallery.svg'),
-                                                                      const Text(
-                                                                        'Upload Electry City Bill Image',
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Color(0xff0196CE),
-                                                                            fontSize: 12),
-                                                                      ),
-                                                                      const Text(
-                                                                          'Supports : JPEG, PNG',
-                                                                          style: TextStyle(
-                                                                              fontSize: 12,
-                                                                              color: Color(0xffCACACA))),
-                                                                    ],
+                                                          border: Border.all(
+                                                              color: Color(
+                                                                  0xff0196CE))),
+                                                      width: double.infinity,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          bottomSheetMenu(
+                                                              context);
+                                                        },
+                                                        child: Container(
+                                                          height: 148,
+                                                          width: double.infinity,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color:
+                                                                Color(0xffEFFAFF),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(10),
+                                                          ),
+                                                          child: (widget.image
+                                                                  .isNotEmpty)
+                                                              ? ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8.0),
+                                                                  child: Image
+                                                                      .network(
+                                                                    widget.image,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    width: double
+                                                                        .infinity,
+                                                                    height: 148,
                                                                   ),
-                                                      ),
-                                                    )),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      isImageDelete = true;
-                                                      widget.image = "";
-                                                    });
-                                                  },
-                                                  child: widget.image.isNotEmpty
-                                                      ? Container(
-                                                          padding:
-                                                              EdgeInsets.all(4),
-                                                          alignment: Alignment
-                                                              .topRight,
-                                                          child: SvgPicture.asset(
-                                                              'assets/icons/delete_icon.svg'),
-                                                        )
-                                                      : Container(),
-                                                )
-                                              ],
-                                            )
-                                          : Container(),
-                                ],
-                              ),
-                        const SizedBox(height: 50),
-                        CommonElevatedButton(
-                          onPressed: () async {
-                            ValidationResult result =
-                                await validateData(context, productProvider);
-                            PersonalDetailsRequestModel postData =
-                                result.postData;
-                            bool isValid = result.isValid;
-                            if (isValid) {
-                              submitPersonalInformationApi(
-                                  context, productProvider, postData);
-                            } else {
-                              print("unValid");
-                            }
-                          },
-                          text: "NEXT",
-                          upperCase: true,
-                        ),
-                      ],
+                                                                )
+                                                              : (widget.image
+                                                                      .isNotEmpty)
+                                                                  ? ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              8.0),
+                                                                      child: Image
+                                                                          .network(
+                                                                        widget
+                                                                            .image,
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                        width: double
+                                                                            .infinity,
+                                                                        height:
+                                                                            148,
+                                                                      ),
+                                                                    )
+                                                                  : Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        SvgPicture
+                                                                            .asset(
+                                                                                'assets/images/gallery.svg'),
+                                                                        const Text(
+                                                                          'Upload Electry City Bill Image',
+                                                                          style: TextStyle(
+                                                                              color:
+                                                                                  Color(0xff0196CE),
+                                                                              fontSize: 12),
+                                                                        ),
+                                                                        const Text(
+                                                                            'Supports : JPEG, PNG',
+                                                                            style: TextStyle(
+                                                                                fontSize: 12,
+                                                                                color: Color(0xffCACACA))),
+                                                                      ],
+                                                                    ),
+                                                        ),
+                                                      )),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        isImageDelete = true;
+                                                        widget.image = "";
+                                                      });
+                                                    },
+                                                    child: widget.image.isNotEmpty
+                                                        ? Container(
+                                                            padding:
+                                                                EdgeInsets.all(4),
+                                                            alignment: Alignment
+                                                                .topRight,
+                                                            child: SvgPicture.asset(
+                                                                'assets/icons/delete_icon.svg'),
+                                                          )
+                                                        : Container(),
+                                                  )
+                                                ],
+                                              )
+                                            : Container(),
+                                  ],
+                                ),
+                          const SizedBox(height: 50),
+                          CommonElevatedButton(
+                            onPressed: () async {
+                              ValidationResult result =
+                                  await validateData(context, productProvider);
+                              PersonalDetailsRequestModel postData =
+                                  result.postData;
+                              bool isValid = result.isValid;
+                              if (isValid) {
+                                submitPersonalInformationApi(
+                                    context, productProvider, postData);
+                              } else {
+                                print("unValid");
+                              }
+                            },
+                            text: "NEXT",
+                            upperCase: true,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ));
-          }
-        }),
+                  ],
+                ),
+              ));
+            }
+          }),
+        ),
       ),
     );
   }
@@ -2077,6 +2094,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     final String? userId = prefsUtil.getString(USER_ID);
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final int? companyId = prefsUtil.getInt(COMPANY_ID);
+    final String? mobileNo = prefsUtil.getString(LOGIN_MOBILE_NUMBER);
 
     var currentStateId = "";
     var currentCityId = "";
@@ -2099,8 +2117,6 @@ class _PersonalInformationState extends State<PersonalInformation> {
       billDocId =
           productProvider.getpostElectricityBillDocumentSingleFileData!.docId!;
     }
-
-    {}
 
     PersonalDetailsRequestModel postData = PersonalDetailsRequestModel(
         firstName: _firstNameCl.text.toString(),
@@ -2126,8 +2142,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
         subActivityId: widget.subActivityId!,
         middleName: _middleNameCl.text.toString(),
         companyId: companyId,
-        mobileNo: personalDetailsResponce!.mobileNo ??
-            _alternatePhoneNumberCl.text.toString(),
+        mobileNo: personalDetailsResponce!.mobileNo ?? mobileNo,
         ownershipType: selectedOwnershipTypeValue,
         ownershipTypeAddress: "",
         ownershipTypeProof: selectOwnershipProofValue,
@@ -2181,6 +2196,16 @@ class _PersonalInformationState extends State<PersonalInformation> {
         isValid = false;
       } else if (electricityState.isEmpty) {
         errorMessage = "Electricity State should not be empty";
+        isValid = false;
+      } else {
+        isValid = true;
+      }
+    } else if (selectOwnershipProofValue == "Electricity Manual Bill Upload") {
+      if (billDocId == null) {
+        errorMessage = "Please Add Bill Document";
+        isValid = false;
+      } else if (billDocId == 0) {
+        errorMessage = "Please Add Bill Document";
         isValid = false;
       } else {
         isValid = true;
