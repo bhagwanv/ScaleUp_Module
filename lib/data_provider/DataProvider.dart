@@ -533,7 +533,7 @@ class DataProvider extends ChangeNotifier {
       CustomerTransactionListRequestModel customerTransactionListRequestModel) async {
     _getCustomerTransactionListData =
     await apiService.getCustomerTransactionList(customerTransactionListRequestModel);
-
+    notifyListeners();
   }
 
   Future<void> getCustomerOrderSummaryForAnchor(int leadId) async {
@@ -545,7 +545,7 @@ class DataProvider extends ChangeNotifier {
       CustomerTransactionListTwoReqModel customerTransactionListTwoReqModel) async {
     _getCustomerTransactionListTwoData =
     await apiService.getCustomerTransactionListTwo(customerTransactionListTwoReqModel);
-
+    notifyListeners();
   }
 
   Future<void> disposegetCustomerOrderSummaryData() async {
@@ -588,19 +588,25 @@ class DataProvider extends ChangeNotifier {
   Future<void> getKarzaElectricityServiceProviderList() async {
     _getElectricityServiceProviderListData =
     await apiService.getKarzaElectricityServiceProviderList();
-
+    notifyListeners();
   }
 
   Future<void> getKarzaElectricityState(String state) async {
     _getElectricityStateListData =
     (await apiService.getKarzaElectricityState(state)) ;
-
+    notifyListeners();
   }
 
   Future<void> getKarzaElectricityAuthentication(ElectricityAuthenticationReqModel electricityAuthenticationReqModel) async {
     _getElectricityAuthenticationData = await apiService.getKarzaElectricityAuthentication(electricityAuthenticationReqModel) ;
-
+    notifyListeners();
   }
+
+  Future<void> disposegetElectricityStateListData() async {
+    _getElectricityStateListData = null;
+    notifyListeners();
+  }
+
 
 }
 

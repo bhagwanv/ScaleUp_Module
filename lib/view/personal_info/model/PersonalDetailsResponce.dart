@@ -35,7 +35,11 @@ class PersonalDetailsResponce {
       this.ownershipTypeName, 
       this.ownershipTypeAddress, 
       this.ownershipTypeResponseId, 
-      this.manulaElectrictyBillImage,});
+      this.manulaElectrictyBillImage,
+      this.electricityServiceProvider,
+      this.electricityState,
+
+  });
 
   PersonalDetailsResponce.fromJson(dynamic json) {
     leadMasterId = json['leadMasterId'];
@@ -74,6 +78,8 @@ class PersonalDetailsResponce {
     ownershipTypeAddress = json['ownershipTypeAddress'];
     ownershipTypeResponseId = json['ownershipTypeResponseId'];
     manulaElectrictyBillImage = json['manulaElectrictyBillImage'];
+    electricityServiceProvider = json['electricityServiceProvider'];
+    electricityState = json['electricityState'];
   }
   int? leadMasterId;
   String? firstName;
@@ -111,6 +117,10 @@ class PersonalDetailsResponce {
   dynamic ownershipTypeAddress;
   dynamic ownershipTypeResponseId;
   String? manulaElectrictyBillImage;
+  String? electricityServiceProvider;
+  String? electricityState;
+
+
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -150,6 +160,8 @@ class PersonalDetailsResponce {
     map['ownershipTypeAddress'] = ownershipTypeAddress;
     map['ownershipTypeResponseId'] = ownershipTypeResponseId;
     map['manulaElectrictyBillImage'] = manulaElectrictyBillImage;
+    map['electricityServiceProvider'] = electricityServiceProvider;
+    map['electricityState'] = electricityState;
     return map;
   }
 
