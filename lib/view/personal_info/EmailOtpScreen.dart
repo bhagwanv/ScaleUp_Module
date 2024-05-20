@@ -198,11 +198,16 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                     height: 20,
                   ),
                   Center(
-                    child: Text(
-                      'Back',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 15, color: Colors.blue),
-                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text(
+                        'Back',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(fontSize: 15, color: Colors.blue),
+                      ),
+                    )
                   ),
                   const SizedBox(
                     height: 20,

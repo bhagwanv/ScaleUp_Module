@@ -87,14 +87,14 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    MyApp.platform.setMethodCallHandler((MethodCall call) async {
+   /* MyApp.platform.setMethodCallHandler((MethodCall call) async {
       if (call.method == "logout") {
         return doSomething();
       }else{
         MyApp.platform.setMethodCallHandler(_receiveFromHost);
       }
       return null;
-    });
+    });*/
 
 
     return MaterialApp(
@@ -134,6 +134,8 @@ class _MyAppState extends State<MyApp> {
       if (call.method == "ScaleUP") {
         final String data = call.arguments;
         jData = await jsonDecode(data);
+      } else if(call.method == "logout"){
+        doSomething();
       }
     } on PlatformException catch (error) {
       print(error);
@@ -148,6 +150,7 @@ class _MyAppState extends State<MyApp> {
         transactionId = jData['transactionId'] ?? jData['transactionId'];
       });
 
+      print("Mobile Number"+mobileNumber);
     }
   }
 }
