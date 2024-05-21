@@ -827,6 +827,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     data = await ApiService().emailExist(userId!, emailID) as EmailExistRespoce;
     if (data.isSuccess!) {
       Utils.showToast(data.message!, context);
+      Navigator.of(context, rootNavigator: true).pop();
     } else {
       callSendOptEmail(context, _emailIDCl.text);
     }
