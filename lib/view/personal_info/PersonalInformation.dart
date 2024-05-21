@@ -141,6 +141,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   var ivrsNumber = "";
   var electricityServiceProvider = "";
   var electricityState = "";
+  var isCustomerName = false;
 
   @override
   void initState() {
@@ -2083,6 +2084,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           if (data.result!.consumerName != null) {
             customerName = data.result!.consumerName!;
 
+            isCustomerName=true;
             if (data.result!.consumerName != null) {
               customerAddress = data.result!.consumerName!;
             }
@@ -2247,6 +2249,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                 ivrsNumber = "";
                                 electricityServiceProvider = "";
                                 electricityState = "";
+                                isCustomerName=false;
                               });
                               getKarzaElectricityState(context, productProvider);
                             },
@@ -2318,6 +2321,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             onChanged: (ElectricityStateResModel? value) {
                               setState(() {
                                 selectDistrictValue = value;
+                                customerName = "";
+                                customerAddress = "";
+                                consumerNumber = "";
+                                ivrsNumber = "";
+                                isCustomerName=false;
                               });
                               getKarzaElectricityAuthentication(
                                   context,
@@ -2345,30 +2353,36 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     : Container(),
               ],
             ),
-            SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.only(left: 4.0),
-              child: Text(
-                "Name (As per IVRS No.)",
-                style: TextStyle(color: Colors.grey, fontSize: 15),
-              ),
-            ),
-            SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.only(left: 4.0),
-              child: Text(
-                "$customerName",
-                style: TextStyle(color: Colors.black, fontSize: 15),
-              ),
-            ),
-            SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.only(left: 4.0),
-              child: Text(
-                "Address : $customerAddress",
-                style: TextStyle(color: Colors.black, fontSize: 15),
-              ),
-            ),
+            isCustomerName?
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    "Name (As per IVRS No.)",
+                    style: TextStyle(color: Colors.grey, fontSize: 15),
+                  ),
+                ),
+                SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    "$customerName",
+                    style: TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                ),
+                SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    "Address : $customerAddress",
+                    style: TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                ),
+              ],
+            ):Container(),
           ],
         ),
       ],
