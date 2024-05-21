@@ -188,7 +188,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                             'Enter\nConfirmation Code',
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
-                                                fontSize: 35,
+                                                fontSize: 25,
                                                 color: Colors.black),
                                           ),
                                           const SizedBox(

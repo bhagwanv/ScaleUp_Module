@@ -791,7 +791,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           subActivityId: widget.subActivityId,
           accountNumber: _bankAccountNumberCl.text,
           accountHolderName: _accountHolderController.text,
-          DocumentId: document);
+          DocumentId: document,SurrogateType: "Banking");
 
       Utils.onLoading(context, "");
       await Provider.of<DataProvider>(context, listen: false)

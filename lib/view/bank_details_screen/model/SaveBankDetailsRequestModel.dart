@@ -9,7 +9,9 @@ class SaveBankDetailsRequestModel {
       this.subActivityId, 
       this.accountNumber, 
       this.accountHolderName,
-      this.DocumentId,});
+      this.DocumentId,
+      this.SurrogateType
+  });
 
   SaveBankDetailsRequestModel.fromJson(dynamic json) {
     accountType = json['AccountType'];
@@ -22,6 +24,7 @@ class SaveBankDetailsRequestModel {
     accountNumber = json['AccountNumber'];
     accountHolderName = json['AccountHolderName'];
     DocumentId = json['DocumentId'];
+    SurrogateType = json['SurrogateType'];
   }
   String? accountType;
   String? bankName;
@@ -33,6 +36,7 @@ class SaveBankDetailsRequestModel {
   String? accountNumber;
   String? accountHolderName;
   String? DocumentId;
+  String? SurrogateType;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -46,6 +50,7 @@ class SaveBankDetailsRequestModel {
     map['AccountNumber'] = accountNumber;
     map['AccountHolderName'] = accountHolderName;
     map['DocumentId'] = DocumentId;
+    map['SurrogateType'] = SurrogateType;
     return map;
   }
 
