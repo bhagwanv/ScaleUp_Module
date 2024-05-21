@@ -602,11 +602,5 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> disposegetElectricityStateListData() async {
-    _getElectricityStateListData = null;
-    notifyListeners();
-  }
-
-
 }
 
