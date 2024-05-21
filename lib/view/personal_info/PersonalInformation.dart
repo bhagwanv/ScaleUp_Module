@@ -60,9 +60,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
   final TextEditingController _alternatePhoneNumberCl = TextEditingController();
   final TextEditingController _countryCl = TextEditingController();
   final TextEditingController _customerIvrsCl = TextEditingController();
+  final TextEditingController _electryCityServiceCl = TextEditingController();
+  final TextEditingController _electryDistrictCl = TextEditingController();
   String? selectedGenderValue;
   String? selectedMaritalStatusValue;
-  var isVerifyIVRSNumber = false;
   final List<String> genderList = [
     'Male',
     'Female',
@@ -138,10 +139,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
   var customerName = "";
   var customerAddress = "";
   var consumerNumber = "";
-  var ivrsNumber = "";
   var electricityServiceProvider = "";
   var electricityState = "";
   var isCustomerName = false;
+  var isOwnerShipProofEditable = false;
 
   @override
   void initState() {
@@ -267,11 +268,15 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         if (personalDetailsResponce!.ownershipTypeProof !=
                             null) {
                           if (personalDetailsResponce!
-                              .ownershipTypeProof!.isNotEmpty) {
+                                  .ownershipTypeProof!.isNotEmpty &&
+                              !isOwnerShipProofEditable) {
                             if (personalDetailsResponce!.ownershipTypeProof ==
                                 "Electricity Manual Bill Upload") {
                               selectOwnershipProofValue =
                                   "Electricity Manual Bill Upload";
+                            } else {
+                              selectOwnershipProofValue =
+                                  "Digital Bill Verification";
                             }
                           }
                         }
@@ -335,17 +340,26 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         }
 
                         //set Digital veryFication Ivrs number
-                        if (personalDetailsResponce!.ivrsNumber != null) {
+                        if (personalDetailsResponce!.ivrsNumber != null &&
+                            !isOwnerShipProofEditable) {
                           consumerNumber = personalDetailsResponce!.ivrsNumber;
+                          _customerIvrsCl.text =
+                              personalDetailsResponce!.ivrsNumber;
                         }
                         if (personalDetailsResponce!
-                                .electricityServiceProvider !=
-                            null) {
+                                    .electricityServiceProvider !=
+                                null &&
+                            !isOwnerShipProofEditable) {
                           electricityServiceProvider = personalDetailsResponce!
                               .electricityServiceProvider!;
+                          _electryCityServiceCl.text = personalDetailsResponce!
+                              .electricityServiceProvider!;
                         }
-                        if (personalDetailsResponce!.electricityState != null) {
+                        if (personalDetailsResponce!.electricityState != null &&
+                            !isOwnerShipProofEditable) {
                           electricityState =
+                              personalDetailsResponce!.electricityState!;
+                          _electryDistrictCl.text =
                               personalDetailsResponce!.electricityState!;
                         }
                       } else {
@@ -529,12 +543,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                       onChanged: (String? value) async {
                                         setState(() {
                                           selectOwnershipProofValue = value;
+                                          isOwnerShipProofEditable = true;
                                           if (selectOwnershipProofValue ==
                                               "Digital Bill Verification") {
                                             customerName = "";
                                             customerAddress = "";
-                                            consumerNumber = "";
-                                            ivrsNumber = "";
                                             electricityServiceProvider = "";
                                             _customerIvrsCl.text = "";
                                             electricityState = "";
@@ -688,6 +701,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               PersonalDetailsRequestModel postData =
                                   result.postData;
                               bool isValid = result.isValid;
+                              print("wqwwewew" + postData.toJson().toString());
                               if (isValid) {
                                 submitPersonalInformationApi(
                                     context, productProvider, postData);
@@ -716,7 +730,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
       DataProvider productProvider,
       PersonalDetailsRequestModel postData) async {
     Utils.onLoading(context, "");
-    await productProvider.postLeadPersonalDetail(postData);
+    await productProvider.postLeadPersonalDetail(postData, context);
     if (productProvider.getPostPersonalDetailsResponseModel?.statusCode !=
         401) {
       if (productProvider.getPostPersonalDetailsResponseModel != null) {
@@ -1874,20 +1888,32 @@ class _PersonalInformationState extends State<PersonalInformation> {
         subActivityId: widget.subActivityId!,
         middleName: _middleNameCl.text.toString(),
         companyId: companyId,
-        mobileNo: personalDetailsResponce!.mobileNo ?? mobileNo,
+        mobileNo: mobileNo,
         ownershipType: selectedOwnershipTypeValue,
         ownershipTypeAddress: "",
-        ownershipTypeProof: selectOwnershipProofValue,
-        electricityBillDocumentId: billDocId,
         ownershipTypeName: "",
         ownershipTypeResponseId: "",
         gender: _genderCl.text.toString(),
         marital: selectedMaritalStatusValue,
         resAddress1: _currentAddressLineOneCl.text.toString(),
         resAddress2: _currentAddressLineTwoCl.text.toString(),
-        ivrsNumber: consumerNumber,
-        electricityServiceProvider: electricityServiceProvider,
-        electricityState: electricityState);
+        ownershipTypeProof: selectOwnershipProofValue,
+        electricityBillDocumentId:
+            selectOwnershipProofValue == "Electricity Manual Bill Upload"
+                ? billDocId
+                : null,
+        ivrsNumber:
+            selectOwnershipProofValue != "Electricity Manual Bill Upload"
+                ? _customerIvrsCl.text.toString()
+                : null,
+        electricityServiceProvider:
+            selectOwnershipProofValue != "Electricity Manual Bill Upload"
+                ? electricityServiceProvider
+                : null,
+        electricityState:
+            selectOwnershipProofValue != "Electricity Manual Bill Upload"
+                ? electricityState
+                : null);
 
     bool isValid = false;
     String errorMessage = "";
@@ -1920,14 +1946,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
       errorMessage = "Verify Email ";
       isValid = false;
     } else if (selectOwnershipProofValue == "Digital Bill Verification") {
-      if (consumerNumber.isEmpty) {
+      if (_customerIvrsCl.text.isEmpty) {
         errorMessage = "ivrsNumber should not be empty";
         isValid = false;
       } else if (electricityServiceProvider.isEmpty) {
         errorMessage = "Electricity Service Provider should not be empty";
         isValid = false;
       } else if (electricityState.isEmpty) {
-        errorMessage = "Electricity State should not be empty";
+        errorMessage = "Please Select Correct Service Provider";
         isValid = false;
       } else {
         isValid = true;
@@ -1989,7 +2015,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
       productProvider.getIvrsData!.when(
         success: (data) async {
           // Handle successful response
-
+          consumerNumber = _customerIvrsCl.text.toString();
           if (data.result!) {
             Utils.showToast("Data Already Exists", context);
           } else {
@@ -2084,7 +2110,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           if (data.result!.consumerName != null) {
             customerName = data.result!.consumerName!;
 
-            isCustomerName=true;
+            isCustomerName = true;
             if (data.result!.consumerName != null) {
               customerAddress = data.result!.consumerName!;
             }
@@ -2092,6 +2118,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
               consumerNumber = data.result!.consumerNumber!;
             }
           } else {
+            electricityState = "";
+            selectDistrictValue = null;
             Utils.showToast("Service Provider Incorrect", context);
           }
         },
@@ -2126,8 +2154,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   controller: _customerIvrsCl,
-                  textCapitalization:
-                  TextCapitalization.characters,
+                  textCapitalization: TextCapitalization.characters,
                   maxLines: 1,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
@@ -2145,7 +2172,6 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       labelText: "Customer IVRS  ",
                       fillColor: textFiledBackgroundColour,
                       filled: true,
-
                       border: OutlineInputBorder(
                         borderSide:
                             BorderSide(color: kPrimaryColor, width: 1.0),
@@ -2160,229 +2186,296 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         selectServiceProviderList.clear();
                       });
 
-                       getIvrsNumberExist(
+                      getIvrsNumberExist(
                         context,
                         productProvider,
                         _customerIvrsCl,
                       );
-                    }else{
+                    } else {
                       setState(() {
                         selectServiceProviderValue = null;
                         selectServiceProviderList.clear();
                         selectDistrictList.clear();
-                        selectDistrictValue=null;
-                         customerName = "";
-                         customerAddress = "";
-                         consumerNumber = "";
-                         ivrsNumber = "";
-                         electricityServiceProvider = "";
-                         electricityState = "";
+                        selectDistrictValue = null;
+                        customerName = "";
+                        customerAddress = "";
+                        consumerNumber = "";
+                        electricityServiceProvider = "";
+                        electricityState = "";
                       });
-
                     }
                   },
                 ),
               ],
             ),
-
             SizedBox(height: 8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                selectServiceProviderList.isNotEmpty
-                    ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 15),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4.0),
-                          child: Text(
-                            "Select Service Provider",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        DropdownButtonFormField2<
-                            ElectricityServiceProviderListResModel>(
-                            isExpanded: true,
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.symmetric(vertical: 16),
-                              fillColor: textFiledBackgroundColour,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(
-                                    color: kPrimaryColor, width: 1),
+                 isOwnerShipProofEditable
+                    ? selectServiceProviderList.isNotEmpty
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 15),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4.0),
+                                child: Text(
+                                  "Select Service Provider",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
                               ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(
-                                    color: kPrimaryColor, width: 1),
+                              SizedBox(height: 8),
+                              DropdownButtonFormField2<
+                                  ElectricityServiceProviderListResModel>(
+                                isExpanded: true,
+                                decoration: InputDecoration(
+                                  contentPadding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  fillColor: textFiledBackgroundColour,
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: const BorderSide(
+                                        color: kPrimaryColor, width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: const BorderSide(
+                                        color: kPrimaryColor, width: 1),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: BorderSide(
+                                        color: kPrimaryColor, width: 1),
+                                  ),
+                                ),
+                                hint: const Text(
+                                  'Select service provider',
+                                  style: TextStyle(
+                                    color: blueColor,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                items: getDropDownOptionServiceList(
+                                    selectServiceProviderList),
+                                onChanged:
+                                    (ElectricityServiceProviderListResModel?
+                                        value) {
+                                  setState(() {
+                                    selectServiceProviderValue = value;
+                                    selectServiceProviderCode = value!.code;
+                                    selectedStateValue = value.state.toString();
+                                    selectDistrictList.clear();
+                                    electricityServiceProvider =
+                                        value!.serviceProvider!.toString();
+                                    customerName = "";
+                                    customerAddress = "";
+                                    consumerNumber = "";
+                                    isCustomerName = false;
+                                  });
+                                  getKarzaElectricityState(
+                                      context, productProvider);
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.only(right: 8),
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: MenuItemStyleData(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  customHeights: _getCustomItemsHeightsService(
+                                      selectServiceProviderList),
+                                ),
+                                iconStyleData: const IconStyleData(
+                                  openMenuIcon: Icon(Icons.arrow_drop_up),
+                                ),
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    BorderSide(color: kPrimaryColor, width: 1),
-                              ),
-                            ),
-                            hint: const Text(
-                              'Select service provider',
-                              style: TextStyle(
-                                color: blueColor,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            items: getDropDownOptionServiceList(
-                                selectServiceProviderList),
-                            onChanged:
-                                (ElectricityServiceProviderListResModel? value) {
-                              setState(() {
-                                selectServiceProviderValue = value;
-                                selectServiceProviderCode = value!.code;
-                                selectedStateValue = value.state.toString();
-                                selectDistrictList.clear();
-                                customerName = "";
-                                customerAddress = "";
-                                consumerNumber = "";
-                                ivrsNumber = "";
-                                electricityServiceProvider = "";
-                                electricityState = "";
-                                isCustomerName=false;
-                              });
-                              getKarzaElectricityState(context, productProvider);
-                            },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.only(right: 8),
-                            ),
-                            dropdownStyleData: const DropdownStyleData(
-                              maxHeight: 200,
-                            ),
-                            menuItemStyleData: MenuItemStyleData(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              customHeights: _getCustomItemsHeightsService(
-                                  selectServiceProviderList),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              openMenuIcon: Icon(Icons.arrow_drop_up),
-                            ),
-                          ),
-                      ],
-                    )
-                    : Container(),
-
-                selectDistrictList.isNotEmpty
-                    ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                            ],
+                          )
+                        : Container()
+                    : Column(
                         children: [
                           const SizedBox(height: 15),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4.0),
-                            child: Text(
-                              "Select District",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          DropdownButtonFormField2<ElectricityStateResModel>(
-                            isExpanded: true,
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.symmetric(vertical: 16),
-                              fillColor: textFiledBackgroundColour,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(
-                                    color: kPrimaryColor, width: 1),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: const BorderSide(
-                                    color: kPrimaryColor, width: 1),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    BorderSide(color: kPrimaryColor, width: 1),
-                              ),
-                            ),
-                            hint: const Text(
-                              'Select District',
-                              style: TextStyle(
-                                color: blueColor,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            items:
-                                getDropDownOptionDisticList(selectDistrictList),
-                            onChanged: (ElectricityStateResModel? value) {
-                              setState(() {
-                                selectDistrictValue = value;
-                                customerName = "";
-                                customerAddress = "";
-                                consumerNumber = "";
-                                ivrsNumber = "";
-                                isCustomerName=false;
-                              });
-                              getKarzaElectricityAuthentication(
-                                  context,
-                                  productProvider,
-                                  selectDistrictValue!.districtName.toString());
-                            },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.only(right: 8),
-                            ),
-                            dropdownStyleData: const DropdownStyleData(
-                              maxHeight: 200,
-                            ),
-                            menuItemStyleData: MenuItemStyleData(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              customHeights: _getCustomItemsHeightsDistic(
-                                  selectDistrictList),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              openMenuIcon: Icon(Icons.arrow_drop_up),
-                            ),
+                          TextField(
+                            enabled: false,
+                            controller: _electryCityServiceCl,
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.next,
+                            maxLines: 1,
+                            cursorColor: Colors.black,
+                            decoration: const InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: kPrimaryColor,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
+                                ),
+                                hintText: "Select Service Provider",
+                                labelText: "Service Provider",
+                                fillColor: textFiledBackgroundColour,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: kPrimaryColor, width: 1.0),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
+                                )),
                           ),
                         ],
-                      )
-                    : Container(),
+                      ),
+                isOwnerShipProofEditable
+                    ? selectDistrictList.isNotEmpty
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 15),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4.0),
+                                child: Text(
+                                  "Select District",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              DropdownButtonFormField2<
+                                  ElectricityStateResModel>(
+                                // value: selectDistrictValue != null ? selectDistrictValue : null,
+                                isExpanded: true,
+                                decoration: InputDecoration(
+                                  contentPadding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  fillColor: textFiledBackgroundColour,
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: const BorderSide(
+                                        color: kPrimaryColor, width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: const BorderSide(
+                                        color: kPrimaryColor, width: 1),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: BorderSide(
+                                        color: kPrimaryColor, width: 1),
+                                  ),
+                                ),
+                                hint: const Text(
+                                  'Select District',
+                                  style: TextStyle(
+                                    color: blueColor,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                items: getDropDownOptionDisticList(
+                                    selectDistrictList),
+                                onChanged: (ElectricityStateResModel? value) {
+                                  setState(() {
+                                    selectDistrictValue = value;
+                                    customerName = "";
+                                    customerAddress = "";
+                                    consumerNumber = "";
+                                    electricityState =
+                                        value!.districtName!.toString();
+                                    isCustomerName = false;
+                                  });
+                                  getKarzaElectricityAuthentication(
+                                      context,
+                                      productProvider,
+                                      selectDistrictValue!.districtName
+                                          .toString());
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.only(right: 8),
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: MenuItemStyleData(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  customHeights: _getCustomItemsHeightsDistic(
+                                      selectDistrictList),
+                                ),
+                                iconStyleData: const IconStyleData(
+                                  openMenuIcon: Icon(Icons.arrow_drop_up),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Container()
+                    : Column(
+                        children: [
+                          SizedBox(height: 20),
+                          TextField(
+                            enabled: false,
+                            controller: _electryDistrictCl,
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.next,
+                            maxLines: 1,
+                            cursorColor: Colors.black,
+                            decoration: const InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: kPrimaryColor,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
+                                ),
+                                hintText: "Select District",
+                                labelText: "Select District",
+                                fillColor: textFiledBackgroundColour,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: kPrimaryColor, width: 1.0),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
+                                )),
+                          ),
+                        ],
+                      ),
               ],
             ),
-            isCustomerName?
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 15),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: Text(
-                    "Name (As per IVRS No.)",
-                    style: TextStyle(color: Colors.grey, fontSize: 15),
-                  ),
-                ),
-                SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: Text(
-                    "$customerName",
-                    style: TextStyle(color: Colors.black, fontSize: 15),
-                  ),
-                ),
-                SizedBox(height: 15),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: Text(
-                    "Address : $customerAddress",
-                    style: TextStyle(color: Colors.black, fontSize: 15),
-                  ),
-                ),
-              ],
-            ):Container(),
+            isCustomerName
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 15),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(
+                          "Name (As per IVRS No.)",
+                          style: TextStyle(color: Colors.grey, fontSize: 15),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(
+                          "$customerName",
+                          style: TextStyle(color: Colors.black, fontSize: 15),
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(
+                          "Address : $customerAddress",
+                          style: TextStyle(color: Colors.black, fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  )
+                : Container(),
           ],
         ),
       ],

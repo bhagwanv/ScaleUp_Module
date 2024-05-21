@@ -84,16 +84,16 @@ class ApiService {
 
   Future<void> handle401(BuildContext context, String pageType) async {
     final prefsUtil = await SharedPref.getInstance();
-    prefsUtil.clear();
-    /*Navigator.of(context).pushReplacement(
+    prefsUtil.saveBool(IS_LOGGED_IN, false);
+    Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SplashScreen(
-            mobileNumber: mobileNumber,
-            companyID: company,
-            productID: product
+            mobileNumber: prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
+            companyID: prefsUtil.getInt(COMPANY_ID)!.toString(),
+            productID: prefsUtil.getInt(PRODUCT_ID)!.toString()
         ),
       ),
-    );*/
+    );
   }
 
   Future<ProductCompanyDetailResponseModel> productCompanyDetail(String product,
@@ -615,7 +615,7 @@ class ApiService {
   }
 
   Future<PostPersonalDetailsResponseModel> postLeadPersonalDetail(
-      PersonalDetailsRequestModel personalDetailsRequestModel) async {
+      PersonalDetailsRequestModel personalDetailsRequestModel, BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var token = prefsUtil.getString(TOKEN);
@@ -635,7 +635,9 @@ class ApiService {
         return responseModel;
       }
       if (response.statusCode == 401) {
-        return PostPersonalDetailsResponseModel(statusCode: 401);
+        // Handle 401 unauthorized error
+        await handle401(context, "pushReplacement");
+        throw Exception('Failed to load products');
       } else {
         throw Exception('Failed to load products');
       }
