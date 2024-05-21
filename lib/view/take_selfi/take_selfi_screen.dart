@@ -104,9 +104,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                   success: (LeadSelfieResponseModel) async {
                     leadSelfieResponseModel = LeadSelfieResponseModel;
                     if (leadSelfieResponseModel != null) {
-                      if (leadSelfieResponseModel!.frontImageUrl != null &&
-                          leadSelfieResponseModel!.frontDocumentId != null &&
-                          !isSelfieDelete) {
+                      if (leadSelfieResponseModel!.frontImageUrl != null && leadSelfieResponseModel!.frontDocumentId != null && !isSelfieDelete) {
                         selfieImage = leadSelfieResponseModel!.frontImageUrl!;
                         frontDocumentId =
                             leadSelfieResponseModel!.frontDocumentId!;

@@ -15,12 +15,6 @@ import 'package:timer_count_down/timer_count_down.dart';
 import '../../api/ApiService.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../utils/constants.dart';
-import '../../utils/customer_sequence_logic.dart';
-import '../../utils/loader.dart';
-import '../otp_screens/model/VarifayOtpRequest.dart';
-import '../splash_screen/model/GetLeadResponseModel.dart';
-import '../splash_screen/model/LeadCurrentRequestModel.dart';
-import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'model/OTPValidateForEmailRequest.dart';
 import 'model/SendOtpOnEmailResponce.dart';
 
