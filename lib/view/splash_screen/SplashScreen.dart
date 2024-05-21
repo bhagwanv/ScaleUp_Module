@@ -116,7 +116,6 @@ class _SplashScreenState extends State<SplashScreen> {
       widget.isLoggedIn =  prefsUtil.getBool(IS_LOGGED_IN)!;
     }
     Provider.of<DataProvider>(context, listen: false).productCompanyDetail(product, company);
-
   }
 
   Future<LeadCurrentResponseModel?> SaveData(ProductCompanyDetailResponse response) async {

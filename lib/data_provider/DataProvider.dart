@@ -452,9 +452,9 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> postLeadPersonalDetail(
-      PersonalDetailsRequestModel personalDetailsRequestModel) async {
+      PersonalDetailsRequestModel personalDetailsRequestModel, BuildContext context) async {
     _getPostPersonalDetailsResponseModel =
-    await apiService.postLeadPersonalDetail(personalDetailsRequestModel);
+    await apiService.postLeadPersonalDetail(personalDetailsRequestModel, context);
 
   }
 
@@ -599,6 +599,13 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getKarzaElectricityAuthentication(ElectricityAuthenticationReqModel electricityAuthenticationReqModel) async {
     _getElectricityAuthenticationData = await apiService.getKarzaElectricityAuthentication(electricityAuthenticationReqModel) ;
+    notifyListeners();
+  }
+
+  Future<void> disposeAllProviderData() async {
+    _getCustomerOrderSummaryData = null;
+    _getCustomerTransactionListTwoData = null;
+    _getPersonalDetailsData = null;
     notifyListeners();
   }
 

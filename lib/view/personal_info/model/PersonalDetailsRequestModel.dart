@@ -153,7 +153,7 @@ class PersonalDetailsRequestModel {
     data['OwnershipTypeProof'] = this.ownershipTypeProof;
     data['ElectricityBillDocumentId'] = this.electricityBillDocumentId;
     data['OwnershipTypeName'] = this.ownershipTypeName;
-    data['OwnershipTypeResponseId'] = this.ivrsNumber;
+    data['OwnershipTypeResponseId'] = this.ownershipTypeResponseId;
     data['ivrsNumber'] = this.ivrsNumber;
     data['electricityServiceProvider'] = this.electricityServiceProvider;
     data['electricityState'] = this.electricityState;

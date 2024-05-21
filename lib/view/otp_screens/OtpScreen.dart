@@ -282,6 +282,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
           "Please enter the OTP we just sent you on your mobile number",
           VALIDACTION_IMAGE_PATH);
     } else {
+      productProvider.disposeAllProviderData();
       Utils.onLoading(context, "");
       final prefsUtil = await SharedPref.getInstance();
       await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(
@@ -298,7 +299,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
         CompanyCode: prefsUtil.getString(COMPANY_CODE),
       ));
       Navigator.of(context, rootNavigator: true).pop();
-
       if (productProvider.getVerifyData != null) {
         productProvider.getVerifyData!.when(
           success: (VerifyOtpResponce) async {
@@ -353,7 +353,6 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
           prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
-
       customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "pushReplacement");
     } catch (error) {
       Navigator.of(context, rootNavigator: true).pop();
