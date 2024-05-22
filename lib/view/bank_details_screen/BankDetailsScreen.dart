@@ -28,15 +28,19 @@ class BankDetailsScreen extends StatefulWidget {
   final int activityId;
   final int subActivityId;
 
-  BankDetailsScreen({super.key, required this.activityId, required this.subActivityId,});
+  BankDetailsScreen({
+    super.key,
+    required this.activityId,
+    required this.subActivityId,
+  });
 
   @override
   State<BankDetailsScreen> createState() => _BankDetailsScreenState();
 }
 
 class _BankDetailsScreenState extends State<BankDetailsScreen> {
-  final TextEditingController _accountHolderController =
-      TextEditingController();
+  final TextEditingController _accountHolderController = TextEditingController();
+  final TextEditingController _bankStatmentPassworedController = TextEditingController();
   final TextEditingController _bankNameController = TextEditingController();
   final TextEditingController _bankAccountNumberCl = TextEditingController();
   final TextEditingController _accountTypeCl = TextEditingController();
@@ -47,9 +51,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   List<LiveBankList?>? liveBankList = [];
   late String selectedAccountTypeValue = "";
   String? selectedBankValue;
-  BankDetailsResponceModel?
-  bankDetailsResponceModel = null;
-  List<int?>? documentList = [];
+  BankDetailsResponceModel? bankDetailsResponceModel = null;
+  List<String?>? documentList = [];
+  var isEditableStatement = false;
 
   @override
   void initState() {
@@ -155,7 +159,6 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             if (productProvider.getBankDetailsData == null && isLoading) {
               return Center(child: Loader());
             } else {
-
               if (productProvider.getBankDetailsData != null && isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
                 isLoading = false;
@@ -171,15 +174,22 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         if (bankDetailsResponceModel!.isSuccess!) {
                           _accountHolderController.text =
                               bankDetailsResponceModel!
-                                  .result!.accountHolderName!;
-                          _bankAccountNumberCl.text =
-                              bankDetailsResponceModel!.result!.accountNumber!;
+                                  .result!.leadBankDetailDTOs!.first.accountHolderName!;
+                          _bankAccountNumberCl.text = bankDetailsResponceModel!
+                              .result!.leadBankDetailDTOs!.first.accountNumber!;
                           _ifsccodeCl.text =
-                              bankDetailsResponceModel!.result!.ifscCode!;
+                              bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.ifscCode!;
                           _bankNameController.text =
-                              bankDetailsResponceModel!.result!.bankName!;
-                          _accountTypeCl.text =
-                              bankDetailsResponceModel!.result!.accountType!;
+                              bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName!;
+                          _accountTypeCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountType!;
+                          _bankStatmentPassworedController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.pdfPassword!;
+                          if(!isEditableStatement) {
+                            for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
+                              print("bankDocsDAta "+i.toString());
+                              documentList!.add(bankDetailsResponceModel!.result!.bankDocs![i].fileURL);
+                            }
+                            isEditableStatement = true;
+                          }
                         } else {
                           Utils.showToast(
                               bankDetailsResponceModel!.message!, context);
@@ -277,6 +287,15 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       SizedBox(
                         height: 16.0,
                       ),
+
+                      CommonTextField(
+                        controller: _bankStatmentPassworedController,
+                        hintText: "Bank Statement password(optional)",
+                        labelText: "Bank Statement password(optional)",
+                      ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
                       Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -284,8 +303,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         width: double.infinity,
                         child: GestureDetector(
                           onTap: () async {
-                            FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom,
-                              allowedExtensions: ['pdf']);
+                            isEditableStatement = true;
+                            FilePickerResult? result = await FilePicker.platform
+                                .pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: ['pdf']);
                             if (result != null) {
                               File file = File(result.files.single.path!);
                               print(file.path);
@@ -295,12 +317,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                       listen: false)
                                   .postBusineesDoumentSingleFile(
                                       file, true, "", "");
-                              if (productProvider
-                                      .getpostBusineesDoumentSingleFileData !=
-                                  null) {
-                                documentList!.add(productProvider
-                                    .getpostBusineesDoumentSingleFileData!
-                                    .docId);
+                              if (productProvider.getpostBusineesDoumentSingleFileData != null) {
+                                documentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
                               }
                               setState(() {
                                 Navigator.pop(context);
@@ -322,7 +340,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               children: [
                                 SvgPicture.asset('assets/images/gallery.svg'),
                                 const Text(
-                                  'Upload 6 months Bank Statement',
+                                  'Upload Bank Proof',
                                   style: TextStyle(
                                       color: Color(0xff0196CE), fontSize: 12),
                                 ),
@@ -330,10 +348,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: Color(0xffCACACA))),
-                                const Text('You Can Upload Multiple Files',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xffCACACA))),
+
                               ],
                             ),
                           ),
@@ -342,26 +357,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       SizedBox(
                         height: 16.0,
                       ),
+
                       documentList!.isNotEmpty
                           ?
-                          /*ListView.separated(
-                        shrinkWrap: true,
-                        itemCount: documentList!.length,
-                        separatorBuilder: (_, __) => const Divider(),
-                        itemBuilder: (context, int index) {
-                          return Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(child: Text("${documentList![index]! + 1}"),),
-                                Container(child: Icon(Icons.picture_as_pdf)),
-                                Container(child:SvgPicture.asset(
-                                    'assets/icons/delete_icon.svg'),),
-                              ],
-                            ),
-                          );
-                        },
-                      )*/
                           Column(
                               children:
                                   documentList!.asMap().entries.map((entry) {
@@ -387,6 +385,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                           InkWell(
                                             onTap: () {
                                               setState(() {
+                                                isEditableStatement = true;
                                                 documentList!.removeAt(index);
                                               });
                                             },
@@ -436,8 +435,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false).getBankDetails(leadId!,productCode!);
-
+    Provider.of<DataProvider>(context, listen: false).getBankDetails(leadId!, productCode!);
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false).getBankList();
     Navigator.of(context, rootNavigator: true).pop();
@@ -447,11 +445,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     var initialData;
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
-        if (bankDetailsResponceModel!.result!.bankName != null) {
+        if (bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName != null) {
           initialData = liveBankList!
               .where((element) =>
                   element?.bankName ==
-                  bankDetailsResponceModel!.result!.bankName!)
+                  bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName!)
               .toList();
           if (initialData.isNotEmpty) {
             selectedBankValue = initialData.first!.bankName!.toString();
@@ -463,7 +461,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         initialData = null;
       }
       return DropdownButtonFormField2<LiveBankList>(
-        value: initialData != null ? initialData.first : null,
+        value: initialData?.first,
         isExpanded: true,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -560,10 +558,10 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   Widget accountTypeWidget(DataProvider productProvider) {
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
-        if (bankDetailsResponceModel!.result!.accountType != null) {
+        if (bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountType != null) {
           List<String> initialData = accountTypeList
               .where((element) => element.contains(
-                  bankDetailsResponceModel!.result?.accountType ?? ''))
+                  bankDetailsResponceModel!.result?.leadBankDetailDTOs!.first.accountType ?? ''))
               .toList();
           if (initialData.isNotEmpty) {
             selectedAccountTypeValue = initialData.first;
@@ -760,7 +758,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   }
 
   Future<void> submitBankDetailsApi(BuildContext contextz,
-      DataProvider productProvider, List<int?> docList) async {
+      DataProvider productProvider, List<String?> docList) async {
     if (selectedBankValue == null) {
       Utils.showToast("Please Select Bank", context);
     } else if (selectedBankValue!.isEmpty) {
@@ -780,23 +778,35 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       final prefsUtil = await SharedPref.getInstance();
       final int? leadID = prefsUtil.getInt(LEADE_ID);
 
-      String document = docList.join(",");
-      var postData = SaveBankDetailsRequestModel(
-          accountType: selectedAccountTypeValue,
-          bankName: selectedBankValue,
-          iFSCCode: _ifsccodeCl.text,
+      List<LeadBankDetailDTOs> leadBankDetailsList = [];
+      List<BankDocs> bankDocList = [];
+
+      leadBankDetailsList.add(
+        LeadBankDetailDTOs(
           leadId: leadID!,
-          eNach: "BankDetail",
+          Type: "borrower",
+          bankName: selectedBankValue,
+          ifscCode: _ifsccodeCl.text,
+          accountType: selectedAccountTypeValue,
           activityId: widget.activityId,
           subActivityId: widget.subActivityId,
           accountNumber: _bankAccountNumberCl.text,
           accountHolderName: _accountHolderController.text,
-          DocumentId: document,SurrogateType: "Banking");
+          pdfPassword: _bankStatmentPassworedController.text,
+          surrogateType: "Banking",
+        ),
+      );
 
-      Utils.onLoading(context, "");
-      await Provider.of<DataProvider>(context, listen: false)
-          .saveLeadBankDetail(postData);
-      Navigator.of(context, rootNavigator: true).pop();
+      for (int i = 0; i < docList.length; i++) {
+        bankDocList.add(BankDocs(documentType: "id_proof",documentName: "bank_statement",fileURL: docList[i],sequence: i,pdfPassword: _bankStatmentPassworedController.text,documentNumber: _bankAccountNumberCl.text));
+      }
+
+      var postData = SaveBankDetailsRequestModel(leadBankDetailDTOs: leadBankDetailsList, isScaleUp: true,bankDocs: bankDocList);
+
+      print("Save Data"+postData.toJson().toString());
+     /* Utils.onLoading(context, "");
+      await Provider.of<DataProvider>(context, listen: false).saveLeadBankDetail(postData);
+      Navigator.of(context, rootNavigator: true).pop();*/
 
       if (productProvider.getSaveLeadBankDetailData != null) {
         productProvider.getSaveLeadBankDetailData!.when(
@@ -845,7 +855,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
+      customerSequence(
+          context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');

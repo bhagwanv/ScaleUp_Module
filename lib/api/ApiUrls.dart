@@ -16,7 +16,7 @@ class ApiUrls{
   final String postLeadPAN="/services/lead/v1/PostLeadPAN";
   final String LeadMobileValidate="/aggregator/LeadAgg/LeadMobileValidate";
   final String bankListApi="/services/lead/v1/api/eNach/BankList";
-  final String GetLeadBankDetail="/services/lead/v1/api/LeadBankDetail/GetLeadBankDetail";
+  final String GetLeadBankDetail="/services/lead/v1/api/LeadBankDetail/GetBankDetail";
   final String GetAllState="/services/location/v1/State/GetAllState";
   final String GetCityByStateId="/services/location/v1/City/GetCityByStateId";
   final String getLeadSelfie="/aggregator/LeadAgg/GetLeadSelfie";

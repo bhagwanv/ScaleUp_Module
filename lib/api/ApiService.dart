@@ -831,7 +831,7 @@ class ApiService {
         final response = await interceptor.get(
           Uri.parse(
               '${apiUrls.baseUrl + apiUrls
-                  .GetLeadBankDetail}?LeadId=$leadID&productCode=$productCode'),
+                  .GetLeadBankDetail}?LeadId=$leadID'),
           headers: {
             'Content-Type': 'application/json', // Set the content type as JSON
           },
