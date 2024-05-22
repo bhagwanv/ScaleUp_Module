@@ -12,6 +12,7 @@ import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
 import 'package:scale_up_module/view/take_selfi/camera_page.dart';
 
 import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
 import '../../utils/Utils.dart';
@@ -112,7 +113,14 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                     }
                   },
                   failure: (exception) {
-                    print("Failure");
+                    if (exception is ApiException) {
+                      if(exception.statusCode==401){
+                        productProvider.disposeAllProviderData();
+                        ApiService().handle401(context);
+                      }else{
+                        Utils.showToast(exception.errorMessage,context);
+                      }
+                    }
                   },
                 );
                 if (productProvider.getPostSelfieImageSingleFileData != null) {
@@ -302,14 +310,14 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
           }
         },
         failure: (exception) {
-          Navigator.pushAndRemoveUntil<dynamic>(
-            context,
-            MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) =>
-                  LoginScreen(activityId: 1, subActivityId: 0),
-            ),
-            (route) => false, //if you want to disable back feature set to false
-          );
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
         },
       );
     }

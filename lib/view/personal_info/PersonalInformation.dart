@@ -383,7 +383,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       }
                     },
                     failure: (exception) {
-                      print("Failure");
+                      if (exception is ApiException) {
+                        if(exception.statusCode==401){
+                          productProvider.disposeAllProviderData();
+                          ApiService().handle401(context);
+                        }else{
+                          Utils.showToast(exception.errorMessage,context);
+                        }
+                      }
                     },
                   );
                 }
@@ -2028,8 +2035,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
           }
         },
         failure: (exception) {
-          // Handle failure
-          print("Failure");
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
         },
       );
     }
@@ -2051,8 +2064,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
           }
         },
         failure: (exception) {
-          // Handle failure
-          print("Failure");
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
         },
       );
     }
@@ -2079,8 +2098,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
           }
         },
         failure: (exception) {
-          // Handle failure
-          print("Failure");
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
         },
       );
     }
@@ -2125,8 +2150,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
           }
         },
         failure: (exception) {
-          // Handle failure
-          print("Failure");
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
         },
       );
     }

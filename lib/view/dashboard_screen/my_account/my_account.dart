@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
+import '../../../api/ApiService.dart';
+import '../../../api/FailureException.dart';
 import '../../../data_provider/DataProvider.dart';
 import '../../../shared_preferences/SharedPref.dart';
 import '../../../utils/Utils.dart';
@@ -136,9 +138,14 @@ class _MyAccountState extends State<MyAccount> {
                 }
               },
               failure: (exception) {
-                // Handle failure
-                print("dfjsf2");
-                //print('Failure! Error: ${exception.message}');
+                if (exception is ApiException) {
+                  if(exception.statusCode==401){
+                    productProvider.disposeAllProviderData();
+                    ApiService().handle401(context);
+                  }else{
+                    Utils.showToast(exception.errorMessage,context);
+                  }
+                }
               },
             );
           }
@@ -155,9 +162,14 @@ class _MyAccountState extends State<MyAccount> {
                 }
               },
               failure: (exception) {
-                // Handle failure
-                print("dfjsf2");
-                //print('Failure! Error: ${exception.message}');
+                if (exception is ApiException) {
+                  if(exception.statusCode==401){
+                    productProvider.disposeAllProviderData();
+                    ApiService().handle401(context);
+                  }else{
+                    Utils.showToast(exception.errorMessage,context);
+                  }
+                }
               },
             );
           }
@@ -711,9 +723,14 @@ class _MyAccountState extends State<MyAccount> {
           }
         },
         failure: (exception) {
-          // Handle failure
-          print("dfjsf2");
-          //print('Failure! Error: ${exception.message}');
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
         },
       );
     }

@@ -14,6 +14,7 @@ import 'package:scale_up_module/view/bank_details_screen/model/LiveBankList.dart
 import 'package:scale_up_module/view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
 
 import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/common_text_field.dart';
@@ -188,9 +189,14 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                     }
                   },
                   failure: (exception) {
-                    // Handle failure
-                    print("Failure");
-                    //print('Failure! Error: ${exception.message}');
+                    if (exception is ApiException) {
+                      if(exception.statusCode==401){
+                        productProvider.disposeAllProviderData();
+                        ApiService().handle401(context);
+                      }else{
+                        Utils.showToast(exception.errorMessage,context);
+                      }
+                    }
                   },
                 );
               }
@@ -810,8 +816,14 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             }
           },
           failure: (exception) {
-            // Handle failure
-            print("Failure");
+            if (exception is ApiException) {
+              if(exception.statusCode==401){
+                productProvider.disposeAllProviderData();
+                ApiService().handle401(context);
+              }else{
+                Utils.showToast(exception.errorMessage,context);
+              }
+            }
           },
         );
       }

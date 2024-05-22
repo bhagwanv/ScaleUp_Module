@@ -11,6 +11,8 @@ import 'package:scale_up_module/view/checkoutView/CongratulationScreen.dart';
 import 'package:scale_up_module/view/dashboard_screen/bottom_navigation.dart';
 
 import '../../../utils/constants.dart';
+import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/loader.dart';
@@ -80,9 +82,14 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                     }
                   },
                   failure: (exception) {
-                    // Handle failure
-                    print("Failure");
-                    //print('Failure! Error: ${exception.message}');
+                    if (exception is ApiException) {
+                      if(exception.statusCode==401){
+                        productProvider.disposeAllProviderData();
+                        ApiService().handle401(context);
+                      }else{
+                        Utils.showToast(exception.errorMessage,context);
+                      }
+                    }
                   },
                 );
               }
@@ -821,8 +828,14 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
         }
       },
       failure: (exception) {
-        // Handle failure
-        print('Failure! Error: ${exception}');
+        if (exception is ApiException) {
+          if(exception.statusCode==401){
+            productProvider.disposeAllProviderData();
+            ApiService().handle401(context);
+          }else{
+            Utils.showToast(exception.errorMessage,context);
+          }
+        }
       },
     );
   }

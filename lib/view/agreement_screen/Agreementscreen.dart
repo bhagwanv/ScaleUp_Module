@@ -8,6 +8,7 @@ import 'package:scale_up_module/utils/Utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
 import '../../utils/common_elevted_button.dart';
@@ -73,7 +74,15 @@ class _AgreementScreenState extends State<AgreementScreen> {
                         }
                       },
                       failure: (exception) {
-                        print("Failure");
+                        if (exception is ApiException) {
+                          if(exception.statusCode==401){
+                            productProvider.disposeAllProviderData();
+                            ApiService().handle401(context);
+                          }else{
+                            Utils.showToast(exception.errorMessage,context);
+                          }
+                        }
+
                       },
                     );
                   }

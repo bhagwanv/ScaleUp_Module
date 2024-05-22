@@ -11,6 +11,7 @@ import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/utils/common_text_field.dart';
 
 import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
 import '../../utils/ImagePickerFile.dart';
@@ -1005,9 +1006,9 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                             Utils.showToast(
                                 "Please Select Incorporation Date", context);
                           } else {
-                            await postLeadBuisnessDetail(context);
+                            await postLeadBuisnessDetail(context,productProvider);
 
-                            if (productProvider.getPostLeadBuisnessDetailData !=
+                           /* if (productProvider.getPostLeadBuisnessDetailData !=
                                 null) {
                               if (productProvider
                                   .getPostLeadBuisnessDetailData!.isSuccess!) {
@@ -1018,7 +1019,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                         .getPostLeadBuisnessDetailData!.message!,
                                     context);
                               }
-                            }
+                            }*/
                           }
                         },
                         text: 'Next',
@@ -1276,7 +1277,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     Navigator.of(context, rootNavigator: true).pop();
   }
 
-  Future<void> postLeadBuisnessDetail(BuildContext context) async {
+  Future<void> postLeadBuisnessDetail(BuildContext context, DataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     Utils.onLoading(context, "");
 
@@ -1305,6 +1306,35 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
+
+    if (productProvider.getPostLeadBuisnessDetailData != null) {
+      productProvider.getPostLeadBuisnessDetailData!.when(
+        success: (data) {
+          // Handle successful response
+          if (data.isSuccess != null) {
+            if (data.isSuccess!) {
+              fetchData(context);
+            } else {
+              Utils.showToast(
+                  data.message!,
+                  context);
+            }
+          }
+        },
+        failure: (exception) {
+          // Handle failure
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
+        },
+      );
+    }
+
   }
 
   void bottomSheetMenu(BuildContext context) {

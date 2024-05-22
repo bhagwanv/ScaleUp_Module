@@ -200,8 +200,8 @@ class DataProvider extends ChangeNotifier {
   CustomerDetailUsingGstResponseModel? _getCustomerDetailUsingGSTData;
   CustomerDetailUsingGstResponseModel? get getCustomerDetailUsingGSTData => _getCustomerDetailUsingGSTData;
 
-  PostLeadBuisnessDetailResponsModel? _getPostLeadBuisnessDetailData;
-  PostLeadBuisnessDetailResponsModel? get getPostLeadBuisnessDetailData => _getPostLeadBuisnessDetailData;
+  Result<PostLeadBuisnessDetailResponsModel,Exception>? _getPostLeadBuisnessDetailData;
+  Result<PostLeadBuisnessDetailResponsModel,Exception>? get getPostLeadBuisnessDetailData => _getPostLeadBuisnessDetailData;
 
 
   Result<OfferResponceModel,Exception>? _getOfferResponceata;
