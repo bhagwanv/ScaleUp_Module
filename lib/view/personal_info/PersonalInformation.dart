@@ -143,6 +143,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
   var electricityState = "";
   var isCustomerName = false;
   var isOwnerShipProofEditable = false;
+  var isElectriCityDistrictEdit = false;
+  var isElectriCityServiceEdit = false;
 
   @override
   void initState() {
@@ -345,22 +347,33 @@ class _PersonalInformationState extends State<PersonalInformation> {
                           consumerNumber = personalDetailsResponce!.ivrsNumber;
                           _customerIvrsCl.text =
                               personalDetailsResponce!.ivrsNumber;
-                        }
-                        if (personalDetailsResponce!
-                                    .electricityServiceProvider !=
-                                null &&
-                            !isOwnerShipProofEditable) {
-                          electricityServiceProvider = personalDetailsResponce!
-                              .electricityServiceProvider!;
-                          _electryCityServiceCl.text = personalDetailsResponce!
-                              .electricityServiceProvider!;
-                        }
-                        if (personalDetailsResponce!.electricityState != null &&
-                            !isOwnerShipProofEditable) {
-                          electricityState =
-                              personalDetailsResponce!.electricityState!;
-                          _electryDistrictCl.text =
-                              personalDetailsResponce!.electricityState!;
+                          if (personalDetailsResponce!
+                                      .electricityServiceProvider !=
+                                  null &&
+                              !isOwnerShipProofEditable) {
+                            electricityServiceProvider =
+                                personalDetailsResponce!
+                                    .electricityServiceProvider!;
+                            _electryCityServiceCl.text =
+                                personalDetailsResponce!
+                                    .electricityServiceProvider!;
+                            isElectriCityServiceEdit = false;
+                          }
+                          if (personalDetailsResponce!.electricityState !=
+                                  null &&
+                              !isOwnerShipProofEditable) {
+                            electricityState =
+                                personalDetailsResponce!.electricityState!;
+                            _electryDistrictCl.text =
+                                personalDetailsResponce!.electricityState!;
+                            isElectriCityDistrictEdit = false;
+                          }
+                          isOwnerShipProofEditable = true;
+                          getIvrsNumberExist(
+                            context,
+                            productProvider,
+                            _customerIvrsCl,
+                          );
                         }
                       } else {
                         if (!isEmailClear && !isValidEmail) {
@@ -1947,7 +1960,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
       errorMessage = "Verify Email ";
       isValid = false;
     } else if (selectOwnershipProofValue == "Digital Bill Verification") {
-      if (_customerIvrsCl.text.isEmpty) {
+      if (_customerIvrsCl.text.length < 10) {
         errorMessage = "ivrsNumber should not be empty";
         isValid = false;
       } else if (electricityServiceProvider.isEmpty) {
@@ -2049,6 +2062,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
           if (data.isNotEmpty) {
             selectServiceProviderList.addAll(data!);
           }
+
+          selectServiceProviderList.forEach((var data) {
+            if (_electryCityServiceCl.text.isNotEmpty) {
+              if (_electryCityServiceCl.text == data.serviceProvider) {
+                selectedStateValue = data.state;
+              }
+            }
+          });
         },
         failure: (exception) {
           // Handle failure
@@ -2159,7 +2180,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   maxLines: 1,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp((r'[A-Z0-9]'))),
-                    LengthLimitingTextInputFormatter(15)
+                    LengthLimitingTextInputFormatter(11)
                   ],
                   cursorColor: Colors.black,
                   decoration: const InputDecoration(
@@ -2180,7 +2201,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       )),
                   onChanged: (text) async {
                     print('TextField value: $text (${text.length})');
-                    if (text.length == 11) {
+                    isOwnerShipProofEditable = true;
+                    if (text.length >= 10) {
                       // Make API Call to validate PAN card
                       setState(() {
                         selectServiceProviderValue = null;
@@ -2213,7 +2235,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 isOwnerShipProofEditable
+                isOwnerShipProofEditable && isElectriCityServiceEdit
                     ? selectServiceProviderList.isNotEmpty
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2302,7 +2324,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         children: [
                           const SizedBox(height: 15),
                           TextField(
-                            enabled: false,
+                            showCursor: false,
+                            readOnly: true,
+                            enabled: true,
                             controller: _electryCityServiceCl,
                             keyboardType: TextInputType.number,
                             textInputAction: TextInputAction.next,
@@ -2326,10 +2350,18 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10.0)),
                                 )),
+                            onTap: () {
+                              setState(() {
+                                isOwnerShipProofEditable = true;
+                                isElectriCityServiceEdit = true;
+                                isElectriCityDistrictEdit = true;
+                                selectDistrictList.clear();
+                              });
+                            },
                           ),
                         ],
                       ),
-                isOwnerShipProofEditable
+                isOwnerShipProofEditable && isElectriCityDistrictEdit
                     ? selectDistrictList.isNotEmpty
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2417,7 +2449,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         children: [
                           SizedBox(height: 20),
                           TextField(
-                            enabled: false,
+                            showCursor: false,
+                            readOnly: true,
+                            enabled: true,
                             controller: _electryDistrictCl,
                             keyboardType: TextInputType.number,
                             textInputAction: TextInputAction.next,
@@ -2441,6 +2475,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10.0)),
                                 )),
+                            onTap: () {
+                              setState(() {
+                                isOwnerShipProofEditable = true;
+                                isElectriCityDistrictEdit = true;
+                                getKarzaElectricityState(
+                                    context, productProvider);
+                              });
+                            },
                           ),
                         ],
                       ),
