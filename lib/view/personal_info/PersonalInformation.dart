@@ -566,6 +566,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                             electricityState = "";
                                             selectDistrictList.clear();
                                             selectServiceProviderList.clear();
+                                            isElectriCityDistrictEdit = true;
+                                            isElectriCityServiceEdit = true;
                                           }
                                         });
                                       },
@@ -2202,6 +2204,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   onChanged: (text) async {
                     print('TextField value: $text (${text.length})');
                     isOwnerShipProofEditable = true;
+                    isElectriCityDistrictEdit = true;
+                    isElectriCityServiceEdit = true;
                     if (text.length >= 10) {
                       // Make API Call to validate PAN card
                       setState(() {
