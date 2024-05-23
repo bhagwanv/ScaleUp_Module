@@ -804,9 +804,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       var postData = SaveBankDetailsRequestModel(leadBankDetailDTOs: leadBankDetailsList, isScaleUp: true,bankDocs: bankDocList);
 
       print("Save Data"+postData.toJson().toString());
-     /* Utils.onLoading(context, "");
+      Utils.onLoading(context, "");
       await Provider.of<DataProvider>(context, listen: false).saveLeadBankDetail(postData);
-      Navigator.of(context, rootNavigator: true).pop();*/
+      Navigator.of(context, rootNavigator: true).pop();
 
       if (productProvider.getSaveLeadBankDetailData != null) {
         productProvider.getSaveLeadBankDetailData!.when(
