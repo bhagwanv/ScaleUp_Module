@@ -148,6 +148,7 @@ class _LoginFormState extends State<LoginForm> {
                             await prefsUtil.saveString(LOGIN_MOBILE_NUMBER, _mobileNumberCl.text.toString());
                             await prefsUtil.saveInt(COMPANY_ID, widget.companyID!);
                             await prefsUtil.saveInt(PRODUCT_ID, widget.ProductID!);
+                            widget.productProvider!.disposeAllProviderData();
                             Navigator.push(
                               context,
                               MaterialPageRoute(

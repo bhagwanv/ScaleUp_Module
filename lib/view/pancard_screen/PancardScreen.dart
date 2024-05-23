@@ -68,7 +68,7 @@ class _PancardScreenState extends State<PancardScreen> {
   void initState() {
     super.initState();
     //Api Call
-    LeadPANApi(context);
+    leadPANApi(context);
   }
 
   // Callback function to receive the selected image
@@ -621,9 +621,9 @@ class _PancardScreenState extends State<PancardScreen> {
     );
   }
 
-  Future<void> LeadPANApi(BuildContext context) async {
+  Future<void> leadPANApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    final String? userId = prefsUtil.getString(USER_ID);
+    String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
     Provider.of<DataProvider>(context, listen: false).getLeadPAN(userId!,productCode!);
