@@ -99,8 +99,11 @@ class ApiService {
   Future<ProductCompanyDetailResponseModel> productCompanyDetail(String product,
       String company) async {
     if (await internetConnectivity.networkConnectivity()) {
+      final prefsUtil = await SharedPref.getInstance();
+     // var base_url = await prefsUtil.getString(BASE_URL);
+      var base_url = apiUrls.baseUrl;
       final response = await interceptor.get(Uri.parse(
-          '${apiUrls.baseUrl + apiUrls
+          '${base_url! + apiUrls
               .productCompanyDetail}?product=$product&company=$company'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
