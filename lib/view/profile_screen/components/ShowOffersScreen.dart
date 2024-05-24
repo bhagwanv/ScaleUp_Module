@@ -13,6 +13,7 @@ import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.da
 import 'package:scale_up_module/view/splash_screen/model/LeadCurrentRequestModel.dart';
 import 'package:scale_up_module/view/splash_screen/model/LeadCurrentResponseModel.dart';
 import '../../../api/ApiService.dart';
+import '../../../api/FailureException.dart';
 import '../../../data_provider/DataProvider.dart';
 import '../../../shared_preferences/SharedPref.dart';
 import '../../../utils/Utils.dart';
@@ -77,7 +78,14 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
           await getCheckStatus(context,productProvider);
         },
         failure: (exception) {
-          print("Failure");
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
         },
       );
     }
@@ -221,7 +229,14 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
           }
         },
         failure: (exception) {
-          print("Failure!");
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
 
 
         },
@@ -307,7 +322,14 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
                         offerResponceModel = OfferResponceModel;
                       },
                       failure: (exception) {
-                        print("Failure");
+                        if (exception is ApiException) {
+                          if(exception.statusCode==401){
+                            productProvider.disposeAllProviderData();
+                            ApiService().handle401(context);
+                          }else{
+                            Utils.showToast(exception.errorMessage,context);
+                          }
+                        }
                       },
                     );
                   }

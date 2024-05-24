@@ -9,6 +9,7 @@ import 'package:scale_up_module/view/take_selfi/take_selfi_screen.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
 import '../../utils/Utils.dart';
@@ -256,14 +257,14 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
             }
           },
           failure: (exception) {
-            Navigator.pushAndRemoveUntil<dynamic>(
-              context,
-              MaterialPageRoute<dynamic>(
-                builder: (BuildContext context) =>
-                    LoginScreen(activityId: 1, subActivityId: 0),
-              ),
-                  (route) => false, //if you want to disable back feature set to false
-            );
+            if (exception is ApiException) {
+              if(exception.statusCode==401){
+                productProvider.disposeAllProviderData();
+                ApiService().handle401(context);
+              }else{
+                Utils.showToast(exception.errorMessage,context);
+              }
+            }
           },
         );
       }
@@ -333,14 +334,14 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
           }
         },
         failure: (exception) {
-          Navigator.pushAndRemoveUntil<dynamic>(
-            context,
-            MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) =>
-                  LoginScreen(activityId: 1, subActivityId: 0),
-            ),
-                (route) => false, //if you want to disable back feature set to false
-          );
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
         },
       );
     }

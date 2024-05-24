@@ -82,7 +82,7 @@ class ApiService {
   final interceptor = Interceptor();
   final internetConnectivity = InternetConnectivity();
 
-  Future<void> handle401(BuildContext context, String pageType) async {
+  Future<void> handle401(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     prefsUtil.saveBool(IS_LOGGED_IN, false);
     Navigator.of(context).pushReplacement(
@@ -186,7 +186,7 @@ class ApiService {
 
           case 401:
             // Handle 401 unauthorized error
-            await handle401(context, "pushReplacement");
+            await handle401(context);
             return Failure(ApiException(response.statusCode, "Unauthorized"));
           default:
             // 3. return Failure with the desired exception
@@ -659,7 +659,7 @@ class ApiService {
       }
       if (response.statusCode == 401) {
         // Handle 401 unauthorized error
-        await handle401(context, "pushReplacement");
+        await handle401(context);
         throw Exception('Failed to load products');
       } else {
         throw Exception('Failed to load products');

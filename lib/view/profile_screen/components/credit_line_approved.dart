@@ -11,6 +11,7 @@ import 'package:scale_up_module/view/profile_screen/model/DisbursementResponce.d
 import 'package:scale_up_module/view/profile_screen/model/OfferPersonNameResponceModel.dart';
 import 'package:scale_up_module/view/profile_screen/model/OfferResponceModel.dart';
 
+import '../../../api/FailureException.dart';
 import '../../../data_provider/DataProvider.dart';
 import '../../../utils/common_elevted_button.dart';
 import '../../../utils/constants.dart';
@@ -108,9 +109,14 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                   disbursementResponce = DisbursementResponce;
                 },
                 failure: (exception) {
-                  // Handle failure
-                  print("Failure");
-                  //print('Failure! Error: ${exception.message}');
+                  if (exception is ApiException) {
+                    if(exception.statusCode==401){
+                      productProvider.disposeAllProviderData();
+                      ApiService().handle401(context);
+                    }else{
+                      Utils.showToast(exception.errorMessage,context);
+                    }
+                  }
                 },
               );
             }
@@ -121,9 +127,14 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                   offerResponceModel = OfferResponceModel;
                 },
                 failure: (exception) {
-                  // Handle failure
-                  print("Failure");
-                  //print('Failure! Error: ${exception.message}');
+                  if (exception is ApiException) {
+                    if(exception.statusCode==401){
+                      productProvider.disposeAllProviderData();
+                      ApiService().handle401(context);
+                    }else{
+                      Utils.showToast(exception.errorMessage,context);
+                    }
+                  }
                 },
               );
             }
@@ -135,7 +146,14 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
                 offerPersonNameResponceModel = OfferPersonNameResponceModel;
               },
               failure: (exception) {
-                print("Failure");
+                if (exception is ApiException) {
+                  if(exception.statusCode==401){
+                    productProvider.disposeAllProviderData();
+                    ApiService().handle401(context);
+                  }else{
+                    Utils.showToast(exception.errorMessage,context);
+                  }
+                }
               },
             );
           }
@@ -478,9 +496,14 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
           }
         },
         failure: (exception) {
-          // Handle failure
-          print("Failure!");
-          //print('Failure! Error: ${exception.message}');
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
         },
       );
     }

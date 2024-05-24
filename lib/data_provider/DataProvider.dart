@@ -200,8 +200,8 @@ class DataProvider extends ChangeNotifier {
   CustomerDetailUsingGstResponseModel? _getCustomerDetailUsingGSTData;
   CustomerDetailUsingGstResponseModel? get getCustomerDetailUsingGSTData => _getCustomerDetailUsingGSTData;
 
-  PostLeadBuisnessDetailResponsModel? _getPostLeadBuisnessDetailData;
-  PostLeadBuisnessDetailResponsModel? get getPostLeadBuisnessDetailData => _getPostLeadBuisnessDetailData;
+  Result<PostLeadBuisnessDetailResponsModel,Exception>? _getPostLeadBuisnessDetailData;
+  Result<PostLeadBuisnessDetailResponsModel,Exception>? get getPostLeadBuisnessDetailData => _getPostLeadBuisnessDetailData;
 
 
   Result<OfferResponceModel,Exception>? _getOfferResponceata;
@@ -605,7 +605,54 @@ class DataProvider extends ChangeNotifier {
   Future<void> disposeAllProviderData() async {
     _getCustomerOrderSummaryData = null;
     _getCustomerTransactionListTwoData = null;
+    _ProductCompanyDetailResponseModel = null;
+    _genrateOptData = null;
+    _getLeadPANData = null;
+    _getLeadValidPanCardData = null;
+    _getFathersNameByValidPanCardData = null;
+    _getPostLeadPanData = null;
+    _getLeadAadhaar = null;
+    _getValidateAadhaarOTPData = null;
+    _getLeadAadharGenerateOTP = null;
+    _getLeadSelfieData = null;
+    _getPostLeadSelfieData = null;
     _getPersonalDetailsData = null;
+    _getDisbursementProposalData = null;
+    _getDisbursementData = null;
+    _getVerifyData = null;
+    _getBankListData = null;
+    _getBankDetailsData = null;
+    _getAllStateData = null;
+    _getAllCityData = null;
+    _getCurrentAllCityData = null;
+    _getEmailExistData = null;
+    _getOtpOnEmailData = null;
+    _getValidOtpEmailData = null;
+    _getPostPersonalDetailsResponseModel = null;
+    _getLeadBusinessDetailData = null;
+    _getCustomerDetailUsingGSTData = null;
+    _getPostLeadBuisnessDetailData = null;
+    _getOfferResponceata = null;
+    _getAcceptOfferData = null;
+    _getLeadNameData = null;
+    _getSaveLeadBankDetailData = null;
+    _genrateOptPaymentData = null;
+    _reSendOptPaymentData = null;
+    _getTranscationData = null;
+    _validOptPaymentData = null;
+    _postPaymentOrderData = null;
+    _getCustomerOrderSummaryData = null;
+    _getCustomerTransactionListData = null;
+    _getCustomerOrderSummaryForAnchorData = null;
+    _getCustomerTransactionListTwoData = null;
+    _getTransactionBreakupData = null;
+    _getCheckSignData = null;
+    _getNextCallData = null;
+    _getIvrsData = null;
+    _getElectricityServiceProviderListData = null;
+    _getElectricityStateListData = null;
+    _getElectricityAuthenticationData = null;
+    _InProgressScreen = null;
     notifyListeners();
   }
 
