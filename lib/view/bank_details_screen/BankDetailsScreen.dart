@@ -12,7 +12,6 @@ import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import 'package:scale_up_module/view/bank_details_screen/model/LiveBankList.dart';
 import 'package:scale_up_module/view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
-
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
@@ -98,7 +97,6 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       if (i.isEven) {
         itemsHeights.add(40);
       }
-      //Dividers indexes will be the odd indexes
       if (i.isOdd) {
         itemsHeights.add(4);
       }
@@ -120,8 +118,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     return itemsHeights;
   }
 
-  List<DropdownMenuItem<LiveBankList>> _addDividersAfterItems1(
-      List<LiveBankList?> items) {
+  List<DropdownMenuItem<LiveBankList>> _addDividersAfterItems1(List<LiveBankList?> items) {
     final List<DropdownMenuItem<LiveBankList>> menuItems = [];
     for (final LiveBankList? item in items) {
       menuItems.addAll(
@@ -763,8 +760,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     }
   }
 
-  Future<void> submitBankDetailsApi(BuildContext contextz,
-      DataProvider productProvider, List<String?> docList) async {
+  Future<void> submitBankDetailsApi(BuildContext contextz, DataProvider productProvider, List<String?> docList) async {
     if (selectedBankValue == null) {
       Utils.showToast("Please Select Bank", context);
     } else if (selectedBankValue!.isEmpty) {
@@ -867,8 +863,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(
-          context, getLeadData, leadCurrentActivityAsyncData, "push");
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');

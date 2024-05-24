@@ -919,7 +919,7 @@ class ApiService {
     }
   }
 
-  Future<PostLeadBuisnessDetailResponsModel> postLeadBuisnessDetail(
+  Future<Result<PostLeadBuisnessDetailResponsModel,Exception>> postLeadBuisnessDetail(
       PostLeadBuisnessDetailRequestModel
           postLeadBuisnessDetailRequestModel) async {
     if (await internetConnectivity.networkConnectivity()) {
@@ -941,10 +941,10 @@ class ApiService {
         final dynamic jsonData = json.decode(response.body);
         final PostLeadBuisnessDetailResponsModel responseModel =
             PostLeadBuisnessDetailResponsModel.fromJson(jsonData);
-        return responseModel;
+        return Success(responseModel);
       }
       if (response.statusCode == 401) {
-        return PostLeadBuisnessDetailResponsModel(statusCode: 401);
+        return Failure(ApiException(response.statusCode, ""));
       } else {
         throw Exception('Failed to load products');
       }
