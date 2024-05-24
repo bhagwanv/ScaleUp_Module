@@ -140,6 +140,8 @@ class _MyAppState extends State<MyApp> {
     }
 
     if (jData != null) {
+      final prefsUtil = await SharedPref.getInstance();
+      prefsUtil.saveString(BASE_URL, jData['baseUrl']);
       setState(() {
         mobileNumber = jData['mobileNumber'] ?? "";
         company = jData['companyID'] ?? "";
@@ -148,7 +150,6 @@ class _MyAppState extends State<MyApp> {
         isPayNow = jData['isPayNow'] ?? false;
         transactionId = jData['transactionId'] ?? jData['transactionId'];
       });
-
     }
   }
 }
