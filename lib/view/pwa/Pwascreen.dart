@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:scale_up_module/view/profile_screen/components/ShowOffersScreen.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../api/ApiService.dart';
@@ -102,7 +103,14 @@ class _AgreementScreenState extends State<Pwascreen> {
     pwaModel = await ApiService().pwaData(leadId!);
     if(pwaModel!.isSuccess!) {
       if (pwaModel!.message == "Activity Completed") {
-        fetchData(context);
+        //fetchData(context);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+              builder: (context) => ShowOffersScreen(
+                  activityId: widget.activityId,
+                  subActivityId: widget.subActivityId,
+                  pageType: "pushReplacement")),
+        );
       } else {
         setState(() {
 

@@ -370,13 +370,9 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
                                 ],
                               ),
                               const SizedBox(height: 30),
-                              offerResponceModel != null &&
-                                  offerResponceModel!.response != null &&
-                                  offerResponceModel!
-                                      .response!.processingFeePayableBy ==
-                                      "Customer" &&
-                                  !isCheckStatus
-                                  ? CommonElevatedButton(
+                              offerResponceModel != null && offerResponceModel!.response != null && offerResponceModel!.response!.processingFeePayableBy == "Customer" ?
+                              !isCheckStatus?
+                              CommonElevatedButton(
                                 onPressed: () async {
                                   Navigator.push(
                                     context,
@@ -391,14 +387,19 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
                                 },
                                 text: "Pay Now",
                                 upperCase: true,
-                              )
-                                  : CommonElevatedButton(
+                              ) : CommonElevatedButton(
                                 onPressed: () async {
                                   await acceptOffer(context, productProvider);
                                 },
                                 text: "Proceed to e-Agreement",
                                 upperCase: true,
-                              ),
+                              ):offerResponceModel!.response!.processingFeePayableBy == "anchor"? CommonElevatedButton(
+                                onPressed: () async {
+                                  await acceptOffer(context, productProvider);
+                                },
+                                text: "Proceed to e-Agreement",
+                                upperCase: true,
+                              ):Container(),
                               const SizedBox(height: 10),
                             ],
                           ),

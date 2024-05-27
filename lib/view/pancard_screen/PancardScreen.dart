@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:scale_up_module/view/aadhaar_screen/components/CheckboxTerm.dart';
 import 'package:scale_up_module/view/pancard_screen/model/PostLeadPANRequestModel.dart';
 
 import '../../api/ApiService.dart';
@@ -482,7 +483,25 @@ class _PancardScreenState extends State<PancardScreen> {
                               ],
                             ),
                             SizedBox(height: 20),
-                            CommonCheckBox(
+
+                            CheckboxTerm(
+                              content:
+                              "By proceeding, I provide consent on the following",
+                              onChanged: (bool isChecked) async {
+
+                                if (isChecked) {
+                                  final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PermissionsScreen()),
+                                  );
+                                  // Handle the result from Screen B using the callback function
+                                  _handlePermissionsAccepted(result ?? false);
+                                }
+                                isChecked = _acceptPermissions;
+                              },
+                            ),
+                           /* CommonCheckBox(
                               onChanged: (bool isChecked) async {
                                 // Handle the state change here
                                 print('Checkbox state changed: $isChecked');
@@ -497,10 +516,9 @@ class _PancardScreenState extends State<PancardScreen> {
                                 }
                               },
                               isChecked: _acceptPermissions,
-                              text:
-                              "By proceeding, I provide consent on the following",
+                              text: "By proceeding, I provide consent on the following",
                               upperCase: false,
-                            ),
+                            ),*/
                             SizedBox(height: 20),
                             /*Text("I hereby accept Scaleup T&C & Privacy Policy . Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners"),*/
                             RichText(

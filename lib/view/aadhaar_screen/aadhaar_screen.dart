@@ -424,7 +424,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.only(left: 15, right: 30),
-                  child: CheckboxTerm(
+                  child:
+                  CheckboxTerm(
                     content:
                         "I hereby agree to provide my Aadhaar Number and One Time Password (OTP) data for Aadhaar based authentication for KYC purpose in establishing my identity with Scaleupfincap Private Limited.",
                     onChanged: (bool? value) {
