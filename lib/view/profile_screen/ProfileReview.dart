@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../utils/Utils.dart';
 import 'package:provider/provider.dart';
 import '../../data_provider/DataProvider.dart';
@@ -71,8 +73,14 @@ class _ProfileReviewState extends State<ProfileReview> {
                   }
                 },
                 failure: (exception) {
-                  // Handle failure
-                  print("Failure");
+                  if (exception is ApiException) {
+                    if(exception.statusCode==401){
+                      productProvider.disposeAllProviderData();
+                      ApiService().handle401(context);
+                    }else{
+                      Utils.showToast(exception.errorMessage,context);
+                    }
+                  }
                 },
               );
             }

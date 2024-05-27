@@ -21,6 +21,7 @@ const gry = Color(0xFFEFEEFC);
 const double defaultPadding = 16.0;
 
 /*shared variable*/
+const String BASE_URL = "base_url";
 const String LOGIN_MOBILE_NUMBER = "login_mobile_number";
 const String IS_LOGGED_IN = "isLoggedIn";
 const String USER_ID = "user_id";

@@ -10,6 +10,8 @@ import 'package:scale_up_module/view/checkoutView/model/ValidOtpForCheckoutModel
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
+import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
 import '../../utils/Utils.dart';
@@ -85,9 +87,14 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                       }
                     },
                     failure: (exception) {
-                      // Handle failure
-                      print("Failure");
-                      //print('Failure! Error: ${exception.message}');
+                      if (exception is ApiException) {
+                        if(exception.statusCode==401){
+                          productProvider.disposeAllProviderData();
+                          ApiService().handle401(context);
+                        }else{
+                          Utils.showToast(exception.errorMessage,context);
+                        }
+                      }
                     },
                   );
                 }
@@ -389,8 +396,14 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
         }
       },
       failure: (exception) {
-        // Handle failure
-        print('Failure! Error: $exception');
+        if (exception is ApiException) {
+          if(exception.statusCode==401){
+            productProvider.disposeAllProviderData();
+            ApiService().handle401(context);
+          }else{
+            Utils.showToast(exception.errorMessage,context);
+          }
+        }
       },
     );
 
@@ -420,8 +433,14 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
         }
       },
       failure: (exception) {
-        // Handle failure
-        print('Failure! Error: ${exception}');
+        if (exception is ApiException) {
+          if(exception.statusCode==401){
+            productProvider.disposeAllProviderData();
+            ApiService().handle401(context);
+          }else{
+            Utils.showToast(exception.errorMessage,context);
+          }
+        }
       },
     );
 

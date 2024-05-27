@@ -68,7 +68,7 @@ class _PancardScreenState extends State<PancardScreen> {
   void initState() {
     super.initState();
     //Api Call
-    LeadPANApi(context);
+    leadPANApi(context);
   }
 
   // Callback function to receive the selected image
@@ -162,9 +162,14 @@ class _PancardScreenState extends State<PancardScreen> {
                         }
                       },
                       failure: (exception) {
-                        // Handle failure
-                        print("dfjsf2");
-                        //print('Failure! Error: ${exception.message}');
+                        if (exception is ApiException) {
+                          if(exception.statusCode==401){
+                            productProvider.disposeAllProviderData();
+                            ApiService().handle401(context);
+                          }else{
+                            Utils.showToast(exception.errorMessage,context);
+                          }
+                        }
                       },
                     );
                   }
@@ -616,9 +621,9 @@ class _PancardScreenState extends State<PancardScreen> {
     );
   }
 
-  Future<void> LeadPANApi(BuildContext context) async {
+  Future<void> leadPANApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    final String? userId = prefsUtil.getString(USER_ID);
+    String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
     Provider.of<DataProvider>(context, listen: false).getLeadPAN(userId!,productCode!);
@@ -686,23 +691,15 @@ class _PancardScreenState extends State<PancardScreen> {
           }
         },
         failure: (exception) {
-          // Handle failure
-          //print('Failure! Error: ${exception.message}');
           if (exception is ApiException) {
             if(exception.statusCode==401){
-              Navigator.pushAndRemoveUntil<dynamic>(
-                context,
-                MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) =>
-                      LoginScreen(activityId: 1, subActivityId: 0),
-                ),
-                    (route) => false, //if you want to disable back feature set to false
-              );
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
             }else{
               Utils.showToast(exception.errorMessage,context);
             }
           }
-        },
+          }
       );
     }
   }
@@ -731,14 +728,8 @@ class _PancardScreenState extends State<PancardScreen> {
           // Handle failure
           if (exception is ApiException) {
             if(exception.statusCode==401){
-              Navigator.pushAndRemoveUntil<dynamic>(
-                context,
-                MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) =>
-                      LoginScreen(activityId: 1, subActivityId: 0),
-                ),
-                    (route) => false, //if you want to disable back feature set to false
-              );
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
             }else{
               Utils.showToast(exception.errorMessage,context);
             }
@@ -768,14 +759,8 @@ class _PancardScreenState extends State<PancardScreen> {
           // Handle failure
           if (exception is ApiException) {
             if(exception.statusCode==401){
-              Navigator.pushAndRemoveUntil<dynamic>(
-                context,
-                MaterialPageRoute<dynamic>(
-                  builder: (BuildContext context) =>
-                      LoginScreen(activityId: 1, subActivityId: 0),
-                ),
-                    (route) => false, //if you want to disable back feature set to false
-              );
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
             }else{
               Utils.showToast(exception.errorMessage,context);
             }

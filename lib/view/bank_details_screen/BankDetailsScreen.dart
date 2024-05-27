@@ -12,8 +12,8 @@ import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import 'package:scale_up_module/view/bank_details_screen/model/LiveBankList.dart';
 import 'package:scale_up_module/view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
-
 import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/common_text_field.dart';
@@ -97,7 +97,6 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       if (i.isEven) {
         itemsHeights.add(40);
       }
-      //Dividers indexes will be the odd indexes
       if (i.isOdd) {
         itemsHeights.add(4);
       }
@@ -119,8 +118,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     return itemsHeights;
   }
 
-  List<DropdownMenuItem<LiveBankList>> _addDividersAfterItems1(
-      List<LiveBankList?> items) {
+  List<DropdownMenuItem<LiveBankList>> _addDividersAfterItems1(List<LiveBankList?> items) {
     final List<DropdownMenuItem<LiveBankList>> menuItems = [];
     for (final LiveBankList? item in items) {
       menuItems.addAll(
@@ -198,9 +196,14 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                     }
                   },
                   failure: (exception) {
-                    // Handle failure
-                    print("Failure");
-                    //print('Failure! Error: ${exception.message}');
+                    if (exception is ApiException) {
+                      if(exception.statusCode==401){
+                        productProvider.disposeAllProviderData();
+                        ApiService().handle401(context);
+                      }else{
+                        Utils.showToast(exception.errorMessage,context);
+                      }
+                    }
                   },
                 );
               }
@@ -757,8 +760,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     }
   }
 
-  Future<void> submitBankDetailsApi(BuildContext contextz,
-      DataProvider productProvider, List<String?> docList) async {
+  Future<void> submitBankDetailsApi(BuildContext contextz, DataProvider productProvider, List<String?> docList) async {
     if (selectedBankValue == null) {
       Utils.showToast("Please Select Bank", context);
     } else if (selectedBankValue!.isEmpty) {
@@ -804,9 +806,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       var postData = SaveBankDetailsRequestModel(leadBankDetailDTOs: leadBankDetailsList, isScaleUp: true,bankDocs: bankDocList);
 
       print("Save Data"+postData.toJson().toString());
-     /* Utils.onLoading(context, "");
+      Utils.onLoading(context, "");
       await Provider.of<DataProvider>(context, listen: false).saveLeadBankDetail(postData);
-      Navigator.of(context, rootNavigator: true).pop();*/
+      Navigator.of(context, rootNavigator: true).pop();
 
       if (productProvider.getSaveLeadBankDetailData != null) {
         productProvider.getSaveLeadBankDetailData!.when(
@@ -820,8 +822,14 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             }
           },
           failure: (exception) {
-            // Handle failure
-            print("Failure");
+            if (exception is ApiException) {
+              if(exception.statusCode==401){
+                productProvider.disposeAllProviderData();
+                ApiService().handle401(context);
+              }else{
+                Utils.showToast(exception.errorMessage,context);
+              }
+            }
           },
         );
       }
@@ -855,8 +863,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
 
-      customerSequence(
-          context, getLeadData, leadCurrentActivityAsyncData, "push");
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');

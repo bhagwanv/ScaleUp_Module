@@ -7,6 +7,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 
+import '../../../api/ApiService.dart';
+import '../../../api/FailureException.dart';
 import '../../../data_provider/DataProvider.dart';
 import '../../../shared_preferences/SharedPref.dart';
 import '../../../utils/constants.dart';
@@ -95,8 +97,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   }
                 },
                 failure: (exception) {
-                  // Handle failure
-                  print("Failure! Error:");
+                  if (exception is ApiException) {
+                    if(exception.statusCode==401){
+                      productProvider.disposeAllProviderData();
+                      ApiService().handle401(context);
+                    }else{
+                      Utils.showToast(exception.errorMessage,context);
+                    }
+                  }
                 },
               );
             }
@@ -382,9 +390,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
           }
         },
         failure: (exception) {
-          // Handle failure
-          print("dfjsf2");
-          //print('Failure! Error: ${exception.message}');
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
         },
       );
     }

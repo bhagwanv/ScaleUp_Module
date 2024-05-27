@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/aadhaar_screen/aadhaar_otp_screen.dart';
 import 'package:scale_up_module/view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
 import 'package:scale_up_module/view/aadhaar_screen/models/LeadAadhaarResponse.dart';
+import '../../api/ApiService.dart';
+import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
 import '../../shared_preferences/SharedPref.dart';
 import '../../utils/ImagePicker.dart';
@@ -133,7 +135,14 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                 }
               },
               failure: (exception) {
-                print("Failure");
+                if (exception is ApiException) {
+                  if(exception.statusCode==401){
+                    productProvider.disposeAllProviderData();
+                    ApiService().handle401(context);
+                  }else{
+                    Utils.showToast(exception.errorMessage,context);
+                  }
+                }
               },
             );
 
@@ -555,14 +564,14 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
           }
         },
         failure: (exception) {
-          Navigator.pushAndRemoveUntil<dynamic>(
-            context,
-            MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) =>
-                  LoginScreen(activityId: 1, subActivityId: 0),
-            ),
-                (route) => false, //if you want to disable back feature set to false
-          );
+          if (exception is ApiException) {
+            if(exception.statusCode==401){
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            }else{
+              Utils.showToast(exception.errorMessage,context);
+            }
+          }
         },
       );
     }
