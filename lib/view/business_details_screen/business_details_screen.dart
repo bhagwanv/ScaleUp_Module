@@ -458,11 +458,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 if (text.length == 15) {
                                   try {
                                     Utils.hideKeyBored(context);
-                                    await getCustomerDetailUsingGST(
-                                        context, _gstController.text);
-                                    if (productProvider
-                                            .getCustomerDetailUsingGSTData !=
-                                        null) {
+                                    await getCustomerDetailUsingGST(context, _gstController.text);
+                                    if (productProvider.getCustomerDetailUsingGSTData != null) {
                                       if (productProvider
                                               .getCustomerDetailUsingGSTData!
                                               .busGSTNO !=
@@ -739,9 +736,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  slectedDate!.isNotEmpty
-                                      ? '$slectedDate'
-                                      : 'Business Incorporation Date',
+                                  slectedDate!.isNotEmpty ? '$slectedDate' : 'Business Incorporation Date',
                                   style: const TextStyle(fontSize: 16.0),
                                 ),
                                 const Icon(Icons.date_range),

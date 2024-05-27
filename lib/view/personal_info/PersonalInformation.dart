@@ -718,10 +718,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
                           const SizedBox(height: 50),
                           CommonElevatedButton(
                             onPressed: () async {
-                              ValidationResult result =
-                                  await validateData(context, productProvider);
-                              PersonalDetailsRequestModel postData =
-                                  result.postData;
+                              ValidationResult result = await validateData(context, productProvider);
+                              PersonalDetailsRequestModel postData = result.postData;
                               bool isValid = result.isValid;
                               print("wqwwewew" + postData.toJson().toString());
                               if (isValid) {
@@ -2000,7 +1998,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     }
 
     print("postData::: " + postData.toJson().toString());
-    return ValidationResult(postData, isValid);
+   return ValidationResult(postData, isValid);
   }
 
   void bottomSheetMenu(BuildContext context) {

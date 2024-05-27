@@ -5,7 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/utils/constants.dart';
+import 'package:scale_up_module/view/business_details_screen/business_details_screen.dart';
 import 'package:scale_up_module/view/checkoutView/CheckOutOtpScreen.dart';
+import 'package:scale_up_module/view/login_screen/login_screen.dart';
+import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'data_provider/DataProvider.dart';
 import 'view/agreement_screen/Agreementscreen.dart';
@@ -113,12 +116,12 @@ class _MyAppState extends State<MyApp> {
           } else {
             return _buildHome();
 
-          // SplashScreen(mobileNumber: "7803994667", companyID: "CN_1", productID: "CreditLine", isLoggedIn: true));
+         //return LoginScreen(activityId: 2, subActivityId: 2);
             //return CheckOutOtpScreen(transactionId: "202457");
            // return PaymentConfirmation(transactionReqNo: "202457",customerName: "Aarti Mukati",imageUrl:"https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/0d625556-7f61-47c9-a522-8fef21215b14.jpg",customerCareMoblie: "6263246384",customerCareEmail: "customer.care@scaleupfin.com");
             //return CongratulationScreen();
             //return SplashScreen(mobileNumber: "6263246384", companyID: "CN_1", ProductID: "CreditLine",);
-           // return SplashScreen(mobileNumber: "9399927443", companyID: "CN_1", productID: "CreditLine");
+            //return SplashScreen(mobileNumber: "8989804393", companyID: "2", productID: "2");
             //return ShowOffersScreen(activityId: 2, subActivityId: 2);
           }
         },

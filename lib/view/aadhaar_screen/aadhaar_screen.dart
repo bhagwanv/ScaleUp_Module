@@ -546,7 +546,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
       productProvider.getLeadAadharGenerateOTP!.when(
         success: (AadhaarGenerateOTPResponseModel) async {
           var leadAadhaarResponse = AadhaarGenerateOTPResponseModel;
-          if(leadAadhaarResponse != null) {
+          if(leadAadhaarResponse != null&&leadAadhaarResponse.data!=null) {
             String reqID = "";
             if (leadAadhaarResponse.data!.message != null) {
               print(leadAadhaarResponse.data!.message!);
@@ -561,6 +561,8 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                         subActivityId: widget.subActivityId,
                         document: request,
                         requestId: reqID)));
+          }else{
+            Utils.showToast(leadAadhaarResponse.error!.error!.message!, context);
           }
         },
         failure: (exception) {
