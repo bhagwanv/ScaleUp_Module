@@ -10,18 +10,20 @@ import 'package:scale_up_module/view/dashboard_screen/model/CustomerTransactionL
 import 'package:scale_up_module/view/dashboard_screen/my_account/model/CustomerOrderSummaryResModel.dart';
 import 'package:scale_up_module/view/dashboard_screen/my_account/model/CustomerTransactionListRespModel.dart';
 import 'package:scale_up_module/view/dashboard_screen/vendorDetail/model/TransactionList.dart';
-import 'data_provider/DataProvider.dart';
+import '../../../api/ApiService.dart';
+import '../../../api/FailureException.dart';
+import '../../../data_provider/DataProvider.dart';
 
-class MyHomePage1 extends StatefulWidget {
-  MyHomePage1({
+class Vendor_detail_screen1 extends StatefulWidget {
+  const Vendor_detail_screen1({
     Key? key,
   }) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _Vendor_detail_screen1State createState() => _Vendor_detail_screen1State();
 }
 
-class _MyHomePageState extends State<MyHomePage1>
+class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   var isLoading = true;
@@ -48,7 +50,6 @@ class _MyHomePageState extends State<MyHomePage1>
 
     //Api Call
     getCustomerOrderSummary(context);
-
   }
 
   @override
@@ -110,7 +111,14 @@ class _MyHomePageState extends State<MyHomePage1>
                 }
               },
               failure: (exception) {
-                print("dfjsf2");
+                if (exception is ApiException) {
+                  if (exception.statusCode == 401) {
+                    productProvider.disposeAllProviderData();
+                    ApiService().handle401(context);
+                  } else {
+                    Utils.showToast(exception.errorMessage, context);
+                  }
+                }
               },
             );
           }
@@ -118,18 +126,23 @@ class _MyHomePageState extends State<MyHomePage1>
           if (productProvider.getCustomerTransactionListData != null) {
             productProvider.getCustomerTransactionListData!.when(
               success: (data) {
-                print("sdhf");
                 if (data.isNotEmpty) {
                   customerTransactionList.addAll(data);
                   loading = true;
                 } else {
-                  print("1111");
                   loading = false;
                 }
               },
               failure: (exception) {
                 // Handle failure
-                print("dfjsf2");
+                if (exception is ApiException) {
+                  if (exception.statusCode == 401) {
+                    productProvider.disposeAllProviderData();
+                    ApiService().handle401(context);
+                  } else {
+                    Utils.showToast(exception.errorMessage, context);
+                  }
+                }
                 //print('Failure! Error: ${exception.message}');
               },
             );
@@ -524,8 +537,8 @@ class _MyHomePageState extends State<MyHomePage1>
 
   Future<void> getCustomerOrderSummary(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    // final int? leadId = prefsUtil.getInt(LEADE_ID);
-    int leadId = 52;
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+    // int leadId = 52;
     Provider.of<DataProvider>(context, listen: false)
         .getCustomerOrderSummary(leadId);
   }
@@ -533,10 +546,10 @@ class _MyHomePageState extends State<MyHomePage1>
   Future<void> getCustomerTransactionList(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
 
-    //var leadeId = prefsUtil.getInt(LEADE_ID)!;
-    //var companyId = prefsUtil.getInt(COMPANY_ID)!;
-    var companyId = "2";
-    var leadeId = 52;
+    var leadeId = prefsUtil.getInt(LEADE_ID)!;
+    var companyId = prefsUtil.getInt(COMPANY_ID)!;
+    //var companyId = "2";
+    //var leadeId = 52;
     Utils.onLoading(context, "");
     var customerTransactionListRequestModel =
         CustomerTransactionListRequestModel(
@@ -607,13 +620,12 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-        body: SafeArea(
+      body: SafeArea(
           top: true,
           bottom: true,
           child: _myListView(widget.context, widget.customerTransactionList,
               widget.productProvider, widget.scrollController)),
-        ) ;
+    );
   }
 
   void _scrollListener() async {
@@ -629,7 +641,6 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
         ScrollDirection.forward) {
       controller.reverse();
     }
-
 
     if (widget.scrollController.position.pixels ==
         widget.scrollController.position.maxScrollExtent) {
@@ -1039,7 +1050,14 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
         },
         failure: (exception) {
           // Handle failure
-          print("dfjsf2");
+          if (exception is ApiException) {
+            if (exception.statusCode == 401) {
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            } else {
+              Utils.showToast(exception.errorMessage, context);
+            }
+          }
           //print('Failure! Error: ${exception.message}');
         },
       );
@@ -1050,10 +1068,10 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
       BuildContext context, String transactionType) async {
     final prefsUtil = await SharedPref.getInstance();
 
-    //var leadeId = prefsUtil.getInt(LEADE_ID)!;
-    //var companyId = prefsUtil.getInt(COMPANY_ID)!;
-    var companyId = "2";
-    var leadeId = 52;
+    var leadeId = prefsUtil.getInt(LEADE_ID)!;
+    var companyId = prefsUtil.getInt(COMPANY_ID)!;
+    //var companyId = "2";
+    //var leadeId = 52;
     Utils.onLoading(context, "");
     var customerTransactionListRequestModel =
         CustomerTransactionListRequestModel(

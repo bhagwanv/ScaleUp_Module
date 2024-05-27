@@ -8,6 +8,7 @@ import 'package:scale_up_module/utils/constants.dart';
 import 'package:scale_up_module/view/checkoutView/CheckOutOtpScreen.dart';
 import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'data_provider/DataProvider.dart';
+import 'view/dashboard_screen/vendorDetail/vendor_detail_screen1.dart';
 import 'view/agreement_screen/Agreementscreen.dart';
 
 var mobileNumber = "";
@@ -102,7 +103,8 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: FutureBuilder<void>(
+      home:
+      FutureBuilder<void>(
         future: _initializeData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
