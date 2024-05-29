@@ -3,15 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:scale_up_module/shared_preferences/SharedPref.dart';
-import 'package:scale_up_module/utils/constants.dart';
-import 'package:scale_up_module/view/business_details_screen/business_details_screen.dart';
-import 'package:scale_up_module/view/checkoutView/CheckOutOtpScreen.dart';
-import 'package:scale_up_module/view/login_screen/login_screen.dart';
-import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
-import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
-import 'data_provider/DataProvider.dart';
-import 'view/agreement_screen/Agreementscreen.dart';
+
+import 'business_loan/data_provider/DataProvider.dart';
+import 'business_loan/shared_preferences/SharedPref.dart';
+import 'business_loan/utils/constants.dart';
+import 'business_loan/view/checkoutView/CheckOutOtpScreen.dart';
+import 'business_loan/view/splash_screen/SplashScreen.dart';
+
 
 var mobileNumber = "";
 var company = "";
@@ -40,6 +38,7 @@ class _MyAppState extends State<MyApp> {
   var mobileNumber = "";
   var company = "";
   var product = "";
+  var productName = "";
   var isPayNow = false;
   var transactionId = "";
   var baseUrl = "";
@@ -72,7 +71,7 @@ class _MyAppState extends State<MyApp> {
   }
 
 
-  Widget _buildHome() {
+  Widget _Scale_supply_chain() {
     if (transactionId.isNotEmpty) {
       return CheckOutOtpScreen(transactionId: transactionId);
     } else if (mobileNumber.isNotEmpty) {
@@ -80,6 +79,19 @@ class _MyAppState extends State<MyApp> {
         mobileNumber: mobileNumber,
         companyID: company,
         productID: product);
+    } else {
+      return EmptyContainer();
+    }
+  }
+
+  Widget _BusinessLoan() {
+    if (transactionId.isNotEmpty) {
+      return CheckOutOtpScreen(transactionId: transactionId);
+    } else if (mobileNumber.isNotEmpty) {
+      return SplashScreen(
+          mobileNumber: mobileNumber,
+          companyID: company,
+          productID: product);
     } else {
       return EmptyContainer();
     }
@@ -113,7 +125,9 @@ class _MyAppState extends State<MyApp> {
             return Scaffold(
                 body: Center(child: Text('Error: ${snapshot.error}')));
           } else {
-            return _buildHome();
+            return product == "BusinessLoan"
+                ? _BusinessLoan()
+                : _Scale_supply_chain();
 
          //return LoginScreen(activityId: 2, subActivityId: 2);
             //return CheckOutOtpScreen(transactionId: "202457");
