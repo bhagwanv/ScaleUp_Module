@@ -484,7 +484,7 @@ class _PancardScreenState extends State<PancardScreen> {
                             ),
                             SizedBox(height: 20),
 
-                            CheckboxTerm(
+                           /* CheckboxTerm(
                               content:
                               "By proceeding, I provide consent on the following",
                               onChanged: (bool isChecked) async {
@@ -500,8 +500,8 @@ class _PancardScreenState extends State<PancardScreen> {
                                 }
                                 isChecked = _acceptPermissions;
                               },
-                            ),
-                           /* CommonCheckBox(
+                            ),*/
+                            CommonCheckBox(
                               onChanged: (bool isChecked) async {
                                 // Handle the state change here
                                 print('Checkbox state changed: $isChecked');
@@ -518,7 +518,7 @@ class _PancardScreenState extends State<PancardScreen> {
                               isChecked: _acceptPermissions,
                               text: "By proceeding, I provide consent on the following",
                               upperCase: false,
-                            ),*/
+                            ),
                             SizedBox(height: 20),
                             /*Text("I hereby accept Scaleup T&C & Privacy Policy . Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners"),*/
                             RichText(

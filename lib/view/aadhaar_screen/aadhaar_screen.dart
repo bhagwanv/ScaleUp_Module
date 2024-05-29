@@ -477,7 +477,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                         String stringWithSpaces = _aadhaarController.text;
                         print("normal" + stringWithSpaces);
                         String stringWithoutSpaces =
-                            stringWithSpaces.replaceAll(RegExp(r'\s+'), '');
+                        stringWithSpaces.replaceAll(RegExp(r'\s+'), '');
                         print("stringWithSpaces" + stringWithoutSpaces);
                         generateAadhaarOTPAPI(
                             context,
