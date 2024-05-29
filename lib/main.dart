@@ -17,7 +17,6 @@ var mobileNumber = "";
 var company = "";
 var product = "";
 var isPayNow = false;
-// var transactionId = "202420";
 var transactionId = "";
 
 void main() {
