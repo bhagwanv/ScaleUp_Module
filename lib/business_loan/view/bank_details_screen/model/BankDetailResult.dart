@@ -11,6 +11,7 @@ class BankDetailResult {
   String? pdfPassword;
   bool? isEnach;
   String? surrogateType;
+  String? type;
 
   BankDetailResult(
       {this.leadId,
@@ -24,7 +25,9 @@ class BankDetailResult {
         this.accountHolderName,
         this.pdfPassword,
         this.isEnach,
-        this.surrogateType});
+        this.surrogateType,
+        this.type,
+      });
 
   BankDetailResult.fromJson(Map<String, dynamic> json) {
     leadId = json['leadId'];
@@ -39,6 +42,7 @@ class BankDetailResult {
     pdfPassword = json['pdfPassword'];
     isEnach = json['isEnach'];
     surrogateType = json['surrogateType'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -55,6 +59,7 @@ class BankDetailResult {
     data['pdfPassword'] = this.pdfPassword;
     data['isEnach'] = this.isEnach;
     data['surrogateType'] = this.surrogateType;
+    data['type'] = this.type;
     return data;
   }
 }

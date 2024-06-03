@@ -12,6 +12,7 @@ import 'package:scale_up_module/business_loan/utils/Utils.dart';
 import 'package:scale_up_module/business_loan/view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import 'package:scale_up_module/business_loan/view/bank_details_screen/model/LiveBankList.dart';
 import 'package:scale_up_module/business_loan/view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../../../scale_up_supply_chain/utils/common_check_box.dart';
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
@@ -41,19 +42,31 @@ class BankDetailsScreen extends StatefulWidget {
 class _BankDetailsScreenState extends State<BankDetailsScreen> {
   final TextEditingController _accountHolderController = TextEditingController();
   final TextEditingController _bankStatmentPassworedController = TextEditingController();
-  final TextEditingController _bankNameController = TextEditingController();
   final TextEditingController _bankAccountNumberCl = TextEditingController();
-  final TextEditingController _accountTypeCl = TextEditingController();
   final TextEditingController _ifsccodeCl = TextEditingController();
 
+  final TextEditingController _nachAccountHolderController = TextEditingController();
+  final TextEditingController _nachBankStatmentPassworedController = TextEditingController();
+  final TextEditingController _nachBankAccountNumberCl = TextEditingController();
+  final TextEditingController _nachIfsccodeCl = TextEditingController();
+  var nachsurrogateType="";
+
   // var personalDetailsData;
-  var isLoading = true;
+  var isLoading = false;
   List<LiveBankList?>? liveBankList = [];
-  late String selectedAccountTypeValue = "";
+  String? selectedAccountTypeValue;
+  String? selectedNachAccountTypeValue;
   String? selectedBankValue;
+  String? nachSelectedBankValue;
   BankDetailsResponceModel? bankDetailsResponceModel = null;
   List<String?>? documentList = [];
+  List<String?>? gstDocumentList = [];
+  List<String?>? itrDocumentList = [];
   var isEditableStatement = false;
+  var isSameBank = false;
+  var disbursementDetailType="";
+  var nachTpye="";
+
 
   @override
   void initState() {
@@ -61,7 +74,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     callAPI(context);
   }
 
-  List<String> accountTypeList = ['saving', 'current', 'other'];
+  List<String> accountTypeList = ['savings', 'current', 'other'];
 
   List<DropdownMenuItem<String>> _addDividersAfterItems(List<String> items) {
     final List<DropdownMenuItem<String>> menuItems = [];
@@ -103,6 +116,49 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     }
     return itemsHeights;
   }
+
+
+  List<DropdownMenuItem<String>> _addNachDividersAfterItems(List<String> items) {
+    final List<DropdownMenuItem<String>> menuItems = [];
+    for (final String item in items) {
+      menuItems.addAll(
+        [
+          DropdownMenuItem<String>(
+            value: item,
+            child: Text(
+              item,
+              style: const TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          //If it's last item, we will not add Divider after it.
+          if (item != items.last)
+            const DropdownMenuItem<String>(
+              enabled: false,
+              child: Divider(
+                height: 0.1,
+              ),
+            ),
+        ],
+      );
+    }
+    return menuItems;
+  }
+
+  List<double> _getCustomNachItemsHeights(List<String> items) {
+    final List<double> itemsHeights = [];
+    for (int i = 0; i < (items.length * 2) - 1; i++) {
+      if (i.isEven) {
+        itemsHeights.add(40);
+      }
+      if (i.isOdd) {
+        itemsHeights.add(4);
+      }
+    }
+    return itemsHeights;
+  }
+
 
   List<double> _getCustomItemsHeights1(List<LiveBankList?> items) {
     final List<double> itemsHeights = [];
@@ -170,24 +226,71 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                     if (bankDetailsResponceModel != null) {
                       if (bankDetailsResponceModel!.result != null) {
                         if (bankDetailsResponceModel!.isSuccess!) {
-                          _accountHolderController.text =
-                              bankDetailsResponceModel!
-                                  .result!.leadBankDetailDTOs!.first.accountHolderName!;
-                          _bankAccountNumberCl.text = bankDetailsResponceModel!
-                              .result!.leadBankDetailDTOs!.first.accountNumber!;
-                          _ifsccodeCl.text =
-                              bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.ifscCode!;
-                          _bankNameController.text =
-                              bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName!;
-                          _accountTypeCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountType!;
-                          _bankStatmentPassworedController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.pdfPassword!;
+                          //bank details
+                          if(bankDetailsResponceModel!.result!.leadBankDetailDTOs!=null){
+                            _accountHolderController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountHolderName!;
+                            _bankAccountNumberCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountNumber!;
+                            _ifsccodeCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.ifscCode!;
+                            selectedBankValue = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName!;
+                            selectedAccountTypeValue = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountType!;
+                            nachsurrogateType=bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.surrogateType!;
+                            disbursementDetailType=bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.type!;
+                          }
+
+
+                          //natch bank Details
+                          if(isSameBank){
+                            if(bankDetailsResponceModel!.result!.leadBankDetailDTOs!=null){
+                              _nachAccountHolderController.text=bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].accountHolderName!;
+                              _nachBankAccountNumberCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].accountNumber!;
+                              _nachIfsccodeCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].ifscCode!;
+                              nachSelectedBankValue = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].bankName!;
+                              selectedNachAccountTypeValue= bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].accountType!;
+                              _bankStatmentPassworedController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].pdfPassword!;
+                              nachTpye = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].type!;
+                            }
+                          }else{
+                            _nachAccountHolderController.text="";
+                            _nachBankAccountNumberCl.text = "";
+                            _nachIfsccodeCl.text = "";
+                            nachSelectedBankValue =null;
+                            selectedNachAccountTypeValue=null;
+                            _bankStatmentPassworedController.text = "";
+                          }
+
+
+
+                         // _bankStatmentPassworedController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.pdfPassword!;
                           if(!isEditableStatement) {
                             for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
                               print("bankDocsDAta "+i.toString());
-                              documentList!.add(bankDetailsResponceModel!.result!.bankDocs![i].fileURL);
+                              if(bankDetailsResponceModel!.result!.bankDocs![i].documentName=="bank_statement"){
+                                documentList!.add(bankDetailsResponceModel!.result!.bankDocs![i].fileURL);
+                              }
+                              if(bankDetailsResponceModel!.result!.bankDocs![i].documentName=="surrogate_gst"){
+                                gstDocumentList!.add(bankDetailsResponceModel!.result!.bankDocs![i].fileURL);
+                              }
+
+                              if(bankDetailsResponceModel!.result!.bankDocs![i].documentName=="surrogate_itr"){
+                                itrDocumentList!.add(bankDetailsResponceModel!.result!.bankDocs![i].fileURL);
+                              }
+
                             }
                             isEditableStatement = true;
                           }
+
+
+
+
+                          for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
+                            print("bankDocsDAta1 "+i.toString());
+
+
+                          }
+
+
+
+
                         } else {
                           Utils.showToast(
                               bankDetailsResponceModel!.message!, context);
@@ -244,8 +347,21 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 30.0,
+                        height: 16.0,
                       ),
+
+                      Text(
+                        "Disbursement Bank Detail",
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: blackSmall,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+
                       bankListWidget(productProvider),
                       SizedBox(
                         height: 16.0,
@@ -291,120 +407,470 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         height: 16.0,
                       ),
 
-                      CommonTextField(
-                        controller: _bankStatmentPassworedController,
-                        hintText: "Bank Statement password(optional)",
-                        labelText: "Bank Statement password(optional)",
-                      ),
-                      SizedBox(
-                        height: 16.0,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: const Color(0xff0196CE))),
-                        width: double.infinity,
-                        child: GestureDetector(
-                          onTap: () async {
-                            isEditableStatement = true;
-                            FilePickerResult? result = await FilePicker.platform
-                                .pickFiles(
-                                    type: FileType.custom,
-                                    allowedExtensions: ['pdf']);
-                            if (result != null) {
-                              File file = File(result.files.single.path!);
-                              print(file.path);
-                              //widget.onImageSelected(file);
-                              Utils.onLoading(context, "");
-                              await Provider.of<DataProvider>(context,
-                                      listen: false)
-                                  .postBusineesDoumentSingleFile(
-                                      file, true, "", "");
-                              if (productProvider.getpostBusineesDoumentSingleFileData != null) {
-                                documentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
-                              }
-                              setState(() {
-                                Navigator.pop(context);
-                              });
-                            } else {
-                              // User canceled the picker
-                            }
-                          },
-                          child: Container(
-                            height: 148,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffEFFAFF),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset('assets/images/gallery.svg'),
-                                const Text(
-                                  'Upload Bank Proof',
-                                  style: TextStyle(
-                                      color: Color(0xff0196CE), fontSize: 12),
-                                ),
-                                const Text('Supports : PDF',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xffCACACA))),
 
-                              ],
-                            ),
-                          ),
+
+                      Text(
+                        "NaCH Bank Detail",
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: blackSmall,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                       SizedBox(
                         height: 16.0,
                       ),
 
-                      documentList!.isNotEmpty
-                          ?
-                          Column(
-                              children:
-                                  documentList!.asMap().entries.map((entry) {
-                                final index = entry.key;
-                                final document = entry.value;
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      color: Colors.grey[200],
+                       CommonCheckBox(
+                              onChanged: (bool isChecked) async {
+                                // Handle the state change here
+                                print('Checkbox state changed: $isChecked');
+                                setState(() {
+                                  isSameBank=isChecked;
+                                  if(isChecked){
+                                    print("1111$selectedAccountTypeValue");
+                                    _nachAccountHolderController.text=_accountHolderController.text;
+                                    _nachBankAccountNumberCl.text=_bankAccountNumberCl.text;
+                                    _nachIfsccodeCl.text=_ifsccodeCl.text;
+                                     selectedNachAccountTypeValue=selectedAccountTypeValue;
+                                    nachSelectedBankValue=selectedBankValue;
+                                  }else{
+                                    _nachAccountHolderController.text="";
+                                    _nachBankAccountNumberCl.text="";
+                                    _nachIfsccodeCl.text="";
+                                    selectedNachAccountTypeValue=null;
+                                    nachSelectedBankValue= null;
+                                  }
+
+
+                                });
+                              },
+                              isChecked: isSameBank,
+                              text: "Same Bank as Disbursement ",
+                              upperCase: false,
+                            ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+
+                      nachBankListWidget(productProvider),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+                      CommonTextField(
+                        enabled: !isSameBank,
+                        controller: _nachAccountHolderController,
+                        hintText: "Account Holder Name ",
+                        labelText: "Account Holder Name ",
+                      ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+                      CommonTextField(
+                        enabled: !isSameBank,
+                        inputFormatter: [
+                          LengthLimitingTextInputFormatter(17),
+                          // Limit to 10 characters
+                        ],
+                        keyboardType: TextInputType.number,
+                        controller: _nachBankAccountNumberCl,
+                        maxLines: 1,
+                        hintText: "Bank Acc Number ",
+                        labelText: "Bank Acc Number ",
+                      ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+                      nachAccountTypeWidget(productProvider),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+                      CommonTextField(
+                        enabled: !isSameBank,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Z0-9]'))),
+                          LengthLimitingTextInputFormatter(11)
+                        ],
+                        controller: _nachIfsccodeCl,
+                        hintText: "IFSC Code",
+                        labelText: "IFSC Code",
+                        textCapitalization: TextCapitalization.characters,
+                      ),
+                      SizedBox(
+                        height: 16.0,
+                      ),
+
+
+
+                      CommonTextField(
+                        controller: _bankStatmentPassworedController,
+                        hintText: "Bank Statement password(optional)",
+                        labelText: "Bank Statement password(optional)",
+                      ),
+                      //Uplod Bank  Document
+
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 16.0,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: const Color(0xff0196CE))),
+                            width: double.infinity,
+                            child: GestureDetector(
+                              onTap: () async {
+                                isEditableStatement = true;
+                                FilePickerResult? result = await FilePicker.platform
+                                    .pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: ['pdf']);
+                                if (result != null) {
+                                  File file = File(result.files.single.path!);
+                                  print(file.path);
+                                  //widget.onImageSelected(file);
+                                  Utils.onLoading(context, "");
+                                  await Provider.of<DataProvider>(context,
+                                      listen: false)
+                                      .postBusineesDoumentSingleFile(
+                                      file, true, "", "");
+                                  if (productProvider.getpostBusineesDoumentSingleFileData != null) {
+                                    documentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
+                                  }
+                                  setState(() {
+                                    Navigator.pop(context);
+                                  });
+                                } else {
+                                  // User canceled the picker
+                                }
+                              },
+                              child: Container(
+                                height: 148,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffEFFAFF),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset('assets/images/gallery.svg'),
+                                    const Text(
+                                      'Upload Bank Proof',
+                                      style: TextStyle(
+                                          color: Color(0xff0196CE), fontSize: 12),
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Text("${index + 1}"),
-                                          Spacer(),
-                                          Icon(Icons.picture_as_pdf),
-                                          Spacer(),
-                                          InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                isEditableStatement = true;
-                                                documentList!.removeAt(index);
-                                              });
-                                            },
-                                            child: Container(
-                                              child: SvgPicture.asset(
-                                                  'assets/icons/delete_icon.svg'),
-                                            ),
+                                    const Text('Supports : PDF',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xffCACACA))),
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16.0,
+                          ),
+
+                          documentList!.isNotEmpty
+                              ?
+                          Column(
+                            children:
+                            documentList!.asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final document = entry.value;
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    color: Colors.grey[200],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      children: [
+                                        Text("${index + 1}"),
+                                        Spacer(),
+                                        Icon(Icons.picture_as_pdf),
+                                        Spacer(),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              isEditableStatement = true;
+                                              documentList!.removeAt(index);
+                                            });
+                                          },
+                                          child: Container(
+                                            child: SvgPicture.asset(
+                                                'assets/icons/delete_icon.svg'),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                );
-                              }).toList(),
-                            )
-                          : Container(),
+                                ),
+                              );
+                            }).toList(),
+                          )
+                              : Container(),
+
+                        ],
+                      ),
+
+
+                  // upload GST Document
+                      nachsurrogateType=="GST"?
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 16.0,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: const Color(0xff0196CE))),
+                            width: double.infinity,
+                            child: GestureDetector(
+                              onTap: () async {
+                                isEditableStatement = true;
+                                FilePickerResult? result = await FilePicker.platform
+                                    .pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: ['pdf']);
+                                if (result != null) {
+                                  File file = File(result.files.single.path!);
+                                  print(file.path);
+                                  //widget.onImageSelected(file);
+                                  Utils.onLoading(context, "");
+                                  await Provider.of<DataProvider>(context,
+                                      listen: false)
+                                      .postBusineesDoumentSingleFile(
+                                      file, true, "", "");
+                                  if (productProvider.getpostBusineesDoumentSingleFileData != null) {
+                                    gstDocumentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
+                                  }
+                                  setState(() {
+                                    Navigator.pop(context);
+                                  });
+                                } else {
+                                  // User canceled the picker
+                                }
+                              },
+                              child: Container(
+                                height: 148,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffEFFAFF),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset('assets/images/gallery.svg'),
+                                    const Text(
+                                      'Upload GST',
+                                      style: TextStyle(
+                                          color: Color(0xff0196CE), fontSize: 12),
+                                    ),
+                                    const Text('Supports : PDF',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xffCACACA))),
+                                    const Text('You can upload multiple files',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xff0196CE))),
+
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16.0,
+                          ),
+
+                          gstDocumentList!.isNotEmpty
+                              ?
+                          Column(
+                            children:
+                            gstDocumentList!.asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final document = entry.value;
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    color: Colors.grey[200],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      children: [
+                                        Text("${index + 1}"),
+                                        Spacer(),
+                                        Icon(Icons.picture_as_pdf),
+                                        Spacer(),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              isEditableStatement = true;
+                                              gstDocumentList!.removeAt(index);
+                                            });
+                                          },
+                                          child: Container(
+                                            child: SvgPicture.asset(
+                                                'assets/icons/delete_icon.svg'),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          )
+                              : Container(),
+
+                        ],
+                      ):Container(),
+
+                      // upload ITR Document
+                      nachsurrogateType=="ITR"?
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 16.0,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: const Color(0xff0196CE))),
+                            width: double.infinity,
+                            child: GestureDetector(
+                              onTap: () async {
+                                isEditableStatement = true;
+                                FilePickerResult? result = await FilePicker.platform
+                                    .pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: ['pdf']);
+                                if (result != null) {
+                                  File file = File(result.files.single.path!);
+                                  print(file.path);
+                                  //widget.onImageSelected(file);
+                                  Utils.onLoading(context, "");
+                                  await Provider.of<DataProvider>(context,
+                                      listen: false)
+                                      .postBusineesDoumentSingleFile(
+                                      file, true, "", "");
+                                  if (productProvider.getpostBusineesDoumentSingleFileData != null) {
+                                    itrDocumentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
+                                  }
+                                  setState(() {
+                                    Navigator.pop(context);
+                                  });
+                                } else {
+                                  // User canceled the picker
+                                }
+                              },
+                              child: Container(
+                                height: 148,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffEFFAFF),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset('assets/images/gallery.svg'),
+                                    const Text(
+                                      'Upload ITR',
+                                      style: TextStyle(
+                                          color: Color(0xff0196CE), fontSize: 12),
+                                    ),
+                                    const Text('Supports : PDF',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xffCACACA))),
+                                    const Text('You can upload multiple files',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xff0196CE))),
+
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16.0,
+                          ),
+
+                          itrDocumentList!.isNotEmpty
+                              ?
+                          Column(
+                            children:
+                            itrDocumentList!.asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final document = entry.value;
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    color: Colors.grey[200],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      children: [
+                                        Text("${index + 1}"),
+                                        Spacer(),
+                                        Icon(Icons.picture_as_pdf),
+                                        Spacer(),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              isEditableStatement = true;
+                                              itrDocumentList!.removeAt(index);
+                                            });
+                                          },
+                                          child: Container(
+                                            child: SvgPicture.asset(
+                                                'assets/icons/delete_icon.svg'),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          )
+                              : Container(),
+                        ],
+                      ):Container(),
+
+
+
                       SizedBox(
                         height: 30.0,
                       ),
@@ -436,29 +902,33 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
   Future<void> callAPI(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    final int? leadId = prefsUtil.getInt(LEADE_ID);
-    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    /*final int? leadId = prefsUtil.getInt(LEADE_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);*/
+    final int? leadId = 85;
+    final String? productCode = "BusinessLoan";
     Provider.of<DataProvider>(context, listen: false).getBankDetails(leadId!, productCode!);
-    Utils.onLoading(context, "");
+    //Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false).getBankList();
-    Navigator.of(context, rootNavigator: true).pop();
+   // Navigator.of(context, rootNavigator: true).pop();
   }
 
   Widget bankListWidget(DataProvider productProvider) {
     var initialData;
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
-        if (bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName != null) {
-          initialData = liveBankList!
-              .where((element) =>
-                  element?.bankName ==
-                  bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName!)
-              .toList();
-          if (initialData.isNotEmpty) {
-            selectedBankValue = initialData.first!.bankName!.toString();
+        if(bankDetailsResponceModel!.result!.leadBankDetailDTOs!=null){
+          if (bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName != null) {
+            initialData = liveBankList!
+                .where((element) =>
+            element?.bankName ==
+                bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName!)
+                .toList();
+            if (initialData.isNotEmpty) {
+              selectedBankValue = initialData.first!.bankName!.toString();
+            }
+          } else {
+            initialData = null;
           }
-        } else {
-          initialData = null;
         }
       } else {
         initialData = null;
@@ -540,6 +1010,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         items: _addDividersAfterItems1(liveBankList!),
         onChanged: (LiveBankList? value) {
           selectedBankValue = value!.bankName!;
+          print("value!.bankName!");
         },
         buttonStyleData: const ButtonStyleData(
           padding: EdgeInsets.only(right: 8),
@@ -558,7 +1029,123 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     }
   }
 
-  Widget accountTypeWidget(DataProvider productProvider) {
+  Widget nachBankListWidget(DataProvider productProvider) {
+    var initialData;
+    if (bankDetailsResponceModel != null) {
+      if (bankDetailsResponceModel!.result != null) {
+        if(bankDetailsResponceModel!.result!.leadBankDetailDTOs!=null){
+          if (bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].bankName != null) {
+            initialData = liveBankList!
+                .where((element) =>
+            element?.bankName ==
+                bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].bankName!)
+                .toList();
+            if (initialData.isNotEmpty) {
+              nachSelectedBankValue = initialData.first!.bankName!.toString();
+            }
+          } else {
+            initialData = null;
+          }
+        }
+
+      } else {
+        initialData = null;
+      }
+      return DropdownButtonFormField2<LiveBankList>(
+        value: initialData?.first,
+        isExpanded: true,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 16),
+          fillColor: textFiledBackgroundColour,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: kPrimaryColor, width: 1),
+          ),
+        ),
+        hint: const Text(
+          'Bank Name',
+          style: TextStyle(
+            color: blueColor,
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        items: _addDividersAfterItems1(liveBankList!),
+        onChanged: (LiveBankList? value) {
+          nachSelectedBankValue = value!.bankName!;
+        },
+        buttonStyleData: const ButtonStyleData(
+          padding: EdgeInsets.only(right: 8),
+        ),
+        dropdownStyleData: const DropdownStyleData(
+          maxHeight: 200,
+        ),
+        menuItemStyleData: MenuItemStyleData(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          customHeights: _getCustomItemsHeights1(liveBankList!),
+        ),
+        iconStyleData: const IconStyleData(
+          openMenuIcon: Icon(Icons.arrow_drop_up),
+        ),
+      );
+    } else {
+      return DropdownButtonFormField2<LiveBankList>(
+        isExpanded: true,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 16),
+          fillColor: textFiledBackgroundColour,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: kPrimaryColor, width: 1),
+          ),
+        ),
+        hint: const Text(
+          'Bank Name',
+          style: TextStyle(
+            color: blueColor,
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        items: _addDividersAfterItems1(liveBankList!),
+        onChanged: (LiveBankList? value) {
+          nachSelectedBankValue = value!.bankName!;
+        },
+        buttonStyleData: const ButtonStyleData(
+          padding: EdgeInsets.only(right: 8),
+        ),
+        dropdownStyleData: const DropdownStyleData(
+          maxHeight: 200,
+        ),
+        menuItemStyleData: MenuItemStyleData(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          customHeights: _getCustomItemsHeights1(liveBankList!),
+        ),
+        iconStyleData: const IconStyleData(
+          openMenuIcon: Icon(Icons.arrow_drop_up),
+        ),
+      );
+    }
+  }
+/*  Widget accountTypeWidget(DataProvider productProvider) {
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
         if (bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountType != null) {
@@ -758,7 +1345,109 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         ),
       );
     }
+  }*/
+
+  Widget accountTypeWidget(DataProvider productProvider) {
+
+    return DropdownButtonFormField2<String>(
+      value:selectedAccountTypeValue,
+      isExpanded: true,
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.symmetric(vertical: 16),
+        fillColor: textFiledBackgroundColour,
+        filled: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: kPrimaryColor, width: 1),
+        ),
+      ),
+      hint: Text('Account Type',
+        style: TextStyle(
+          color: blueColor,
+          fontSize: 14.0,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      items: _addDividersAfterItems(accountTypeList),
+      onChanged: (String? value) {
+        selectedAccountTypeValue = value!;
+        print("atul${value}");
+      },
+      buttonStyleData: const ButtonStyleData(
+        padding: EdgeInsets.only(right: 8),
+      ),
+      dropdownStyleData: const DropdownStyleData(
+        maxHeight: 200,
+      ),
+      menuItemStyleData: MenuItemStyleData(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        customHeights: _getCustomItemsHeights(accountTypeList),
+      ),
+      iconStyleData: const IconStyleData(
+        openMenuIcon: Icon(Icons.arrow_drop_up),
+      ),
+    );
+
   }
+
+  Widget nachAccountTypeWidget(DataProvider productProvider) {
+
+    return DropdownButtonFormField2<String>(
+      value:selectedNachAccountTypeValue,
+      isExpanded: true,
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.symmetric(vertical: 16),
+        fillColor: textFiledBackgroundColour,
+        filled: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: kPrimaryColor, width: 1),
+        ),
+      ),
+      hint: Text('Account Type',
+        style: TextStyle(
+          color: blueColor,
+          fontSize: 14.0,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      items: _addDividersAfterItems(accountTypeList),
+      onChanged: (String? value) {
+        selectedNachAccountTypeValue = value!;
+      },
+      buttonStyleData: const ButtonStyleData(
+        padding: EdgeInsets.only(right: 8),
+      ),
+      dropdownStyleData: const DropdownStyleData(
+        maxHeight: 200,
+      ),
+      menuItemStyleData: MenuItemStyleData(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        customHeights: _getCustomItemsHeights(accountTypeList),
+      ),
+      iconStyleData: const IconStyleData(
+        openMenuIcon: Icon(Icons.arrow_drop_up),
+      ),
+    );
+
+  }
+
 
   Future<void> submitBankDetailsApi(BuildContext contextz, DataProvider productProvider, List<String?> docList) async {
     if (selectedBankValue == null) {
@@ -769,14 +1458,32 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       Utils.showToast("Please Enter Account Holder Name", context);
     } else if (_bankAccountNumberCl.text.isEmpty) {
       Utils.showToast("Please Enter Account Number", context);
-    } else if (selectedAccountTypeValue.isEmpty) {
+    } else if (selectedAccountTypeValue==null) {
       Utils.showToast("Please Select account Type", context);
     } else if (_ifsccodeCl.text.isEmpty) {
       Utils.showToast("Please Enter IFSC code", context);
     } else if (!Utils.isValidIFSCCode(_ifsccodeCl.text)) {
       Utils.showToast(
           "IFSC code should be minimum 9 digits and max 11 digits!!", context);
-    } else {
+    }else if (nachSelectedBankValue == null) {
+      Utils.showToast("Please Select Nach Bank", context);
+    } else if (nachSelectedBankValue!.isEmpty) {
+      Utils.showToast("Please Select Nach Bank", context);
+    } else if (_nachAccountHolderController.text.isEmpty) {
+      Utils.showToast("Please Enter Nach Account Holder Name", context);
+    } else if (_nachBankAccountNumberCl.text.isEmpty) {
+      Utils.showToast("Please Enter Nach Account Number", context);
+    } else if (selectedNachAccountTypeValue==null) {
+      Utils.showToast("Please Select Nach account Type", context);
+    } else if (_nachIfsccodeCl.text.isEmpty) {
+      Utils.showToast("Please Enter Nach IFSC code", context);
+    } else if (!Utils.isValidIFSCCode(_nachIfsccodeCl.text)) {
+      Utils.showToast(
+          "IFSC code should be minimum 9 digits and max 11 digits!!", context);
+    }else if (documentList!.isEmpty) {
+      Utils.showToast("Please uploade bank proof", context);
+    }
+    else {
       final prefsUtil = await SharedPref.getInstance();
       final int? leadID = prefsUtil.getInt(LEADE_ID);
 
@@ -786,7 +1493,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       leadBankDetailsList.add(
         LeadBankDetailDTOs(
           leadId: leadID!,
-          Type: "borrower",
+          Type: disbursementDetailType,
           bankName: selectedBankValue,
           ifscCode: _ifsccodeCl.text,
           accountType: selectedAccountTypeValue,
@@ -795,7 +1502,23 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           accountNumber: _bankAccountNumberCl.text,
           accountHolderName: _accountHolderController.text,
           pdfPassword: _bankStatmentPassworedController.text,
-          surrogateType: "Banking",
+          surrogateType: nachsurrogateType,
+        ),
+      );
+
+      leadBankDetailsList.add(
+        LeadBankDetailDTOs(
+          leadId: leadID!,
+          Type: nachTpye,
+          bankName: nachSelectedBankValue,
+          ifscCode: _nachIfsccodeCl.text,
+          accountType: selectedNachAccountTypeValue,
+          activityId: widget.activityId,
+          subActivityId: widget.subActivityId,
+          accountNumber: _nachBankAccountNumberCl.text,
+          accountHolderName: _nachAccountHolderController.text,
+          pdfPassword: _bankStatmentPassworedController.text,
+          surrogateType: nachsurrogateType,
         ),
       );
 

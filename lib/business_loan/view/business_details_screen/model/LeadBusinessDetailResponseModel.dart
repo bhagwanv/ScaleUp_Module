@@ -18,7 +18,10 @@ class LeadBusinessDetailResponseModel {
       this.buisnessProofDocId, 
       this.buisnessDocumentNo, 
       this.status, 
-      this.message,});
+      this.message,
+      this.surrogateType,
+      this.inquiryAmount,
+  });
 
   LeadBusinessDetailResponseModel.fromJson(dynamic json) {
     businessName = json['businessName'];
@@ -40,6 +43,8 @@ class LeadBusinessDetailResponseModel {
     buisnessDocumentNo = json['buisnessDocumentNo'];
     status = json['status'];
     message = json['message'];
+    surrogateType = json['surrogateType'];
+    inquiryAmount = json['inquiryAmount'];
   }
   String? businessName;
   String? doi;
@@ -60,6 +65,8 @@ class LeadBusinessDetailResponseModel {
   String? buisnessDocumentNo;
   dynamic status;
   dynamic message;
+  String? surrogateType;
+  int? inquiryAmount;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -82,6 +89,8 @@ class LeadBusinessDetailResponseModel {
     map['buisnessDocumentNo'] = buisnessDocumentNo;
     map['status'] = status;
     map['message'] = message;
+    map['surrogateType'] = surrogateType;
+    map['inquiryAmount'] = inquiryAmount;
     return map;
   }
 

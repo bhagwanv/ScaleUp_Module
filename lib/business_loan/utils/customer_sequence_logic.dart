@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scale_up_module/business_loan/utils/screen_type.dart';
+import 'package:scale_up_module/business_loan/view/msme_registration_screen/MsmeRegistrationScreen.dart';
 import '../view/aadhaar_screen/aadhaar_screen.dart';
 import '../view/bank_details_screen/BankDetailsScreen.dart';
 import '../view/business_details_screen/business_details_screen.dart';
@@ -26,9 +27,7 @@ ScreenType? customerSequence(
       if (leadCurrentActivityAsyncData.currentSequence! != 0) {
         var currentSequence = leadCurrentActivityAsyncData.currentSequence!;
         debugPrint("sequence no.  $currentSequence");
-        var leadCurrentActivity = leadCurrentActivityAsyncData
-            .leadProductActivity!
-            .firstWhere((product) => product.sequence == currentSequence);
+        var leadCurrentActivity = leadCurrentActivityAsyncData.leadProductActivity!.firstWhere((product) => product.sequence == currentSequence);
         debugPrint("ACTIVITYnAME  ${leadCurrentActivity.activityName}");
         debugPrint("SubActivityName  ${leadCurrentActivity.subActivityName}");
         if (leadCurrentActivity.activityName == "MobileOtp") {
@@ -158,6 +157,11 @@ ScreenType? customerSequence(
                 builder: (context) => BottomNav(pageType: pageType)),
           );
           return ScreenType.MyAccount;
+        } else if (leadCurrentActivity.activityName == "MSME") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => MsmeRegistrationScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)));
+          return ScreenType.MyAccount;
         }
       } else {
         return null;
@@ -284,7 +288,8 @@ ScreenType? customerSequence(
                     isDisbursement: true)),
           );
           return ScreenType.Disbursement;
-        } else if (leadCurrentActivity.activityName ==
+        }
+        else if (leadCurrentActivity.activityName ==
             "Disbursement Completed") {
           Navigator.of(context).push(
             //MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: true,)),
@@ -292,10 +297,17 @@ ScreenType? customerSequence(
                 builder: (context) => BottomNav(pageType: pageType)),
           );
           return ScreenType.DisbursementCompleted;
-        } else if (leadCurrentActivity.activityName == "MyAccount") {
+        }
+        else if (leadCurrentActivity.activityName == "MyAccount") {
           Navigator.of(context).push(
             MaterialPageRoute(
                 builder: (context) => BottomNav(pageType: pageType)),
+          );
+          return ScreenType.MyAccount;
+        } else if (leadCurrentActivity.activityName == "MSME") {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => MsmeRegistrationScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)),
           );
           return ScreenType.MyAccount;
         }

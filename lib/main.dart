@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
+import 'package:scale_up_module/business_loan/view/business_details_screen/business_details_screen.dart';
 import 'business_loan/data_provider/DataProvider.dart';
 import 'business_loan/shared_preferences/SharedPref.dart';
 import 'business_loan/utils/constants.dart';
+import 'business_loan/view/bank_details_screen/BankDetailsScreen.dart';
 import 'business_loan/view/checkoutView/CheckOutOtpScreen.dart';
+import 'business_loan/view/loan_offer_screen/LoanOfferScreen.dart';
+import 'business_loan/view/msme_registration_screen/MsmeRegistrationScreen.dart';
 import 'business_loan/view/splash_screen/SplashScreen.dart';
 
 
@@ -125,9 +128,16 @@ class _MyAppState extends State<MyApp> {
             return Scaffold(
                 body: Center(child: Text('Error: ${snapshot.error}')));
           } else {
-            return product == "BusinessLoan"
+
+           // return SplashScreen(mobileNumber: "8319552430", companyID: "CN_67", productID: "BusinessLoan",);
+            return LoanOfferScreen(activityId: 0, subActivityId: 0,);
+            
+           /* return product == "BusinessLoan"
                 ? _BusinessLoan()
-                : _Scale_supply_chain();
+                : _Scale_supply_chain();*/
+
+           // return MsmeRegistrationScreen(activityId: 2, subActivityId: 2,sequenceNo: 8);
+           // return BankDetailsScreen(activityId: 2, subActivityId: 2);
 
          //return LoginScreen(activityId: 2, subActivityId: 2);
             //return CheckOutOtpScreen(transactionId: "202457");

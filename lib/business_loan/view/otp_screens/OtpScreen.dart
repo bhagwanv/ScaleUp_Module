@@ -284,13 +284,19 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     } else {
       productProvider.disposeAllProviderData();
       Utils.onLoading(context, "");
+
+      var activityId=10;
+      var companyId=2;
+     var  productId=8;
+
+
       final prefsUtil = await SharedPref.getInstance();
       await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(
         activityId: activityId,
-        companyId: prefsUtil.getInt(COMPANY_ID),
+        companyId:2, //prefsUtil.getInt(COMPANY_ID),
         mobileNo: userLoginMobile,
         otp: otpText,
-        productId: prefsUtil.getInt(PRODUCT_ID),
+        productId:8, //prefsUtil.getInt(PRODUCT_ID),
         subActivityId: subActivityId,
         vintageDays: 0,
         monthlyAvgBuying: 0,
@@ -308,8 +314,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
               pinController.clear();
               Utils.showToast(verifyOtpResponce.message!, context);
             } else {
-              await prefsUtil.saveString(
-                  USER_ID, verifyOtpResponce.userId.toString());
+              await prefsUtil.saveString(USER_ID, verifyOtpResponce.userId.toString());
               await prefsUtil.saveString(TOKEN, verifyOtpResponce.userTokan.toString());
               await prefsUtil.saveInt(LEADE_ID, verifyOtpResponce.leadId!);
               await prefsUtil.saveBool(IS_LOGGED_IN, true);

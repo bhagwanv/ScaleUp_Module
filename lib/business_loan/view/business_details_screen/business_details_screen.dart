@@ -39,12 +39,13 @@ class BusinessDetailsScreen extends StatefulWidget {
 }
 
 class _BusinessDetailsState extends State<BusinessDetailsScreen> {
-  var isLoading = true;
+  var isLoading = false;
   final TextEditingController _gstController = TextEditingController();
   final TextEditingController _businessNameController = TextEditingController();
   final TextEditingController _addressLineController = TextEditingController();
   final TextEditingController _addressLine2Controller = TextEditingController();
   final TextEditingController _pinCodeController = TextEditingController();
+  final TextEditingController _inquiryAmountController = TextEditingController();
   final TextEditingController _businessDocumentNumberController =
       TextEditingController();
   String? selectedStateValue;
@@ -140,11 +141,18 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   final List<String> monthlySalesTurnoverList = [
     'Upto 3 Lacs',
-    '3 Lacs - 10 Lacs',
+    '3 Lacs- 10 Lacs',
     '10 Lacs - 25 Lacs',
     'Above 25 Lacs'
   ];
   String? selectedMonthlySalesTurnoverValue;
+
+  final List<String> SurrogateTypeList = [
+    'Banking',
+    'GST',
+    'ITR',
+  ];
+  String? selectedSurrogateTyperValue;
 
   final List<String> chooseBusinessProofList = [
     'GST Certificate',
@@ -296,11 +304,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                 isLoading = false;
               }
               if (productProvider.getLeadBusinessDetailData != null) {
-                if (productProvider.getLeadBusinessDetailData?.businessName !=
-                        null &&
-                    productProvider.getLeadBusinessDetailData?.doi != null &&
-                    !isClearData &&
-                    !isImageDelete) {
+                if (productProvider.getLeadBusinessDetailData?.businessName != null && productProvider.getLeadBusinessDetailData?.doi != null && !isClearData && !isImageDelete) {
                   if (productProvider.getLeadBusinessDetailData!.busGSTNO !=
                       null) {
                     _gstController.text =
@@ -341,6 +345,15 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       .getLeadBusinessDetailData!.buisnessProof != null) {
                     selectedChooseBusinessProofValue = productProvider
                         .getLeadBusinessDetailData!.buisnessProof!;
+                  }
+                  if(productProvider
+                      .getLeadBusinessDetailData!.surrogateType != null) {
+                    selectedSurrogateTyperValue = productProvider.getLeadBusinessDetailData!.surrogateType!;
+
+                  }
+                  if(productProvider
+                      .getLeadBusinessDetailData!.inquiryAmount != null) {
+                    _inquiryAmountController.text = productProvider.getLeadBusinessDetailData!.inquiryAmount!.toString();
                   }
                 } else {
                   updateData = true;
@@ -536,6 +549,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                   image = "";
                                   businessProofDocId = null;
                                   isGstFilled=false;
+                                  _inquiryAmountController.text="";
+                                  selectedSurrogateTyperValue=null;
                                 });
                               },
                               child: Container(
@@ -745,9 +760,81 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           ),
                         ),
                       ),
+
+
                       const SizedBox(
                         height: 22.0,
                       ),
+
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      CommonTextField(
+                        controller: _inquiryAmountController,
+                        enabled: updateData,
+                        hintText: "Inquiry Amount",
+                        labelText: "Inquiry Amount",
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+
+                      DropdownButtonFormField2<String>(
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 8),
+                          fillColor: textFiledBackgroundColour,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide:
+                            const BorderSide(color: kPrimaryColor, width: 1),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide:
+                            const BorderSide(color: kPrimaryColor, width: 1),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide:
+                            const BorderSide(color: kPrimaryColor, width: 1),
+                          ),
+                        ),
+                        hint: const Text(
+                          'Choose Surrogate Type',
+                          style: TextStyle(
+                            color: blueColor,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        items: _addDividersAfterItems(SurrogateTypeList),
+                        value: selectedSurrogateTyperValue,
+                        onChanged: (String? value) {
+                          selectedSurrogateTyperValue = value;
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.only(right: 8),
+                        ),
+                        dropdownStyleData: const DropdownStyleData(
+                          maxHeight: 200,
+                        ),
+                        menuItemStyleData: MenuItemStyleData(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          customHeights:
+                          _getCustomItemsHeights(SurrogateTypeList),
+                        ),
+                        iconStyleData: const IconStyleData(
+                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 22.0,
+                      ),
+
+
                       const Text(
                         "Business Address ",
                         style: TextStyle(
@@ -1000,7 +1087,14 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           } else if (slectedDate!.isEmpty) {
                             Utils.showToast(
                                 "Please Select Incorporation Date", context);
-                          } else {
+                          }
+                          else if (_inquiryAmountController!.text.isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Inquiry Amount ", context);
+                          } else if (selectedSurrogateTyperValue!.isEmpty) {
+                            Utils.showToast(
+                                "Please Select Surrogate Type", context);
+                          }else {
                             await postLeadBuisnessDetail(context,productProvider);
 
                            /* if (productProvider.getPostLeadBuisnessDetailData !=
@@ -1063,28 +1157,30 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
         }
       }
     } else {
-      if (productProvider.getLeadBusinessDetailData!.stateId != null &&
-          productProvider.getLeadBusinessDetailData!.stateId! != 0) {
-        if (productProvider.getAllStateData != null) {
-          var allStates = productProvider.getAllStateData!.returnObject!;
-          if (setStateListFirstTime) {
-            initialData = allStates.firstWhere(
-                (element) =>
-                    element?.id ==
-                    productProvider.getLeadBusinessDetailData!.stateId,
-                orElse: () => null);
-            selectedStateValue =
-                productProvider.getLeadBusinessDetailData!.stateId!.toString();
+      if(productProvider.getLeadBusinessDetailData!=null){
+        if (productProvider.getLeadBusinessDetailData!.stateId != null &&
+            productProvider.getLeadBusinessDetailData!.stateId! != 0) {
+          if (productProvider.getAllStateData != null) {
+            var allStates = productProvider.getAllStateData!.returnObject!;
+            if (setStateListFirstTime) {
+              initialData = allStates.firstWhere(
+                      (element) =>
+                  element?.id ==
+                      productProvider.getLeadBusinessDetailData!.stateId,
+                  orElse: () => null);
+              selectedStateValue =
+                  productProvider.getLeadBusinessDetailData!.stateId!.toString();
+            }
           }
+          if (cityCallInitial) {
+            citylist.clear();
+            Provider.of<DataProvider>(context, listen: false)
+                .getAllCity(productProvider.getLeadBusinessDetailData!.stateId!);
+            cityCallInitial = false;
+          }
+        } else {
+          setStateListFirstTime = false;
         }
-        if (cityCallInitial) {
-          citylist.clear();
-          Provider.of<DataProvider>(context, listen: false)
-              .getAllCity(productProvider.getLeadBusinessDetailData!.stateId!);
-          cityCallInitial = false;
-        }
-      } else {
-        setStateListFirstTime = false;
       }
     }
     if (productProvider.getAllStateData != null) {
@@ -1274,7 +1370,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   Future<void> postLeadBuisnessDetail(BuildContext context, DataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
-    Utils.onLoading(context, "");
+
 
     var postLeadBuisnessDetailRequestModel = PostLeadBuisnessDetailRequestModel(
       leadId: prefsUtil.getInt(LEADE_ID),
@@ -1296,12 +1392,14 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       buisnessDocumentNo: _businessDocumentNumberController.text.toString(),
       buisnessProofDocId: businessProofDocId,
       buisnessProof: selectedChooseBusinessProofValue,
+      inquiryAmount: int.parse(_inquiryAmountController.text),
+      surrogateType: selectedSurrogateTyperValue
     );
     debugPrint("Post DATA:: ${postLeadBuisnessDetailRequestModel.toJson()}");
+     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
-
     if (productProvider.getPostLeadBuisnessDetailData != null) {
       productProvider.getPostLeadBuisnessDetailData!.when(
         success: (data) {
@@ -1342,8 +1440,12 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   Future<void> getPersonalDetailAndStateApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    final String? userId = prefsUtil.getString(USER_ID);
-    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+  //  final String? userId = prefsUtil.getString(USER_ID);
+   // final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+
+    final String? userId = "0ae22741-5bba-48e8-a768-569beebaabfa";
+    final String? productCode = "BusinessLoan";
+
 
     await Provider.of<DataProvider>(context, listen: false)
         .getLeadBusinessDetail(userId!,productCode!);

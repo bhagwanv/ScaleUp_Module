@@ -256,7 +256,7 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                         width: double.infinity,
                                         height: 135,
                                         decoration: BoxDecoration(
-                                          color: gry,
+                                          color: light_gray,
                                           borderRadius: BorderRadius.circular(
                                               10), // Adjust the value to change the roundness
                                         ),

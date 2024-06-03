@@ -16,7 +16,10 @@ const text_green_color = Color(0xFF6BCFB3);
 const text_orange_color = Color(0xFFF56B3B);
 const text_light_whit_color = Color(0xFFF7FBFC);
 const text_light_blue_color = Color(0xFFA3AED0);
-const gry = Color(0xFFEFEEFC);
+const light_gray = Color(0xFFEFEEFC);
+const dark_green = Color(0xFF0AAB41);
+const tabel_cell_color = Color(0xFFF4F4F4);
+const tabel_border_color = Color(0xFFCACACA);
 
 const double defaultPadding = 16.0;
 

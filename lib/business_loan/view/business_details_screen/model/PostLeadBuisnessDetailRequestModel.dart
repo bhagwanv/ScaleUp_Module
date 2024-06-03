@@ -18,7 +18,11 @@ class PostLeadBuisnessDetailRequestModel {
       this.companyId, 
       this.buisnessDocumentNo, 
       this.buisnessProofDocId, 
-      this.buisnessProof,});
+      this.buisnessProof,
+      this.inquiryAmount,
+      this.surrogateType,
+
+  });
 
   PostLeadBuisnessDetailRequestModel.fromJson(dynamic json) {
     leadId = json['LeadId'];
@@ -40,6 +44,8 @@ class PostLeadBuisnessDetailRequestModel {
     buisnessDocumentNo = json['BuisnessDocumentNo'];
     buisnessProofDocId = json['BuisnessProofDocId'];
     buisnessProof = json['BuisnessProof'];
+    inquiryAmount = json['InquiryAmount'];
+    surrogateType = json['SurrogateType'];
   }
   int? leadId;
   String? userId;
@@ -60,6 +66,8 @@ class PostLeadBuisnessDetailRequestModel {
   String? buisnessDocumentNo;
   int? buisnessProofDocId;
   String? buisnessProof;
+  int? inquiryAmount;
+  String? surrogateType;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -82,6 +90,8 @@ class PostLeadBuisnessDetailRequestModel {
     map['BuisnessDocumentNo'] = buisnessDocumentNo;
     map['BuisnessProofDocId'] = buisnessProofDocId;
     map['BuisnessProof'] = buisnessProof;
+    map['InquiryAmount'] = inquiryAmount;
+    map['SurrogateType'] = surrogateType;
     return map;
   }
 

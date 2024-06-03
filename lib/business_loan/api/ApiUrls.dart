@@ -1,7 +1,7 @@
 class ApiUrls{
 
-  final String baseUrl = 'https://gateway-uat.scaleupfin.com';
-  //final String baseUrl = 'https://gateway-qa.scaleupfin.com';
+  //final String baseUrl = 'https://gateway-uat.scaleupfin.com';
+  final String baseUrl = 'https://gateway-qa.scaleupfin.com';
   final String productCompanyDetail = '/aggregator/LeadAgg/ProductCompanyDetail';
   final String getLeadCurrentActivity="/services/lead/v1/GetLeadCurrentActivity";
   final String leadCurrentActivityAsync="/aggregator/LeadAgg/LeadCurrentActivityAsync";
@@ -60,6 +60,14 @@ class ApiUrls{
   final String getKarzaElectricityServiceProviderList="/services/kyc/v1/KYCDoc/GetKarzaElectricityServiceProviderList";
   final String getKarzaElectricityState="/services/kyc/v1/KYCDoc/GetKarzaElectricityState";
   final String getKarzaElectricityAuthentication="/services/kyc/v1/KYCDoc/KarzaElectricityAuthentication";
+
+
+
+  final String getLeadMSME="/aggregator/LeadAgg/GetLeadMSME";
+  final String postLeadMSME="/services/lead/v1/PostLeadMSME";
+
+  final String getLeadMasterByLeadId="/services/lead/v1/ArthMate/GetLeadMasterByLeadId";
+  final String getRateOfInterest="/services/lead/v1/ArthMate/GetRateOfInterest";
 
 
 }
