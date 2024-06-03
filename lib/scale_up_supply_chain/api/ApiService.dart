@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../business_loan/ProductCompanyDetailResponseModel.dart';
+import '../../ProductCompanyDetailResponseModel.dart';
 import '../shared_preferences/SharedPref.dart';
 import '../utils/InternetConnectivity.dart';
 import '../utils/constants.dart';
@@ -957,7 +957,8 @@ class ApiService {
   Future<BankListResponceModel> getBankList() async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
+     // var base_url = prefsUtil.getString(BASE_URL);
+      var base_url = ApiUrls().baseUrl;
       final response = await interceptor.get(
         Uri.parse('${base_url! + apiUrls.bankListApi}'),
         headers: {
@@ -985,7 +986,8 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var base_url = prefsUtil.getString(BASE_URL);
+       // var base_url = prefsUtil.getString(BASE_URL);
+        var base_url = ApiUrls().baseUrl;
         final response = await interceptor.get(
           Uri.parse('${base_url! + apiUrls.GetLeadBankDetail}?LeadId=$leadID'),
           headers: {

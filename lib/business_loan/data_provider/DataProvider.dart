@@ -2,7 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:scale_up_module/business_loan/ProductCompanyDetailResponseModel.dart';
+import 'package:scale_up_module/ProductCompanyDetailResponseModel.dart';
 
 import '../api/ApiService.dart';
 import '../api/ExceptionHandling.dart';
@@ -32,6 +32,9 @@ import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionLi
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
 import '../view/dashboard_screen/vendorDetail/model/TransactionBreakupResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
+import '../view/msme_registration_screen/model/LeadMSMEResModel.dart';
+import '../view/msme_registration_screen/model/PostLeadMSMEReqModel.dart';
+import '../view/msme_registration_screen/model/PostLeadMSMEResModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/pancard_screen/model/FathersNameByValidPanCardResponseModel.dart';
@@ -270,6 +273,13 @@ class DataProvider extends ChangeNotifier {
 
   Result<InProgressScreenModel,Exception>? _InProgressScreen;
   Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;
+
+  Result<LeadMsmeResModel,Exception>? _getLeadMSMEData;
+  Result<LeadMsmeResModel,Exception>? get getLeadMSMEData => _getLeadMSMEData;
+
+  Result<PostLeadMsmeResModel,Exception>? _getPostLeadMSMEData;
+  Result<PostLeadMsmeResModel,Exception>? get getPostLeadMSMEData => _getPostLeadMSMEData;
+
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -602,6 +612,16 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getLeadMSME(String UserId,String productcode) async {
+    _getLeadMSMEData = await apiService.getLeadMSME(UserId,productcode);
+    notifyListeners();
+  }
+
+  Future<void> postLeadMSME(PostLeadMsmeReqModel postLeadMsmeReqModel) async {
+    _getPostLeadMSMEData = await apiService.postLeadMSME(postLeadMsmeReqModel);
+    notifyListeners();
+  }
+
   Future<void> disposeAllProviderData() async {
     _getCustomerOrderSummaryData = null;
     _getCustomerTransactionListTwoData = null;
@@ -653,6 +673,7 @@ class DataProvider extends ChangeNotifier {
     _getElectricityStateListData = null;
     _getElectricityAuthenticationData = null;
     _InProgressScreen = null;
+    _getLeadMSMEData=null;
     notifyListeners();
   }
 

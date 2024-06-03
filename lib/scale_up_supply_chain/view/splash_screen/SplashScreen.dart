@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scale_up_module/business_loan/ProductCompanyDetailResponseModel.dart';
+import 'package:scale_up_module/ProductCompanyDetailResponseModel.dart';
 import 'package:scale_up_module/business_loan/api/ApiService.dart';
 import 'package:scale_up_module/business_loan/data_provider/DataProvider.dart';
 import 'package:scale_up_module/business_loan/shared_preferences/SharedPref.dart';

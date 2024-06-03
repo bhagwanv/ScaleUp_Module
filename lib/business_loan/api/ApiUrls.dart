@@ -62,4 +62,9 @@ class ApiUrls{
   final String getKarzaElectricityAuthentication="/services/kyc/v1/KYCDoc/KarzaElectricityAuthentication";
 
 
+
+  final String getLeadMSME="/aggregator/LeadAgg/GetLeadMSME";
+  final String postLeadMSME="/services/lead/v1/PostLeadMSME";
+
+
 }

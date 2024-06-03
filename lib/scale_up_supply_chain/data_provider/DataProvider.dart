@@ -2,7 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:scale_up_module/business_loan/ProductCompanyDetailResponseModel.dart';
+import 'package:scale_up_module/ProductCompanyDetailResponseModel.dart';
 
 import '../api/ApiService.dart';
 import '../api/ExceptionHandling.dart';

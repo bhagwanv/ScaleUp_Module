@@ -71,6 +71,7 @@ class BankDocsModel {
   int? sequence;
   String? pdfPassword;
   String? documentNumber;
+  String? surrogateType;
 
   BankDocsModel(
       {this.documentType,
@@ -78,7 +79,9 @@ class BankDocsModel {
         this.fileURL,
         this.sequence,
         this.pdfPassword,
-        this.documentNumber});
+        this.documentNumber,
+        this.surrogateType
+      });
 
   BankDocsModel.fromJson(Map<String, dynamic> json) {
     documentType = json['documentType'];
@@ -87,6 +90,7 @@ class BankDocsModel {
     sequence = json['sequence'];
     pdfPassword = json['pdfPassword'];
     documentNumber = json['documentNumber'];
+    documentNumber = json['surrogateType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -97,6 +101,7 @@ class BankDocsModel {
     data['sequence'] = this.sequence;
     data['pdfPassword'] = this.pdfPassword;
     data['documentNumber'] = this.documentNumber;
+    data['surrogateType'] = this.surrogateType;
     return data;
   }
 }

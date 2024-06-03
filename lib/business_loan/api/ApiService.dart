@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../ProductCompanyDetailResponseModel.dart';
+import '../../ProductCompanyDetailResponseModel.dart';
 import '../shared_preferences/SharedPref.dart';
 import '../utils/InternetConnectivity.dart';
 import '../utils/constants.dart';
@@ -32,6 +32,9 @@ import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionLi
 import '../view/dashboard_screen/vendorDetail/model/TransactionBreakupResModel.dart';
 import '../view/login_screen/login_screen.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
+import '../view/msme_registration_screen/model/LeadMSMEResModel.dart';
+import '../view/msme_registration_screen/model/PostLeadMSMEReqModel.dart';
+import '../view/msme_registration_screen/model/PostLeadMSMEResModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
 import '../view/otp_screens/model/VerifyOtpResponce.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
@@ -102,7 +105,7 @@ class ApiService {
       var base_url = prefsUtil.getString(BASE_URL);
       //  var base_url = apiUrls.baseUrl;
       final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.productCompanyDetail}?product=$product&company=$company'));
+          '${ApiUrls().baseUrl + apiUrls.productCompanyDetail}?product=$product&company=$company'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response
@@ -213,7 +216,7 @@ class ApiService {
       try {
         var request = http.MultipartRequest(
           'POST',
-          Uri.parse('${base_url! + apiUrls.postSingleFile}'),
+          Uri.parse('${ApiUrls().baseUrl + apiUrls.postSingleFile}'),
         );
 
         // Add file to the request
@@ -877,7 +880,8 @@ class ApiService {
       String userId, String productCode) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
+      //var base_url = prefsUtil.getString(BASE_URL);
+      var base_url = ApiUrls().baseUrl;
       final response = await interceptor.get(Uri.parse(
           '${base_url! + apiUrls.getLeadBusinessDetail}?UserId=$userId&productCode=$productCode'));
       print(response.body); // Print the response body once here
@@ -924,8 +928,12 @@ class ApiService {
           postLeadBuisnessDetailRequestModel) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
-      var token = await prefsUtil.getString(TOKEN);
+     // var base_url = prefsUtil.getString(BASE_URL);
+    //  var token = await prefsUtil.getString(TOKEN);
+
+      var base_url = ApiUrls().baseUrl;
+      var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiIwYWUyMjc0MS01YmJhLTQ4ZTgtYTc2OC01NjliZWViYWFiZmEiLCJ1c2VybmFtZSI6Ijg4MTc1MDc0MDciLCJsb2dnZWRvbiI6IjA2LzAzLzIwMjQgMDY6MjY6NTciLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI4ODE3NTA3NDA3IiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIxIiwibmJmIjoxNzE3Mzk2MDE3LCJleHAiOjE3MTc0ODI0MTcsImlhdCI6MTcxNzM5NjAxNywiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.CtDbP_tj56XN2S52PB6gKFxJw-gCQiNP6r53fq8t3kofknhjMyc6sMfVxwIGpJbQAUGdJNmes9DVtRl2YoT7NezBTvRE3yQtBzPtGDdtGgnRlA-TlkBjMbOLjSrtZXJ1LKFLu4q9fWbaNMly_QUIknEkQdlHamVBhgLwniHDkSD7i3EE1c5ODGRzMv0-51W4xjHS6BHllr5jGyd0TqiKm-ktJk-D1ZDNZjEo7gqOakbM80usf2JjAcm8uEoO04CffpfPrjKNQQPXWpgEjS5h01N1wzJd8c9Ku45EPHftts5eS7D4XL2KmSixvulJIqjuOeSIm3ADda2Z5nEV09v6Qw";
+
       final response = await interceptor.post(
           Uri.parse('${base_url! + apiUrls.postLeadBuisnessDetail}'),
           headers: {
@@ -957,7 +965,8 @@ class ApiService {
   Future<BankListResponceModel> getBankList() async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
+     // var base_url = prefsUtil.getString(BASE_URL);
+      var base_url = ApiUrls().baseUrl;
       final response = await interceptor.get(
         Uri.parse('${base_url! + apiUrls.bankListApi}'),
         headers: {
@@ -985,7 +994,8 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var base_url = prefsUtil.getString(BASE_URL);
+        //var base_url = prefsUtil.getString(BASE_URL);
+        var base_url = ApiUrls().baseUrl;
         final response = await interceptor.get(
           Uri.parse('${base_url! + apiUrls.GetLeadBankDetail}?LeadId=$leadID'),
           headers: {
@@ -1049,7 +1059,8 @@ class ApiService {
   Future<AllStateResponce> getAllState() async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
+     // var base_url = prefsUtil.getString(BASE_URL);
+      var base_url = ApiUrls().baseUrl;
       final response = await interceptor.get(
         Uri.parse('${base_url! + apiUrls.GetAllState}'),
         headers: {
@@ -1075,7 +1086,8 @@ class ApiService {
   Future<List<CityResponce>> GetCityByStateId(int stateID) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
+      //var base_url = prefsUtil.getString(BASE_URL);
+      var base_url = ApiUrls().baseUrl;
       final response = await interceptor.get(
         Uri.parse('${base_url! + apiUrls.GetCityByStateId}?stateId=$stateID'),
         headers: {
@@ -1724,4 +1736,70 @@ class ApiService {
       throw Exception('No internet connection');
     }
   }
+
+
+  Future<Result<LeadMsmeResModel, Exception>> getLeadMSME(
+      String UserId, String productcode) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        final response = await interceptor.get(Uri.parse(
+            '${ApiUrls().baseUrl + apiUrls.getLeadMSME}?UserId=$UserId&productCode=$productcode'));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final LeadMsmeResModel responseModel =
+            LeadMsmeResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<PostLeadMsmeResModel, Exception>> postLeadMSME(PostLeadMsmeReqModel postLeadMsmeReqModel) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+      //  var token = await prefsUtil.getString(TOKEN);
+        var token="eyJhbGciOiJSUzI1NiIsImtpZCI6IkVENjQ5MzE3NjYwNkM0OTZDODIxOUU5OUYwMDhFOTM5RUMwMThGNDhSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJ1c2VySWQiOiIwYWUyMjc0MS01YmJhLTQ4ZTgtYTc2OC01NjliZWViYWFiZmEiLCJ1c2VybmFtZSI6Ijg4MTc1MDc0MDciLCJsb2dnZWRvbiI6IjA1LzMwLzIwMjQgMDk6MDI6MjIiLCJzY29wZSI6ImNybUFwaSIsInVzZXJ0eXBlIjoiQ3VzdG9tZXIiLCJtb2JpbGUiOiI4ODE3NTA3NDA3IiwiZW1haWwiOiIiLCJyb2xlcyI6IiIsImNvbXBhbnlpZCI6IjIiLCJwcm9kdWN0aWQiOiIxIiwibmJmIjoxNzE3MDU5NzQyLCJleHAiOjE3MTcxNDYxNDIsImlhdCI6MTcxNzA1OTc0MiwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS11YXQuc2NhbGV1cGZpbi5jb20iLCJhdWQiOiJjcm1BcGkifQ.Ny9pmnihTWWlBY1p2PjnvcZulOEF6g1ibpNvqLATPoIZDOOhOLPuOX2fs_UNYdaqPtibxpxLJOq7z90QlViTqZF22PKp6AieGrtBnRLYJ1YsoWc6SF8bXZvZ3_CRYta10yVYBUKJ9326ttSeHG9tllD_iOM1th_KtJtGcwafP3jXnaymAv0dQcfIGfxRZjEzsPGAZW0QXZWmSLHVNs9PsI9xxgOf5nzc4Hl9sY3f3LnwAO91N7xATVUFjyR8zrb8RCIH55juRwz5NzXgNwgipwvZr2YyUbPn58OC5jY33uO6dLMVyBLmB_Sp0aI2vX4soQdC4_raX07d_jmN6vjqyw";
+        final response = await interceptor.post(
+            Uri.parse('${ApiUrls().baseUrl! + apiUrls.postLeadMSME}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(postLeadMsmeReqModel));
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final PostLeadMsmeResModel responseModel =
+            PostLeadMsmeResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
 }
