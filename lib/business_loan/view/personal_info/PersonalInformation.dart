@@ -1260,6 +1260,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
           textInputAction: TextInputAction.next,
           maxLines: 1,
           cursorColor: Colors.black,
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
+            LengthLimitingTextInputFormatter(6)],
           decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -1562,8 +1564,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
           textInputAction: TextInputAction.next,
           controller: _alternatePhoneNumberCl,
           maxLines: 1,
-          maxLength: 10,
           cursorColor: Colors.black,
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
+            LengthLimitingTextInputFormatter(10)],
           decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -1678,6 +1681,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
           textInputAction: TextInputAction.next,
           maxLines: 1,
           cursorColor: Colors.black,
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
+            LengthLimitingTextInputFormatter(6)],
           decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -1899,7 +1904,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
         permanentPincode: personalDetailsResponce!.permanentPincode!.toString(),
         permanentCity: personalDetailsResponce!.permanentCity!.toString(),
         permanentState: personalDetailsResponce!.permanentState!.toString(),
-        pincode: _currentAddressPinCodeCl.text.toString(),
+        pincode: _currentAddressPinCodeCl.text.trim().toString(),
         state: currentStateId,
         city: currentCityId,
         residenceStatus: "",
@@ -1916,8 +1921,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
         ownershipTypeResponseId: "",
         gender: _genderCl.text.toString(),
         marital: selectedMaritalStatusValue,
-        resAddress1: _currentAddressLineOneCl.text.toString(),
-        resAddress2: _currentAddressLineTwoCl.text.toString(),
+        resAddress1: _currentAddressLineOneCl.text.trim().toString(),
+        resAddress2: _currentAddressLineTwoCl.text.trim().toString(),
         ownershipTypeProof: selectOwnershipProofValue,
         electricityBillDocumentId:
             selectOwnershipProofValue == "Electricity Manual Bill Upload"
@@ -1925,7 +1930,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 : null,
         ivrsNumber:
             selectOwnershipProofValue != "Electricity Manual Bill Upload"
-                ? _customerIvrsCl.text.toString()
+                ? _customerIvrsCl.text.trim().toString()
                 : null,
         electricityServiceProvider:
             selectOwnershipProofValue != "Electricity Manual Bill Upload"
@@ -1939,16 +1944,16 @@ class _PersonalInformationState extends State<PersonalInformation> {
     bool isValid = false;
     String errorMessage = "";
 
-    if (_firstNameCl.text.toString().isEmpty) {
+    if (_firstNameCl.text.trim().toString().isEmpty) {
       errorMessage = "First name should not be empty";
       isValid = false;
-    } else if (_lastNameCl.text.toString().isEmpty) {
+    } else if (_lastNameCl.text.trim().toString().isEmpty) {
       errorMessage = "Last name should not be empty";
       isValid = false;
-    } else if (_alternatePhoneNumberCl.text.toString().isEmpty) {
+    } else if (_alternatePhoneNumberCl.text.trim().toString().isEmpty) {
       errorMessage = "Alternate Mobile Number should not be empty";
       isValid = false;
-    } else if (_emailIDCl.text.toString().isEmpty) {
+    } else if (_emailIDCl.text.trim().toString().isEmpty) {
       errorMessage = "Email should not be empty";
       isValid = false;
     } else if (userId!.isEmpty) {
@@ -2036,7 +2041,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
       productProvider.getIvrsData!.when(
         success: (data) async {
           // Handle successful response
-          consumerNumber = _customerIvrsCl.text.toString();
+          consumerNumber = _customerIvrsCl.text.trim().toString();
           if (data.result!) {
             Utils.showToast("Data Already Exists", context);
           } else {
@@ -2140,7 +2145,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
     var clientData = ClientData(caseId: leadeId.toString());
     var electricityAuthenticationReqModel = ElectricityAuthenticationReqModel(
-        consumerId: _customerIvrsCl.text,
+        consumerId: _customerIvrsCl.text.trim(),
         consent: "Y",
         district: districtName,
         serviceProvider: selectServiceProviderCode,

@@ -30,6 +30,7 @@ import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespMod
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
 import '../view/dashboard_screen/vendorDetail/model/TransactionBreakupResModel.dart';
+import '../view/loan_offer_screen/model/AadhaarOtpGenerateResModel.dart';
 import '../view/loan_offer_screen/model/LeadMasterByLeadIdResModel.dart';
 import '../view/loan_offer_screen/model/RateOfInterestResModel.dart';
 import '../view/login_screen/login_screen.dart';
@@ -1881,6 +1882,41 @@ class ApiService {
             final dynamic jsonData = json.decode(response.body);
             final RateOfInterestResModel responseModel =
             RateOfInterestResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<AadhaarOtpGenerateResModel, Exception>> aadhaarOtpGenerate(int leadid) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        var base_url = prefsUtil.getString(BASE_URL);
+        final response = await interceptor.get(Uri.parse(
+            '${ApiUrls().baseUrl + apiUrls.aadhaarOtpGenerate}?leadid=$leadid'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+        );
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final AadhaarOtpGenerateResModel responseModel =
+            AadhaarOtpGenerateResModel.fromJson(jsonData);
             return Success(responseModel);
 
           default:

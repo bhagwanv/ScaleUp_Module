@@ -65,6 +65,7 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
   var doi="";
   var frontDocumentId=0;
   var isImageDelete=false;
+  var isFillData=false;
 
 
   @override
@@ -96,35 +97,39 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
                     productProvider.getLeadMSMEData!.when(
                       success: (data) async {
                         leadMsmeResModel = data;
-                        if (leadMsmeResModel != null) {
+                        if(!isFillData){
+                          if (leadMsmeResModel != null) {
 
-                          if(leadMsmeResModel!.msmeRegNum!=null){
-                            _msmeRegNumCl.text=leadMsmeResModel!.msmeRegNum!;
-                          }
+                            if(leadMsmeResModel!.msmeRegNum!=null){
+                              _msmeRegNumCl.text=leadMsmeResModel!.msmeRegNum!;
+                            }
 
-                          if(leadMsmeResModel!.businessName!=null){
-                            _businesNameCl.text=leadMsmeResModel!.businessName!;
-                          }
+                            if(leadMsmeResModel!.businessName!=null){
+                              _businesNameCl.text=leadMsmeResModel!.businessName!;
+                            }
 
-                          if(leadMsmeResModel!.businessType!=null){
-                            selectedBusinessTypeValue=leadMsmeResModel!.businessType!;
-                          }
+                            if(leadMsmeResModel!.businessType!=null){
+                              selectedBusinessTypeValue=leadMsmeResModel!.businessType!;
+                            }
 
 
-                          if(leadMsmeResModel!.doi!=null){
-                            doi=leadMsmeResModel!.doi!;
-                          }
-                          if(leadMsmeResModel!.frontDocumentId!=null){
-                            frontDocumentId=leadMsmeResModel!.frontDocumentId!;
-                          }
-                          if(leadMsmeResModel!.vintage!=null){
-                            _vintageCl.text=leadMsmeResModel!.vintage!.toString();
-                          }
-                          if(leadMsmeResModel!.msmeCertificateUrl!=null && !isImageDelete){
-                            msmeCertificateUrl=leadMsmeResModel!.msmeCertificateUrl!;
-                          }
+                            if(leadMsmeResModel!.doi!=null){
+                              doi=leadMsmeResModel!.doi!;
+                            }
+                            if(leadMsmeResModel!.frontDocumentId!=null){
+                              frontDocumentId=leadMsmeResModel!.frontDocumentId!;
+                            }
+                            if(leadMsmeResModel!.vintage!=null){
+                              _vintageCl.text=leadMsmeResModel!.vintage!.toString();
+                            }
+                            if(leadMsmeResModel!.msmeCertificateUrl!=null && !isImageDelete){
+                              msmeCertificateUrl=leadMsmeResModel!.msmeCertificateUrl!;
+                            }
+                            isFillData=true;
 
+                          }
                         }
+
                       },
                       failure: (exception) {
                         if (exception is ApiException) {

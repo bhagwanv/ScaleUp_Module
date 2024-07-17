@@ -31,6 +31,7 @@ import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespMod
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
 import '../view/dashboard_screen/vendorDetail/model/TransactionBreakupResModel.dart';
+import '../view/loan_offer_screen/model/AadhaarOtpGenerateResModel.dart';
 import '../view/loan_offer_screen/model/LeadMasterByLeadIdResModel.dart';
 import '../view/loan_offer_screen/model/RateOfInterestResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
@@ -288,6 +289,10 @@ class DataProvider extends ChangeNotifier {
 
   Result<RateOfInterestResModel,Exception>? _getRateOfInterestData;
   Result<RateOfInterestResModel,Exception>? get getRateOfInterestData => _getRateOfInterestData;
+
+  Result<AadhaarOtpGenerateResModel,Exception>? _getaadhaarOtpGenerateData;
+  Result<AadhaarOtpGenerateResModel,Exception>? get getaadhaarOtpGenerateData => _getaadhaarOtpGenerateData;
+
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -637,6 +642,10 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getRateOfInterest(int tenure) async {
     _getRateOfInterestData = await apiService.getRateOfInterest(tenure);
+    notifyListeners();
+  }
+  Future<void> aadhaarOtpGenerate(int leadid) async {
+    _getaadhaarOtpGenerateData = await apiService.aadhaarOtpGenerate(leadid);
     notifyListeners();
   }
 

@@ -60,6 +60,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   var isGstFilled = false;
 
   var updateData = false;
+  var isInquiryAmount = true;
 
   List<CityResponce?> citylist = [];
   var cityCallInitial = true;
@@ -354,6 +355,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   if(productProvider
                       .getLeadBusinessDetailData!.inquiryAmount != null) {
                     _inquiryAmountController.text = productProvider.getLeadBusinessDetailData!.inquiryAmount!.toString();
+                    isInquiryAmount=false;
                   }
                 } else {
                   updateData = true;
@@ -551,6 +553,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                   isGstFilled=false;
                                   _inquiryAmountController.text="";
                                   selectedSurrogateTyperValue=null;
+                                  isInquiryAmount=true;
                                 });
                               },
                               child: Container(
@@ -569,6 +572,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       ),
                       CommonTextField(
                         controller: _businessNameController,
+                        inputFormatter: [FilteringTextInputFormatter.allow(RegExp((r'[A-Za-z]'))),
+                          LengthLimitingTextInputFormatter(10)],
                         enabled: updateData,
                         hintText: "Business Name(As Per Doc) ",
                         labelText: "Business Name(As Per Doc)",
@@ -608,6 +613,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       ),
                       CommonTextField(
                         controller: _pinCodeController,
+                        inputFormatter: [FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(6)],
                         enabled: updateData,
                         hintText: "Pin Code",
                         labelText: "Pin Code",
@@ -771,7 +778,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       ),
                       CommonTextField(
                         controller: _inquiryAmountController,
-                        enabled: updateData,
+                        enabled: isInquiryAmount,
+                        inputFormatter: [FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),],
                         hintText: "Inquiry Amount",
                         labelText: "Inquiry Amount",
                       ),
@@ -1061,17 +1069,17 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       const SizedBox(height: 54.0),
                       CommonElevatedButton(
                         onPressed: () async {
-                          if (_businessNameController.text.isEmpty) {
+                          if (_businessNameController.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Business Name (As Per Doc)",
                                 context);
-                          } else if (_addressLineController.text.isEmpty) {
+                          } else if (_addressLineController.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Address Line 1", context);
-                          } else if (_addressLine2Controller.text.isEmpty) {
+                          } else if (_addressLine2Controller.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Address Line 2", context);
-                          } else if (_pinCodeController.text.isEmpty) {
+                          } else if (_pinCodeController.text.trim().isEmpty) {
                             Utils.showToast("Please Enter Pin Code", context);
                           } else if (selectedBusinessTypeValue == null) {
                             Utils.showToast(
@@ -1079,7 +1087,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           } else if (selectedMonthlySalesTurnoverValue == null) {
                             Utils.showToast("Please Select Income Slab", context);
                           } else if (_businessDocumentNumberController
-                              .text.isEmpty) {
+                              .text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Business Document Number", context);
                           } else if (businessProofDocId == null) {
@@ -1088,7 +1096,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                             Utils.showToast(
                                 "Please Select Incorporation Date", context);
                           }
-                          else if (_inquiryAmountController!.text.isEmpty) {
+                          else if (_inquiryAmountController!.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Inquiry Amount ", context);
                           } else if (selectedSurrogateTyperValue!.isEmpty) {
@@ -1261,18 +1269,22 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           }
         }
       } else {
-        if (productProvider.getLeadBusinessDetailData!.cityId != 0) {
-          if (setCityListFirstTime) {
-            initialData = citylist.firstWhere(
-                (element) =>
+        if(productProvider.getLeadBusinessDetailData!=null){
+          if(productProvider.getLeadBusinessDetailData!.cityId !=null){
+            if (productProvider.getLeadBusinessDetailData!.cityId != 0) {
+              if (setCityListFirstTime) {
+                initialData = citylist.firstWhere(
+                        (element) =>
                     element?.id ==
-                    productProvider.getLeadBusinessDetailData!.cityId,
-                orElse: () => CityResponce());
-            selectedCityValue =
-                productProvider.getLeadBusinessDetailData!.cityId!.toString();
+                        productProvider.getLeadBusinessDetailData!.cityId,
+                    orElse: () => CityResponce());
+                selectedCityValue =
+                    productProvider.getLeadBusinessDetailData!.cityId!.toString();
+              }
+            } else {
+              setCityListFirstTime = false;
+            }
           }
-        } else {
-          setCityListFirstTime = false;
         }
       }
 
@@ -1377,22 +1389,22 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       userId: prefsUtil.getString(USER_ID),
       activityId: widget.activityId,
       subActivityId: widget.subActivityId,
-      busName: _businessNameController.text.toString(),
+      busName: _businessNameController.text.trim().toString(),
       doi: slectedDate.toString(),
       busGSTNO: gstNumber,
       busEntityType: selectedBusinessTypeValue,
-      busAddCorrLine1: _addressLineController.text.toString(),
-      busAddCorrLine2: _addressLine2Controller.text.toString(),
+      busAddCorrLine1: _addressLineController.text.trim().toString(),
+      busAddCorrLine2: _addressLine2Controller.text.trim().toString(),
       busAddCorrCity: selectedCityValue,
       busAddCorrState: selectedStateValue,
-      busAddCorrPincode: _pinCodeController.text.toString(),
+      busAddCorrPincode: _pinCodeController.text.trim().toString(),
       buisnessMonthlySalary: 0,
       incomeSlab: selectedMonthlySalesTurnoverValue,
       companyId: prefsUtil.getInt(COMPANY_ID),
-      buisnessDocumentNo: _businessDocumentNumberController.text.toString(),
+      buisnessDocumentNo: _businessDocumentNumberController.text.trim().toString(),
       buisnessProofDocId: businessProofDocId,
       buisnessProof: selectedChooseBusinessProofValue,
-      inquiryAmount: int.parse(_inquiryAmountController.text),
+      inquiryAmount: int.parse(_inquiryAmountController.text.trim()),
       surrogateType: selectedSurrogateTyperValue
     );
     debugPrint("Post DATA:: ${postLeadBuisnessDetailRequestModel.toJson()}");

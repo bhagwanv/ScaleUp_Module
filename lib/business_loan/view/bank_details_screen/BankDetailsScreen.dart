@@ -66,6 +66,10 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   var isSameBank = false;
   var disbursementDetailType="";
   var nachTpye="";
+  var selectedBankinitialData=null;
+  var selectedNatchBankinitialData=null;
+  var isFillData=false;
+  var isSelectedNatchBank=false;
 
 
   @override
@@ -223,80 +227,77 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                   success: (BankDetailsResponceModel) async {
                     bankDetailsResponceModel = BankDetailsResponceModel;
 
-                    if (bankDetailsResponceModel != null) {
-                      if (bankDetailsResponceModel!.result != null) {
-                        if (bankDetailsResponceModel!.isSuccess!) {
-                          //bank details
-                          if(bankDetailsResponceModel!.result!.leadBankDetailDTOs!=null){
-                            _accountHolderController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountHolderName!;
-                            _bankAccountNumberCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountNumber!;
-                            _ifsccodeCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.ifscCode!;
-                            selectedBankValue = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName!;
-                            selectedAccountTypeValue = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountType!;
-                            nachsurrogateType=bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.surrogateType!;
-                            disbursementDetailType=bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.type!;
-                          }
-
-
-                          //natch bank Details
-                          if(isSameBank){
+                    if(!isFillData){
+                      if (bankDetailsResponceModel != null) {
+                        if (bankDetailsResponceModel!.result != null) {
+                          if (bankDetailsResponceModel!.isSuccess!) {
+                            //bank details
                             if(bankDetailsResponceModel!.result!.leadBankDetailDTOs!=null){
-                              _nachAccountHolderController.text=bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].accountHolderName!;
-                              _nachBankAccountNumberCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].accountNumber!;
-                              _nachIfsccodeCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].ifscCode!;
-                              nachSelectedBankValue = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].bankName!;
-                              selectedNachAccountTypeValue= bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].accountType!;
-                              _bankStatmentPassworedController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].pdfPassword!;
-                              nachTpye = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].type!;
+                              _accountHolderController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountHolderName!;
+                              _bankAccountNumberCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountNumber!;
+                              _ifsccodeCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.ifscCode!;
+                              selectedBankValue = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName!;
+                              selectedAccountTypeValue = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountType!;
+                              nachsurrogateType=bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.surrogateType!;
+                              disbursementDetailType=bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.type!;
                             }
-                          }else{
-                            _nachAccountHolderController.text="";
-                            _nachBankAccountNumberCl.text = "";
-                            _nachIfsccodeCl.text = "";
-                            nachSelectedBankValue =null;
-                            selectedNachAccountTypeValue=null;
-                            _bankStatmentPassworedController.text = "";
-                          }
+
+
+                            //natch bank Details
+                              if(bankDetailsResponceModel!.result!.leadBankDetailDTOs!=null){
+                                _nachAccountHolderController.text=bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].accountHolderName!;
+                                _nachBankAccountNumberCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].accountNumber!;
+                                _nachIfsccodeCl.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].ifscCode!;
+                                nachSelectedBankValue = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].bankName!;
+                                selectedNachAccountTypeValue= bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].accountType!;
+                                _bankStatmentPassworedController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].pdfPassword!;
+                                nachTpye = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].type!;
+
+                                isFillData=true;
+                            }
 
 
 
-                         // _bankStatmentPassworedController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.pdfPassword!;
-                          if(!isEditableStatement) {
+                            // _bankStatmentPassworedController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.pdfPassword!;
+                            if(!isEditableStatement) {
+                              for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
+                                print("bankDocsDAta "+i.toString());
+                                if(bankDetailsResponceModel!.result!.bankDocs![i].documentName=="bank_statement"){
+                                  documentList!.add(bankDetailsResponceModel!.result!.bankDocs![i].fileURL);
+                                }
+                                if(bankDetailsResponceModel!.result!.bankDocs![i].documentName=="surrogate_gst"){
+                                  gstDocumentList!.add(bankDetailsResponceModel!.result!.bankDocs![i].fileURL);
+                                }
+
+                                if(bankDetailsResponceModel!.result!.bankDocs![i].documentName=="surrogate_itr"){
+                                  itrDocumentList!.add(bankDetailsResponceModel!.result!.bankDocs![i].fileURL);
+                                }
+
+                              }
+                              isEditableStatement = true;
+                            }
+
+
+
+
                             for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
-                              print("bankDocsDAta "+i.toString());
-                              if(bankDetailsResponceModel!.result!.bankDocs![i].documentName=="bank_statement"){
-                                documentList!.add(bankDetailsResponceModel!.result!.bankDocs![i].fileURL);
-                              }
-                              if(bankDetailsResponceModel!.result!.bankDocs![i].documentName=="surrogate_gst"){
-                                gstDocumentList!.add(bankDetailsResponceModel!.result!.bankDocs![i].fileURL);
-                              }
+                              print("bankDocsDAta1 "+i.toString());
 
-                              if(bankDetailsResponceModel!.result!.bankDocs![i].documentName=="surrogate_itr"){
-                                itrDocumentList!.add(bankDetailsResponceModel!.result!.bankDocs![i].fileURL);
-                              }
 
                             }
-                            isEditableStatement = true;
+
+
+
+
+                          } else {
+                            Utils.showToast(
+                                bankDetailsResponceModel!.message!, context);
                           }
-
-
-
-
-                          for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
-                            print("bankDocsDAta1 "+i.toString());
-
-
-                          }
-
-
-
-
-                        } else {
-                          Utils.showToast(
-                              bankDetailsResponceModel!.message!, context);
                         }
                       }
+
                     }
+
                   },
                   failure: (exception) {
                     if (exception is ApiException) {
@@ -428,18 +429,20 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                 setState(() {
                                   isSameBank=isChecked;
                                   if(isChecked){
-                                    print("1111$selectedAccountTypeValue");
                                     _nachAccountHolderController.text=_accountHolderController.text;
                                     _nachBankAccountNumberCl.text=_bankAccountNumberCl.text;
                                     _nachIfsccodeCl.text=_ifsccodeCl.text;
                                      selectedNachAccountTypeValue=selectedAccountTypeValue;
                                     nachSelectedBankValue=selectedBankValue;
+                                    isSelectedNatchBank=false;
+
                                   }else{
                                     _nachAccountHolderController.text="";
                                     _nachBankAccountNumberCl.text="";
                                     _nachIfsccodeCl.text="";
                                     selectedNachAccountTypeValue=null;
                                     nachSelectedBankValue= null;
+                                    isSelectedNatchBank=true;
                                   }
 
 
@@ -752,120 +755,244 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       nachsurrogateType=="ITR"?
                       Column(
                         children: [
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: const Color(0xff0196CE))),
-                            width: double.infinity,
-                            child: GestureDetector(
-                              onTap: () async {
-                                isEditableStatement = true;
-                                FilePickerResult? result = await FilePicker.platform
-                                    .pickFiles(
-                                    type: FileType.custom,
-                                    allowedExtensions: ['pdf']);
-                                if (result != null) {
-                                  File file = File(result.files.single.path!);
-                                  print(file.path);
-                                  //widget.onImageSelected(file);
-                                  Utils.onLoading(context, "");
-                                  await Provider.of<DataProvider>(context,
-                                      listen: false)
-                                      .postBusineesDoumentSingleFile(
-                                      file, true, "", "");
-                                  if (productProvider.getpostBusineesDoumentSingleFileData != null) {
-                                    itrDocumentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
-                                  }
-                                  setState(() {
-                                    Navigator.pop(context);
-                                  });
-                                } else {
-                                  // User canceled the picker
-                                }
-                              },
-                              child: Container(
-                                height: 148,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffEFFAFF),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset('assets/images/gallery.svg'),
-                                    const Text(
-                                      'Upload ITR',
-                                      style: TextStyle(
-                                          color: Color(0xff0196CE), fontSize: 12),
-                                    ),
-                                    const Text('Supports : PDF',
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: Color(0xffCACACA))),
-                                    const Text('You can upload multiple files',
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: Color(0xff0196CE))),
-
-
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-
-                          itrDocumentList!.isNotEmpty
-                              ?
                           Column(
-                            children:
-                            itrDocumentList!.asMap().entries.map((entry) {
-                              final index = entry.key;
-                              final document = entry.value;
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    color: Colors.grey[200],
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 16.0,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: const Color(0xff0196CE))),
+                                width: double.infinity,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    isEditableStatement = true;
+                                    FilePickerResult? result = await FilePicker.platform
+                                        .pickFiles(
+                                        type: FileType.custom,
+                                        allowedExtensions: ['pdf']);
+                                    if (result != null) {
+                                      File file = File(result.files.single.path!);
+                                      print(file.path);
+                                      //widget.onImageSelected(file);
+                                      Utils.onLoading(context, "");
+                                      await Provider.of<DataProvider>(context,
+                                          listen: false)
+                                          .postBusineesDoumentSingleFile(
+                                          file, true, "", "");
+                                      if (productProvider.getpostBusineesDoumentSingleFileData != null) {
+                                        gstDocumentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
+                                      }
+                                      setState(() {
+                                        Navigator.pop(context);
+                                      });
+                                    } else {
+                                      // User canceled the picker
+                                    }
+                                  },
+                                  child: Container(
+                                    height: 148,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffEFFAFF),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Text("${index + 1}"),
-                                        Spacer(),
-                                        Icon(Icons.picture_as_pdf),
-                                        Spacer(),
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              isEditableStatement = true;
-                                              itrDocumentList!.removeAt(index);
-                                            });
-                                          },
-                                          child: Container(
-                                            child: SvgPicture.asset(
-                                                'assets/icons/delete_icon.svg'),
-                                          ),
+                                        SvgPicture.asset('assets/images/gallery.svg'),
+                                        const Text(
+                                          'Upload GST',
+                                          style: TextStyle(
+                                              color: Color(0xff0196CE), fontSize: 12),
                                         ),
+                                        const Text('Supports : PDF',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xffCACACA))),
+                                        const Text('You can upload multiple files',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xff0196CE))),
+
+
                                       ],
                                     ),
                                   ),
                                 ),
-                              );
-                            }).toList(),
-                          )
-                              : Container(),
+                              ),
+                              SizedBox(
+                                height: 16.0,
+                              ),
+
+                              gstDocumentList!.isNotEmpty
+                                  ?
+                              Column(
+                                children:
+                                gstDocumentList!.asMap().entries.map((entry) {
+                                  final index = entry.key;
+                                  final document = entry.value;
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        color: Colors.grey[200],
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                          children: [
+                                            Text("${index + 1}"),
+                                            Spacer(),
+                                            Icon(Icons.picture_as_pdf),
+                                            Spacer(),
+                                            InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  isEditableStatement = true;
+                                                  gstDocumentList!.removeAt(index);
+                                                });
+                                              },
+                                              child: Container(
+                                                child: SvgPicture.asset(
+                                                    'assets/icons/delete_icon.svg'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                                  : Container(),
+
+                            ],
+                          ),
+
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 16.0,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: const Color(0xff0196CE))),
+                                width: double.infinity,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    isEditableStatement = true;
+                                    FilePickerResult? result = await FilePicker.platform
+                                        .pickFiles(
+                                        type: FileType.custom,
+                                        allowedExtensions: ['pdf']);
+                                    if (result != null) {
+                                      File file = File(result.files.single.path!);
+                                      print(file.path);
+                                      //widget.onImageSelected(file);
+                                      Utils.onLoading(context, "");
+                                      await Provider.of<DataProvider>(context,
+                                          listen: false)
+                                          .postBusineesDoumentSingleFile(
+                                          file, true, "", "");
+                                      if (productProvider.getpostBusineesDoumentSingleFileData != null) {
+                                        itrDocumentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
+                                      }
+                                      setState(() {
+                                        Navigator.pop(context);
+                                      });
+                                    } else {
+                                      // User canceled the picker
+                                    }
+                                  },
+                                  child: Container(
+                                    height: 148,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffEFFAFF),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset('assets/images/gallery.svg'),
+                                        const Text(
+                                          'Upload ITR',
+                                          style: TextStyle(
+                                              color: Color(0xff0196CE), fontSize: 12),
+                                        ),
+                                        const Text('Supports : PDF',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xffCACACA))),
+                                        const Text('You can upload multiple files',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Color(0xff0196CE))),
+
+
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 16.0,
+                              ),
+
+                              itrDocumentList!.isNotEmpty
+                                  ?
+                              Column(
+                                children:
+                                itrDocumentList!.asMap().entries.map((entry) {
+                                  final index = entry.key;
+                                  final document = entry.value;
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        color: Colors.grey[200],
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                          children: [
+                                            Text("${index + 1}"),
+                                            Spacer(),
+                                            Icon(Icons.picture_as_pdf),
+                                            Spacer(),
+                                            InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  isEditableStatement = true;
+                                                  itrDocumentList!.removeAt(index);
+                                                });
+                                              },
+                                              child: Container(
+                                                child: SvgPicture.asset(
+                                                    'assets/icons/delete_icon.svg'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                                  : Container(),
+                            ],
+                          ),
                         ],
                       ):Container(),
 
@@ -877,7 +1004,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       CommonElevatedButton(
                         onPressed: () async {
                           await submitBankDetailsApi(
-                              context, productProvider, documentList!);
+                              context, productProvider, documentList!,gstDocumentList!,itrDocumentList!);
 
                           /* Navigator.push(
                             context,
@@ -902,10 +1029,10 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
   Future<void> callAPI(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    /*final int? leadId = prefsUtil.getInt(LEADE_ID);
-    final String? productCode = prefsUtil.getString(PRODUCT_CODE);*/
-    final int? leadId = 85;
-    final String? productCode = "BusinessLoan";
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    /*final int? leadId = 85;
+    final String? productCode = "BusinessLoan";*/
     Provider.of<DataProvider>(context, listen: false).getBankDetails(leadId!, productCode!);
     //Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false).getBankList();
@@ -913,28 +1040,27 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   }
 
   Widget bankListWidget(DataProvider productProvider) {
-    var initialData;
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
         if(bankDetailsResponceModel!.result!.leadBankDetailDTOs!=null){
           if (bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName != null) {
-            initialData = liveBankList!
+            selectedBankinitialData = liveBankList!
                 .where((element) =>
             element?.bankName ==
                 bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.bankName!)
                 .toList();
-            if (initialData.isNotEmpty) {
-              selectedBankValue = initialData.first!.bankName!.toString();
+            if (selectedBankinitialData.isNotEmpty) {
+              selectedBankValue = selectedBankinitialData.first!.bankName!.toString();
             }
           } else {
-            initialData = null;
+            selectedBankinitialData = null;
           }
         }
       } else {
-        initialData = null;
+        selectedBankinitialData = null;
       }
       return DropdownButtonFormField2<LiveBankList>(
-        value: initialData?.first,
+        value: selectedBankinitialData?.first,
         isExpanded: true,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -1030,29 +1156,29 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   }
 
   Widget nachBankListWidget(DataProvider productProvider) {
-    var initialData;
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
         if(bankDetailsResponceModel!.result!.leadBankDetailDTOs!=null){
           if (bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].bankName != null) {
-            initialData = liveBankList!
+            selectedNatchBankinitialData = liveBankList!
                 .where((element) =>
             element?.bankName ==
                 bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].bankName!)
                 .toList();
-            if (initialData.isNotEmpty) {
-              nachSelectedBankValue = initialData.first!.bankName!.toString();
-            }
+            /*if (selectedNatchBankinitialData.isNotEmpty) {
+              nachSelectedBankValue = selectedNatchBankinitialData[1].bankName!.toString();
+            }*/
           } else {
-            initialData = null;
+            selectedNatchBankinitialData = null;
           }
         }
 
       } else {
-        initialData = null;
+        selectedNatchBankinitialData = null;
       }
       return DropdownButtonFormField2<LiveBankList>(
-        value: initialData?.first,
+        //value: selectedNatchBankinitialData!=null?selectedBankinitialData?.first:null,
+        value: isSameBank?selectedBankinitialData?.first:!isSelectedNatchBank?selectedNatchBankinitialData[0]:null,
         isExpanded: true,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -1145,6 +1271,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       );
     }
   }
+
 /*  Widget accountTypeWidget(DataProvider productProvider) {
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
@@ -1449,7 +1576,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   }
 
 
-  Future<void> submitBankDetailsApi(BuildContext contextz, DataProvider productProvider, List<String?> docList) async {
+  Future<void> submitBankDetailsApi(BuildContext contextz, DataProvider productProvider, List<String?> docList, List<String?> gstDocList,List<String?> itrDocList) async {
     if (selectedBankValue == null) {
       Utils.showToast("Please Select Bank", context);
     } else if (selectedBankValue!.isEmpty) {
@@ -1524,6 +1651,12 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
       for (int i = 0; i < docList.length; i++) {
         bankDocList.add(BankDocs(documentType: "id_proof",documentName: "bank_statement",fileURL: docList[i],sequence: i,pdfPassword: _bankStatmentPassworedController.text,documentNumber: _bankAccountNumberCl.text));
+      }
+      for (int i = 0; i < gstDocList.length; i++) {
+        bankDocList.add(BankDocs(documentType: "id_proof",documentName: "surrogate_gst",fileURL: gstDocList[i],sequence: i,pdfPassword: _bankStatmentPassworedController.text,documentNumber: _bankAccountNumberCl.text));
+      }
+      for (int i = 0; i < itrDocList.length; i++) {
+        bankDocList.add(BankDocs(documentType: "id_proof",documentName: "surrogate_itr",fileURL: itrDocList[i],sequence: i,pdfPassword: _bankStatmentPassworedController.text,documentNumber: _bankAccountNumberCl.text));
       }
 
       var postData = SaveBankDetailsRequestModel(leadBankDetailDTOs: leadBankDetailsList, isScaleUp: true,bankDocs: bankDocList);

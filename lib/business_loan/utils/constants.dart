@@ -20,6 +20,7 @@ const light_gray = Color(0xFFEFEEFC);
 const dark_green = Color(0xFF0AAB41);
 const tabel_cell_color = Color(0xFFF4F4F4);
 const tabel_border_color = Color(0xFFCACACA);
+const togel_color = Color(0x6FE74623);
 
 const double defaultPadding = 16.0;
 

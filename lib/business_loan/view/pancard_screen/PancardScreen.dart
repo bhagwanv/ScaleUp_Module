@@ -484,7 +484,7 @@ class _PancardScreenState extends State<PancardScreen> {
                             ),
                             SizedBox(height: 20),
 
-                            CheckboxTerm(
+                           /* CheckboxTerm(
                               content:
                               "By proceeding, I provide consent on the following",
                               onChanged: (bool isChecked) async {
@@ -500,12 +500,16 @@ class _PancardScreenState extends State<PancardScreen> {
                                 }
                                 isChecked = _acceptPermissions;
                               },
-                            ),
-                           /* CommonCheckBox(
+                            ),*/
+                            CommonCheckBox(
                               onChanged: (bool isChecked) async {
                                 // Handle the state change here
                                 print('Checkbox state changed: $isChecked');
                                 if (isChecked) {
+                                  setState(() {
+                                    isDataClear=true;
+                                  });
+
                                   final result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -518,7 +522,7 @@ class _PancardScreenState extends State<PancardScreen> {
                               isChecked: _acceptPermissions,
                               text: "By proceeding, I provide consent on the following",
                               upperCase: false,
-                            ),*/
+                            ),
                             SizedBox(height: 20),
                             /*Text("I hereby accept Scaleup T&C & Privacy Policy . Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners"),*/
                             RichText(
@@ -533,6 +537,10 @@ class _PancardScreenState extends State<PancardScreen> {
                                   _buildClickableTextSpan(
                                     text: 'T&C  & Privacy Policy',
                                     onClick: ()async {
+                                      setState(() {
+                                        isDataClear=true;
+
+                                      });
 
                                       final result = await Navigator.push(
                                         context,
@@ -560,13 +568,13 @@ class _PancardScreenState extends State<PancardScreen> {
                                 final String? userId = prefsUtil.getString(USER_ID);
                                 final int? companyId = prefsUtil.getInt(COMPANY_ID);
 
-                                if (_panNumberCl.text.isEmpty) {
+                                if (_panNumberCl.text.trim().isEmpty) {
                                   Utils.showToast("Please Enter Valid Pan Card Details",context);
                                 }/* else if (_nameAsPanCl.text.isEmpty) {
                                   Utils.showToast("Please Enter Name (As Per Pan))",context);
                                 } else if (_dOBAsPanCl.text.isEmpty || dobAsPan.isEmpty) {
                                   Utils.showToast("Please Enter Name (As Per Pan))",context);
-                                }*/ else if (_fatherNameAsPanCl.text.isEmpty) {
+                                }*/ else if (_fatherNameAsPanCl.text.trim().isEmpty) {
                                   Utils.showToast("Please Enter Father Name!!!",context);
                                 } else if (image.isEmpty) {
                                   Utils.showToast("Upload PAN-CARD Image!! ",context);
@@ -580,13 +588,13 @@ class _PancardScreenState extends State<PancardScreen> {
                                     userId: userId,
                                     activityId: widget.activityId,
                                     subActivityId: widget.subActivityId,
-                                    uniqueId: _panNumberCl.text,
+                                    uniqueId: _panNumberCl.text.trim(),
                                     imagePath: image,
                                     documentId: documentId,
                                     companyId: companyId,
-                                    fathersName: _fatherNameAsPanCl.text,
+                                    fathersName: _fatherNameAsPanCl.text.trim(),
                                     dob: dobAsPan,
-                                    name: _nameAsPanCl.text,
+                                    name: _nameAsPanCl.text.trim(),
                                   );
                                   await postLeadPAN(context, productProvider,
                                       postLeadPanRequestModel);

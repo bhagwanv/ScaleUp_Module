@@ -429,8 +429,11 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                     content:
                         "I hereby agree to provide my Aadhaar Number and One Time Password (OTP) data for Aadhaar based authentication for KYC purpose in establishing my identity with Scaleupfincap Private Limited.",
                     onChanged: (bool? value) {
+
                       tcChecked = value!;
+                      print("1111$tcChecked");
                     },
+                    isChecked:tcChecked ,
                   ),
                 ),
                 const SizedBox(height: 46),

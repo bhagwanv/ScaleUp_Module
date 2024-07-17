@@ -68,6 +68,7 @@ class ApiUrls{
 
   final String getLeadMasterByLeadId="/services/lead/v1/ArthMate/GetLeadMasterByLeadId";
   final String getRateOfInterest="/services/lead/v1/ArthMate/GetRateOfInterest";
+  final String aadhaarOtpGenerate="/services/lead/v1/ArthMate/AadhaarOtpGenerate";
 
 
 }
