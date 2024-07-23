@@ -560,13 +560,13 @@ class _PancardScreenState extends State<PancardScreen> {
                                 final String? userId = prefsUtil.getString(USER_ID);
                                 final int? companyId = prefsUtil.getInt(COMPANY_ID);
 
-                                if (_panNumberCl.text.isEmpty) {
+                                if (_panNumberCl.text.trim().isEmpty) {
                                   Utils.showToast("Please Enter Valid Pan Card Details",context);
                                 }/* else if (_nameAsPanCl.text.isEmpty) {
                                   Utils.showToast("Please Enter Name (As Per Pan))",context);
                                 } else if (_dOBAsPanCl.text.isEmpty || dobAsPan.isEmpty) {
                                   Utils.showToast("Please Enter Name (As Per Pan))",context);
-                                }*/ else if (_fatherNameAsPanCl.text.isEmpty) {
+                                }*/ else if (_fatherNameAsPanCl.text.trim().isEmpty) {
                                   Utils.showToast("Please Enter Father Name!!!",context);
                                 } else if (image.isEmpty) {
                                   Utils.showToast("Upload PAN-CARD Image!! ",context);
@@ -580,13 +580,13 @@ class _PancardScreenState extends State<PancardScreen> {
                                     userId: userId,
                                     activityId: widget.activityId,
                                     subActivityId: widget.subActivityId,
-                                    uniqueId: _panNumberCl.text,
+                                    uniqueId: _panNumberCl.text.trim(),
                                     imagePath: image,
                                     documentId: documentId,
                                     companyId: companyId,
-                                    fathersName: _fatherNameAsPanCl.text,
+                                    fathersName: _fatherNameAsPanCl.text.trim(),
                                     dob: dobAsPan,
-                                    name: _nameAsPanCl.text,
+                                    name: _nameAsPanCl.text.trim(),
                                   );
                                   await postLeadPAN(context, productProvider,
                                       postLeadPanRequestModel);

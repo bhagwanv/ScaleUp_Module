@@ -1,7 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:scale_up_module/business_loan/data_provider/DataProvider.dart';
+import 'package:scale_up_module/business_loan/utils/constants.dart';
+import 'package:scale_up_module/business_loan/view/splash_screen/SplashScreen.dart';
+import '../../main.dart';
 import 'adhar_faild_widgets.dart';
 import 'kyc_faild_widgets.dart';
 
@@ -191,6 +197,67 @@ class Utils {
 
     return formattedDate;
 
+  }
+  static void internetConectivityDilog(String msg, BuildContext context) {
+
+    Widget okButton = TextButton(
+      child: Text("Retry", style: GoogleFonts.urbanist(
+        fontSize: 16,
+        color: kPrimaryColor,
+        fontWeight: FontWeight.w700,
+      ),),
+      onPressed: () {
+
+        Navigator.of(context).pop(false);
+        // Clear the navigator stack and restart the app
+       /* Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => MyApp()),
+              (Route<dynamic> route) => false,
+        );*/
+
+        // Replace the current screen with a new instance of MyApp
+       /* Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => MyApp()),
+        );*/
+
+        WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter is initialized
+        runApp(
+          ChangeNotifierProvider(
+            create: (context) => DataProvider(),
+            child: MyApp(),
+          ),
+        );
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(
+        "Alert",
+        style: GoogleFonts.urbanist(
+          fontSize: 20,
+          color: Colors.black,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      content: Text(msg, textAlign: TextAlign.justify, style: GoogleFonts.urbanist(
+        fontSize: 16,
+        color: Colors.black,
+        fontWeight: FontWeight.w400,
+      ),),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   static String dateMonthAndYearFormat(String date) {

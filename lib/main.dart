@@ -129,12 +129,13 @@ class _MyAppState extends State<MyApp> {
                 body: Center(child: Text('Error: ${snapshot.error}')));
           } else {
 
-            return SplashScreen(mobileNumber: "9522392801", companyID: "CN_67", productID: "BusinessLoan",);
+          //  return SplashScreen(mobileNumber: "9522392801", companyID: "CN_67", productID: "BusinessLoan",);
+           // return SplashScreen(mobileNumber: "8885554466", companyID: "2", productID: "2");
            // return LoanOfferScreen(activityId: 0, subActivityId: 0,);
             
-           /* return product == "BusinessLoan"
+            return product == "BusinessLoan"
                 ? _BusinessLoan()
-                : _Scale_supply_chain();*/
+                : _Scale_supply_chain();
 
            // return MsmeRegistrationScreen(activityId: 2, subActivityId: 2,sequenceNo: 8);
            // return BankDetailsScreen(activityId: 2, subActivityId: 2);

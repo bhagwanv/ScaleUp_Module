@@ -450,18 +450,24 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
       onChanged: (String? value) {
         selectedBusinessTypeValue = value!;
       },
-      buttonStyleData: const ButtonStyleData(
-        padding: EdgeInsets.only(right: 8),
+      dropdownStyleData: DropdownStyleData(
+        maxHeight: 400,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+        ),
       ),
-      dropdownStyleData: const DropdownStyleData(
-        maxHeight: 200,
-      ),
-      menuItemStyleData: MenuItemStyleData(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        customHeights: _getCustomItemsHeights(BusinessTypeList),
+      menuItemStyleData: const MenuItemStyleData(
+        padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
       ),
       iconStyleData: const IconStyleData(
-        openMenuIcon: Icon(Icons.arrow_drop_up),
+        icon: Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Icon(Icons.keyboard_arrow_down),
+        ), // Down arrow icon when closed
+        openMenuIcon: Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Icon(Icons.keyboard_arrow_up),
+        ), // Up arrow icon when open
       ),
     );
   }
@@ -481,13 +487,13 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
             ),
           ),
           //If it's last item, we will not add Divider after it.
-          if (item != items.last)
+         /* if (item != items.last)
             const DropdownMenuItem<String>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -519,13 +525,13 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
   }
 
   Future<void> submitpostLeadMSMEApi(BuildContext context, DataProvider productProvider,) async {
-    if (_msmeRegNumCl.text.isEmpty) {
+    if (_msmeRegNumCl.text.trim().isEmpty) {
       Utils.showToast("Please Enter MSME Registration Number", context);
-    } else if (_businesNameCl!.text.isEmpty) {
+    } else if (_businesNameCl!.text.trim().isEmpty) {
       Utils.showToast("Please Enter Business Name", context);
     }  else if (selectedBusinessTypeValue.isEmpty) {
       Utils.showToast("Please Select Business Type", context);
-    } else if (_vintageCl.text.isEmpty) {
+    } else if (_vintageCl.text.trim().isEmpty) {
       Utils.showToast("Please Vintage Month", context);
     } else if (msmeCertificateUrl.isEmpty) {
       Utils.showToast("Please Upload Pdf Document", context);
@@ -538,11 +544,11 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
       var postLeadMsmeReqModel = PostLeadMsmeReqModel(
           doi:doi,
           msmeCertificateUrl:msmeCertificateUrl,
-          msmeRegNum:_msmeRegNumCl.text,
+          msmeRegNum:_msmeRegNumCl.text.trim(),
           frontDocumentId:frontDocumentId,
-          businessName:_businesNameCl.text,
+          businessName:_businesNameCl.text.trim(),
           businessType:selectedBusinessTypeValue,
-          vintage:int.parse(_vintageCl.text),
+          vintage:int.parse(_vintageCl.text.trim()),
           leadMasterId:leadID,
           sequenceNo:widget.sequenceNo,
           leadId:leadID,

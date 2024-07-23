@@ -491,20 +491,24 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                 selectedOwnershipTypeValue = value;
                               });
                             },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.only(right: 8),
+                            dropdownStyleData: DropdownStyleData(
+                              maxHeight: 400,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
                             ),
-                            dropdownStyleData: const DropdownStyleData(
-                              maxHeight: 200,
-                            ),
-                            menuItemStyleData: MenuItemStyleData(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              customHeights:
-                                  _getCustomItemsHeights(ownershipTypeList),
+                            menuItemStyleData: const MenuItemStyleData(
+                              padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                             ),
                             iconStyleData: const IconStyleData(
-                              openMenuIcon: Icon(Icons.arrow_drop_up),
+                              icon: Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Icon(Icons.keyboard_arrow_down),
+                              ), // Down arrow icon when closed
+                              openMenuIcon: Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Icon(Icons.keyboard_arrow_up),
+                              ), // Up arrow icon when open
                             ),
                           ),
                           const SizedBox(height: 15),
@@ -578,21 +582,24 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                           }
                                         });
                                       },
-                                      buttonStyleData: const ButtonStyleData(
-                                        padding: EdgeInsets.only(right: 8),
+                                      dropdownStyleData: DropdownStyleData(
+                                        maxHeight: 400,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                        ),
                                       ),
-                                      dropdownStyleData:
-                                          const DropdownStyleData(
-                                        maxHeight: 200,
-                                      ),
-                                      menuItemStyleData: MenuItemStyleData(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        customHeights: _getCustomItemsHeights(
-                                            ownershipProofList),
+                                      menuItemStyleData: const MenuItemStyleData(
+                                        padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                                       ),
                                       iconStyleData: const IconStyleData(
-                                        openMenuIcon: Icon(Icons.arrow_drop_up),
+                                        icon: Padding(
+                                          padding: EdgeInsets.only(right: 10),
+                                          child: Icon(Icons.keyboard_arrow_down),
+                                        ), // Down arrow icon when closed
+                                        openMenuIcon: Padding(
+                                          padding: EdgeInsets.only(right: 10),
+                                          child: Icon(Icons.keyboard_arrow_up),
+                                        ), // Up arrow icon when open
                                       ),
                                     ),
                                     const SizedBox(height: 15),
@@ -849,7 +856,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
       Utils.showToast(data.message!, context);
       Navigator.of(context, rootNavigator: true).pop();
     } else {
-      callSendOptEmail(context, _emailIDCl.text);
+      callSendOptEmail(context, _emailIDCl.text.trim());
     }
   }
 
@@ -868,13 +875,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
           ),
           //If it's last item, we will not add Divider after it.
-          if (item != items.last)
+         /* if (item != items.last)
             const DropdownMenuItem<String>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -900,13 +907,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != items.last)
+         /* if (item != items.last)
             const DropdownMenuItem<ElectricityServiceProviderListResModel>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -929,13 +936,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != items.last)
+         /* if (item != items.last)
             const DropdownMenuItem<ElectricityStateResModel>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -1029,13 +1036,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != items.last)
+         /* if (item != items.last)
             const DropdownMenuItem<ReturnObject>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -1057,13 +1064,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != list.last)
+         /* if (item != list.last)
             const DropdownMenuItem<CityResponce>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -1086,13 +1093,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != list.last)
+          /*if (item != list.last)
             const DropdownMenuItem<CityResponce>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -1454,18 +1461,24 @@ class _PersonalInformationState extends State<PersonalInformation> {
               selectedMaritalStatusValue = value;
             });
           },
-          buttonStyleData: const ButtonStyleData(
-            padding: EdgeInsets.only(right: 8),
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 400,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
-          dropdownStyleData: const DropdownStyleData(
-            maxHeight: 200,
-          ),
-          menuItemStyleData: MenuItemStyleData(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            customHeights: _getCustomItemsHeights(maritalList),
+          menuItemStyleData: const MenuItemStyleData(
+            padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
           ),
           iconStyleData: const IconStyleData(
-            openMenuIcon: Icon(Icons.arrow_drop_up),
+            icon: Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(Icons.keyboard_arrow_down),
+            ), // Down arrow icon when closed
+            openMenuIcon: Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(Icons.keyboard_arrow_up),
+            ), // Up arrow icon when open
           ),
         ),
         SizedBox(height: 15),
@@ -1753,21 +1766,25 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   .getCurrentAllCity(value!.id!);
                             });
                           },
-                          buttonStyleData: const ButtonStyleData(
-                            padding: EdgeInsets.only(right: 8),
-                          ),
-                          dropdownStyleData: const DropdownStyleData(
-                            maxHeight: 200,
-                          ),
-                          menuItemStyleData: MenuItemStyleData(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            customHeights: _getCustomItemsHeights2(
-                                productProvider.getAllStateData!.returnObject!),
-                          ),
-                          iconStyleData: const IconStyleData(
-                            openMenuIcon: Icon(Icons.arrow_drop_up),
-                          ),
+                    dropdownStyleData: DropdownStyleData(
+                      maxHeight: 400,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                    ),
+                    iconStyleData: const IconStyleData(
+                      icon: Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(Icons.keyboard_arrow_down),
+                      ), // Down arrow icon when closed
+                      openMenuIcon: Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(Icons.keyboard_arrow_up),
+                      ), // Up arrow icon when open
+                    ),
                         )
                       : Container(),
                   const SizedBox(height: 15),
@@ -1809,20 +1826,25 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               selectedCurrentCity = value;
                             });
                           },
-                          buttonStyleData: const ButtonStyleData(
-                            padding: EdgeInsets.only(right: 8),
-                          ),
-                          dropdownStyleData: const DropdownStyleData(
-                            maxHeight: 200,
-                          ),
-                          menuItemStyleData: MenuItemStyleData(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            customHeights: _getCustomItemsHeights3(citylist),
-                          ),
-                          iconStyleData: const IconStyleData(
-                            openMenuIcon: Icon(Icons.arrow_drop_up),
-                          ),
+                    dropdownStyleData: DropdownStyleData(
+                      maxHeight: 400,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                    ),
+                    iconStyleData: const IconStyleData(
+                      icon: Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(Icons.keyboard_arrow_down),
+                      ), // Down arrow icon when closed
+                      openMenuIcon: Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(Icons.keyboard_arrow_up),
+                      ), // Up arrow icon when open
+                    ),
                         )
                       : Container(),
                 ],
@@ -1886,20 +1908,20 @@ class _PersonalInformationState extends State<PersonalInformation> {
     }
 
     PersonalDetailsRequestModel postData = PersonalDetailsRequestModel(
-        firstName: _firstNameCl.text.toString(),
-        lastName: _lastNameCl.text.toString(),
+        firstName: _firstNameCl.text.trim().toString(),
+        lastName: _lastNameCl.text.trim().toString(),
         fatherName: personalDetailsResponce!.fatherName!,
         fatherLastName: personalDetailsResponce!.fatherLastName!,
         dOB: "",
-        alternatePhoneNo: _alternatePhoneNumberCl.text.toString(),
-        emailId: _emailIDCl.text.toString(),
+        alternatePhoneNo: _alternatePhoneNumberCl.text.trim().toString(),
+        emailId: _emailIDCl.text.trim().toString(),
         typeOfAddress: "Permanent",
         permanentAddressLine1: personalDetailsResponce!.permanentAddressLine1!,
         permanentAddressLine2: personalDetailsResponce!.permanentAddressLine2!,
         permanentPincode: personalDetailsResponce!.permanentPincode!.toString(),
         permanentCity: personalDetailsResponce!.permanentCity!.toString(),
         permanentState: personalDetailsResponce!.permanentState!.toString(),
-        pincode: _currentAddressPinCodeCl.text.toString(),
+        pincode: _currentAddressPinCodeCl.text.trim().toString(),
         state: currentStateId,
         city: currentCityId,
         residenceStatus: "",
@@ -1907,17 +1929,17 @@ class _PersonalInformationState extends State<PersonalInformation> {
         userId: userId,
         activityId: widget.activityId!,
         subActivityId: widget.subActivityId!,
-        middleName: _middleNameCl.text.toString(),
+        middleName: _middleNameCl.text.trim().toString(),
         companyId: companyId,
         mobileNo: mobileNo,
         ownershipType: selectedOwnershipTypeValue,
         ownershipTypeAddress: "",
         ownershipTypeName: "",
         ownershipTypeResponseId: "",
-        gender: _genderCl.text.toString(),
+        gender: _genderCl.text.trim().toString(),
         marital: selectedMaritalStatusValue,
-        resAddress1: _currentAddressLineOneCl.text.toString(),
-        resAddress2: _currentAddressLineTwoCl.text.toString(),
+        resAddress1: _currentAddressLineOneCl.text.trim().toString(),
+        resAddress2: _currentAddressLineTwoCl.text.trim().toString(),
         ownershipTypeProof: selectOwnershipProofValue,
         electricityBillDocumentId:
             selectOwnershipProofValue == "Electricity Manual Bill Upload"
@@ -1925,7 +1947,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 : null,
         ivrsNumber:
             selectOwnershipProofValue != "Electricity Manual Bill Upload"
-                ? _customerIvrsCl.text.toString()
+                ? _customerIvrsCl.text.trim().toString()
                 : null,
         electricityServiceProvider:
             selectOwnershipProofValue != "Electricity Manual Bill Upload"
@@ -1939,16 +1961,16 @@ class _PersonalInformationState extends State<PersonalInformation> {
     bool isValid = false;
     String errorMessage = "";
 
-    if (_firstNameCl.text.toString().isEmpty) {
+    if (_firstNameCl.text.trim().toString().isEmpty) {
       errorMessage = "First name should not be empty";
       isValid = false;
-    } else if (_lastNameCl.text.toString().isEmpty) {
+    } else if (_lastNameCl.text.trim().toString().isEmpty) {
       errorMessage = "Last name should not be empty";
       isValid = false;
-    } else if (_alternatePhoneNumberCl.text.toString().isEmpty) {
+    } else if (_alternatePhoneNumberCl.text.trim().toString().isEmpty) {
       errorMessage = "Alternate Mobile Number should not be empty";
       isValid = false;
-    } else if (_emailIDCl.text.toString().isEmpty) {
+    } else if (_emailIDCl.text.trim().toString().isEmpty) {
       errorMessage = "Email should not be empty";
       isValid = false;
     } else if (userId!.isEmpty) {
@@ -2036,7 +2058,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
       productProvider.getIvrsData!.when(
         success: (data) async {
           // Handle successful response
-          consumerNumber = _customerIvrsCl.text.toString();
+          consumerNumber = _customerIvrsCl.text.trim().toString();
           if (data.result!) {
             Utils.showToast("Data Already Exists", context);
           } else {
@@ -2077,8 +2099,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
           }
 
           selectServiceProviderList.forEach((var data) {
-            if (_electryCityServiceCl.text.isNotEmpty) {
-              if (_electryCityServiceCl.text == data.serviceProvider) {
+            if (_electryCityServiceCl.text.trim().isNotEmpty) {
+              if (_electryCityServiceCl.text.trim() == data.serviceProvider) {
                 selectedStateValue = data.state;
               }
             }
@@ -2140,7 +2162,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
     var clientData = ClientData(caseId: leadeId.toString());
     var electricityAuthenticationReqModel = ElectricityAuthenticationReqModel(
-        consumerId: _customerIvrsCl.text,
+        consumerId: _customerIvrsCl.text.trim(),
         consent: "Y",
         district: districtName,
         serviceProvider: selectServiceProviderCode,
@@ -2334,20 +2356,24 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   getKarzaElectricityState(
                                       context, productProvider);
                                 },
-                                buttonStyleData: const ButtonStyleData(
-                                  padding: EdgeInsets.only(right: 8),
+                                dropdownStyleData: DropdownStyleData(
+                                  maxHeight: 400,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
                                 ),
-                                dropdownStyleData: const DropdownStyleData(
-                                  maxHeight: 200,
-                                ),
-                                menuItemStyleData: MenuItemStyleData(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  customHeights: _getCustomItemsHeightsService(
-                                      selectServiceProviderList),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                                 ),
                                 iconStyleData: const IconStyleData(
-                                  openMenuIcon: Icon(Icons.arrow_drop_up),
+                                  icon: Padding(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Icon(Icons.keyboard_arrow_down),
+                                  ), // Down arrow icon when closed
+                                  openMenuIcon: Padding(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Icon(Icons.keyboard_arrow_up),
+                                  ), // Up arrow icon when open
                                 ),
                               ),
                             ],
@@ -2459,20 +2485,24 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                       selectDistrictValue!.districtName
                                           .toString());
                                 },
-                                buttonStyleData: const ButtonStyleData(
-                                  padding: EdgeInsets.only(right: 8),
+                                dropdownStyleData: DropdownStyleData(
+                                  maxHeight: 400,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
                                 ),
-                                dropdownStyleData: const DropdownStyleData(
-                                  maxHeight: 200,
-                                ),
-                                menuItemStyleData: MenuItemStyleData(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  customHeights: _getCustomItemsHeightsDistic(
-                                      selectDistrictList),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                                 ),
                                 iconStyleData: const IconStyleData(
-                                  openMenuIcon: Icon(Icons.arrow_drop_up),
+                                  icon: Padding(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Icon(Icons.keyboard_arrow_down),
+                                  ), // Down arrow icon when closed
+                                  openMenuIcon: Padding(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Icon(Icons.keyboard_arrow_up),
+                                  ), // Up arrow icon when open
                                 ),
                               ),
                             ],

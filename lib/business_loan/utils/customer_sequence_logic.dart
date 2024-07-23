@@ -5,6 +5,7 @@ import '../view/aadhaar_screen/aadhaar_screen.dart';
 import '../view/bank_details_screen/BankDetailsScreen.dart';
 import '../view/business_details_screen/business_details_screen.dart';
 import '../view/dashboard_screen/bottom_navigation.dart';
+import '../view/loan_offer_screen/LoanOfferScreen.dart';
 import '../view/pancard_screen/PancardScreen.dart';
 import '../view/personal_info/PersonalInformation.dart';
 import '../view/profile_screen/components/ShowOffersScreen.dart';
@@ -161,7 +162,14 @@ ScreenType? customerSequence(
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
                 builder: (context) => MsmeRegistrationScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)));
-          return ScreenType.MyAccount;
+          return ScreenType.Msme;
+        }
+        else if (leadCurrentActivity.activityName == "Arthmate Show Offer") {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => LoanOfferScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)),
+          );
+          return ScreenType.loanOffer;
         }
       } else {
         return null;
@@ -309,7 +317,14 @@ ScreenType? customerSequence(
             MaterialPageRoute(
                 builder: (context) => MsmeRegistrationScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)),
           );
-          return ScreenType.MyAccount;
+          return ScreenType.Msme;
+        }
+        else if (leadCurrentActivity.activityName == "Arthmate Show Offer") {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => LoanOfferScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)),
+          );
+          return ScreenType.loanOffer;
         }
       } else {
         return null;

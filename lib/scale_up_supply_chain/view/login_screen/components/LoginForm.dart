@@ -124,7 +124,7 @@ class _LoginFormState extends State<LoginForm> {
             children: [
               CommonElevatedButton(
                 onPressed: () async {
-                  if (_mobileNumberCl.text.isEmpty) {
+                  if (_mobileNumberCl.text.trim().isEmpty) {
                     Utils.showToast("Please Enter Mobile Number",context);
                   } else if (!Utils.isPhoneNoValid(_mobileNumberCl.text)) {
                     Utils.showToast("Please Enter Valid Mobile Number",context);
@@ -134,7 +134,7 @@ class _LoginFormState extends State<LoginForm> {
 
                     final prefsUtil = await SharedPref.getInstance();
                     Utils.onLoading(context, "");
-                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(context, _mobileNumberCl.text, widget.companyID!);
+                    await Provider.of<DataProvider>(context, listen: false).genrateOtp(context, _mobileNumberCl.text.trim(), widget.companyID!);
 
                     if (widget.productProvider!.genrateOptData != null) {
                       widget.productProvider!.genrateOptData!.when(

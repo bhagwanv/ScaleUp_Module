@@ -77,13 +77,13 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
               ),
             ),
           ),
-          if (item != items.last)
+        /*  if (item != items.last)
             const DropdownMenuItem<ReturnObject>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -458,7 +458,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 if (text.length == 15) {
                                   try {
                                     Utils.hideKeyBored(context);
-                                    await getCustomerDetailUsingGST(context, _gstController.text);
+                                    await getCustomerDetailUsingGST(context, _gstController.text.trim());
                                     if (productProvider.getCustomerDetailUsingGSTData != null) {
                                       if (productProvider
                                               .getCustomerDetailUsingGSTData!
@@ -644,18 +644,24 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         onChanged: (String? value) {
                           selectedBusinessTypeValue = value;
                         },
-                        buttonStyleData: const ButtonStyleData(
-                          padding: EdgeInsets.only(right: 8),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 400,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
-                        dropdownStyleData: const DropdownStyleData(
-                          maxHeight: 200,
-                        ),
-                        menuItemStyleData: MenuItemStyleData(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights: _getCustomItemsHeights(businessTypeList),
+                        menuItemStyleData: const MenuItemStyleData(
+                          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                         ),
                         iconStyleData: const IconStyleData(
-                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                          icon: Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: Icon(Icons.keyboard_arrow_down),
+                          ), // Down arrow icon when closed
+                          openMenuIcon: Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: Icon(Icons.keyboard_arrow_up),
+                          ), // Up arrow icon when open
                         ),
                       ),
                       const SizedBox(
@@ -697,19 +703,24 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         onChanged: (String? value) {
                           selectedMonthlySalesTurnoverValue = value;
                         },
-                        buttonStyleData: const ButtonStyleData(
-                          padding: EdgeInsets.only(right: 8),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 400,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
-                        dropdownStyleData: const DropdownStyleData(
-                          maxHeight: 200,
-                        ),
-                        menuItemStyleData: MenuItemStyleData(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights:
-                              _getCustomItemsHeights(monthlySalesTurnoverList),
+                        menuItemStyleData: const MenuItemStyleData(
+                          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                         ),
                         iconStyleData: const IconStyleData(
-                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                          icon: Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: Icon(Icons.keyboard_arrow_down),
+                          ), // Down arrow icon when closed
+                          openMenuIcon: Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: Icon(Icons.keyboard_arrow_up),
+                          ), // Up arrow icon when open
                         ),
                       ),
                       const SizedBox(
@@ -798,19 +809,24 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                             selectedChooseBusinessProofValue = value;
                           });
                         },
-                        buttonStyleData: const ButtonStyleData(
-                          padding: EdgeInsets.only(right: 8),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 400,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
-                        dropdownStyleData: const DropdownStyleData(
-                          maxHeight: 200,
-                        ),
-                        menuItemStyleData: MenuItemStyleData(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights:
-                              _getCustomItemsHeights(chooseBusinessProofList),
+                        menuItemStyleData: const MenuItemStyleData(
+                          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                         ),
                         iconStyleData: const IconStyleData(
-                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                          icon: Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: Icon(Icons.keyboard_arrow_down),
+                          ), // Down arrow icon when closed
+                          openMenuIcon: Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: Icon(Icons.keyboard_arrow_up),
+                          ), // Up arrow icon when open
                         ),
                       ),
                       const SizedBox(
@@ -974,17 +990,17 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       const SizedBox(height: 54.0),
                       CommonElevatedButton(
                         onPressed: () async {
-                          if (_businessNameController.text.isEmpty) {
+                          if (_businessNameController.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Business Name (As Per Doc)",
                                 context);
-                          } else if (_addressLineController.text.isEmpty) {
+                          } else if (_addressLineController.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Address Line 1", context);
-                          } else if (_addressLine2Controller.text.isEmpty) {
+                          } else if (_addressLine2Controller.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Address Line 2", context);
-                          } else if (_pinCodeController.text.isEmpty) {
+                          } else if (_pinCodeController.text.trim().isEmpty) {
                             Utils.showToast("Please Enter Pin Code", context);
                           } else if (selectedBusinessTypeValue == null) {
                             Utils.showToast(
@@ -992,7 +1008,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           } else if (selectedMonthlySalesTurnoverValue == null) {
                             Utils.showToast("Please Select Income Slab", context);
                           } else if (_businessDocumentNumberController
-                              .text.isEmpty) {
+                              .text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Business Document Number", context);
                           } else if (businessProofDocId == null) {
@@ -1126,19 +1142,24 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                     .getAllCity(value!.id!);
                 selectedStateValue = value.id!.toString();
               },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights2(
-              productProvider.getAllStateData!.returnObject!),
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         ),
         iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
+          icon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
         ),
       );
     } else {
@@ -1217,18 +1238,24 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   setCityListFirstTime = false;
                 });
               },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights3(citylist),
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         ),
         iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
+          icon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
         ),
       );
     } else {

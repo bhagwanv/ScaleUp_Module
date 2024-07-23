@@ -491,20 +491,24 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                 selectedOwnershipTypeValue = value;
                               });
                             },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.only(right: 8),
+                            dropdownStyleData: DropdownStyleData(
+                              maxHeight: 400,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
                             ),
-                            dropdownStyleData: const DropdownStyleData(
-                              maxHeight: 200,
-                            ),
-                            menuItemStyleData: MenuItemStyleData(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              customHeights:
-                                  _getCustomItemsHeights(ownershipTypeList),
+                            menuItemStyleData: const MenuItemStyleData(
+                              padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                             ),
                             iconStyleData: const IconStyleData(
-                              openMenuIcon: Icon(Icons.arrow_drop_up),
+                              icon: Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Icon(Icons.keyboard_arrow_down),
+                              ), // Down arrow icon when closed
+                              openMenuIcon: Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Icon(Icons.keyboard_arrow_up),
+                              ), // Up arrow icon when open
                             ),
                           ),
                           const SizedBox(height: 15),
@@ -578,21 +582,24 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                           }
                                         });
                                       },
-                                      buttonStyleData: const ButtonStyleData(
-                                        padding: EdgeInsets.only(right: 8),
+                                      dropdownStyleData: DropdownStyleData(
+                                        maxHeight: 400,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                        ),
                                       ),
-                                      dropdownStyleData:
-                                          const DropdownStyleData(
-                                        maxHeight: 200,
-                                      ),
-                                      menuItemStyleData: MenuItemStyleData(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        customHeights: _getCustomItemsHeights(
-                                            ownershipProofList),
+                                      menuItemStyleData: const MenuItemStyleData(
+                                        padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                                       ),
                                       iconStyleData: const IconStyleData(
-                                        openMenuIcon: Icon(Icons.arrow_drop_up),
+                                        icon: Padding(
+                                          padding: EdgeInsets.only(right: 10),
+                                          child: Icon(Icons.keyboard_arrow_down),
+                                        ), // Down arrow icon when closed
+                                        openMenuIcon: Padding(
+                                          padding: EdgeInsets.only(right: 10),
+                                          child: Icon(Icons.keyboard_arrow_up),
+                                        ), // Up arrow icon when open
                                       ),
                                     ),
                                     const SizedBox(height: 15),
@@ -868,13 +875,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
           ),
           //If it's last item, we will not add Divider after it.
-          if (item != items.last)
+         /* if (item != items.last)
             const DropdownMenuItem<String>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -900,13 +907,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != items.last)
+          /*if (item != items.last)
             const DropdownMenuItem<ElectricityServiceProviderListResModel>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -929,13 +936,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != items.last)
+         /* if (item != items.last)
             const DropdownMenuItem<ElectricityStateResModel>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -1029,13 +1036,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != items.last)
+         /* if (item != items.last)
             const DropdownMenuItem<ReturnObject>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -1057,13 +1064,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != list.last)
+          /*if (item != list.last)
             const DropdownMenuItem<CityResponce>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -1086,13 +1093,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != list.last)
+         /* if (item != list.last)
             const DropdownMenuItem<CityResponce>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -1456,18 +1463,24 @@ class _PersonalInformationState extends State<PersonalInformation> {
               selectedMaritalStatusValue = value;
             });
           },
-          buttonStyleData: const ButtonStyleData(
-            padding: EdgeInsets.only(right: 8),
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 400,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
-          dropdownStyleData: const DropdownStyleData(
-            maxHeight: 200,
-          ),
-          menuItemStyleData: MenuItemStyleData(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            customHeights: _getCustomItemsHeights(maritalList),
+          menuItemStyleData: const MenuItemStyleData(
+            padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
           ),
           iconStyleData: const IconStyleData(
-            openMenuIcon: Icon(Icons.arrow_drop_up),
+            icon: Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(Icons.keyboard_arrow_down),
+            ), // Down arrow icon when closed
+            openMenuIcon: Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(Icons.keyboard_arrow_up),
+            ), // Up arrow icon when open
           ),
         ),
         SizedBox(height: 15),
@@ -1758,21 +1771,25 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   .getCurrentAllCity(value!.id!);
                             });
                           },
-                          buttonStyleData: const ButtonStyleData(
-                            padding: EdgeInsets.only(right: 8),
-                          ),
-                          dropdownStyleData: const DropdownStyleData(
-                            maxHeight: 200,
-                          ),
-                          menuItemStyleData: MenuItemStyleData(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            customHeights: _getCustomItemsHeights2(
-                                productProvider.getAllStateData!.returnObject!),
-                          ),
-                          iconStyleData: const IconStyleData(
-                            openMenuIcon: Icon(Icons.arrow_drop_up),
-                          ),
+                    dropdownStyleData: DropdownStyleData(
+                      maxHeight: 400,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                    ),
+                    iconStyleData: const IconStyleData(
+                      icon: Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(Icons.keyboard_arrow_down),
+                      ), // Down arrow icon when closed
+                      openMenuIcon: Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(Icons.keyboard_arrow_up),
+                      ), // Up arrow icon when open
+                    ),
                         )
                       : Container(),
                   const SizedBox(height: 15),
@@ -1814,20 +1831,25 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               selectedCurrentCity = value;
                             });
                           },
-                          buttonStyleData: const ButtonStyleData(
-                            padding: EdgeInsets.only(right: 8),
-                          ),
-                          dropdownStyleData: const DropdownStyleData(
-                            maxHeight: 200,
-                          ),
-                          menuItemStyleData: MenuItemStyleData(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            customHeights: _getCustomItemsHeights3(citylist),
-                          ),
-                          iconStyleData: const IconStyleData(
-                            openMenuIcon: Icon(Icons.arrow_drop_up),
-                          ),
+                    dropdownStyleData: DropdownStyleData(
+                      maxHeight: 400,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                    ),
+                    iconStyleData: const IconStyleData(
+                      icon: Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(Icons.keyboard_arrow_down),
+                      ), // Down arrow icon when closed
+                      openMenuIcon: Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(Icons.keyboard_arrow_up),
+                      ), // Up arrow icon when open
+                    ),
                         )
                       : Container(),
                 ],
@@ -2339,20 +2361,24 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   getKarzaElectricityState(
                                       context, productProvider);
                                 },
-                                buttonStyleData: const ButtonStyleData(
-                                  padding: EdgeInsets.only(right: 8),
+                                dropdownStyleData: DropdownStyleData(
+                                  maxHeight: 400,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
                                 ),
-                                dropdownStyleData: const DropdownStyleData(
-                                  maxHeight: 200,
-                                ),
-                                menuItemStyleData: MenuItemStyleData(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  customHeights: _getCustomItemsHeightsService(
-                                      selectServiceProviderList),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                                 ),
                                 iconStyleData: const IconStyleData(
-                                  openMenuIcon: Icon(Icons.arrow_drop_up),
+                                  icon: Padding(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Icon(Icons.keyboard_arrow_down),
+                                  ), // Down arrow icon when closed
+                                  openMenuIcon: Padding(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Icon(Icons.keyboard_arrow_up),
+                                  ), // Up arrow icon when open
                                 ),
                               ),
                             ],
@@ -2464,20 +2490,24 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                       selectDistrictValue!.districtName
                                           .toString());
                                 },
-                                buttonStyleData: const ButtonStyleData(
-                                  padding: EdgeInsets.only(right: 8),
+                                dropdownStyleData: DropdownStyleData(
+                                  maxHeight: 400,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
                                 ),
-                                dropdownStyleData: const DropdownStyleData(
-                                  maxHeight: 200,
-                                ),
-                                menuItemStyleData: MenuItemStyleData(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  customHeights: _getCustomItemsHeightsDistic(
-                                      selectDistrictList),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                                 ),
                                 iconStyleData: const IconStyleData(
-                                  openMenuIcon: Icon(Icons.arrow_drop_up),
+                                  icon: Padding(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Icon(Icons.keyboard_arrow_down),
+                                  ), // Down arrow icon when closed
+                                  openMenuIcon: Padding(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Icon(Icons.keyboard_arrow_up),
+                                  ), // Up arrow icon when open
                                 ),
                               ),
                             ],

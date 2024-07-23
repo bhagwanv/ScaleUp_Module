@@ -243,7 +243,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                     onPressed: () async {
                       await callVerifyOtpApi(
                           context,
-                          pinController.text,
+                          pinController.text.trim(),
                           productProvider,
                           widget.activityId!,
                           widget.subActivityId!,

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,7 +10,11 @@ import 'package:provider/provider.dart';
 import 'package:scale_up_module/business_loan/api/ApiService.dart';
 import 'package:scale_up_module/business_loan/api/FailureException.dart';
 import 'package:scale_up_module/business_loan/utils/common_elevted_button.dart';
+import 'package:scale_up_module/business_loan/utils/customer_sequence_logic.dart';
 import 'package:scale_up_module/business_loan/utils/loader.dart';
+import 'package:scale_up_module/business_loan/view/splash_screen/model/GetLeadResponseModel.dart';
+import 'package:scale_up_module/business_loan/view/splash_screen/model/LeadCurrentRequestModel.dart';
+import 'package:scale_up_module/business_loan/view/splash_screen/model/LeadCurrentResponseModel.dart';
 
 import '../../../business_loan/data_provider/DataProvider.dart';
 import '../../../business_loan/utils/Utils.dart';
@@ -22,12 +27,13 @@ class LoanOfferScreen extends StatefulWidget {
   final int activityId;
   final int subActivityId;
   final String? pageType;
+  final int sequenceNo;
 
   const LoanOfferScreen(
       {super.key,
       required this.activityId,
       required this.subActivityId,
-      this.pageType});
+      this.pageType, required this.sequenceNo});
 
   @override
   State<LoanOfferScreen> createState() => _LoanOfferScreenState();
@@ -858,6 +864,41 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
     await Provider.of<DataProvider>(context, listen: false)
         .getRateOfInterest(tenure);
     Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future<void> fetchData(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    try {
+      LeadCurrentResponseModel? leadCurrentActivityAsyncData;
+      var leadCurrentRequestModel = LeadCurrentRequestModel(
+        companyId: prefsUtil.getInt(COMPANY_ID),
+        productId: prefsUtil.getInt(PRODUCT_ID),
+        leadId: prefsUtil.getInt(LEADE_ID),
+        userId: prefsUtil.getString(USER_ID),
+        mobileNo: prefsUtil.getString(LOGIN_MOBILE_NUMBER),
+        activityId: widget.activityId,
+        subActivityId: widget.subActivityId,
+        monthlyAvgBuying: 0,
+        vintageDays: 0,
+        isEditable: true,
+      );
+      leadCurrentActivityAsyncData =
+      await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+      as LeadCurrentResponseModel?;
+
+      GetLeadResponseModel? getLeadData;
+      getLeadData = await ApiService().getLeads(
+          prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
+          prefsUtil.getInt(COMPANY_ID)!,
+          prefsUtil.getInt(PRODUCT_ID)!,
+          prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
+
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error occurred during API call: $error');
+      }
+    }
   }
 }
 

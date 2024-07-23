@@ -325,18 +325,18 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                           CommonElevatedButton(
                                             onPressed: () async {
 
-                                              if(pinController.text.isEmpty){
+                                              if(pinController.text.trim().isEmpty){
                                                 Utils.showBottomSheet(
                                                     context,
                                                     "Please enter the OTP we just sent you on your mobile number",
                                                     VALIDACTION_IMAGE_PATH);
-                                              }else if(pinController.text.length < 6){
+                                              }else if(pinController.text.trim().length < 6){
                                                 Utils.showBottomSheet(
                                                     context,
                                                     "Please enter the OTP we just sent you on your mobile number",
                                                     VALIDACTION_IMAGE_PATH);
                                               }else{
-                                                callValidOtpApi(context,pinController.text,productProvider);
+                                                callValidOtpApi(context,pinController.text.trim(),productProvider);
                                               }
                                             },
                                             text: "Verify Code",

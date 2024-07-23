@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:scale_up_module/scale_up_supply_chain/utils/Utils.dart';
 import '../../ProductCompanyDetailResponseModel.dart';
 import '../shared_preferences/SharedPref.dart';
 import '../utils/InternetConnectivity.dart';
@@ -114,6 +115,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+        Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -136,6 +138,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -163,6 +166,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -193,6 +197,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -254,6 +259,7 @@ class ApiService {
         throw Exception('Error uploading file: $e');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -286,6 +292,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -324,6 +331,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -359,6 +367,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -395,6 +404,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -423,6 +433,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -459,6 +470,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -492,6 +504,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -524,6 +537,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -560,6 +574,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -592,6 +607,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -628,6 +644,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -665,6 +682,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -692,6 +710,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -719,6 +738,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -745,6 +765,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -769,6 +790,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -798,6 +820,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -826,6 +849,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -865,6 +889,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -892,6 +917,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -915,6 +941,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -949,6 +976,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -977,6 +1005,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -1008,6 +1037,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1041,6 +1071,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1070,6 +1101,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -1096,6 +1128,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -1121,6 +1154,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1149,6 +1183,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1177,6 +1212,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1205,6 +1241,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         throw Exception('No internet connection');
       }
     } on Exception catch (e) {
@@ -1234,6 +1271,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -1258,6 +1296,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         throw Exception('No internet connection');
       }
     } on Exception catch (e) {
@@ -1286,6 +1325,7 @@ class ApiService {
             return Failure(Exception(response.reasonPhrase));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         throw Exception('No internet connection');
       }
     } on Exception catch (e) {
@@ -1317,6 +1357,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1347,6 +1388,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1378,6 +1420,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1416,6 +1459,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1452,6 +1496,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1480,6 +1525,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1516,6 +1562,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1544,6 +1591,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1580,6 +1628,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1608,6 +1657,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1634,6 +1684,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -1659,6 +1710,7 @@ class ApiService {
             return Failure(ApiException(response.statusCode, ""));
         }
       } else {
+        Utils.showBottomToast("No Internet connection");
         return Failure(Exception("No Internet connection"));
       }
     } on Exception catch (e) {
@@ -1692,6 +1744,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
@@ -1723,6 +1776,7 @@ class ApiService {
         throw Exception('Failed to load products');
       }
     } else {
+      Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
     }
   }
