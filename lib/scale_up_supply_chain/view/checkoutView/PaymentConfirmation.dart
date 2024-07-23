@@ -58,7 +58,7 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
         body: SafeArea(
             top: true,
             bottom: true,
-            child: Consumer<DataProvider>(
+            child: Consumer<SupplyChainDataProvider>(
                 builder: (context, productProvider, child) {
               if (productProvider.getTranscationData == null && isLoading) {
                 return Center(child: Loader());
@@ -802,14 +802,14 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
   }
 
   Future<void> callTransaction(String transactionReqNo) async {
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .GetByTransactionReqNo(transactionReqNo);
   }
 
-  void payemtOrderPost(BuildContext context, DataProvider productProvider, TransactionDetailModel transactionDetailModel)async {
+  void payemtOrderPost(BuildContext context, SupplyChainDataProvider productProvider, TransactionDetailModel transactionDetailModel)async {
     Utils.onLoading(context, "");
     var  payemtOrderPostRequestModel =  PayemtOrderPostRequestModel(transactionReqNo: transactionDetailModel.response!.transactionReqNo,amount: transactionDetailModel.response!.transactionAmount!,mobileNo: transactionDetailModel.response!.mobileNo!,loanAccountId: transactionDetailModel.response!.loanAccountId!,creditDay:creditDays);
-    await Provider.of<DataProvider>(context, listen: false).PostOrderPlacement(payemtOrderPostRequestModel);
+    await Provider.of<SupplyChainDataProvider>(context, listen: false).PostOrderPlacement(payemtOrderPostRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
 
     productProvider.postPaymentOrderData!.when(

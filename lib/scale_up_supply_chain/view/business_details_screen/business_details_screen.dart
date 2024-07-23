@@ -121,7 +121,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   void _onImageSelected(File imageFile) async {
     isImageDelete = false;
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .postBusineesDoumentSingleFile(imageFile, true, "", "");
 
     setState(() {
@@ -286,7 +286,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           top: true,
           bottom: true,
           child:
-              Consumer<DataProvider>(builder: (context, productProvider, child) {
+              Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
             if (productProvider.getLeadBusinessDetailData == null && isLoading) {
               return const Loader();
             } else {
@@ -1048,7 +1048,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     );
   }
 
-  Widget buildStateField(DataProvider productProvider) {
+  Widget buildStateField(SupplyChainDataProvider productProvider) {
     ReturnObject? initialData;
 
     if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
@@ -1072,7 +1072,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
           if (cityCallInitial) {
             citylist.clear();
-            Provider.of<DataProvider>(context, listen: false).getAllCity(
+            Provider.of<SupplyChainDataProvider>(context, listen: false).getAllCity(
                 productProvider.getCustomerDetailUsingGSTData!.stateId!);
             cityCallInitial = false;
           }
@@ -1095,7 +1095,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
         }
         if (cityCallInitial) {
           citylist.clear();
-          Provider.of<DataProvider>(context, listen: false)
+          Provider.of<SupplyChainDataProvider>(context, listen: false)
               .getAllCity(productProvider.getLeadBusinessDetailData!.stateId!);
           cityCallInitial = false;
         }
@@ -1138,7 +1138,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
             : (ReturnObject? value) {
                 citylist.clear();
                 setStateListFirstTime = false;
-                Provider.of<DataProvider>(context, listen: false)
+                Provider.of<SupplyChainDataProvider>(context, listen: false)
                     .getAllCity(value!.id!);
                 selectedStateValue = value.id!.toString();
               },
@@ -1167,7 +1167,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     }
   }
 
-  Widget buildCityField(DataProvider productProvider) {
+  Widget buildCityField(SupplyChainDataProvider productProvider) {
     if (productProvider.getAllCityData != null) {
       CityResponce? initialData;
       if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
@@ -1294,12 +1294,12 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   Future<void> getCustomerDetailUsingGST(
       BuildContext context, String gstNumber) async {
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getCustomerDetailUsingGST(gstNumber);
     Navigator.of(context, rootNavigator: true).pop();
   }
 
-  Future<void> postLeadBuisnessDetail(BuildContext context, DataProvider productProvider) async {
+  Future<void> postLeadBuisnessDetail(BuildContext context, SupplyChainDataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     Utils.onLoading(context, "");
 
@@ -1325,7 +1325,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       buisnessProof: selectedChooseBusinessProofValue,
     );
     debugPrint("Post DATA:: ${postLeadBuisnessDetailRequestModel.toJson()}");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -1372,10 +1372,10 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     final String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getLeadBusinessDetail(userId!,productCode!);
 
-    await Provider.of<DataProvider>(context, listen: false).getAllState();
+    await Provider.of<SupplyChainDataProvider>(context, listen: false).getAllState();
   }
 
   Future<void> fetchData(BuildContext context) async {

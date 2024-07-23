@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:scale_up_module/business_loan/data_provider/DataProvider.dart';
 import 'package:scale_up_module/business_loan/view/business_details_screen/business_details_screen.dart';
-import 'business_loan/data_provider/DataProvider.dart';
+import 'package:scale_up_module/scale_up_supply_chain/data_provider/DataProvider.dart';
+import 'package:scale_up_module/scale_up_supply_chain/view/splash_screen/SplashScreen.dart';
+
 import 'business_loan/shared_preferences/SharedPref.dart';
 import 'business_loan/utils/constants.dart';
 import 'business_loan/view/bank_details_screen/BankDetailsScreen.dart';
@@ -23,10 +26,19 @@ var transactionId = "";
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter is initialized
   runApp(
-    ChangeNotifierProvider(
+   /* ChangeNotifierProvider(
       create: (context) => DataProvider(),
       child: MyApp(),
+    ),*/
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => DataProvider()),
+        ChangeNotifierProvider(create: (context) => SupplyChainDataProvider()),
+        // Add more providers here
+      ],
+      child: MyApp(),
     ),
+
   );
 }
 
@@ -75,29 +87,32 @@ class _MyAppState extends State<MyApp> {
 
 
   Widget _Scale_supply_chain() {
-    if (transactionId.isNotEmpty) {
+    /*if (transactionId.isNotEmpty) {
       return CheckOutOtpScreen(transactionId: transactionId);
     } else if (mobileNumber.isNotEmpty) {
-      return SplashScreen(
+      return SupplyChainSplashScreen(
         mobileNumber: mobileNumber,
         companyID: company,
         productID: product);
     } else {
       return EmptyContainer();
-    }
+    }*/
+     return SupplyChainSplashScreen(mobileNumber: "7803994667", companyID: "CN_1", productID: 'CreditLine',);
   }
 
   Widget _BusinessLoan() {
-    if (transactionId.isNotEmpty) {
+   /* if (transactionId.isNotEmpty) {
       return CheckOutOtpScreen(transactionId: transactionId);
     } else if (mobileNumber.isNotEmpty) {
-      return SplashScreen(
+      return BusinessLoanSplashScreen(
           mobileNumber: mobileNumber,
           companyID: company,
           productID: product);
     } else {
       return EmptyContainer();
-    }
+    }*/
+
+    return BusinessLoanSplashScreen(mobileNumber: "9644498924", companyID: "CN_67", productID: "BusinessLoan",);
   }
 
   @override
@@ -130,9 +145,12 @@ class _MyAppState extends State<MyApp> {
           } else {
 
           //  return SplashScreen(mobileNumber: "9522392801", companyID: "CN_67", productID: "BusinessLoan",);
-           // return SplashScreen(mobileNumber: "8885554466", companyID: "2", productID: "2");
+           // return SupplyChainSplashScreen(mobileNumber: "8989804393", companyID: "CN_1", productID: 'CreditLine',);
            // return LoanOfferScreen(activityId: 0, subActivityId: 0,);
-            
+
+            var product="CreditLine";
+            //var product="BusinessLoan";
+
             return product == "BusinessLoan"
                 ? _BusinessLoan()
                 : _Scale_supply_chain();

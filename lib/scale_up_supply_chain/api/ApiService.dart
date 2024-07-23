@@ -88,7 +88,7 @@ class ApiService {
     prefsUtil.saveBool(IS_LOGGED_IN, false);
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => SplashScreen(
+        builder: (context) => SupplyChainSplashScreen(
             mobileNumber: prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
             companyID: prefsUtil.getInt(COMPANY_ID)!.toString(),
             productID: prefsUtil.getInt(PRODUCT_ID)!.toString()),
@@ -103,7 +103,7 @@ class ApiService {
       var base_url = prefsUtil.getString(BASE_URL);
       //  var base_url = apiUrls.baseUrl;
       final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.productCompanyDetail}?product=$product&company=$company'));
+          '${apiUrls.baseUrl + apiUrls.productCompanyDetail}?product=$product&company=$company'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response
@@ -126,7 +126,7 @@ class ApiService {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
       final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.getLeadCurrentActivity}?MobileNo=$mobile&ProductId=$productId&CompanyId=$companyId&LeadId=$leadId'));
+          '${apiUrls.baseUrl + apiUrls.getLeadCurrentActivity}?MobileNo=$mobile&ProductId=$productId&CompanyId=$companyId&LeadId=$leadId'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response
@@ -149,7 +149,7 @@ class ApiService {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
       final response = await interceptor.post(
-          Uri.parse('${base_url! + apiUrls.leadCurrentActivityAsync}'),
+          Uri.parse('${apiUrls.baseUrl + apiUrls.leadCurrentActivityAsync}'),
           headers: {
             'Content-Type': 'application/json', // Set the content type as JSON
           },
@@ -178,7 +178,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.generateOtp}?MobileNo=$mobileNumber&companyId=$CompanyID'));
+            '${apiUrls.baseUrl + apiUrls.generateOtp}?MobileNo=$mobileNumber&companyId=$CompanyID'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -218,7 +218,7 @@ class ApiService {
       try {
         var request = http.MultipartRequest(
           'POST',
-          Uri.parse('${base_url! + apiUrls.postSingleFile}'),
+          Uri.parse('${apiUrls.baseUrl + apiUrls.postSingleFile}'),
         );
 
         // Add file to the request
@@ -271,7 +271,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.post(
-            Uri.parse('${base_url! + apiUrls.LeadMobileValidate}'),
+            Uri.parse('${apiUrls.baseUrl + apiUrls.LeadMobileValidate}'),
             headers: {
               'Content-Type': 'application/json',
               // Set the content type as JSON
@@ -310,7 +310,7 @@ class ApiService {
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
           Uri.parse(
-              '${base_url! + apiUrls.getLeadValidPanCard}?PanNumber=$panNumber'),
+              '${apiUrls.baseUrl+ apiUrls.getLeadValidPanCard}?PanNumber=$panNumber'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
@@ -348,7 +348,7 @@ class ApiService {
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
           Uri.parse(
-              '${base_url! + apiUrls.getFathersNameByValidPanCard}?PanNumber=$panNumber'),
+              '${apiUrls.baseUrl+ apiUrls.getFathersNameByValidPanCard}?PanNumber=$panNumber'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
@@ -383,7 +383,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.post(
-            Uri.parse('${base_url! + apiUrls.postLeadPAN}'),
+            Uri.parse('${apiUrls.baseUrl + apiUrls.postLeadPAN}'),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token'
@@ -419,7 +419,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getLeadPAN}?UserId=$userId&productCode=$productCode'));
+            '${apiUrls.baseUrl + apiUrls.getLeadPAN}?UserId=$userId&productCode=$productCode'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -451,7 +451,7 @@ class ApiService {
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
           Uri.parse(
-              '${base_url! + apiUrls.getLeadAadhar}?UserId=$userId&productCode=$productCode'),
+              '${apiUrls.baseUrl + apiUrls.getLeadAadhar}?UserId=$userId&productCode=$productCode'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
@@ -487,7 +487,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.post(
-            Uri.parse('${base_url! + apiUrls.getLeadAadharGenerateOTP}'),
+            Uri.parse('${apiUrls.baseUrl + apiUrls.getLeadAadharGenerateOTP}'),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token'
@@ -520,7 +520,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.post(
-            Uri.parse(base_url! + apiUrls.postLeadAadharVerifyOTP),
+            Uri.parse(apiUrls.baseUrl + apiUrls.postLeadAadharVerifyOTP),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token'
@@ -555,7 +555,7 @@ class ApiService {
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
           Uri.parse(
-              '${base_url! + apiUrls.getLeadSelfie}?UserId=$userId&productCode=$productCode'),
+              '${apiUrls.baseUrl + apiUrls.getLeadSelfie}?UserId=$userId&productCode=$productCode'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
@@ -590,7 +590,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.post(
-            Uri.parse(base_url! + apiUrls.postLeadSelfie),
+            Uri.parse(apiUrls.baseUrl + apiUrls.postLeadSelfie),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token'
@@ -625,7 +625,7 @@ class ApiService {
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
           Uri.parse(
-              '${base_url! + apiUrls.GetLeadPersonalDetail}?UserId=$userId&productCode=$productCode'),
+              '${apiUrls.baseUrl + apiUrls.GetLeadPersonalDetail}?UserId=$userId&productCode=$productCode'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
@@ -660,7 +660,7 @@ class ApiService {
       var base_url = prefsUtil.getString(BASE_URL);
       var token = prefsUtil.getString(TOKEN);
       final response = await interceptor.post(
-          Uri.parse(base_url! + apiUrls.PostLeadPersonalDetail),
+          Uri.parse(apiUrls.baseUrl + apiUrls.PostLeadPersonalDetail),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
@@ -693,7 +693,7 @@ class ApiService {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
       final response = await interceptor.post(
-          Uri.parse('${base_url! + apiUrls.OTPValidateForEmail}'),
+          Uri.parse('${apiUrls.baseUrl + apiUrls.OTPValidateForEmail}'),
           headers: {
             'Content-Type': 'application/json', // Set the content type as JSON
           },
@@ -721,7 +721,7 @@ class ApiService {
       var base_url = prefsUtil.getString(BASE_URL);
       final response = await interceptor.get(
         Uri.parse(
-            '${base_url! + apiUrls.EmailExist}?UserId=$userID&EmailId=$EmailId'),
+            '${apiUrls.baseUrl + apiUrls.EmailExist}?UserId=$userID&EmailId=$EmailId'),
         headers: {
           'Content-Type': 'application/json', // Set the content type as JSON
         },
@@ -748,7 +748,7 @@ class ApiService {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
       final response = await interceptor.get(
-        Uri.parse('${base_url! + apiUrls.SendOtpOnEmail}?email=$EmailId'),
+        Uri.parse('${apiUrls.baseUrl + apiUrls.SendOtpOnEmail}?email=$EmailId'),
         headers: {
           'Content-Type': 'application/json', // Set the content type as JSON
         },
@@ -777,7 +777,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getIvrsNumberExist}?UserId=$userId&IVRSNumber=$IvrsNumber'));
+            '${apiUrls.baseUrl + apiUrls.getIvrsNumberExist}?UserId=$userId&IVRSNumber=$IvrsNumber'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -805,7 +805,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getKarzaElectricityServiceProviderList}'));
+            '${apiUrls.baseUrl + apiUrls.getKarzaElectricityServiceProviderList}'));
         print(response.body);
         // Print the response body once here
         switch (response.statusCode) {
@@ -835,7 +835,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getKarzaElectricityState}?state=$state'));
+            '${apiUrls.baseUrl + apiUrls.getKarzaElectricityState}?state=$state'));
         print(response.body);
         // Print the response body once here
         switch (response.statusCode) {
@@ -868,7 +868,7 @@ class ApiService {
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.post(
             Uri.parse(
-                '${base_url! + apiUrls.getKarzaElectricityAuthentication}'),
+                '${apiUrls.baseUrl + apiUrls.getKarzaElectricityAuthentication}'),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token'
@@ -904,7 +904,7 @@ class ApiService {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
       final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.getLeadBusinessDetail}?UserId=$userId&productCode=$productCode'));
+          '${apiUrls.baseUrl + apiUrls.getLeadBusinessDetail}?UserId=$userId&productCode=$productCode'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response
@@ -928,7 +928,7 @@ class ApiService {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
       final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
+          '${apiUrls.baseUrl + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response
@@ -954,7 +954,7 @@ class ApiService {
       var base_url = prefsUtil.getString(BASE_URL);
       var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.post(
-          Uri.parse('${base_url! + apiUrls.postLeadBuisnessDetail}'),
+          Uri.parse('${apiUrls.baseUrl + apiUrls.postLeadBuisnessDetail}'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
@@ -988,7 +988,7 @@ class ApiService {
      // var base_url = prefsUtil.getString(BASE_URL);
       var base_url = ApiUrls().baseUrl;
       final response = await interceptor.get(
-        Uri.parse('${base_url! + apiUrls.bankListApi}'),
+        Uri.parse('${apiUrls.baseUrl + apiUrls.bankListApi}'),
         headers: {
           'Content-Type': 'application/json', // Set the content type as JSON
         },
@@ -1018,7 +1018,7 @@ class ApiService {
        // var base_url = prefsUtil.getString(BASE_URL);
         var base_url = ApiUrls().baseUrl;
         final response = await interceptor.get(
-          Uri.parse('${base_url! + apiUrls.GetLeadBankDetail}?LeadId=$leadID'),
+          Uri.parse('${apiUrls.baseUrl + apiUrls.GetLeadBankDetail}?LeadId=$leadID'),
           headers: {
             'Content-Type': 'application/json', // Set the content type as JSON
           },
@@ -1053,7 +1053,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.post(
-            Uri.parse(base_url! + apiUrls.saveLeadBankDetail),
+            Uri.parse(apiUrls.baseUrl + apiUrls.saveLeadBankDetail),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token'
@@ -1084,7 +1084,7 @@ class ApiService {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
       final response = await interceptor.get(
-        Uri.parse('${base_url! + apiUrls.GetAllState}'),
+        Uri.parse('${apiUrls.baseUrl + apiUrls.GetAllState}'),
         headers: {
           'Content-Type': 'application/json', // Set the content type as JSON
         },
@@ -1111,7 +1111,7 @@ class ApiService {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
       final response = await interceptor.get(
-        Uri.parse('${base_url! + apiUrls.GetCityByStateId}?stateId=$stateID'),
+        Uri.parse('${apiUrls.baseUrl + apiUrls.GetCityByStateId}?stateId=$stateID'),
         headers: {
           'Content-Type': 'application/json', // Set the content type as JSON
         },
@@ -1141,7 +1141,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.GetLeadOffer}?LeadId=$leadId&companyId=$companyID'));
+            '${apiUrls.baseUrl + apiUrls.GetLeadOffer}?LeadId=$leadId&companyId=$companyID'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1169,7 +1169,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.GetLeadName}?UserId=$UserId&productCode=$productcode'));
+            '${apiUrls.baseUrl + apiUrls.GetLeadName}?UserId=$UserId&productCode=$productcode'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1199,7 +1199,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
-            Uri.parse('${base_url! + apiUrls.AcceptOffer}?leadId=$leadId'));
+            Uri.parse('${apiUrls.baseUrl + apiUrls.AcceptOffer}?leadId=$leadId'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1228,7 +1228,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.CheckEsignStatus}?leadId=$leadId'));
+            '${apiUrls.baseUrl + apiUrls.CheckEsignStatus}?leadId=$leadId'));
         print(response.body); // Print the response body once here
 
         switch (response.statusCode) {
@@ -1257,7 +1257,7 @@ class ApiService {
       var base_url = prefsUtil.getString(BASE_URL);
       var token = prefsUtil.getString(TOKEN);
       final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.GetAgreemetDetail}?leadId=$leadId&IsAccept=$accept&companyId=$companyID'));
+          '${apiUrls.baseUrl + apiUrls.GetAgreemetDetail}?leadId=$leadId&IsAccept=$accept&companyId=$companyID'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         final dynamic jsonData = json.decode(response.body);
@@ -1283,7 +1283,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.GetDisbursementProposal}?leadId=$leadId'));
+            '${apiUrls.baseUrl + apiUrls.GetDisbursementProposal}?leadId=$leadId'));
         print(response.body); //
         // Print the response body once here
         switch (response.statusCode) {
@@ -1312,7 +1312,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(
-            Uri.parse('${base_url! + apiUrls.GetDisbursement}?leadId=$leadId'));
+            Uri.parse('${apiUrls.baseUrl + apiUrls.GetDisbursement}?leadId=$leadId'));
         print(response.body); //
         // Print the response body once here
         switch (response.statusCode) {
@@ -1341,7 +1341,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.GetByTransactionReqNoForOTP}?TransactionReqNo=$TransactionReqNo'));
+            '${apiUrls.baseUrl + apiUrls.GetByTransactionReqNoForOTP}?TransactionReqNo=$TransactionReqNo'));
 
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
@@ -1373,7 +1373,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.ResentOrderOTP}?MobileNo=$MobileNumber&TransactionNo=$TransactionNo'));
+            '${apiUrls.baseUrl + apiUrls.ResentOrderOTP}?MobileNo=$MobileNumber&TransactionNo=$TransactionNo'));
 
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
@@ -1404,7 +1404,7 @@ class ApiService {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.ValidateOrderOTPGetToken}?MobileNo=$MobileNumber&otp=$Otp&TransactionReqNo=$TransactionNo'));
+            '${apiUrls.baseUrl + apiUrls.ValidateOrderOTPGetToken}?MobileNo=$MobileNumber&otp=$Otp&TransactionReqNo=$TransactionNo'));
 
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
@@ -1438,7 +1438,7 @@ class ApiService {
         var token = await prefsUtil.getString(TOKEN_CHECKOUT);
         final response = await interceptor.get(
           Uri.parse(
-              '${base_url! + apiUrls.GetByTransactionReqNo}?TransactionReqNo=$TransactionReqNo'),
+              '${apiUrls.baseUrl + apiUrls.GetByTransactionReqNo}?TransactionReqNo=$TransactionReqNo'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
@@ -1475,7 +1475,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = await prefsUtil.getString(TOKEN_CHECKOUT);
         final response = await interceptor.post(
-            Uri.parse('${base_url! + apiUrls.PostOrderPlacement}'),
+            Uri.parse('${apiUrls.baseUrl + apiUrls.PostOrderPlacement}'),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token'
@@ -1512,7 +1512,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getCustomerOrderSummary}?LeadId=$leadId'));
+            '${apiUrls.baseUrl + apiUrls.getCustomerOrderSummary}?LeadId=$leadId'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1543,7 +1543,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.post(
-            Uri.parse(base_url! + apiUrls.getCustomerTransactionList),
+            Uri.parse(apiUrls.baseUrl+ apiUrls.getCustomerTransactionList),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token'
@@ -1578,7 +1578,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getCustomerOrderSummaryForAnchor}?LeadId=$leadId'));
+            '${apiUrls.baseUrl + apiUrls.getCustomerOrderSummaryForAnchor}?LeadId=$leadId'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1609,7 +1609,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.post(
-            Uri.parse(base_url! + apiUrls.getCustomerTransactionListTwo),
+            Uri.parse(apiUrls.baseUrl + apiUrls.getCustomerTransactionListTwo),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token'
@@ -1644,7 +1644,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getTransactionBreakup}?InvoiceId=$invoiceId'));
+            '${apiUrls.baseUrl + apiUrls.getTransactionBreakup}?InvoiceId=$invoiceId'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1671,7 +1671,7 @@ class ApiService {
       var base_url = prefsUtil.getString(BASE_URL);
       var token = prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
-          Uri.parse('${base_url! + apiUrls.GetPFCollection}?leadId=$leadId'));
+          Uri.parse('${apiUrls.baseUrl + apiUrls.GetPFCollection}?leadId=$leadId'));
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         final dynamic jsonData = json.decode(response.body);
@@ -1697,7 +1697,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.DisbursementNext}?leadId=$leadId'));
+            '${apiUrls.baseUrl + apiUrls.DisbursementNext}?leadId=$leadId'));
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1725,7 +1725,7 @@ class ApiService {
       var token = prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
         Uri.parse(
-            '${base_url! + apiUrls.GetPFCollectionActivityStatus}?leadId=$leadId'),
+            '${apiUrls.baseUrl + apiUrls.GetPFCollectionActivityStatus}?leadId=$leadId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token'
@@ -1757,7 +1757,7 @@ class ApiService {
       var token = prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
         Uri.parse(
-            '${base_url! + apiUrls.LeadDataOnInProgressScreen}?leadId=$leadId'),
+            '${apiUrls.baseUrl + apiUrls.LeadDataOnInProgressScreen}?leadId=$leadId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token'

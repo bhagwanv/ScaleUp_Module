@@ -172,7 +172,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
       },
       child: Scaffold(
         body: SafeArea(
-          child: Consumer<DataProvider>(
+          child: Consumer<SupplyChainDataProvider>(
               builder: (context, productProvider, child) {
             if (productProvider.getPersonalDetailsData == null && isLoading) {
               return Center(child: Loader());
@@ -754,7 +754,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
   void submitPersonalInformationApi(
       BuildContext context,
-      DataProvider productProvider,
+      SupplyChainDataProvider productProvider,
       PersonalDetailsRequestModel postData) async {
     Utils.onLoading(context, "");
     await productProvider.postLeadPersonalDetail(postData, context);
@@ -1106,7 +1106,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     return menuItems;
   }
 
-  Widget buildStateField(DataProvider productProvider) {
+  Widget buildStateField(SupplyChainDataProvider productProvider) {
     if (personalDetailsResponce != null) {
       if (personalDetailsResponce!.permanentState != null) {
         if (productProvider.getAllStateData != null) {
@@ -1121,7 +1121,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           if (personalDetailsResponce!.permanentCity != null &&
               cityCallInitial) {
             permanentCitylist.clear();
-            Provider.of<DataProvider>(context, listen: false)
+            Provider.of<SupplyChainDataProvider>(context, listen: false)
                 .getAllCity(personalDetailsResponce!.permanentState!);
             cityCallInitial = false;
           }
@@ -1157,7 +1157,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     }
   }
 
-  Widget buildCityField(DataProvider productProvider) {
+  Widget buildCityField(SupplyChainDataProvider productProvider) {
     if (personalDetailsResponce!.permanentCity != null) {
       var initialData = productProvider.getAllCityData!.firstWhere(
           (element) => element?.id == personalDetailsResponce!.permanentCity,
@@ -1196,12 +1196,12 @@ class _PersonalInformationState extends State<PersonalInformation> {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false)
+    Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getLeadPersonalDetails(userId!, productCode!);
-    Provider.of<DataProvider>(context, listen: false).getAllState();
+    Provider.of<SupplyChainDataProvider>(context, listen: false).getAllState();
   }
 
-  Widget permanentAddressField(DataProvider productProvider) {
+  Widget permanentAddressField(SupplyChainDataProvider productProvider) {
     return Column(
       children: [
         const Align(
@@ -1318,7 +1318,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     );
   }
 
-  Widget basicDetailsFields(DataProvider productProvider) {
+  Widget basicDetailsFields(SupplyChainDataProvider productProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1597,7 +1597,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     );
   }
 
-  Widget currentAddressFields(DataProvider productProvider) {
+  Widget currentAddressFields(SupplyChainDataProvider productProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1762,7 +1762,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               selectedCurrentCity = null;
                               selectedCurrentState = value;
                               citylist.clear();
-                              Provider.of<DataProvider>(context, listen: false)
+                              Provider.of<SupplyChainDataProvider>(context, listen: false)
                                   .getCurrentAllCity(value!.id!);
                             });
                           },
@@ -1878,7 +1878,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   }
 
   Future<ValidationResult> validateData(
-      BuildContext context, DataProvider productProvider) async {
+      BuildContext context, SupplyChainDataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     final int? leadId = prefsUtil.getInt(LEADE_ID);
@@ -2036,21 +2036,21 @@ class _PersonalInformationState extends State<PersonalInformation> {
     Utils.onLoading(context, "");
     isImageDelete = false;
     // Perform asynchronous work first
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .postElectricityBillDocumentSingleFile(imageFile, true, "", "");
     Navigator.of(context, rootNavigator: true).pop();
   }
 
   Future<void> getIvrsNumberExist(
     BuildContext context,
-    DataProvider productProvider,
+    SupplyChainDataProvider productProvider,
     TextEditingController customerIvrsCl,
   ) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
 
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getIvrsNumberExist(userId!, customerIvrsCl.text);
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -2084,9 +2084,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
   }
 
   Future<void> getKarzaElectricityServiceProviderList(
-      BuildContext context, DataProvider productProvider) async {
+      BuildContext context, SupplyChainDataProvider productProvider) async {
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getKarzaElectricityServiceProviderList();
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -2122,12 +2122,12 @@ class _PersonalInformationState extends State<PersonalInformation> {
   }
 
   Future<void> getKarzaElectricityState(
-      BuildContext context, DataProvider productProvider) async {
+      BuildContext context, SupplyChainDataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
 
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getKarzaElectricityState(selectedStateValue!);
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -2156,7 +2156,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   }
 
   Future<void> getKarzaElectricityAuthentication(BuildContext context,
-      DataProvider productProvider, String districtName) async {
+      SupplyChainDataProvider productProvider, String districtName) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadeId = prefsUtil.getInt(LEADE_ID);
 
@@ -2169,7 +2169,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
         clientData: clientData);
 
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getKarzaElectricityAuthentication(electricityAuthenticationReqModel);
     Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.getElectricityAuthenticationData != null) {
@@ -2207,7 +2207,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     setState(() {});
   }
 
-  Widget digitalBillFields(DataProvider productProvider) {
+  Widget digitalBillFields(SupplyChainDataProvider productProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

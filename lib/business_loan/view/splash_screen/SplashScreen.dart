@@ -12,7 +12,7 @@ import 'package:scale_up_module/business_loan/view/splash_screen/model/GetLeadRe
 import 'package:scale_up_module/business_loan/view/splash_screen/model/LeadCurrentRequestModel.dart';
 import 'package:scale_up_module/business_loan/view/splash_screen/model/LeadCurrentResponseModel.dart';
 
-class SplashScreen extends StatefulWidget {
+class BusinessLoanSplashScreen extends StatefulWidget {
   final String mobileNumber;
   final String companyID;
   final String productID;
@@ -20,7 +20,7 @@ class SplashScreen extends StatefulWidget {
   GetLeadResponseModel? getLeadData;
   bool isLoggedIn = false;
 
-  SplashScreen({
+  BusinessLoanSplashScreen({
     Key? key,
     required this.mobileNumber,
     required this.productID,
@@ -28,10 +28,10 @@ class SplashScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<BusinessLoanSplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<BusinessLoanSplashScreen> {
   @override
   void initState() {
     super.initState();

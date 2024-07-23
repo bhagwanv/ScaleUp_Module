@@ -36,7 +36,7 @@ class _VendorsScreenState extends State<VendorsScreen> {
         top: true,
         bottom: true,
         child:
-            Consumer<DataProvider>(builder: (context, productProvider, child) {
+            Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
           if (productProvider.getLeadPANData == null && isLoading) {
              return Loader();
 
@@ -252,6 +252,6 @@ class _VendorsScreenState extends State<VendorsScreen> {
     final String? userId = prefsUtil.getString(USER_ID);
 
     var  customerTransactionListRequestModel=CustomerTransactionListRequestModel(anchorCompanyID:"",leadId:"",skip:"",take:"",transactionType:"");
-    Provider.of<DataProvider>(context, listen: false).getCustomerTransactionList(customerTransactionListRequestModel);
+    Provider.of<SupplyChainDataProvider>(context, listen: false).getCustomerTransactionList(customerTransactionListRequestModel);
   }
 }

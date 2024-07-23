@@ -128,7 +128,7 @@ class Utils {
     );
   }*/
 
-  static onLoading(BuildContext context, String msg) {
+/*  static onLoading(BuildContext context, String msg) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -154,7 +154,7 @@ class Utils {
         ),
       ),
     );
-  }
+  }*/
 
 
   static void hideKeyBored(BuildContext context){
@@ -201,6 +201,34 @@ class Utils {
     String formattedDate = DateFormat('MMMM d, yyyy').format(dateTime);
 
     return formattedDate;
+  }
+
+  static onLoading(BuildContext context, String msg) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => WillPopScope(
+        onWillPop: () async => false,
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 20.0, height: 60.0),
+              // Replace CircularProgressIndicator with your custom image
+              Image.asset(
+                'assets/images/scalup_loder.gif',
+                width: 200.0,
+                height: 200.0,
+                // Adjust width and height according to your image size
+              ),
+              SizedBox(width: 20.0, height: 60.0),
+              Text(msg),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<bool> onback(BuildContext context) async {

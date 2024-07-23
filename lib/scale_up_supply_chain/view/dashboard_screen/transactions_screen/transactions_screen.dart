@@ -70,7 +70,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         top: true,
         bottom: true,
         child:
-            Consumer<DataProvider>(builder: (context, productProvider, child) {
+            Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
           if (productProvider.getCustomerTransactionListTwoData == null &&
               isLoading) {
             Future.delayed(Duration(seconds: 1), () {
@@ -175,7 +175,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   Widget _myListView(
       BuildContext context,
       List<CustomerTransactionListTwoRespModel> customerTransactionList,
-      DataProvider productProvider) {
+      SupplyChainDataProvider productProvider) {
     if (customerTransactionList == null || customerTransactionList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
       return Center(
@@ -351,14 +351,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
       var customerTransactionListTwoReqModel =
           CustomerTransactionListTwoReqModel(
               leadId: leadeId, skip: skip, take: take);
-      await Provider.of<DataProvider>(context, listen: false)
+      await Provider.of<SupplyChainDataProvider>(context, listen: false)
           .getCustomerTransactionListTwo(customerTransactionListTwoReqModel);
     } else {
       Utils.onLoading(context, "");
       var customerTransactionListTwoReqModel =
           CustomerTransactionListTwoReqModel(
               leadId: leadeId, skip: skip, take: take);
-      await Provider.of<DataProvider>(context, listen: false)
+      await Provider.of<SupplyChainDataProvider>(context, listen: false)
           .getCustomerTransactionListTwo(customerTransactionListTwoReqModel);
       Navigator.of(context, rootNavigator: true).pop();
     }
@@ -369,9 +369,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
   }
 
   Future<void> getTransactionBreakup(BuildContext context,
-      DataProvider productProvider, String invoiceId) async {
+      SupplyChainDataProvider productProvider, String invoiceId) async {
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getTransactionBreakup(int.parse(invoiceId.toString()));
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -403,7 +403,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     }
   }
 
-  Future<void> _showDialog(BuildContext context, DataProvider productProvider,
+  Future<void> _showDialog(BuildContext context, SupplyChainDataProvider productProvider,
       List<TransactionList> transactionList) async {
     return showDialog<void>(
       context: context,
@@ -483,7 +483,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 
-  Widget _dialogListView(BuildContext context, DataProvider productProvider,
+  Widget _dialogListView(BuildContext context, SupplyChainDataProvider productProvider,
       List<TransactionList> transactionList) {
     if (transactionList == null || transactionList.isEmpty) {
       // Return a widget indicating that the list is empty or null

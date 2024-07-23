@@ -54,7 +54,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     userID = prefsUtil.getString(USER_ID);
-    Provider.of<DataProvider>(context, listen: false)
+    Provider.of<SupplyChainDataProvider>(context, listen: false)
         .GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
 
 
@@ -63,11 +63,11 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
   }
 
   Future<void> getLeadNameApi(
-      BuildContext context, DataProvider productProvider) async {
+      BuildContext context, SupplyChainDataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     Utils.onLoading(context,"");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getLeadName(userID!, productCode!);
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -91,7 +91,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
     }
   }
 
-  Future<void> getCheckStatus(BuildContext context, DataProvider productProvider,) async {
+  Future<void> getCheckStatus(BuildContext context, SupplyChainDataProvider productProvider,) async {
 
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
@@ -109,18 +109,18 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
   }
 
   Future<void> NextCall(
-      BuildContext context, DataProvider productProvider) async {
+      BuildContext context, SupplyChainDataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getAcceptOffer(leadId!);
     Navigator.of(context, rootNavigator: true).pop();
 
     // var responce = await ApiService().getAcceptOffer(leadId!);
   }
 
-  Widget SetOfferWidget(DataProvider productProvider) {
+  Widget SetOfferWidget(SupplyChainDataProvider productProvider) {
     if (productProvider.getOfferResponceata != null) {
       if (offerResponceModel!.status!) {
         return Column(
@@ -153,7 +153,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
       return Container();
     }
   }
-  Widget SetCutomerOfferWidget(DataProvider productProvider) {
+  Widget SetCutomerOfferWidget(SupplyChainDataProvider productProvider) {
     if (offerResponceModel != null) {
       if (offerResponceModel!.status!) {
         return Column(
@@ -210,11 +210,11 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
   }
 
   Future<void> acceptOffer(
-      BuildContext context, DataProvider productProvider) async {
+      BuildContext context, SupplyChainDataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     Utils.onLoading(context, "");
-    Provider.of<DataProvider>(context, listen: false).getAcceptOffer(leadId!);
+    Provider.of<SupplyChainDataProvider>(context, listen: false).getAcceptOffer(leadId!);
     Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.getAcceptOfferData != null) {
       productProvider.getAcceptOfferData!.when(
@@ -301,7 +301,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
         body: SafeArea(
           top: true,
           bottom: true,
-          child: Consumer<DataProvider>(
+          child: Consumer<SupplyChainDataProvider>(
               builder: (context, productProvider, child) {
                 if (productProvider.getOfferResponceata == null && isLoading) {
                   return Loader();
@@ -393,13 +393,13 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
                                 },
                                 text: "Proceed to e-Agreement",
                                 upperCase: true,
-                              ):offerResponceModel!.response!.processingFeePayableBy == "anchor"? CommonElevatedButton(
+                              ):offerResponceModel!=null?offerResponceModel!.response!=null?offerResponceModel!.response!.processingFeePayableBy == "anchor"? CommonElevatedButton(
                                 onPressed: () async {
                                   await acceptOffer(context, productProvider);
                                 },
                                 text: "Proceed to e-Agreement",
                                 upperCase: true,
-                              ):Container(),
+                              ):Container():Container():Container(),
                               const SizedBox(height: 10),
                             ],
                           ),

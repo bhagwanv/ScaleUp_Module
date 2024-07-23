@@ -152,7 +152,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         top: true,
         bottom: true,
         child: Scaffold(
-          body: Consumer<DataProvider>(
+          body: Consumer<SupplyChainDataProvider>(
               builder: (context, productProvider, child) {
             if (productProvider.getBankDetailsData == null && isLoading) {
               return Center(child: Loader());
@@ -316,7 +316,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               print(file.path);
                               //widget.onImageSelected(file);
                               Utils.onLoading(context, "");
-                              await Provider.of<DataProvider>(context,
+                              await Provider.of<SupplyChainDataProvider>(context,
                                       listen: false)
                                   .postBusineesDoumentSingleFile(
                                       file, true, "", "");
@@ -438,13 +438,13 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false).getBankDetails(leadId!, productCode!);
+    Provider.of<SupplyChainDataProvider>(context, listen: false).getBankDetails(leadId!, productCode!);
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false).getBankList();
+    await Provider.of<SupplyChainDataProvider>(context, listen: false).getBankList();
     Navigator.of(context, rootNavigator: true).pop();
   }
 
-  Widget bankListWidget(DataProvider productProvider) {
+  Widget bankListWidget(SupplyChainDataProvider productProvider) {
     var initialData;
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
@@ -570,7 +570,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     }
   }
 
-  Widget accountTypeWidget(DataProvider productProvider) {
+  Widget accountTypeWidget(SupplyChainDataProvider productProvider) {
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
         if (bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.accountType != null) {
@@ -796,7 +796,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     }
   }
 
-  Future<void> submitBankDetailsApi(BuildContext contextz, DataProvider productProvider, List<String?> docList) async {
+  Future<void> submitBankDetailsApi(BuildContext contextz, SupplyChainDataProvider productProvider, List<String?> docList) async {
     if (selectedBankValue == null) {
       Utils.showToast("Please Select Bank", context);
     } else if (selectedBankValue!.isEmpty) {
@@ -843,7 +843,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
       print("Save Data"+postData.toJson().toString());
       Utils.onLoading(context, "");
-      await Provider.of<DataProvider>(context, listen: false).saveLeadBankDetail(postData);
+      await Provider.of<SupplyChainDataProvider>(context, listen: false).saveLeadBankDetail(postData);
       Navigator.of(context, rootNavigator: true).pop();
 
       if (productProvider.getSaveLeadBankDetailData != null) {

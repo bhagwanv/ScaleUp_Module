@@ -86,7 +86,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
     return Scaffold(
           backgroundColor: Colors.white,
           body: SafeArea(
-            child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+            child: Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
                 return SingleChildScrollView(
                   child: Padding(
                     padding:
@@ -214,7 +214,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
   void validateAadhaar(
     BuildContext context,
     String otpText,
-    DataProvider productProvider,
+    SupplyChainDataProvider productProvider,
   ) async {
     if (otpText.isEmpty) {
       Utils.showToast("Please Enter OTP",context);
@@ -237,7 +237,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
           requestId: widget.requestId!,
           companyId: prefsUtil.getInt(COMPANY_ID));
       Utils.onLoading(context, "");
-      await Provider.of<DataProvider>(context, listen: false)
+      await Provider.of<SupplyChainDataProvider>(context, listen: false)
           .validateAadhaarOtp(req);
       Navigator.of(context, rootNavigator: true).pop();
       if (productProvider.getValidateAadhaarOTPData != null) {
@@ -307,7 +307,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
 
   void generateAadhaarOTPAPI(
     BuildContext context,
-    DataProvider productProvider,
+    SupplyChainDataProvider productProvider,
   ) async {
     var request = AadhaarGenerateOTPRequestModel(
         DocumentNumber: widget.document?.DocumentNumber!,
@@ -318,7 +318,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
         otp: "",
         requestId: "");
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false).leadAadharGenerateOTP(request);
+    await Provider.of<SupplyChainDataProvider>(context, listen: false).leadAadharGenerateOTP(request);
     Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.getLeadAadharGenerateOTP != null) {
       productProvider.getLeadAadharGenerateOTP!.when(

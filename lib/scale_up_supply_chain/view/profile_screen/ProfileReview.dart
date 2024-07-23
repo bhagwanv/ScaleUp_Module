@@ -52,7 +52,7 @@ class _ProfileReviewState extends State<ProfileReview> {
       },
       child: Scaffold(
         body:
-            Consumer<DataProvider>(builder: (context, productProvider, child) {
+            Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
           if (productProvider.InProgressScreenData == null && isLoading) {
             return Center(child: Loader());
           } else {
@@ -157,7 +157,7 @@ class _ProfileReviewState extends State<ProfileReview> {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
 
-    Provider.of<DataProvider>(context, listen: false)
+    Provider.of<SupplyChainDataProvider>(context, listen: false)
         .leadDataOnInProgressScreen(leadId!);
   }
 }

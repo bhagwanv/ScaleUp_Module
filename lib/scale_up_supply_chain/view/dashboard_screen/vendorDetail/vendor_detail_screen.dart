@@ -81,7 +81,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
         body: SafeArea(
       top: true,
       bottom: true,
-      child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+      child: Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
         if (productProvider.getCustomerOrderSummaryData == null && isLoading) {
           return Loader();
         } else {
@@ -530,7 +530,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
   Widget _myListView(
       BuildContext context,
       List<CustomerTransactionListRespModel> customerTransactionList,
-      DataProvider productProvider) {
+      SupplyChainDataProvider productProvider) {
     if (customerTransactionList == null || customerTransactionList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
       return Center(
@@ -776,7 +776,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     //int leadId=257;
-    Provider.of<DataProvider>(context, listen: false)
+    Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getCustomerOrderSummary(leadId);
   }
 
@@ -795,7 +795,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
             skip: skip.toString(),
             take: take,
             transactionType: transactionType);
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getCustomerTransactionList(customerTransactionListRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
     setState(() {
@@ -804,11 +804,11 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
   }
 
   Future<void> getTransactionBreakup(
-      BuildContext context, DataProvider productProvider, String invoiceId) async {
+      BuildContext context, SupplyChainDataProvider productProvider, String invoiceId) async {
     final prefsUtil = await SharedPref.getInstance();
 
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getTransactionBreakup(int.parse(invoiceId.toString()));
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -841,7 +841,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
     }
   }
 
-  Future<void> _showDialog(BuildContext context, DataProvider productProvider,
+  Future<void> _showDialog(BuildContext context, SupplyChainDataProvider productProvider,
       List<TransactionList> transactionList) async {
     return showDialog<void>(
       context: context,
@@ -921,7 +921,7 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
     );
   }
 
-  Widget _dialogListView(BuildContext context, DataProvider productProvider,
+  Widget _dialogListView(BuildContext context, SupplyChainDataProvider productProvider,
       List<TransactionList> transactionList) {
     if (transactionList == null || transactionList.isEmpty) {
       // Return a widget indicating that the list is empty or null

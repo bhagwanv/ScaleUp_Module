@@ -30,7 +30,7 @@ class EmailOtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<EmailOtpScreen> {
   String? appSignature;
   String? otpCode;
-  DataProvider? productProvider;
+  SupplyChainDataProvider? productProvider;
   int _start = 60;
   bool isReSendDisable = true;
   var isLoading = true;
@@ -89,7 +89,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+        child: Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
           return SingleChildScrollView(
             child: Padding(
               padding:
@@ -224,7 +224,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
   }
 
   void callVerifyOtpApi(BuildContext context, String otpText, String email,
-      DataProvider productProvider) async {
+      SupplyChainDataProvider productProvider) async {
     var isValid = false;
     if (otpText.isEmpty) {
       Utils.showToast("Please Enter Opt",context);
@@ -255,7 +255,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
     }
   }
 
-  void reSendOpt(BuildContext context, DataProvider productProvider, CountdownController controller, String? emailID) async {
+  void reSendOpt(BuildContext context, SupplyChainDataProvider productProvider, CountdownController controller, String? emailID) async {
     Utils.onLoading(context, "");
     SendOtpOnEmailResponce sendOtpOnEmailResponce;
     sendOtpOnEmailResponce = await ApiService().sendOtpOnEmail(emailID!);

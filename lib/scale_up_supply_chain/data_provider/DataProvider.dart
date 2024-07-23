@@ -68,7 +68,7 @@ import '../view/take_selfi/model/LeadSelfieResponseModel.dart';
 import '../view/take_selfi/model/PostLeadSelfieRequestModel.dart';
 import '../view/take_selfi/model/PostLeadSelfieResponseModel.dart';
 
-class DataProvider extends ChangeNotifier {
+class SupplyChainDataProvider extends ChangeNotifier {
   final ApiService apiService = ApiService();
 
 

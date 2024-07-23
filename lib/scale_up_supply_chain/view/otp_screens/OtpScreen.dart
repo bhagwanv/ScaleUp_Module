@@ -34,7 +34,7 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   String? appSignature;
   String? otpCode;
-  DataProvider? productProvider;
+  SupplyChainDataProvider? productProvider;
   bool isReSendDisable = true;
   String? userLoginMobile;
   var isLoading = true;
@@ -117,7 +117,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+        child: Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -265,7 +265,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
   Future<void> callVerifyOtpApi(
       BuildContext context,
       String otpText,
-      DataProvider productProvider,
+      SupplyChainDataProvider productProvider,
       int activityId,
       int subActivityId,
       String userLoginMobile,
@@ -285,7 +285,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       productProvider.disposeAllProviderData();
       Utils.onLoading(context, "");
       final prefsUtil = await SharedPref.getInstance();
-      await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(
+      await Provider.of<SupplyChainDataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(
         activityId: activityId,
         companyId: prefsUtil.getInt(COMPANY_ID),
         mobileNo: userLoginMobile,
@@ -362,12 +362,12 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
     }
   }
 
-  Future<void> reSendOpt(BuildContext context, DataProvider productProvider,
+  Future<void> reSendOpt(BuildContext context, SupplyChainDataProvider productProvider,
       String userLoginMobile, CountdownController controller) async {
     final prefsUtil = await SharedPref.getInstance();
 
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .genrateOtp(context, userLoginMobile, prefsUtil.getInt(COMPANY_ID)!);
     Navigator.of(context, rootNavigator: true).pop();
 

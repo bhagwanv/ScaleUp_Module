@@ -14,13 +14,9 @@ import '../../utils/Utils.dart';
 import '../../utils/aadhaar_number_formatter.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
-import '../login_screen/login_screen.dart';
 import 'aadhaar_otp_screen.dart';
 import 'components/CheckboxTerm.dart';
 import 'models/AadhaaGenerateOTPRequestModel.dart';
-import 'models/AadhaarGenerateOTPResponseModel.dart';
-import 'models/AadhaarGenerateOTPResponseModel.dart';
-import 'models/AadhaarGenerateOTPResponseModel.dart';
 import 'models/LeadAadhaarResponse.dart';
 
 class AadhaarScreen extends StatefulWidget {
@@ -37,7 +33,7 @@ class AadhaarScreen extends StatefulWidget {
 
 class _AadhaarScreenState extends State<AadhaarScreen> {
   final TextEditingController _aadhaarController = TextEditingController();
-  DataProvider productProvider = DataProvider();
+  SupplyChainDataProvider productProvider = SupplyChainDataProvider();
   String frontDocumentId = "";
   String backDocumentId = "";
   String frontFileUrl = "";
@@ -50,7 +46,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
     Utils.onLoading(context, "");
     isFrontImageDelete = false;
     // Perform asynchronous work first
-    await Provider.of<DataProvider>(context, listen: false).PostFrontAadhaarSingleFileData(imageFile, true, "", "");
+    await Provider.of<SupplyChainDataProvider>(context, listen: false).PostFrontAadhaarSingleFileData(imageFile, true, "", "");
     Navigator.of(context, rootNavigator: true).pop();
     // Update the widget state synchronously inside setState
   }
@@ -61,7 +57,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
     Utils.onLoading(context, "");
 
     // Perform asynchronous work first
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .postAadhaarBackSingleFile(imageFile, true, "", "");
 
     Navigator.of(context, rootNavigator: true).pop();
@@ -103,7 +99,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
           body: SafeArea(
         top: true,
         bottom: true,
-        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+        child: Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
           if (productProvider.getLeadAadhaar != null) {
             productProvider.getLeadAadhaar!.when(
               success: (LeadAadhaarResponse) async {
@@ -521,7 +517,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
   void generateAadhaarOTPAPI(
       BuildContext context,
-      DataProvider productProvider,
+      SupplyChainDataProvider productProvider,
       String documentNumber,
       String fFileUrl,
       String fDocumentId,
@@ -539,7 +535,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
 
     Utils.onLoading(context, "");
 
-    await Provider.of<DataProvider>(context, listen: false).leadAadharGenerateOTP(request);
+    await Provider.of<SupplyChainDataProvider>(context, listen: false).leadAadharGenerateOTP(request);
 
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -585,6 +581,6 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
     final String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
-    Provider.of<DataProvider>(context, listen: false).getLeadAadhar(userId!,productCode!);
+    Provider.of<SupplyChainDataProvider>(context, listen: false).getLeadAadhar(userId!,productCode!);
   }
 }

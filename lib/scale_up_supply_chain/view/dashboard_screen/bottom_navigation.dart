@@ -27,10 +27,10 @@ class _BottomNavState extends State<BottomNav> {
     const MyAccount(),
   ];
   var selectedIndex = 2;
-  late DataProvider productProvider;
+  late SupplyChainDataProvider productProvider;
   @override
   Widget build(BuildContext context) {
-    productProvider = Provider.of<DataProvider>(context, listen: false);
+    productProvider = Provider.of<SupplyChainDataProvider>(context, listen: false);
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {

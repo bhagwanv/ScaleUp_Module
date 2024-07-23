@@ -62,7 +62,7 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
         body: SafeArea(
       top: true,
       bottom: true,
-      child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+      child: Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
         if (productProvider.getCustomerOrderSummaryData == null && isLoading) {
           return Loader();
         } else {
@@ -539,7 +539,7 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     // int leadId = 52;
-    Provider.of<DataProvider>(context, listen: false)
+    Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getCustomerOrderSummary(leadId);
   }
 
@@ -558,7 +558,7 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
             skip: skip.toString(),
             take: take,
             transactionType: transactionType);
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getCustomerTransactionList(customerTransactionListRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
     print("h111");
@@ -577,7 +577,7 @@ class TabA extends StatefulWidget {
   late ScrollController scrollController;
   late BuildContext context;
   late List<CustomerTransactionListRespModel> customerTransactionList;
-  late DataProvider productProvider;
+  late SupplyChainDataProvider productProvider;
   late List<TransactionList> transactionList;
   late String transactionType;
   late bool loading;
@@ -656,7 +656,7 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
   Widget _myListView(
       BuildContext context,
       List<CustomerTransactionListRespModel> customerTransactionList,
-      DataProvider productProvider,
+      SupplyChainDataProvider productProvider,
       ScrollController _scrollController) {
     if (customerTransactionList == null || customerTransactionList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
@@ -891,7 +891,7 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
     );
   }
 
-  Future<void> _showDialog(BuildContext context, DataProvider productProvider,
+  Future<void> _showDialog(BuildContext context, SupplyChainDataProvider productProvider,
       List<TransactionList> transactionList) async {
     return showDialog<void>(
       context: context,
@@ -971,7 +971,7 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget _dialogListView(BuildContext context, DataProvider productProvider,
+  Widget _dialogListView(BuildContext context, SupplyChainDataProvider productProvider,
       List<TransactionList> transactionList) {
     if (transactionList == null || transactionList.isEmpty) {
       // Return a widget indicating that the list is empty or null
@@ -1025,11 +1025,11 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
   }
 
   Future<void> getTransactionBreakup(BuildContext context,
-      DataProvider productProvider, String invoiceId) async {
+      SupplyChainDataProvider productProvider, String invoiceId) async {
     final prefsUtil = await SharedPref.getInstance();
 
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getTransactionBreakup(int.parse(invoiceId.toString()));
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -1080,7 +1080,7 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
             skip: skip1.toString(),
             take: widget.take,
             transactionType: transactionType);
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getCustomerTransactionList(customerTransactionListRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
   }

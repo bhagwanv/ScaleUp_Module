@@ -49,7 +49,7 @@ class _DisbursementCompletedState extends State<DisbursementCompleted> {
       body: SafeArea(
         top: true,
         bottom: true,
-        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+        child: Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
           if (productProvider.getDisbursementData == null && isLoading) {
             return Center(child: Loader());
           } else {
@@ -115,7 +115,7 @@ class _DisbursementCompletedState extends State<DisbursementCompleted> {
   void callDisbursementApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    Provider.of<DataProvider>(context, listen: false).GetDisbursement(leadId!);
+    Provider.of<SupplyChainDataProvider>(context, listen: false).GetDisbursement(leadId!);
   }
 
   Widget disbusmentWidget() {

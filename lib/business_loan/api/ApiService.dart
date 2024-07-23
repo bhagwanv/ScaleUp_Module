@@ -95,7 +95,7 @@ class ApiService {
     prefsUtil.saveBool(IS_LOGGED_IN, false);
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => SplashScreen(
+        builder: (context) => BusinessLoanSplashScreen(
             mobileNumber: prefsUtil.getString(LOGIN_MOBILE_NUMBER)!,
             companyID: prefsUtil.getInt(COMPANY_ID)!.toString(),
             productID: prefsUtil.getInt(PRODUCT_ID)!.toString()),

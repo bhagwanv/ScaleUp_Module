@@ -66,7 +66,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
         body: SafeArea(
             top: true,
             bottom: true,
-            child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+            child: Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
               if (productProvider.genrateOptPaymentData == null && isLoading) {
                 return Center(child: Loader());
               } else {
@@ -378,12 +378,12 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
   }
 
   Future<void> callGenrateOtp(String transactionReqNo) async {
-    await Provider.of<DataProvider>(context, listen: false).GetByTransactionReqNoForOTP(transactionReqNo);
+    await Provider.of<SupplyChainDataProvider>(context, listen: false).GetByTransactionReqNoForOTP(transactionReqNo);
   }
 
-  void reSendOtpCall(BuildContext context, String mobileNo, DataProvider productProvider)async {
+  void reSendOtpCall(BuildContext context, String mobileNo, SupplyChainDataProvider productProvider)async {
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false).reSendOtpPaymentConfromation(mobileNo,widget.transactionId);
+    await Provider.of<SupplyChainDataProvider>(context, listen: false).reSendOtpPaymentConfromation(mobileNo,widget.transactionId);
     Navigator.of(context, rootNavigator: true).pop();
 
     productProvider.reSendOptPaymentData!.when(
@@ -410,9 +410,9 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
 
   }
 
-  void callValidOtpApi(BuildContext context, String otptext, DataProvider productProvider)async {
+  void callValidOtpApi(BuildContext context, String otptext, SupplyChainDataProvider productProvider)async {
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false).ValidateOrderOTPGetToken(checkOutOtpModel!.response!.mobileNo!,otptext,widget.transactionId);
+    await Provider.of<SupplyChainDataProvider>(context, listen: false).ValidateOrderOTPGetToken(checkOutOtpModel!.response!.mobileNo!,otptext,widget.transactionId);
     Navigator.of(context, rootNavigator: true).pop();
     final prefsUtil = await SharedPref.getInstance();
 

@@ -92,7 +92,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
         backgroundColor: textFiledBackgroundColour,
         body: SafeArea(
           child:
-              Consumer<DataProvider>(builder: (context, productProvider, child) {
+              Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
             if (productProvider.getLeadSelfieData == null && isLoading) {
               return Loader();
             } else {
@@ -269,18 +269,18 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
-    Provider.of<DataProvider>(context, listen: false).getLeadSelfie(userId!,productCode!);
+    Provider.of<SupplyChainDataProvider>(context, listen: false).getLeadSelfie(userId!,productCode!);
   }
 
   Future<void> uolpadSelfie(BuildContext context, File picture) async {
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .postTakeSelfieFile(picture, true, "", "");
     Navigator.of(context, rootNavigator: true).pop();
   }
 
   Future<void> postLeadSelfie(String selfieImage, int frontDocumentId,
-      DataProvider productProvider) async {
+      SupplyChainDataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     final String? userId = prefsUtil.getString(USER_ID);
     var postLeadSelfieRequestModel = PostLeadSelfieRequestModel(
@@ -294,7 +294,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
     );
 
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .postLeadSelfie(postLeadSelfieRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
 

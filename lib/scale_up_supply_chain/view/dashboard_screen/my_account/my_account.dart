@@ -73,7 +73,7 @@ class _MyAccountState extends State<MyAccount> {
         body: SafeArea(
       top: true,
       bottom: true,
-      child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+      child: Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
         if (productProvider.getCustomerOrderSummaryData == null && isLoading) {
           Future.delayed(Duration(seconds: 1), () {
             setState(() {});
@@ -430,7 +430,7 @@ class _MyAccountState extends State<MyAccount> {
      final int? leadId = prefsUtil.getInt(LEADE_ID);
     //final int? leadId = 257;
 
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getCustomerOrderSummary(leadId);
   }
 
@@ -450,7 +450,7 @@ class _MyAccountState extends State<MyAccount> {
             take: take,
             transactionType: transactionType);
 
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getCustomerTransactionList(customerTransactionListRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
     setState(() {
@@ -460,7 +460,7 @@ class _MyAccountState extends State<MyAccount> {
 
   Widget _RecentTransactionListView(
       BuildContext context,
-      DataProvider productProvider,
+      SupplyChainDataProvider productProvider,
       List<CustomerTransactionListRespModel> customerTransactionList) {
     if (customerTransactionList == null || customerTransactionList!.isEmpty) {
       // Return a widget indicating that the list is empty or null
@@ -701,9 +701,9 @@ class _MyAccountState extends State<MyAccount> {
   }
 
   Future<void> getTransactionBreakup(BuildContext context,
-      DataProvider productProvider, String invoiceId) async {
+      SupplyChainDataProvider productProvider, String invoiceId) async {
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getTransactionBreakup(int.parse(invoiceId.toString()));
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -736,7 +736,7 @@ class _MyAccountState extends State<MyAccount> {
     }
   }
 
-  Future<void> _showDialog(BuildContext context, DataProvider productProvider,
+  Future<void> _showDialog(BuildContext context, SupplyChainDataProvider productProvider,
       List<TransactionList> transactionList) async {
     return showDialog<void>(
       context: context,
@@ -816,7 +816,7 @@ class _MyAccountState extends State<MyAccount> {
     );
   }
 
-  Widget _dialogListView(BuildContext context, DataProvider productProvider,
+  Widget _dialogListView(BuildContext context, SupplyChainDataProvider productProvider,
       List<TransactionList> transactionList) {
     if (transactionList == null || transactionList.isEmpty) {
       // Return a widget indicating that the list is empty or null

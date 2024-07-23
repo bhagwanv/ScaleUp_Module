@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/ProductCompanyDetailResponseModel.dart';
-import 'package:scale_up_module/business_loan/api/ApiService.dart';
-import 'package:scale_up_module/business_loan/data_provider/DataProvider.dart';
-import 'package:scale_up_module/business_loan/shared_preferences/SharedPref.dart';
-import 'package:scale_up_module/business_loan/utils/Utils.dart';
-import 'package:scale_up_module/business_loan/utils/constants.dart';
-import 'package:scale_up_module/business_loan/utils/customer_sequence_logic.dart';
-import 'package:scale_up_module/business_loan/view/login_screen/login_screen.dart';
-import 'package:scale_up_module/business_loan/view/splash_screen/model/GetLeadResponseModel.dart';
-import 'package:scale_up_module/business_loan/view/splash_screen/model/LeadCurrentRequestModel.dart';
-import 'package:scale_up_module/business_loan/view/splash_screen/model/LeadCurrentResponseModel.dart';
+import 'package:scale_up_module/scale_up_supply_chain/api/ApiService.dart';
+import 'package:scale_up_module/scale_up_supply_chain/data_provider/DataProvider.dart';
+import 'package:scale_up_module/scale_up_supply_chain/shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/scale_up_supply_chain/utils/Utils.dart';
+import 'package:scale_up_module/scale_up_supply_chain/utils/constants.dart';
+import 'package:scale_up_module/scale_up_supply_chain/utils/customer_sequence_logic.dart';
+import 'package:scale_up_module/scale_up_supply_chain/view/login_screen/login_screen.dart';
+import 'package:scale_up_module/scale_up_supply_chain/view/splash_screen/model/GetLeadResponseModel.dart';
+import 'package:scale_up_module/scale_up_supply_chain/view/splash_screen/model/LeadCurrentRequestModel.dart';
+import 'package:scale_up_module/scale_up_supply_chain/view/splash_screen/model/LeadCurrentResponseModel.dart';
 
-class SplashScreen extends StatefulWidget {
+class SupplyChainSplashScreen extends StatefulWidget {
   final String mobileNumber;
   final String companyID;
   final String productID;
@@ -20,7 +20,7 @@ class SplashScreen extends StatefulWidget {
   GetLeadResponseModel? getLeadData;
   bool isLoggedIn = false;
 
-  SplashScreen({
+  SupplyChainSplashScreen({
     Key? key,
     required this.mobileNumber,
     required this.productID,
@@ -28,10 +28,10 @@ class SplashScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<SupplyChainSplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SupplyChainSplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
           title: const Center(child: Text('Scaleup')),
         ),
         body:
-        Consumer<DataProvider>(builder: (context, productProvider, child) {
+        Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
           if (productProvider.productCompanyDetailResponseModel != null) {
             if (productProvider.productCompanyDetailResponseModel!.status!) {
               SaveData(productProvider.productCompanyDetailResponseModel!.response!).then((leadCurrentActivityAsyncData) {
@@ -115,7 +115,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if(prefsUtil.getBool(IS_LOGGED_IN) != null) {
       widget.isLoggedIn =  prefsUtil.getBool(IS_LOGGED_IN)!;
     }
-    Provider.of<DataProvider>(context, listen: false).productCompanyDetail(product, company);
+    Provider.of<SupplyChainDataProvider>(context, listen: false).productCompanyDetail(product, company);
   }
 
   Future<LeadCurrentResponseModel?> SaveData(ProductCompanyDetailResponse response) async {

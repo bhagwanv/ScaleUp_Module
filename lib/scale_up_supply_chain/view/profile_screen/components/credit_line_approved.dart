@@ -81,7 +81,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
       child: SafeArea(
         top: true,
         bottom: true,
-        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+        child: Consumer<SupplyChainDataProvider>(builder: (context, productProvider, child) {
           if (widget.isDisbursement) {
             if (productProvider.getDisbursementProposalData == null &&
                 isLoading) {
@@ -256,7 +256,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
   void callDisbursementApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    Provider.of<DataProvider>(context, listen: false).getDisbursementProposal(leadId!);
+    Provider.of<SupplyChainDataProvider>(context, listen: false).getDisbursementProposal(leadId!);
   }
 
   void callApi(BuildContext context) async {
@@ -265,14 +265,14 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     userID = prefsUtil.getString(USER_ID);
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false).GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
+    await Provider.of<SupplyChainDataProvider>(context, listen: false).GetLeadOffer(leadId!, prefsUtil.getInt(COMPANY_ID)!);
     Navigator.of(context, rootNavigator: true).pop();
     getLeadNameApi(context, productCode!);
    // getCheckStatus(context, leadId);
   }
 
   Future<void> getLeadNameApi(BuildContext context, String productCode) async {
-    Provider.of<DataProvider>(context, listen: false)
+    Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getLeadName(userID!, productCode);
     //Navigator.of(context, rootNavigator: true).pop();
   }
@@ -286,7 +286,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
     }
   }*/
 
-  Widget SetOfferWidget(DataProvider productProvider) {
+  Widget SetOfferWidget(SupplyChainDataProvider productProvider) {
     if (productProvider.getOfferResponceata != null) {
       if (offerResponceModel!.status!) {
         return Column(
@@ -419,7 +419,7 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
   }
 
   /*Show Offers Call*/
-  Widget SetCutomerOfferWidget(DataProvider productProvider) {
+  Widget SetCutomerOfferWidget(SupplyChainDataProvider productProvider) {
     if (offerResponceModel != null) {
       if (offerResponceModel!.status!) {
         return Column(
@@ -476,11 +476,11 @@ class _CreditLineApprovedState extends State<CreditLineApproved> {
   }
 
   Future<void> acceptOffer(
-      BuildContext context, DataProvider productProvider) async {
+      BuildContext context, SupplyChainDataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getAcceptOffer(leadId!);
     Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.getAcceptOfferData != null) {

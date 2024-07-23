@@ -78,7 +78,7 @@ class _PancardScreenState extends State<PancardScreen> {
     // For example, you can setState to update UI with the selected image
     isImageDelete = false;
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .postSingleFile(imageFile, true, "", "");
     // Navigator.pop(context);
     Navigator.of(context, rootNavigator: true).pop();
@@ -114,7 +114,7 @@ class _PancardScreenState extends State<PancardScreen> {
         body: SafeArea(
           top: true,
           bottom: true,
-          child: Consumer<DataProvider>(
+          child: Consumer<SupplyChainDataProvider>(
               builder: (context, productProvider, child) {
                 if (productProvider.getLeadPANData == null && isLoading) {
                   return Loader();
@@ -381,6 +381,7 @@ class _PancardScreenState extends State<PancardScreen> {
                               keyboardType: TextInputType.text,
                               cursorColor: kPrimaryColor,
                               textCapitalization: TextCapitalization.characters,
+                              inputFormatters: [FilteringTextInputFormatter.allow(RegExp((r'[A-Z ]'))),],
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 16.0, horizontal: 16.0),
@@ -484,7 +485,7 @@ class _PancardScreenState extends State<PancardScreen> {
                             ),
                             SizedBox(height: 20),
 
-                            CheckboxTerm(
+                            /*CheckboxTerm(
                               content:
                               "By proceeding, I provide consent on the following",
                               onChanged: (bool isChecked) async {
@@ -500,8 +501,8 @@ class _PancardScreenState extends State<PancardScreen> {
                                 }
                                 isChecked = _acceptPermissions;
                               },
-                            ),
-                           /* CommonCheckBox(
+                            ),*/
+                            CommonCheckBox(
                               onChanged: (bool isChecked) async {
                                 // Handle the state change here
                                 print('Checkbox state changed: $isChecked');
@@ -518,7 +519,7 @@ class _PancardScreenState extends State<PancardScreen> {
                               isChecked: _acceptPermissions,
                               text: "By proceeding, I provide consent on the following",
                               upperCase: false,
-                            ),*/
+                            ),
                             SizedBox(height: 20),
                             /*Text("I hereby accept Scaleup T&C & Privacy Policy . Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners"),*/
                             RichText(
@@ -644,7 +645,7 @@ class _PancardScreenState extends State<PancardScreen> {
     String? userId = prefsUtil.getString(USER_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
-    Provider.of<DataProvider>(context, listen: false).getLeadPAN(userId!,productCode!);
+    Provider.of<SupplyChainDataProvider>(context, listen: false).getLeadPAN(userId!,productCode!);
   }
 
   Future<void> fetchData(BuildContext context) async {
@@ -683,10 +684,10 @@ class _PancardScreenState extends State<PancardScreen> {
   }
 
   Future<void> getLeadValidPanCard(BuildContext context, String pancardNumber,
-      DataProvider productProvider) async {
+      SupplyChainDataProvider productProvider) async {
     Utils.hideKeyBored(context);
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getLeadValidPanCard(pancardNumber);
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -723,9 +724,9 @@ class _PancardScreenState extends State<PancardScreen> {
   }
 
   Future<void> getFathersNameByValidPanCard(BuildContext context,
-      String pancardNumber, DataProvider productProvider) async {
+      String pancardNumber, SupplyChainDataProvider productProvider) async {
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .getFathersNameByValidPanCard(pancardNumber);
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -757,10 +758,10 @@ class _PancardScreenState extends State<PancardScreen> {
     }
   }
 
-  Future<void> postLeadPAN(BuildContext context, DataProvider productProvider,
+  Future<void> postLeadPAN(BuildContext context, SupplyChainDataProvider productProvider,
       PostLeadPanRequestModel postLeadPanRequestModel) async {
     Utils.onLoading(context, "Loading...");
-    await Provider.of<DataProvider>(context, listen: false)
+    await Provider.of<SupplyChainDataProvider>(context, listen: false)
         .postLeadPAN(postLeadPanRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
     if (productProvider.getPostLeadPaneData != null) {

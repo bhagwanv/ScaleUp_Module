@@ -50,7 +50,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
         body: SafeArea(
           top: true,
           bottom: true,
-          child: Consumer<DataProvider>(
+          child: Consumer<SupplyChainDataProvider>(
               builder: (context, productProvider, child) {
                 if (productProvider.getCheckSignData == null && isLoading) {
                   return Loader();
@@ -157,7 +157,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
   void callApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    Provider.of<DataProvider>(context, listen: false).checkEsignStatus(leadId!);
+    Provider.of<SupplyChainDataProvider>(context, listen: false).checkEsignStatus(leadId!);
   }
 
   Future<void> fetchData(BuildContext context) async {
