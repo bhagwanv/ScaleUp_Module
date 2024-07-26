@@ -78,31 +78,19 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             ),
           ),
           //If it's last item, we will not add Divider after it.
-          if (item != items.last)
+          /*if (item != items.last)
             const DropdownMenuItem<String>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
     return menuItems;
   }
 
-  List<double> _getCustomItemsHeights(List<String> items) {
-    final List<double> itemsHeights = [];
-    for (int i = 0; i < (items.length * 2) - 1; i++) {
-      if (i.isEven) {
-        itemsHeights.add(40);
-      }
-      if (i.isOdd) {
-        itemsHeights.add(4);
-      }
-    }
-    return itemsHeights;
-  }
 
   List<double> _getCustomItemsHeights1(List<LiveBankList?> items) {
     final List<double> itemsHeights = [];
@@ -133,13 +121,13 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             ),
           ),
           // If it's not the last item, add Divider after it.
-          if (item != items.last)
+         /* if (item != items.last)
             const DropdownMenuItem<LiveBankList>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -496,18 +484,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         onChanged: (LiveBankList? value) {
           selectedBankValue = value!.bankName!;
         },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights1(liveBankList!),
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         ),
         iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
+          icon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
         ),
       );
     } else {
@@ -542,18 +536,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         onChanged: (LiveBankList? value) {
           selectedBankValue = value!.bankName!;
         },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights1(liveBankList!),
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         ),
         iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
+          icon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
         ),
       );
     }
@@ -604,18 +604,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             onChanged: (String? value) {
               selectedAccountTypeValue = value!;
             },
-            buttonStyleData: const ButtonStyleData(
-              padding: EdgeInsets.only(right: 8),
+            dropdownStyleData: DropdownStyleData(
+              maxHeight: 400,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+              ),
             ),
-            dropdownStyleData: const DropdownStyleData(
-              maxHeight: 200,
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              customHeights: _getCustomItemsHeights(accountTypeList),
+            menuItemStyleData: const MenuItemStyleData(
+              padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
             ),
             iconStyleData: const IconStyleData(
-              openMenuIcon: Icon(Icons.arrow_drop_up),
+              icon: Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Icon(Icons.keyboard_arrow_down),
+              ), // Down arrow icon when closed
+              openMenuIcon: Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Icon(Icons.keyboard_arrow_up),
+              ), // Up arrow icon when open
             ),
           );
         } else {
@@ -650,18 +656,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             onChanged: (String? value) {
               selectedAccountTypeValue = value!;
             },
-            buttonStyleData: const ButtonStyleData(
-              padding: EdgeInsets.only(right: 8),
+            dropdownStyleData: DropdownStyleData(
+              maxHeight: 400,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+              ),
             ),
-            dropdownStyleData: const DropdownStyleData(
-              maxHeight: 200,
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              customHeights: _getCustomItemsHeights(accountTypeList),
+            menuItemStyleData: const MenuItemStyleData(
+              padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
             ),
             iconStyleData: const IconStyleData(
-              openMenuIcon: Icon(Icons.arrow_drop_up),
+              icon: Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Icon(Icons.keyboard_arrow_down),
+              ), // Down arrow icon when closed
+              openMenuIcon: Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Icon(Icons.keyboard_arrow_up),
+              ), // Up arrow icon when open
             ),
           );
         }
@@ -697,18 +709,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           onChanged: (String? value) {
             selectedAccountTypeValue = value!;
           },
-          buttonStyleData: const ButtonStyleData(
-            padding: EdgeInsets.only(right: 8),
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 400,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
-          dropdownStyleData: const DropdownStyleData(
-            maxHeight: 200,
-          ),
-          menuItemStyleData: MenuItemStyleData(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            customHeights: _getCustomItemsHeights(accountTypeList),
+          menuItemStyleData: const MenuItemStyleData(
+            padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
           ),
           iconStyleData: const IconStyleData(
-            openMenuIcon: Icon(Icons.arrow_drop_up),
+            icon: Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(Icons.keyboard_arrow_down),
+            ), // Down arrow icon when closed
+            openMenuIcon: Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(Icons.keyboard_arrow_up),
+            ), // Up arrow icon when open
           ),
         );
       }
@@ -744,18 +762,24 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         onChanged: (String? value) {
           selectedAccountTypeValue = value!;
         },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights(accountTypeList),
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         ),
         iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
+          icon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
         ),
       );
     }
