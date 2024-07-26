@@ -3,8 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:getwidget/components/toggle/gf_toggle.dart';
-import 'package:getwidget/types/gf_toggle_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/business_loan/api/ApiService.dart';
@@ -452,9 +450,6 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
                                         ),
                                       ],
                                     ),
-
-
-
                                     Container(
                                       width: double.infinity, // Ensures the slider takes full width of its parent
                                       child: Column(
@@ -497,9 +492,6 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
                                         ],
                                       ),
                                     ),
-
-
-
                                   ],
                                 )),
                           ),
