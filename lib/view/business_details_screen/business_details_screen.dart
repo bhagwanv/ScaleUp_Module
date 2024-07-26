@@ -59,6 +59,13 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   var isGstFilled = false;
 
   var updateData = false;
+  CityResponce? selectedCompanyCity = null;
+  ReturnObject? selectedCompanyState = null;
+
+  String? selectedCompanyStateValue;
+  String? selectedCompanyCityValue;
+  String? companyCityId;
+  String? companyStateId;
 
   List<CityResponce?> citylist = [];
   var cityCallInitial = true;
@@ -77,45 +84,17 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
               ),
             ),
           ),
-          if (item != items.last)
+          /*if (item != items.last)
             const DropdownMenuItem<ReturnObject>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
     return menuItems;
-  }
-
-  List<double> _getCustomItemsHeights2(List<ReturnObject?> items) {
-    final List<double> itemsHeights = [];
-    for (int i = 0; i < (items.length * 2) - 1; i++) {
-      if (i.isEven) {
-        itemsHeights.add(40);
-      }
-      //Dividers indexes will be the odd indexes
-      if (i.isOdd) {
-        itemsHeights.add(4);
-      }
-    }
-    return itemsHeights;
-  }
-
-  List<double> _getCustomItemsHeights3(List<CityResponce?> items) {
-    final List<double> itemsHeights = [];
-    for (int i = 0; i < (items.length * 2) - 1; i++) {
-      if (i.isEven) {
-        itemsHeights.add(40);
-      }
-      //Dividers indexes will be the odd indexes
-      if (i.isOdd) {
-        itemsHeights.add(4);
-      }
-    }
-    return itemsHeights;
   }
 
   void _onImageSelected(File imageFile) async {
@@ -175,31 +154,17 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
             ),
           ),
           //If it's last item, we will not add Divider after it.
-          if (item != items.last)
+         /* if (item != items.last)
             const DropdownMenuItem<String>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
     return menuItems;
-  }
-
-  List<double> _getCustomItemsHeights(List<String> items) {
-    final List<double> itemsHeights = [];
-    for (int i = 0; i < (items.length * 2) - 1; i++) {
-      if (i.isEven) {
-        itemsHeights.add(40);
-      }
-      //Dividers indexes will be the odd indexes
-      if (i.isOdd) {
-        itemsHeights.add(4);
-      }
-    }
-    return itemsHeights;
   }
 
   DateTime date = DateTime.now().subtract(const Duration(days: 1));
@@ -592,6 +557,12 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         height: 16.0,
                       ),
                       CommonTextField(
+                        keyboardType: TextInputType.number,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(6)
+                        ],
                         controller: _pinCodeController,
                         enabled: updateData,
                         hintText: "Pin Code",
@@ -644,18 +615,24 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         onChanged: (String? value) {
                           selectedBusinessTypeValue = value;
                         },
-                        buttonStyleData: const ButtonStyleData(
-                          padding: EdgeInsets.only(right: 8),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 400,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
-                        dropdownStyleData: const DropdownStyleData(
-                          maxHeight: 200,
+                        menuItemStyleData: const MenuItemStyleData(
+                          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                         ),
-                        menuItemStyleData: MenuItemStyleData(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights: _getCustomItemsHeights(businessTypeList),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                        iconStyleData: IconStyleData(
+                          icon: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Icon(Icons.keyboard_arrow_down),
+                          ), // Down arrow icon when closed
+                          openMenuIcon: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Icon(Icons.keyboard_arrow_up),
+                          ), // Up arrow icon when open
                         ),
                       ),
                       const SizedBox(
@@ -700,16 +677,24 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         buttonStyleData: const ButtonStyleData(
                           padding: EdgeInsets.only(right: 8),
                         ),
-                        dropdownStyleData: const DropdownStyleData(
-                          maxHeight: 200,
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 400,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
-                        menuItemStyleData: MenuItemStyleData(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights:
-                              _getCustomItemsHeights(monthlySalesTurnoverList),
+                        menuItemStyleData: const MenuItemStyleData(
+                          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                         ),
-                        iconStyleData: const IconStyleData(
-                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                        iconStyleData: IconStyleData(
+                          icon: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Icon(Icons.keyboard_arrow_down),
+                          ), // Down arrow icon when closed
+                          openMenuIcon: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Icon(Icons.keyboard_arrow_up),
+                          ), // Up arrow icon when open
                         ),
                       ),
                       const SizedBox(
@@ -801,16 +786,24 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         buttonStyleData: const ButtonStyleData(
                           padding: EdgeInsets.only(right: 8),
                         ),
-                        dropdownStyleData: const DropdownStyleData(
-                          maxHeight: 200,
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 400,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
-                        menuItemStyleData: MenuItemStyleData(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          customHeights:
-                              _getCustomItemsHeights(chooseBusinessProofList),
+                        menuItemStyleData: const MenuItemStyleData(
+                          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
                         ),
-                        iconStyleData: const IconStyleData(
-                          openMenuIcon: Icon(Icons.arrow_drop_up),
+                        iconStyleData: IconStyleData(
+                          icon: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Icon(Icons.keyboard_arrow_down),
+                          ), // Down arrow icon when closed
+                          openMenuIcon: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Icon(Icons.keyboard_arrow_up),
+                          ), // Up arrow icon when open
                         ),
                       ),
                       const SizedBox(
@@ -986,6 +979,10 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 "Please Enter Address Line 2", context);
                           } else if (_pinCodeController.text.trim().isEmpty) {
                             Utils.showToast("Please Enter Pin Code", context);
+                          } else if (selectedStateValue == null) {
+                            Utils.showToast("Please select state", context);
+                          } else if (selectedCityValue == null) {
+                            Utils.showToast("Please select city", context);
                           } else if (selectedBusinessTypeValue == null) {
                             Utils.showToast(
                                 "Please Select Business Type", context);
@@ -1033,64 +1030,25 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   }
 
   Widget buildStateField(DataProvider productProvider) {
-    ReturnObject? initialData;
-
-    if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
-      if (productProvider.getCustomerDetailUsingGSTData!.stateId != null &&
-          productProvider.getCustomerDetailUsingGSTData!.stateId != 0 &&
-          productProvider.getCustomerDetailUsingGSTData!.cityId != null &&
-          productProvider.getCustomerDetailUsingGSTData!.cityId != 0) {
-        setStateListFirstTime = true;
-        if (productProvider.getAllStateData != null) {
-          var allStates = productProvider.getAllStateData!.returnObject!;
-          if (setStateListFirstTime) {
-            initialData = allStates.firstWhere(
-                (element) =>
-                    element?.id ==
-                    productProvider.getCustomerDetailUsingGSTData!.stateId,
-                orElse: () => null);
-            selectedStateValue = productProvider
-                .getCustomerDetailUsingGSTData!.stateId!
-                .toString();
-          }
+    if (productProvider.getAllStateData != null) {
+      if (productProvider.getAllStateData != null) {
+        var allStates = productProvider.getAllStateData!.returnObject!;
+        if (companyStateId != null) {
+          selectedCompanyState = allStates.firstWhere(
+                  (element) => element?.id == int.parse(companyStateId!),
+              orElse: () => null);
 
           if (cityCallInitial) {
             citylist.clear();
-            Provider.of<DataProvider>(context, listen: false).getAllCity(
-                productProvider.getCustomerDetailUsingGSTData!.stateId!);
+            Provider.of<DataProvider>(context, listen: false)
+                .getAllCity(int.parse(companyStateId!));
             cityCallInitial = false;
           }
         }
       }
-    } else {
-      if (productProvider.getLeadBusinessDetailData!.stateId != null &&
-          productProvider.getLeadBusinessDetailData!.stateId! != 0) {
-        if (productProvider.getAllStateData != null) {
-          var allStates = productProvider.getAllStateData!.returnObject!;
-          if (setStateListFirstTime) {
-            initialData = allStates.firstWhere(
-                (element) =>
-                    element?.id ==
-                    productProvider.getLeadBusinessDetailData!.stateId,
-                orElse: () => null);
-            selectedStateValue =
-                productProvider.getLeadBusinessDetailData!.stateId!.toString();
-          }
-        }
-        if (cityCallInitial) {
-          citylist.clear();
-          Provider.of<DataProvider>(context, listen: false)
-              .getAllCity(productProvider.getLeadBusinessDetailData!.stateId!);
-          cityCallInitial = false;
-        }
-      } else {
-        setStateListFirstTime = false;
-      }
-    }
-    if (productProvider.getAllStateData != null) {
       return DropdownButtonFormField2<ReturnObject?>(
         isExpanded: true,
-        value: initialData,
+        value: selectedCompanyState,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
           fillColor: textFiledBackgroundColour,
@@ -1117,28 +1075,38 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           ),
         ),
         items: getAllState(productProvider.getAllStateData!.returnObject!),
-        onChanged: setStateListFirstTime
-            ? null
-            : (ReturnObject? value) {
-                citylist.clear();
-                setStateListFirstTime = false;
-                Provider.of<DataProvider>(context, listen: false)
-                    .getAllCity(value!.id!);
-                selectedStateValue = value.id!.toString();
-              },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
+        onChanged: (ReturnObject? value) {
+          setState(() {
+            citylist.clear();
+            setStateListFirstTime = false;
+            Provider.of<DataProvider>(context, listen: false)
+                .getAllCity(value!.id!);
+            selectedStateValue = value.id!.toString();
+            selectedCityValue = null;
+            selectedCompanyCity = null;
+            selectedCompanyState = value;
+            companyCityId = null;
+            companyStateId = null;
+          });
+        },
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights2(
-              productProvider.getAllStateData!.returnObject!),
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         ),
         iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
+          icon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
         ),
       );
     } else {
@@ -1147,42 +1115,19 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   }
 
   Widget buildCityField(DataProvider productProvider) {
-    if (productProvider.getAllCityData != null) {
-      CityResponce? initialData;
-      if (!gstUpdate && productProvider.getCustomerDetailUsingGSTData != null) {
-        if (productProvider.getCustomerDetailUsingGSTData!.cityId != null &&
-            productProvider.getCustomerDetailUsingGSTData!.cityId != 0) {
-          setCityListFirstTime = true;
-          if (setCityListFirstTime) {
-            initialData = citylist.firstWhere(
-                (element) =>
-                    element?.id ==
-                    productProvider.getCustomerDetailUsingGSTData!.cityId,
-                orElse: () => CityResponce());
-            selectedCityValue = productProvider
-                .getCustomerDetailUsingGSTData!.cityId!
-                .toString();
-          }
-        }
-      } else {
-        if (productProvider.getLeadBusinessDetailData!.cityId != 0) {
-          if (setCityListFirstTime) {
-            initialData = citylist.firstWhere(
-                (element) =>
-                    element?.id ==
-                    productProvider.getLeadBusinessDetailData!.cityId,
-                orElse: () => CityResponce());
-            selectedCityValue =
-                productProvider.getLeadBusinessDetailData!.cityId!.toString();
-          }
-        } else {
-          setCityListFirstTime = false;
-        }
+    if (productProvider.getAllCityData != null &&
+        productProvider.getAllCityData!.isNotEmpty) {
+      citylist = productProvider.getAllCityData!;
+      print("companyCityId:: ${companyCityId}");
+      print("cityCallInitial:: ${cityCallInitial}");
+      if (companyCityId != null) {
+        selectedCompanyCity = citylist.firstWhere(
+                (element) => element?.id == int.parse(companyCityId!),
+            orElse: () => CityResponce());
       }
-
       return DropdownButtonFormField2<CityResponce>(
         isExpanded: true,
-        value: initialData,
+        value: selectedCompanyCity,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
           fillColor: textFiledBackgroundColour,
@@ -1209,26 +1154,32 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           ),
         ),
         items: getAllCity(citylist),
-        onChanged: setCityListFirstTime
-            ? null
-            : (CityResponce? value) {
-                selectedCityValue = value!.id.toString();
-                setState(() {
-                  setCityListFirstTime = false;
-                });
-              },
-        buttonStyleData: const ButtonStyleData(
-          padding: EdgeInsets.only(right: 8),
+        onChanged: (CityResponce? value) {
+          setState(() {
+            selectedCompanyCity = value;
+            setCityListFirstTime = false;
+            selectedCityValue = value?.id.toString();
+            companyCityId = null;
+          });
+        },
+        dropdownStyleData: DropdownStyleData(
+          maxHeight: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
         ),
-        dropdownStyleData: const DropdownStyleData(
-          maxHeight: 200,
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          customHeights: _getCustomItemsHeights3(citylist),
-        ),
-        iconStyleData: const IconStyleData(
-          openMenuIcon: Icon(Icons.arrow_drop_up),
+        iconStyleData: IconStyleData(
+          icon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_down),
+          ), // Down arrow icon when closed
+          openMenuIcon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Icon(Icons.keyboard_arrow_up),
+          ), // Up arrow icon when open
         ),
       );
     } else {
@@ -1250,14 +1201,14 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
               ),
             ),
           ),
-          // If it's not the last item, add Divider after it.
+          /*// If it's not the last item, add Divider after it.
           if (item != list.last)
             const DropdownMenuItem<CityResponce>(
               enabled: false,
               child: Divider(
                 height: 0.1,
               ),
-            ),
+            ),*/
         ],
       );
     }
@@ -1274,7 +1225,6 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   Future<void> postLeadBuisnessDetail(BuildContext context, DataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
-    Utils.onLoading(context, "");
 
     var postLeadBuisnessDetailRequestModel = PostLeadBuisnessDetailRequestModel(
       leadId: prefsUtil.getInt(LEADE_ID),
@@ -1287,8 +1237,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       busEntityType: selectedBusinessTypeValue,
       busAddCorrLine1: _addressLineController.text.trim().toString(),
       busAddCorrLine2: _addressLine2Controller.text.trim().toString(),
-      busAddCorrCity: selectedCityValue,
-      busAddCorrState: selectedStateValue,
+      busAddCorrCity: selectedCompanyCity?.id.toString(),
+      busAddCorrState: selectedCompanyState?.id.toString(),
       busAddCorrPincode: _pinCodeController.text.trim().toString(),
       buisnessMonthlySalary: 0,
       incomeSlab: selectedMonthlySalesTurnoverValue,
@@ -1298,6 +1248,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       buisnessProof: selectedChooseBusinessProofValue,
     );
     debugPrint("Post DATA:: ${postLeadBuisnessDetailRequestModel.toJson()}");
+    /*Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
@@ -1328,7 +1279,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           }
         },
       );
-    }
+    }*/
 
   }
 
@@ -1347,7 +1298,6 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
     await Provider.of<DataProvider>(context, listen: false)
         .getLeadBusinessDetail(userId!,productCode!);
-
     await Provider.of<DataProvider>(context, listen: false).getAllState();
   }
 
@@ -1390,5 +1340,3 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   }
 }
-
-

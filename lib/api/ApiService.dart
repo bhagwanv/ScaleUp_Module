@@ -903,8 +903,14 @@ class ApiService {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
+      var token = prefsUtil.getString(TOKEN);
       final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.getLeadBusinessDetail}?UserId=$userId&productCode=$productCode'));
+          '${base_url! + apiUrls.getLeadBusinessDetail}?UserId=$userId&productCode=$productCode'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
+        },);
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response

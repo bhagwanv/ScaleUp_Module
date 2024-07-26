@@ -1572,6 +1572,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
         SizedBox(height: 24),
         TextField(
           keyboardType: TextInputType.number,
+          inputFormatters: [ FilteringTextInputFormatter.allow(
+              RegExp((r'[0-9]'))),
+            LengthLimitingTextInputFormatter(10)],
           textInputAction: TextInputAction.next,
           controller: _alternatePhoneNumberCl,
           maxLines: 1,
@@ -1688,6 +1691,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
           enabled: ischeckCurrentAdress,
           controller: _currentAddressPinCodeCl,
           keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(
+                RegExp((r'[0-9]'))),
+            LengthLimitingTextInputFormatter(6)
+          ],
           textInputAction: TextInputAction.next,
           maxLines: 1,
           cursorColor: Colors.black,
