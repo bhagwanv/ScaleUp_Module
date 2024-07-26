@@ -64,11 +64,11 @@ class _SplashScreenState extends State<SplashScreen> {
                             companyID: productProvider
                                 .productCompanyDetailResponseModel!
                                 .response!
-                                .productId,
+                                .companyId,
                             ProductID: productProvider
                                 .productCompanyDetailResponseModel!
                                 .response!
-                                .companyId,
+                                .productId,
                             MobileNumber: widget.mobileNumber,
                           ),
                         ),
