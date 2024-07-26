@@ -260,8 +260,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       ),
                       CommonTextField(
                         inputFormatter: [
-                          LengthLimitingTextInputFormatter(17),
-                          // Limit to 10 characters
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(17)
                         ],
                         keyboardType: TextInputType.number,
                         controller: _bankAccountNumberCl,
@@ -765,13 +766,13 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       Utils.showToast("Please Select Bank", context);
     } else if (selectedBankValue!.isEmpty) {
       Utils.showToast("Please Select Bank", context);
-    } else if (_accountHolderController.text.isEmpty) {
+    } else if (_accountHolderController.text.trim().isEmpty) {
       Utils.showToast("Please Enter Account Holder Name", context);
-    } else if (_bankAccountNumberCl.text.isEmpty) {
+    } else if (_bankAccountNumberCl.text.trim().isEmpty) {
       Utils.showToast("Please Enter Account Number", context);
     } else if (selectedAccountTypeValue.isEmpty) {
       Utils.showToast("Please Select account Type", context);
-    } else if (_ifsccodeCl.text.isEmpty) {
+    } else if (_ifsccodeCl.text.trim().isEmpty) {
       Utils.showToast("Please Enter IFSC code", context);
     } else if (!Utils.isValidIFSCCode(_ifsccodeCl.text)) {
       Utils.showToast(
@@ -788,13 +789,13 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           leadId: leadID!,
           Type: "borrower",
           bankName: selectedBankValue,
-          ifscCode: _ifsccodeCl.text,
+          ifscCode: _ifsccodeCl.text.trim(),
           accountType: selectedAccountTypeValue,
           activityId: widget.activityId,
           subActivityId: widget.subActivityId,
-          accountNumber: _bankAccountNumberCl.text,
-          accountHolderName: _accountHolderController.text,
-          pdfPassword: _bankStatmentPassworedController.text,
+          accountNumber: _bankAccountNumberCl.text.trim(),
+          accountHolderName: _accountHolderController.text.trim(),
+          pdfPassword: _bankStatmentPassworedController.text.trim(),
           surrogateType: "Banking",
         ),
       );

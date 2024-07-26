@@ -208,7 +208,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                   ),
                   CommonElevatedButton(
                     onPressed: () {
-                      callVerifyOtpApi(context, pinController.text,
+                      callVerifyOtpApi(context, pinController.text.trim(),
                           widget.emailID!, productProvider);
                     },
                     text: "Verify Code",

@@ -465,7 +465,7 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                       }
 
                       //call api
-                      if (_aadhaarController.text == "") {
+                      if (_aadhaarController.text.trim() == "") {
                         Utils.showToast("Please Enter Aadhaar Number",context);
                       } else if (frontFileUrl == "" || frontDocumentId == "") {
                         Utils.showToast("Please select Aadhaar Front Image",context);

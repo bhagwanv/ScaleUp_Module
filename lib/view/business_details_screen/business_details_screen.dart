@@ -974,17 +974,17 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       const SizedBox(height: 54.0),
                       CommonElevatedButton(
                         onPressed: () async {
-                          if (_businessNameController.text.isEmpty) {
+                          if (_businessNameController.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Business Name (As Per Doc)",
                                 context);
-                          } else if (_addressLineController.text.isEmpty) {
+                          } else if (_addressLineController.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Address Line 1", context);
-                          } else if (_addressLine2Controller.text.isEmpty) {
+                          } else if (_addressLine2Controller.text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Address Line 2", context);
-                          } else if (_pinCodeController.text.isEmpty) {
+                          } else if (_pinCodeController.text.trim().isEmpty) {
                             Utils.showToast("Please Enter Pin Code", context);
                           } else if (selectedBusinessTypeValue == null) {
                             Utils.showToast(
@@ -992,7 +992,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           } else if (selectedMonthlySalesTurnoverValue == null) {
                             Utils.showToast("Please Select Income Slab", context);
                           } else if (_businessDocumentNumberController
-                              .text.isEmpty) {
+                              .text.trim().isEmpty) {
                             Utils.showToast(
                                 "Please Enter Business Document Number", context);
                           } else if (businessProofDocId == null) {
@@ -1281,19 +1281,19 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       userId: prefsUtil.getString(USER_ID),
       activityId: widget.activityId,
       subActivityId: widget.subActivityId,
-      busName: _businessNameController.text.toString(),
+      busName: _businessNameController.text.trim().toString(),
       doi: slectedDate.toString(),
       busGSTNO: gstNumber,
       busEntityType: selectedBusinessTypeValue,
-      busAddCorrLine1: _addressLineController.text.toString(),
-      busAddCorrLine2: _addressLine2Controller.text.toString(),
+      busAddCorrLine1: _addressLineController.text.trim().toString(),
+      busAddCorrLine2: _addressLine2Controller.text.trim().toString(),
       busAddCorrCity: selectedCityValue,
       busAddCorrState: selectedStateValue,
-      busAddCorrPincode: _pinCodeController.text.toString(),
+      busAddCorrPincode: _pinCodeController.text.trim().toString(),
       buisnessMonthlySalary: 0,
       incomeSlab: selectedMonthlySalesTurnoverValue,
       companyId: prefsUtil.getInt(COMPANY_ID),
-      buisnessDocumentNo: _businessDocumentNumberController.text.toString(),
+      buisnessDocumentNo: _businessDocumentNumberController.text.trim().toString(),
       buisnessProofDocId: businessProofDocId,
       buisnessProof: selectedChooseBusinessProofValue,
     );
