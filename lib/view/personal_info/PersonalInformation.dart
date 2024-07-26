@@ -342,7 +342,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         }
 
                         //set Digital veryFication Ivrs number
-                        if (personalDetailsResponce!.ivrsNumber != null &&
+                        if (personalDetailsResponce!.ivrsNumber != null && personalDetailsResponce!.ivrsNumber.toString().isNotEmpty &&
                             !isOwnerShipProofEditable) {
                           consumerNumber = personalDetailsResponce!.ivrsNumber;
                           _customerIvrsCl.text =
@@ -2258,7 +2258,6 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     isElectriCityDistrictEdit = true;
                     isElectriCityServiceEdit = true;
                     if (text.length >= 10) {
-                      // Make API Call to validate PAN card
                       setState(() {
                         selectServiceProviderValue = null;
                         selectServiceProviderList.clear();
