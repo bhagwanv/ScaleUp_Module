@@ -922,34 +922,37 @@ class ApiService {
   Future<Result<PostLeadBuisnessDetailResponsModel,Exception>> postLeadBuisnessDetail(
       PostLeadBuisnessDetailRequestModel
           postLeadBuisnessDetailRequestModel) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
-      var token = await prefsUtil.getString(TOKEN);
-      final response = await interceptor.post(
-          Uri.parse('${base_url! + apiUrls.postLeadBuisnessDetail}'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token'
-            // Set the content type as JSON// Set the content type as JSON
-          },
-          body: json.encode(postLeadBuisnessDetailRequestModel));
-      //print(json.encode(leadCurrentRequestModel));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-        final PostLeadBuisnessDetailResponsModel responseModel =
+
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse('${base_url! + apiUrls.postLeadBuisnessDetail}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(postLeadBuisnessDetailRequestModel));
+        //print(json.encode(leadCurrentRequestModel));
+        print(response.body); // Print the response body once here the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final PostLeadBuisnessDetailResponsModel responseModel =
             PostLeadBuisnessDetailResponsModel.fromJson(jsonData);
-        return Success(responseModel);
-      }
-      if (response.statusCode == 401) {
-        return Failure(ApiException(response.statusCode, ""));
+            return Success(responseModel);
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode, ""));
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+    } on Exception catch (e) {
+      return Failure(e);
     }
   }
 
@@ -1212,7 +1215,7 @@ class ApiService {
   }
 
   Future<AggrementDetailsResponce> GetAgreemetDetail(
-      int leadId, bool accept, int companyID) async {
+      int leadId, bool accept, int companyID, BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
@@ -1227,6 +1230,7 @@ class ApiService {
         return responseModel;
       }
       if (response.statusCode == 401) {
+        handle401(context);
         throw Exception('Failed to load products');
       } else {
         throw Exception('Failed to load products');
@@ -1613,7 +1617,7 @@ class ApiService {
     }
   }
 
-  Future<PwaModel> pwaData(int leadId) async {
+  Future<PwaModel> pwaData(int leadId, BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
@@ -1627,6 +1631,7 @@ class ApiService {
         return responseModel;
       }
       if (response.statusCode == 401) {
+        handle401(context);
         throw Exception('Failed to load products');
       } else {
         throw Exception('Failed to load products');
@@ -1664,7 +1669,7 @@ class ApiService {
     }
   }
 
-  Future<CheckStatusModel> checkStatus(int leadId) async {
+  Future<CheckStatusModel> checkStatus(int leadId, BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
@@ -1687,6 +1692,7 @@ class ApiService {
       if (response.statusCode == 401) {
         throw Exception('Failed to load products');
       } else {
+        handle401(context);
         throw Exception('Failed to load products');
       }
     } else {
@@ -1696,32 +1702,36 @@ class ApiService {
 
   Future<Result<InProgressScreenModel, Exception>> leadDataOnInProgressScreen(
       int leadId) async {
-    if (await internetConnectivity.networkConnectivity()) {
-      final prefsUtil = await SharedPref.getInstance();
-      var base_url = prefsUtil.getString(BASE_URL);
-      var token = prefsUtil.getString(TOKEN);
-      final response = await interceptor.get(
-        Uri.parse(
-            '${base_url! + apiUrls.LeadDataOnInProgressScreen}?leadId=$leadId'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-      );
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
-        final dynamic jsonData = json.decode(response.body);
-        final InProgressScreenModel responseModel =
+
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(
+          Uri.parse(
+              '${base_url! + apiUrls.LeadDataOnInProgressScreen}?leadId=$leadId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+        );
+        print(response.body); // Print the response body once here the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final InProgressScreenModel responseModel =
             InProgressScreenModel.fromJson(jsonData);
-        return Success(responseModel);
-      }
-      if (response.statusCode == 401) {
-        throw Exception('Failed to load products');
+            return Success(responseModel);
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode, ""));
+        }
       } else {
-        throw Exception('Failed to load products');
+        return Failure(Exception("No Internet connection"));
       }
-    } else {
-      throw Exception('No internet connection');
+    } on Exception catch (e) {
+      return Failure(e);
     }
   }
 }

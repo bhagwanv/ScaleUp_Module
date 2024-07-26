@@ -1,5 +1,4 @@
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -204,7 +203,7 @@ class _AgreementScreenState extends State<AgreementScreen> {
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final int? companyID = prefsUtil.getInt(COMPANY_ID);
    // Utils.onLoading(context,"");
-    aggrementDetails = await ApiService().GetAgreemetDetail(leadId!, accept, companyID!);
+    aggrementDetails = await ApiService().GetAgreemetDetail(leadId!, accept, companyID!,context);
   //  Navigator.of(context, rootNavigator: true).pop();
 
     if(isSubmit){

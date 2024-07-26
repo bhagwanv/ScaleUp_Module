@@ -100,7 +100,7 @@ class _AgreementScreenState extends State<Pwascreen> {
   void callApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    pwaModel = await ApiService().pwaData(leadId!);
+    pwaModel = await ApiService().pwaData(leadId!,context);
     if(pwaModel!.isSuccess!) {
       if (pwaModel!.message == "Activity Completed") {
         //fetchData(context);

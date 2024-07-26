@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +98,7 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     //final int? leadId = 52;
     Utils.onLoading(context,"");
-    CheckStatusModel checkStatus = await ApiService().checkStatus(leadId!);
+    CheckStatusModel checkStatus = await ApiService().checkStatus(leadId!,context);
     Navigator.of(context, rootNavigator: true).pop();
     if (checkStatus.isSuccess!) {
       isCheckStatus = checkStatus.isSuccess!;
