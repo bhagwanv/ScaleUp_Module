@@ -254,15 +254,17 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         controller: _accountHolderController,
                         hintText: "Account Holder Name ",
                         labelText: "Account Holder Name ",
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Z]'))),
+                        ],
                       ),
                       SizedBox(
                         height: 16.0,
                       ),
                       CommonTextField(
-                        inputFormatter: [
-                          LengthLimitingTextInputFormatter(17),
-                          // Limit to 10 characters
-                        ],
+                        inputFormatter:[FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(17)],
                         keyboardType: TextInputType.number,
                         controller: _bankAccountNumberCl,
                         maxLines: 1,

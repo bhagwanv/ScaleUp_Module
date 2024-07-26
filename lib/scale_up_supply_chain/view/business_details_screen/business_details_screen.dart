@@ -554,6 +554,10 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       ),
                       CommonTextField(
                         controller: _businessNameController,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Z0-9]'))),
+                        ],
                         enabled: updateData,
                         hintText: "Business Name(As Per Doc) ",
                         labelText: "Business Name(As Per Doc)",
@@ -578,6 +582,10 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         enabled: updateData,
                         hintText: "Address Line 1",
                         labelText: "Address Line 1",
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Z0-9]'))),
+                        ],
                       ),
                       const SizedBox(
                         height: 16.0,
@@ -587,6 +595,10 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         enabled: updateData,
                         hintText: "Address Line 2",
                         labelText: "Address Line 2",
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Z0-9]'))),
+                        ],
                       ),
                       const SizedBox(
                         height: 16.0,
@@ -596,6 +608,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         enabled: updateData,
                         hintText: "Pin Code",
                         labelText: "Pin Code",
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[0-9]'))),
+                          LengthLimitingTextInputFormatter(6)
+                        ],
                       ),
                       const SizedBox(
                         height: 16.0,
