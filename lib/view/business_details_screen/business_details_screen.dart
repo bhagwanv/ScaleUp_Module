@@ -366,8 +366,6 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   businessProofDocId = productProvider.getpostBusineesDoumentSingleFileData!.docId!;
                 }
               }
-
-
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
@@ -375,13 +373,13 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
+                      /*Padding(
                         padding: const EdgeInsets.only(top: 30.0),
                         child: SvgPicture.asset(
                             "assets/icons/back_arrow_icon.svg",
                             colorFilter: const ColorFilter.mode(
                                 kPrimaryColor, BlendMode.srcIn)),
-                      ),
+                      ),*/
                       const Padding(
                         padding: EdgeInsets.only(top: 20, bottom: 0),
                         child: Text(
@@ -458,6 +456,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                         isGstFilled=true;
                                         selectedChooseBusinessProofValue = "GST Certificate";
                                         _businessDocumentNumberController.text = productProvider.getCustomerDetailUsingGSTData!.busGSTNO!;
+                                        companyStateId = productProvider.getCustomerDetailUsingGSTData!.stateId.toString();
+                                        companyCityId = productProvider.getCustomerDetailUsingGSTData!.cityId.toString();
                                       } else {
                                         Utils.showToast(
                                             productProvider
@@ -501,6 +501,10 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                   image = "";
                                   businessProofDocId = null;
                                   isGstFilled=false;
+                                  companyStateId = null;
+                                  companyCityId = null;
+                                  selectedCompanyState = null;
+                                  selectedCompanyCity = null;
                                 });
                               },
                               child: Container(
@@ -1219,7 +1223,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       BuildContext context, String gstNumber) async {
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
-        .getCustomerDetailUsingGST(gstNumber);
+        .getCustomerDetailUsingGST(gstNumber, context);
     Navigator.of(context, rootNavigator: true).pop();
   }
 
@@ -1248,7 +1252,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       buisnessProof: selectedChooseBusinessProofValue,
     );
     debugPrint("Post DATA:: ${postLeadBuisnessDetailRequestModel.toJson()}");
-    /*Utils.onLoading(context, "");
+    Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadBuisnessDetail(postLeadBuisnessDetailRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
@@ -1274,12 +1278,12 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
             }else{
-              Utils.showToast(exception.errorMessage,context);
+              Utils.showToast("Something went wrong...",context);
             }
           }
         },
       );
-    }*/
+    }
 
   }
 
@@ -1297,7 +1301,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
     await Provider.of<DataProvider>(context, listen: false)
-        .getLeadBusinessDetail(userId!,productCode!);
+        .getLeadBusinessDetail(userId!,productCode!, context);
     await Provider.of<DataProvider>(context, listen: false).getAllState();
   }
 

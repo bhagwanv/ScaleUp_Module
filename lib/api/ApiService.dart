@@ -899,7 +899,7 @@ class ApiService {
 
   //Business Detail Module
   Future<LeadBusinessDetailResponseModel> getLeadBusinessDetail(
-      String userId, String productCode) async {
+      String userId, String productCode, BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
@@ -919,8 +919,11 @@ class ApiService {
         final LeadBusinessDetailResponseModel responseModel =
             LeadBusinessDetailResponseModel.fromJson(jsonData);
         return responseModel;
+      } else if (response.statusCode == 401) {
+        handle401(context);
+        throw Exception('Failed to load data');
       } else {
-        throw Exception('Failed to load products');
+        throw Exception('Failed to load data');
       }
     } else {
       Utils.showBottomToast("No Internet connection");
@@ -929,12 +932,18 @@ class ApiService {
   }
 
   Future<CustomerDetailUsingGstResponseModel> getCustomerDetailUsingGST(
-      String GSTNumber) async {
+      String GSTNumber, BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
+      var token = prefsUtil.getString(TOKEN);
       final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'));
+          '${base_url! + apiUrls.getCustomerDetailUsingGST}?GSTNO=$GSTNumber'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
+        });
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         // Parse the JSON response
@@ -943,8 +952,11 @@ class ApiService {
         final CustomerDetailUsingGstResponseModel responseModel =
             CustomerDetailUsingGstResponseModel.fromJson(jsonData);
         return responseModel;
+      }  else if (response.statusCode == 401) {
+        handle401(context);
+        throw Exception('Failed to load data');
       } else {
-        throw Exception('Failed to load products');
+        throw Exception('Failed to load data');
       }
     } else {
       Utils.showBottomToast("No Internet connection");
@@ -1010,7 +1022,7 @@ class ApiService {
             BankListResponceModel.fromJson(jsonData);
         return responseModel;
       } else {
-        throw Exception('Failed to load products');
+        throw Exception('Failed to load data');
       }
     } else {
       Utils.showBottomToast("No Internet connection");
@@ -1271,8 +1283,7 @@ class ApiService {
         final AggrementDetailsResponce responseModel =
             AggrementDetailsResponce.fromJson(jsonData);
         return responseModel;
-      }
-      if (response.statusCode == 401) {
+      }else if (response.statusCode == 401) {
         handle401(context);
         throw Exception('Failed to load products');
       } else {
@@ -1685,8 +1696,7 @@ class ApiService {
         final dynamic jsonData = json.decode(response.body);
         final PwaModel responseModel = PwaModel.fromJson(jsonData);
         return responseModel;
-      }
-      if (response.statusCode == 401) {
+      } else if (response.statusCode == 401) {
         handle401(context);
         throw Exception('Failed to load products');
       } else {
@@ -1746,11 +1756,10 @@ class ApiService {
         final CheckStatusModel responseModel =
             CheckStatusModel.fromJson(jsonData);
         return responseModel;
-      }
-      if (response.statusCode == 401) {
+      } else if (response.statusCode == 401) {
+        handle401(context);
         throw Exception('Failed to load products');
       } else {
-        handle401(context);
         throw Exception('Failed to load products');
       }
     } else {

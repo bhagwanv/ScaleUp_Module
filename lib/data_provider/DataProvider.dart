@@ -458,13 +458,13 @@ class DataProvider extends ChangeNotifier {
 
   }
 
-  Future<void> getLeadBusinessDetail(String userId,String productCode) async {
-    _getLeadBusinessDetailData = await apiService.getLeadBusinessDetail(userId,productCode);
+  Future<void> getLeadBusinessDetail(String userId,String productCode, BuildContext context) async {
+    _getLeadBusinessDetailData = await apiService.getLeadBusinessDetail(userId,productCode, context);
     notifyListeners();
   }
 
-  Future<void> getCustomerDetailUsingGST(String GSTNumber) async {
-    _getCustomerDetailUsingGSTData = await apiService.getCustomerDetailUsingGST(GSTNumber);
+  Future<void> getCustomerDetailUsingGST(String GSTNumber, BuildContext context) async {
+    _getCustomerDetailUsingGSTData = await apiService.getCustomerDetailUsingGST(GSTNumber, context);
     notifyListeners();
   }
 
