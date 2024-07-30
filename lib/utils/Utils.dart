@@ -161,10 +161,10 @@ class Utils {
     FocusScope.of(context).requestFocus(new FocusNode());
   }
 
-  static String dateFormate(BuildContext context,String date){
+  static String dateFormate(BuildContext context,String date, String dateFormat){
     String inputString = date;
     DateTime dateTime = DateTime.parse(inputString);
-    String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
+    String formattedDate = DateFormat(dateFormat).format(dateTime);
     return formattedDate;
   }
 

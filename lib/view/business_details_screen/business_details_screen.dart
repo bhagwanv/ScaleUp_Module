@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/utils/common_text_field.dart';
@@ -212,7 +213,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       onConfirm: (dateTime, List<int> index) {
         setState(() {
           _dateTime = dateTime;
-          slectedDate = Utils.dateFormate(context, _dateTime.toString());
+          slectedDate = Utils.dateFormate(context, _dateTime.toString(), "dd/MM/yyyy");
           if (kDebugMode) {
             print("$_dateTime");
           }
@@ -279,7 +280,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   _addressLineController.text =
                       productProvider.getLeadBusinessDetailData!.addressLineOne!;
                   slectedDate = Utils.dateFormate(
-                      context, productProvider.getLeadBusinessDetailData!.doi!);
+                      context, productProvider.getLeadBusinessDetailData!.doi!, "dd/MM/yyyy");
                   _addressLine2Controller.text =
                       productProvider.getLeadBusinessDetailData!.addressLineTwo!;
                   _pinCodeController.text = productProvider
@@ -319,7 +320,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   if (productProvider
                       .getCustomerDetailUsingGSTData!.busGSTNO!.isNotEmpty) {
                     slectedDate = Utils.dateFormate(context,
-                        productProvider.getCustomerDetailUsingGSTData!.doi!);
+                        productProvider.getCustomerDetailUsingGSTData!.doi!, "dd/MM/yyyy");
                     if (productProvider
                             .getCustomerDetailUsingGSTData!.buisnessProofDocId !=
                         0) {
@@ -458,6 +459,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                         _businessDocumentNumberController.text = productProvider.getCustomerDetailUsingGSTData!.busGSTNO!;
                                         companyStateId = productProvider.getCustomerDetailUsingGSTData!.stateId.toString();
                                         companyCityId = productProvider.getCustomerDetailUsingGSTData!.cityId.toString();
+                                        selectedStateValue = productProvider.getCustomerDetailUsingGSTData!.stateId.toString();
+                                        selectedCityValue = productProvider.getCustomerDetailUsingGSTData!.cityId.toString();
                                       } else {
                                         Utils.showToast(
                                             productProvider
@@ -1230,13 +1233,20 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
   Future<void> postLeadBuisnessDetail(BuildContext context, DataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
 
+
+    DateFormat inputFormat = DateFormat("MM/dd/yyyy");
+    DateTime dateTime = inputFormat.parse(slectedDate.toString());
+    DateFormat outputFormat = DateFormat("yyyy-MM-dd");
+    String formattedDate = outputFormat.format(dateTime);
+
+    print(formattedDate); // Output: 2024-07-30
     var postLeadBuisnessDetailRequestModel = PostLeadBuisnessDetailRequestModel(
       leadId: prefsUtil.getInt(LEADE_ID),
       userId: prefsUtil.getString(USER_ID),
       activityId: widget.activityId,
       subActivityId: widget.subActivityId,
       busName: _businessNameController.text.trim().toString(),
-      doi: slectedDate.toString(),
+      doi: formattedDate,
       busGSTNO: gstNumber,
       busEntityType: selectedBusinessTypeValue,
       busAddCorrLine1: _addressLineController.text.trim().toString(),
@@ -1250,7 +1260,10 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       buisnessDocumentNo: _businessDocumentNumberController.text.trim().toString(),
       buisnessProofDocId: businessProofDocId,
       buisnessProof: selectedChooseBusinessProofValue,
+      inquiryAmount: 0,
+      surrogateType: null,
     );
+
     debugPrint("Post DATA:: ${postLeadBuisnessDetailRequestModel.toJson()}");
     Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)

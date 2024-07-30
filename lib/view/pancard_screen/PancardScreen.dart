@@ -145,7 +145,7 @@ class _PancardScreenState extends State<PancardScreen> {
 
                           if(LeadPANData.dob!=null){
                             var formateDob =
-                            Utils.dateFormate(context, LeadPANData.dob!);
+                            Utils.dateFormate(context, LeadPANData.dob!, "dd/MM/yyyy");
                             dobAsPan = LeadPANData.dob!;
                             _dOBAsPanCl.text = formateDob;
                           }
@@ -739,7 +739,7 @@ class _PancardScreenState extends State<PancardScreen> {
           // Handle successful response
           fathersNameByValidPanCardResponseModel = FathersNameByValidPanCardResponseModel;
           if (fathersNameByValidPanCardResponseModel.dob != null) {
-            var formateDob = Utils.dateFormate(context, fathersNameByValidPanCardResponseModel.dob);dobAsPan = fathersNameByValidPanCardResponseModel.dob;_dOBAsPanCl.text = formateDob;
+            var formateDob = Utils.dateFormate(context, fathersNameByValidPanCardResponseModel.dob, "dd/MM/yyyy");dobAsPan = fathersNameByValidPanCardResponseModel.dob;_dOBAsPanCl.text = formateDob;
           } else {
             if(fathersNameByValidPanCardResponseModel.message != null) {
               Utils.showToast(fathersNameByValidPanCardResponseModel.message!, context);
@@ -763,7 +763,7 @@ class _PancardScreenState extends State<PancardScreen> {
 
   Future<void> postLeadPAN(BuildContext context, DataProvider productProvider,
       PostLeadPanRequestModel postLeadPanRequestModel) async {
-    Utils.onLoading(context, "Loading...");
+    Utils.onLoading(context, "");
     await Provider.of<DataProvider>(context, listen: false)
         .postLeadPAN(postLeadPanRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
