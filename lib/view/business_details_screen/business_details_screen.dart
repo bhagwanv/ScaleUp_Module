@@ -33,7 +33,10 @@ class BusinessDetailsScreen extends StatefulWidget {
   final String? pageType;
 
   const BusinessDetailsScreen(
-      {super.key, required this.activityId, required this.subActivityId, this.pageType});
+      {super.key,
+      required this.activityId,
+      required this.subActivityId,
+      this.pageType});
 
   @override
   State<BusinessDetailsScreen> createState() => _BusinessDetailsState();
@@ -155,7 +158,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
             ),
           ),
           //If it's last item, we will not add Divider after it.
-         /* if (item != items.last)
+          /* if (item != items.last)
             const DropdownMenuItem<String>(
               enabled: false,
               child: Divider(
@@ -213,7 +216,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       onConfirm: (dateTime, List<int> index) {
         setState(() {
           _dateTime = dateTime;
-          slectedDate = Utils.dateFormate(context, _dateTime.toString(), "dd/MM/yyyy");
+          slectedDate =
+              Utils.dateFormate(context, _dateTime.toString(), "dd/MM/yyyy");
           if (kDebugMode) {
             print("$_dateTime");
           }
@@ -238,7 +242,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
         if (didPop) {
           return;
         }
-        if(widget.pageType == "pushReplacement" ) {
+        if (widget.pageType == "pushReplacement") {
           final bool shouldPop = await Utils().onback(context);
           if (shouldPop) {
             SystemNavigator.pop();
@@ -251,9 +255,10 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
         body: SafeArea(
           top: true,
           bottom: true,
-          child:
-              Consumer<DataProvider>(builder: (context, productProvider, child) {
-            if (productProvider.getLeadBusinessDetailData == null && isLoading) {
+          child: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
+            if (productProvider.getLeadBusinessDetailData == null &&
+                isLoading) {
               return const Loader();
             } else {
               if (productProvider.getLeadBusinessDetailData != null &&
@@ -277,12 +282,14 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
                   _businessNameController.text =
                       productProvider.getLeadBusinessDetailData!.businessName!;
-                  _addressLineController.text =
-                      productProvider.getLeadBusinessDetailData!.addressLineOne!;
+                  _addressLineController.text = productProvider
+                      .getLeadBusinessDetailData!.addressLineOne!;
                   slectedDate = Utils.dateFormate(
-                      context, productProvider.getLeadBusinessDetailData!.doi!, "dd/MM/yyyy");
-                  _addressLine2Controller.text =
-                      productProvider.getLeadBusinessDetailData!.addressLineTwo!;
+                      context,
+                      productProvider.getLeadBusinessDetailData!.doi!,
+                      "dd/MM/yyyy");
+                  _addressLine2Controller.text = productProvider
+                      .getLeadBusinessDetailData!.addressLineTwo!;
                   _pinCodeController.text = productProvider
                       .getLeadBusinessDetailData!.zipCode!
                       .toString();
@@ -298,13 +305,22 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   selectedCityValue = productProvider
                       .getLeadBusinessDetailData!.cityId!
                       .toString();
+
+                  companyStateId = productProvider
+                      .getLeadBusinessDetailData!.stateId!
+                      .toString();
+                  companyCityId = productProvider
+                      .getLeadBusinessDetailData!.cityId!
+                      .toString();
+
                   selectedMonthlySalesTurnoverValue = productProvider
                       .getLeadBusinessDetailData!.incomeSlab!
                       .toString();
                   businessProofDocId = productProvider
                       .getLeadBusinessDetailData!.buisnessProofDocId!;
-                  if(productProvider
-                      .getLeadBusinessDetailData!.buisnessProof != null) {
+                  if (productProvider
+                          .getLeadBusinessDetailData!.buisnessProof !=
+                      null) {
                     selectedChooseBusinessProofValue = productProvider
                         .getLeadBusinessDetailData!.buisnessProof!;
                   }
@@ -319,10 +335,12 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                     !gstUpdate) {
                   if (productProvider
                       .getCustomerDetailUsingGSTData!.busGSTNO!.isNotEmpty) {
-                    slectedDate = Utils.dateFormate(context,
-                        productProvider.getCustomerDetailUsingGSTData!.doi!, "dd/MM/yyyy");
-                    if (productProvider
-                            .getCustomerDetailUsingGSTData!.buisnessProofDocId !=
+                    slectedDate = Utils.dateFormate(
+                        context,
+                        productProvider.getCustomerDetailUsingGSTData!.doi!,
+                        "dd/MM/yyyy");
+                    if (productProvider.getCustomerDetailUsingGSTData!
+                            .buisnessProofDocId !=
                         0) {
                       businessProofDocId = productProvider
                           .getCustomerDetailUsingGSTData!.buisnessProofDocId!;
@@ -360,11 +378,16 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                 citylist = productProvider.getAllCityData!;
               }
 
-              if (productProvider.getpostBusineesDoumentSingleFileData != null &&
+              if (productProvider.getpostBusineesDoumentSingleFileData !=
+                      null &&
                   !isImageDelete) {
-                if (productProvider.getpostBusineesDoumentSingleFileData!.filePath != null) {
-                  image = productProvider.getpostBusineesDoumentSingleFileData!.filePath!;
-                  businessProofDocId = productProvider.getpostBusineesDoumentSingleFileData!.docId!;
+                if (productProvider
+                        .getpostBusineesDoumentSingleFileData!.filePath !=
+                    null) {
+                  image = productProvider
+                      .getpostBusineesDoumentSingleFileData!.filePath!;
+                  businessProofDocId = productProvider
+                      .getpostBusineesDoumentSingleFileData!.docId!;
                 }
               }
               return Padding(
@@ -422,8 +445,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 if (text.length == 15) {
                                   try {
                                     Utils.hideKeyBored(context);
-                                    await getCustomerDetailUsingGST(context, _gstController.text);
-                                    if (productProvider.getCustomerDetailUsingGSTData != null) {
+                                    await getCustomerDetailUsingGST(
+                                        context, _gstController.text);
+                                    if (productProvider
+                                            .getCustomerDetailUsingGSTData !=
+                                        null) {
                                       if (productProvider
                                               .getCustomerDetailUsingGSTData!
                                               .busGSTNO !=
@@ -449,18 +475,35 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                             productProvider
                                                 .getCustomerDetailUsingGSTData!
                                                 .addressLineTwo!;
-                                        _pinCodeController.text = productProvider
-                                            .getCustomerDetailUsingGSTData!
-                                            .zipCode!
-                                            .toString();
+                                        _pinCodeController.text =
+                                            productProvider
+                                                .getCustomerDetailUsingGSTData!
+                                                .zipCode!
+                                                .toString();
                                         //chooseBusinessProofList!.first;
-                                        isGstFilled=true;
-                                        selectedChooseBusinessProofValue = "GST Certificate";
-                                        _businessDocumentNumberController.text = productProvider.getCustomerDetailUsingGSTData!.busGSTNO!;
-                                        companyStateId = productProvider.getCustomerDetailUsingGSTData!.stateId.toString();
-                                        companyCityId = productProvider.getCustomerDetailUsingGSTData!.cityId.toString();
-                                        selectedStateValue = productProvider.getCustomerDetailUsingGSTData!.stateId.toString();
-                                        selectedCityValue = productProvider.getCustomerDetailUsingGSTData!.cityId.toString();
+                                        isGstFilled = true;
+                                        selectedChooseBusinessProofValue =
+                                            "GST Certificate";
+                                        _businessDocumentNumberController.text =
+                                            productProvider
+                                                .getCustomerDetailUsingGSTData!
+                                                .busGSTNO!;
+                                        companyStateId = productProvider
+                                            .getCustomerDetailUsingGSTData!
+                                            .stateId
+                                            .toString();
+                                        companyCityId = productProvider
+                                            .getCustomerDetailUsingGSTData!
+                                            .cityId
+                                            .toString();
+                                        selectedStateValue = productProvider
+                                            .getCustomerDetailUsingGSTData!
+                                            .stateId
+                                            .toString();
+                                        selectedCityValue = productProvider
+                                            .getCustomerDetailUsingGSTData!
+                                            .cityId
+                                            .toString();
                                       } else {
                                         Utils.showToast(
                                             productProvider
@@ -503,11 +546,12 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                   gstNumber = "";
                                   image = "";
                                   businessProofDocId = null;
-                                  isGstFilled=false;
+                                  isGstFilled = false;
                                   companyStateId = null;
                                   companyCityId = null;
                                   selectedCompanyState = null;
                                   selectedCompanyCity = null;
+                                  citylist.clear();
                                 });
                               },
                               child: Container(
@@ -566,8 +610,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       CommonTextField(
                         keyboardType: TextInputType.number,
                         inputFormatter: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp((r'[0-9]'))),
+                          FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
                           LengthLimitingTextInputFormatter(6)
                         ],
                         controller: _pinCodeController,
@@ -595,18 +638,18 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                               vertical: 16, horizontal: 8),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide:
-                                const BorderSide(color: kPrimaryColor, width: 1),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide:
-                                const BorderSide(color: kPrimaryColor, width: 1),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide:
-                                const BorderSide(color: kPrimaryColor, width: 1),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
                           ),
                         ),
                         hint: const Text(
@@ -629,7 +672,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           ),
                         ),
                         menuItemStyleData: const MenuItemStyleData(
-                          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                          padding:
+                              EdgeInsets.only(left: 16, right: 16, bottom: 16),
                         ),
                         iconStyleData: IconStyleData(
                           icon: Padding(
@@ -654,18 +698,18 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           filled: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide:
-                                const BorderSide(color: kPrimaryColor, width: 1),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide:
-                                const BorderSide(color: kPrimaryColor, width: 1),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide:
-                                const BorderSide(color: kPrimaryColor, width: 1),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
                           ),
                         ),
                         hint: const Text(
@@ -691,7 +735,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           ),
                         ),
                         menuItemStyleData: const MenuItemStyleData(
-                          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                          padding:
+                              EdgeInsets.only(left: 16, right: 16, bottom: 16),
                         ),
                         iconStyleData: IconStyleData(
                           icon: Padding(
@@ -728,7 +773,9 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  slectedDate!.isNotEmpty ? '$slectedDate' : 'Business Incorporation Date',
+                                  slectedDate!.isNotEmpty
+                                      ? '$slectedDate'
+                                      : 'Business Incorporation Date',
                                   style: const TextStyle(fontSize: 16.0),
                                 ),
                                 const Icon(Icons.date_range),
@@ -761,18 +808,18 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           filled: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide:
-                                const BorderSide(color: kPrimaryColor, width: 1),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide:
-                                const BorderSide(color: kPrimaryColor, width: 1),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide:
-                                const BorderSide(color: kPrimaryColor, width: 1),
+                            borderSide: const BorderSide(
+                                color: kPrimaryColor, width: 1),
                           ),
                         ),
                         hint: const Text(
@@ -785,11 +832,13 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                         ),
                         items: _addDividersAfterItems(chooseBusinessProofList),
                         value: selectedChooseBusinessProofValue,
-                        onChanged: isGstFilled ? null : (String? value) {
-                          setState(() {
-                            selectedChooseBusinessProofValue = value;
-                          });
-                        },
+                        onChanged: isGstFilled
+                            ? null
+                            : (String? value) {
+                                setState(() {
+                                  selectedChooseBusinessProofValue = value;
+                                });
+                              },
                         buttonStyleData: const ButtonStyleData(
                           padding: EdgeInsets.only(right: 8),
                         ),
@@ -800,7 +849,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           ),
                         ),
                         menuItemStyleData: const MenuItemStyleData(
-                          padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                          padding:
+                              EdgeInsets.only(left: 16, right: 16, bottom: 16),
                         ),
                         iconStyleData: IconStyleData(
                           icon: Padding(
@@ -816,63 +866,90 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       const SizedBox(
                         height: 15.0,
                       ),
+                      selectedChooseBusinessProofValue ==
+                              "Udyog Aadhaar Certificate"
+                          ? TextField(
+                              enabled: true,
+                              controller: _businessDocumentNumberController,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.next,
+                              textCapitalization: TextCapitalization.characters,
+                              maxLines: 1,
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(19),
+                                // Limit the input to 19 characters
+                              ],
+                              cursorColor: Colors.black,
+                              decoration: const InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: kPrimaryColor,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                  ),
+                                  hintText: "UDYAM-XX-00-0000000",
+                                  labelText: "Udyog Aadhaa Document",
+                                  fillColor: textFiledBackgroundColour,
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: kPrimaryColor, width: 1.0),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                  )),
+                              onChanged: (value) {
+                                String formattedInput = value.replaceAll(
+                                    RegExp(r'[^A-Za-z0-9]'), '');
+                                if (formattedInput.length >= 6 &&
+                                    !formattedInput
+                                        .substring(5, 6)
+                                        .contains('-')) {
+                                  formattedInput =
+                                      formattedInput.substring(0, 5) +
+                                          '-' +
+                                          formattedInput.substring(5);
+                                }
 
-                      selectedChooseBusinessProofValue=="Udyog Aadhaar Certificate"?
+                                if (formattedInput.length >= 9 &&
+                                    !formattedInput
+                                        .substring(8, 9)
+                                        .contains('-')) {
+                                  formattedInput =
+                                      formattedInput.substring(0, 8) +
+                                          '-' +
+                                          formattedInput.substring(8);
+                                }
 
-                      TextField(
-                        enabled: true,
-                        controller: _businessDocumentNumberController,
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        textCapitalization: TextCapitalization.characters,
-                        maxLines: 1,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(19), // Limit the input to 19 characters
-                        ],
-                        cursorColor: Colors.black,
-                        decoration: const InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: kPrimaryColor,
-                              ),
-                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                if (formattedInput.length >= 12 &&
+                                    !formattedInput
+                                        .substring(11, 12)
+                                        .contains('-')) {
+                                  formattedInput =
+                                      formattedInput.substring(0, 11) +
+                                          '-' +
+                                          formattedInput.substring(11);
+                                }
+                                if (formattedInput.length > 19) {
+                                  formattedInput =
+                                      formattedInput.substring(0, 19);
+                                }
+                                _businessDocumentNumberController.value =
+                                    TextEditingValue(
+                                  text: formattedInput,
+                                  selection: TextSelection.fromPosition(
+                                    TextPosition(
+                                        offset: formattedInput
+                                            .length), // Maintain cursor position
+                                  ),
+                                );
+                              },
+                            )
+                          : CommonTextField(
+                              controller: _businessDocumentNumberController,
+                              hintText: "Business Document Number",
+                              labelText: "Business Document Number",
                             ),
-                            hintText: "UDYAM-XX-00-0000000",
-                            labelText: "Udyog Aadhaa Document",
-                            fillColor: textFiledBackgroundColour,
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: kPrimaryColor, width: 1.0),
-                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                            )),
-                        onChanged: (value) {
-                          String formattedInput = value.replaceAll(RegExp(r'[^A-Za-z0-9]'), '');
-                          if (formattedInput.length >= 6 && !formattedInput.substring(5, 6).contains('-')) {
-                            formattedInput = formattedInput.substring(0, 5) + '-' + formattedInput.substring(5);
-                          }
-
-                          if (formattedInput.length >= 9 && !formattedInput.substring(8, 9).contains('-')) {
-                            formattedInput = formattedInput.substring(0, 8) + '-' + formattedInput.substring(8);
-                          }
-
-                          if (formattedInput.length >= 12 && !formattedInput.substring(11, 12).contains('-')) {
-                            formattedInput = formattedInput.substring(0, 11) + '-' + formattedInput.substring(11);
-                          }
-                          if (formattedInput.length > 19) {
-                            formattedInput = formattedInput.substring(0, 19);
-                          }
-                          _businessDocumentNumberController.value = TextEditingValue(
-                            text: formattedInput,
-                            selection: TextSelection.fromPosition(
-                              TextPosition(offset: formattedInput.length), // Maintain cursor position
-                            ),
-                          );
-                        },
-                      ):CommonTextField(
-                        controller: _businessDocumentNumberController,
-                        hintText: "Business Document Number",
-                        labelText: "Business Document Number",
-                      ),
                       const SizedBox(
                         height: 36.0,
                       ),
@@ -881,8 +958,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  border:
-                                      Border.all(color: const Color(0xff0196CE))),
+                                  border: Border.all(
+                                      color: const Color(0xff0196CE))),
                               width: double.infinity,
                               child: GestureDetector(
                                 onTap: () {
@@ -939,15 +1016,16 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                                   const Text(
                                                     'Upload Business Proof',
                                                     style: TextStyle(
-                                                        color: Color(0xff0196CE),
+                                                        color:
+                                                            Color(0xff0196CE),
                                                         fontSize: 12),
                                                   ),
                                                   const Text(
                                                       'Supports : JPEG, PNG',
                                                       style: TextStyle(
                                                           fontSize: 12,
-                                                          color:
-                                                              Color(0xffCACACA))),
+                                                          color: Color(
+                                                              0xffCACACA))),
                                                 ],
                                               ),
                                   ),
@@ -978,10 +1056,14 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                             Utils.showToast(
                                 "Please Enter Business Name (As Per Doc)",
                                 context);
-                          } else if (_addressLineController.text.trim().isEmpty) {
+                          } else if (_addressLineController.text
+                              .trim()
+                              .isEmpty) {
                             Utils.showToast(
                                 "Please Enter Address Line 1", context);
-                          } else if (_addressLine2Controller.text.trim().isEmpty) {
+                          } else if (_addressLine2Controller.text
+                              .trim()
+                              .isEmpty) {
                             Utils.showToast(
                                 "Please Enter Address Line 2", context);
                           } else if (_pinCodeController.text.trim().isEmpty) {
@@ -993,21 +1075,26 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                           } else if (selectedBusinessTypeValue == null) {
                             Utils.showToast(
                                 "Please Select Business Type", context);
-                          } else if (selectedMonthlySalesTurnoverValue == null) {
-                            Utils.showToast("Please Select Income Slab", context);
-                          } else if (_businessDocumentNumberController
-                              .text.trim().isEmpty) {
+                          } else if (selectedMonthlySalesTurnoverValue ==
+                              null) {
                             Utils.showToast(
-                                "Please Enter Business Document Number", context);
+                                "Please Select Income Slab", context);
+                          } else if (_businessDocumentNumberController.text
+                              .trim()
+                              .isEmpty) {
+                            Utils.showToast(
+                                "Please Enter Business Document Number",
+                                context);
                           } else if (businessProofDocId == null) {
                             Utils.showToast("Please Select Proof", context);
                           } else if (slectedDate!.isEmpty) {
                             Utils.showToast(
                                 "Please Select Incorporation Date", context);
                           } else {
-                            await postLeadBuisnessDetail(context,productProvider);
+                            await postLeadBuisnessDetail(
+                                context, productProvider);
 
-                           /* if (productProvider.getPostLeadBuisnessDetailData !=
+                            /* if (productProvider.getPostLeadBuisnessDetailData !=
                                 null) {
                               if (productProvider
                                   .getPostLeadBuisnessDetailData!.isSuccess!) {
@@ -1042,13 +1129,13 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
         var allStates = productProvider.getAllStateData!.returnObject!;
         if (companyStateId != null) {
           selectedCompanyState = allStates.firstWhere(
-                  (element) => element?.id == int.parse(companyStateId!),
+              (element) => element?.id == int.parse(companyStateId!),
               orElse: () => null);
 
           if (cityCallInitial) {
             citylist.clear();
             Provider.of<DataProvider>(context, listen: false)
-                .getAllCity(int.parse(companyStateId!),context);
+                .getAllCity(int.parse(companyStateId!), context);
             cityCallInitial = false;
           }
         }
@@ -1087,7 +1174,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
             citylist.clear();
             setStateListFirstTime = false;
             Provider.of<DataProvider>(context, listen: false)
-                .getAllCity(value!.id!,context);
+                .getAllCity(value!.id!, context);
             selectedStateValue = value.id!.toString();
             selectedCityValue = null;
             selectedCompanyCity = null;
@@ -1129,7 +1216,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       print("cityCallInitial:: ${cityCallInitial}");
       if (companyCityId != null) {
         selectedCompanyCity = citylist.firstWhere(
-                (element) => element?.id == int.parse(companyCityId!),
+            (element) => element?.id == int.parse(companyCityId!),
             orElse: () => CityResponce());
       }
       return DropdownButtonFormField2<CityResponce>(
@@ -1230,9 +1317,9 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     Navigator.of(context, rootNavigator: true).pop();
   }
 
-  Future<void> postLeadBuisnessDetail(BuildContext context, DataProvider productProvider) async {
+  Future<void> postLeadBuisnessDetail(
+      BuildContext context, DataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
-
 
     DateFormat inputFormat = DateFormat("MM/dd/yyyy");
     DateTime dateTime = inputFormat.parse(slectedDate.toString());
@@ -1257,7 +1344,8 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       buisnessMonthlySalary: 0,
       incomeSlab: selectedMonthlySalesTurnoverValue,
       companyId: prefsUtil.getInt(COMPANY_ID),
-      buisnessDocumentNo: _businessDocumentNumberController.text.trim().toString(),
+      buisnessDocumentNo:
+          _businessDocumentNumberController.text.trim().toString(),
       buisnessProofDocId: businessProofDocId,
       buisnessProof: selectedChooseBusinessProofValue,
       inquiryAmount: 0,
@@ -1278,26 +1366,23 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
             if (data.isSuccess!) {
               fetchData(context);
             } else {
-              Utils.showToast(
-                  data.message!,
-                  context);
+              Utils.showToast(data.message!, context);
             }
           }
         },
         failure: (exception) {
           // Handle failure
           if (exception is ApiException) {
-            if(exception.statusCode==401){
+            if (exception.statusCode == 401) {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
-            }else{
-              Utils.showToast("Something went wrong...",context);
+            } else {
+              Utils.showToast("Something went wrong...", context);
             }
           }
         },
       );
     }
-
   }
 
   void bottomSheetMenu(BuildContext context) {
@@ -1314,8 +1399,9 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
     await Provider.of<DataProvider>(context, listen: false)
-        .getLeadBusinessDetail(userId!,productCode!, context);
-    await Provider.of<DataProvider>(context, listen: false).getAllState(context);
+        .getLeadBusinessDetail(userId!, productCode!, context);
+    await Provider.of<DataProvider>(context, listen: false)
+        .getAllState(context);
   }
 
   Future<void> fetchData(BuildContext context) async {
@@ -1348,12 +1434,12 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
         prefsUtil.getInt(LEADE_ID)!,
       ) as GetLeadResponseModel?;
 
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "push");
+      customerSequence(
+          context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
       if (kDebugMode) {
         print('Error occurred during API call: $error');
       }
     }
-
   }
 }
