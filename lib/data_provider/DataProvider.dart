@@ -381,8 +381,8 @@ class DataProvider extends ChangeNotifier {
   }
 
 
-  Future<void> getBankList() async {
-    _getBankListData = await apiService.getBankList();
+  Future<void> getBankList(BuildContext context) async {
+    _getBankListData = await apiService.getBankList(context);
     notifyListeners();
   }
 
@@ -397,18 +397,18 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getAllState() async {
-    _getAllStateData = await apiService.getAllState();
+  Future<void> getAllState(BuildContext context) async {
+    _getAllStateData = await apiService.getAllState(context);
     notifyListeners();
   }
 
-  Future<void> getAllCity(int stateID) async {
-    _getAllCityData = await apiService.GetCityByStateId(stateID);
+  Future<void> getAllCity(int stateID, BuildContext context) async {
+    _getAllCityData = await apiService.GetCityByStateId(stateID,context);
     notifyListeners();
   }
 
-  Future<void> getCurrentAllCity(int stateID) async {
-    _getCurrentAllCityData = await apiService.GetCityByStateId(stateID);
+  Future<void> getCurrentAllCity(int stateID, BuildContext context) async {
+    _getCurrentAllCityData = await apiService.GetCityByStateId(stateID,context);
     notifyListeners();
   }
 
@@ -434,8 +434,8 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> otpValidateForEmail(OtpValidateForEmailRequest model) async {
-    _getValidOtpEmailData = await apiService.otpValidateForEmail(model);
+  Future<void> otpValidateForEmail(OtpValidateForEmailRequest model, BuildContext context) async {
+    _getValidOtpEmailData = await apiService.otpValidateForEmail(model,context);
     notifyListeners();
   }
 

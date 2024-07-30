@@ -234,7 +234,7 @@ class _OtpScreenState extends State<EmailOtpScreen> {
       Utils.onLoading(context, "");
       try {
         await productProvider.otpValidateForEmail(
-            OtpValidateForEmailRequest(email: email, otp: otpText));
+            OtpValidateForEmailRequest(email: email, otp: otpText),context);
         if (productProvider.getValidOtpEmailData != null &&
             productProvider.getValidOtpEmailData!.status != null &&
             !productProvider.getValidOtpEmailData!.status!) {

@@ -417,9 +417,15 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getLeadPAN}?UserId=$userId&productCode=$productCode'));
+            '${base_url! + apiUrls.getLeadPAN}?UserId=$userId&productCode=$productCode'),
+          headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
+          },);
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -688,14 +694,17 @@ class ApiService {
   }
 
   Future<ValidEmResponce> otpValidateForEmail(
-      OtpValidateForEmailRequest model) async {
+      OtpValidateForEmailRequest model, BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.post(
           Uri.parse('${base_url! + apiUrls.OTPValidateForEmail}'),
           headers: {
-            'Content-Type': 'application/json', // Set the content type as JSON
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
           },
           body: json.encode(model));
       //print(json.encode(leadCurrentRequestModel));
@@ -706,7 +715,10 @@ class ApiService {
         final ValidEmResponce responseModel =
             ValidEmResponce.fromJson(jsonData);
         return responseModel;
-      } else {
+      } else if (response.statusCode == 401) {
+        handle401(context);
+        throw Exception('Failed to load products');
+      }else {
         throw Exception('Failed to load products');
       }
     } else {
@@ -719,11 +731,14 @@ class ApiService {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
         Uri.parse(
             '${base_url! + apiUrls.EmailExist}?UserId=$userID&EmailId=$EmailId'),
         headers: {
-          'Content-Type': 'application/json', // Set the content type as JSON
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
         },
       );
       //print(json.encode(leadCurrentRequestModel));
@@ -747,10 +762,13 @@ class ApiService {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
         Uri.parse('${base_url! + apiUrls.SendOtpOnEmail}?email=$EmailId'),
         headers: {
-          'Content-Type': 'application/json', // Set the content type as JSON
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
         },
       );
       //print(json.encode(leadCurrentRequestModel));
@@ -776,8 +794,14 @@ class ApiService {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getIvrsNumberExist}?UserId=$userId&IVRSNumber=$IvrsNumber'));
+            '${base_url! + apiUrls.getIvrsNumberExist}?UserId=$userId&IVRSNumber=$IvrsNumber'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -804,8 +828,14 @@ class ApiService {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getKarzaElectricityServiceProviderList}'));
+            '${base_url! + apiUrls.getKarzaElectricityServiceProviderList}'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
         print(response.body);
         // Print the response body once here
         switch (response.statusCode) {
@@ -834,8 +864,14 @@ class ApiService {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getKarzaElectricityState}?state=$state'));
+            '${base_url! + apiUrls.getKarzaElectricityState}?state=$state'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
         print(response.body);
         // Print the response body once here
         switch (response.statusCode) {
@@ -1003,14 +1039,17 @@ class ApiService {
   }
 
   //Bank DetailsModule
-  Future<BankListResponceModel> getBankList() async {
+  Future<BankListResponceModel> getBankList(BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
         Uri.parse('${base_url! + apiUrls.bankListApi}'),
         headers: {
-          'Content-Type': 'application/json', // Set the content type as JSON
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
         },
       );
       //print(json.encode(leadCurrentRequestModel));
@@ -1021,7 +1060,10 @@ class ApiService {
         final BankListResponceModel responseModel =
             BankListResponceModel.fromJson(jsonData);
         return responseModel;
-      } else {
+      } else if (response.statusCode == 401) {
+        handle401(context);
+        throw Exception('Failed to load products');
+      }else {
         throw Exception('Failed to load data');
       }
     } else {
@@ -1036,10 +1078,13 @@ class ApiService {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
           Uri.parse('${base_url! + apiUrls.GetLeadBankDetail}?LeadId=$leadID'),
           headers: {
-            'Content-Type': 'application/json', // Set the content type as JSON
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
           },
         );
         //print(json.encode(leadCurrentRequestModel));
@@ -1098,14 +1143,17 @@ class ApiService {
     }
   }
 
-  Future<AllStateResponce> getAllState() async {
+  Future<AllStateResponce> getAllState(BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
         Uri.parse('${base_url! + apiUrls.GetAllState}'),
         headers: {
-          'Content-Type': 'application/json', // Set the content type as JSON
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
         },
       );
       //print(json.encode(leadCurrentRequestModel));
@@ -1116,6 +1164,9 @@ class ApiService {
         final AllStateResponce responseModel =
             AllStateResponce.fromJson(jsonData);
         return responseModel;
+      }else if (response.statusCode == 401) {
+        handle401(context);
+        throw Exception('Failed to load products');
       } else {
         throw Exception('Failed to load products');
       }
@@ -1125,14 +1176,17 @@ class ApiService {
     }
   }
 
-  Future<List<CityResponce>> GetCityByStateId(int stateID) async {
+  Future<List<CityResponce>> GetCityByStateId(int stateID, BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
+      var token = await prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
         Uri.parse('${base_url! + apiUrls.GetCityByStateId}?stateId=$stateID'),
         headers: {
-          'Content-Type': 'application/json', // Set the content type as JSON
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
         },
       );
       //print(json.encode(leadCurrentRequestModel));
@@ -1143,6 +1197,9 @@ class ApiService {
         final List<CityResponce> responseModel = List<CityResponce>.from(
             jsonData.map((model) => CityResponce.fromJson(model)));
         return responseModel;
+      }else if (response.statusCode == 401) {
+        handle401(context);
+        throw Exception('Failed to load products');
       } else {
         throw Exception('Failed to load products');
       }
@@ -1159,8 +1216,14 @@ class ApiService {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.GetLeadOffer}?LeadId=$leadId&companyId=$companyID'));
+            '${base_url! + apiUrls.GetLeadOffer}?LeadId=$leadId&companyId=$companyID'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1187,8 +1250,14 @@ class ApiService {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.GetLeadName}?UserId=$UserId&productCode=$productcode'));
+            '${base_url! + apiUrls.GetLeadName}?UserId=$UserId&productCode=$productcode'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1218,7 +1287,12 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
-            Uri.parse('${base_url! + apiUrls.AcceptOffer}?leadId=$leadId'));
+            Uri.parse('${base_url! + apiUrls.AcceptOffer}?leadId=$leadId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1247,7 +1321,12 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.CheckEsignStatus}?leadId=$leadId'));
+            '${base_url! + apiUrls.CheckEsignStatus}?leadId=$leadId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
         print(response.body); // Print the response body once here
 
         switch (response.statusCode) {
@@ -1276,7 +1355,12 @@ class ApiService {
       var base_url = prefsUtil.getString(BASE_URL);
       var token = prefsUtil.getString(TOKEN);
       final response = await interceptor.get(Uri.parse(
-          '${base_url! + apiUrls.GetAgreemetDetail}?leadId=$leadId&IsAccept=$accept&companyId=$companyID'));
+          '${base_url! + apiUrls.GetAgreemetDetail}?leadId=$leadId&IsAccept=$accept&companyId=$companyID'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
+        },);
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         final dynamic jsonData = json.decode(response.body);
@@ -1301,8 +1385,14 @@ class ApiService {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.GetDisbursementProposal}?leadId=$leadId'));
+            '${base_url! + apiUrls.GetDisbursementProposal}?leadId=$leadId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
         print(response.body); //
         // Print the response body once here
         switch (response.statusCode) {
@@ -1330,8 +1420,14 @@ class ApiService {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(
-            Uri.parse('${base_url! + apiUrls.GetDisbursement}?leadId=$leadId'));
+            Uri.parse('${base_url! + apiUrls.GetDisbursement}?leadId=$leadId'),
+          headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
+        },);
         print(response.body); //
         // Print the response body once here
         switch (response.statusCode) {
@@ -1359,8 +1455,15 @@ class ApiService {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.GetByTransactionReqNoForOTP}?TransactionReqNo=$TransactionReqNo'));
+            '${base_url! + apiUrls.GetByTransactionReqNoForOTP}?TransactionReqNo=$TransactionReqNo'),
+          headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
+        },
+        );
 
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
@@ -1391,8 +1494,14 @@ class ApiService {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.ResentOrderOTP}?MobileNo=$MobileNumber&TransactionNo=$TransactionNo'));
+            '${base_url! + apiUrls.ResentOrderOTP}?MobileNo=$MobileNumber&TransactionNo=$TransactionNo'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
 
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
@@ -1421,9 +1530,15 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.ValidateOrderOTPGetToken}?MobileNo=$MobileNumber&otp=$Otp&TransactionReqNo=$TransactionNo'));
+            '${base_url! + apiUrls.ValidateOrderOTPGetToken}?MobileNo=$MobileNumber&otp=$Otp&TransactionReqNo=$TransactionNo'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
 
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
@@ -1531,7 +1646,12 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getCustomerOrderSummary}?LeadId=$leadId'));
+            '${base_url! + apiUrls.getCustomerOrderSummary}?LeadId=$leadId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1597,7 +1717,12 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getCustomerOrderSummaryForAnchor}?LeadId=$leadId'));
+            '${base_url! + apiUrls.getCustomerOrderSummaryForAnchor}?LeadId=$leadId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1663,7 +1788,12 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.getTransactionBreakup}?InvoiceId=$invoiceId'));
+            '${base_url! + apiUrls.getTransactionBreakup}?InvoiceId=$invoiceId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:
@@ -1690,7 +1820,12 @@ class ApiService {
       var base_url = prefsUtil.getString(BASE_URL);
       var token = prefsUtil.getString(TOKEN);
       final response = await interceptor.get(
-          Uri.parse('${base_url! + apiUrls.GetPFCollection}?leadId=$leadId'));
+          Uri.parse('${base_url! + apiUrls.GetPFCollection}?leadId=$leadId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
+        },);
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
         final dynamic jsonData = json.decode(response.body);
@@ -1716,7 +1851,11 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.DisbursementNext}?leadId=$leadId'));
+            '${base_url! + apiUrls.DisbursementNext}?leadId=$leadId'), headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          // Set the content type as JSON// Set the content type as JSON
+        },);
         print(response.body); // Print the response body once here
         switch (response.statusCode) {
           case 200:

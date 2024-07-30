@@ -429,7 +429,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     Provider.of<DataProvider>(context, listen: false).getBankDetails(leadId!, productCode!);
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false).getBankList();
+    await Provider.of<DataProvider>(context, listen: false).getBankList(context);
     Navigator.of(context, rootNavigator: true).pop();
   }
 

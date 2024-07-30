@@ -1045,7 +1045,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           if (cityCallInitial) {
             citylist.clear();
             Provider.of<DataProvider>(context, listen: false)
-                .getAllCity(int.parse(companyStateId!));
+                .getAllCity(int.parse(companyStateId!),context);
             cityCallInitial = false;
           }
         }
@@ -1084,7 +1084,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
             citylist.clear();
             setStateListFirstTime = false;
             Provider.of<DataProvider>(context, listen: false)
-                .getAllCity(value!.id!);
+                .getAllCity(value!.id!,context);
             selectedStateValue = value.id!.toString();
             selectedCityValue = null;
             selectedCompanyCity = null;
@@ -1302,7 +1302,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
     await Provider.of<DataProvider>(context, listen: false)
         .getLeadBusinessDetail(userId!,productCode!, context);
-    await Provider.of<DataProvider>(context, listen: false).getAllState();
+    await Provider.of<DataProvider>(context, listen: false).getAllState(context);
   }
 
   Future<void> fetchData(BuildContext context) async {

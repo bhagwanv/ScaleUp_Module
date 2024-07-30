@@ -1122,7 +1122,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
               cityCallInitial) {
             permanentCitylist.clear();
             Provider.of<DataProvider>(context, listen: false)
-                .getAllCity(personalDetailsResponce!.permanentState!);
+                .getAllCity(personalDetailsResponce!.permanentState!,context);
             cityCallInitial = false;
           }
         }
@@ -1198,7 +1198,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
     Provider.of<DataProvider>(context, listen: false)
         .getLeadPersonalDetails(userId!, productCode!);
-    Provider.of<DataProvider>(context, listen: false).getAllState();
+    Provider.of<DataProvider>(context, listen: false).getAllState(context);
   }
 
   Widget permanentAddressField(DataProvider productProvider) {
@@ -1771,7 +1771,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               selectedCurrentState = value;
                               citylist.clear();
                               Provider.of<DataProvider>(context, listen: false)
-                                  .getCurrentAllCity(value!.id!);
+                                  .getCurrentAllCity(value!.id!,context);
                             });
                           },
                     dropdownStyleData: DropdownStyleData(
