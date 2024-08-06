@@ -1,20 +1,19 @@
-import 'CheckOutLogInOtpResponse.dart';
 import 'Response.dart';
 
-class CheckOutOtpModel {
-  CheckOutOtpModel({
+class ValidOtpForCheckoutResModel {
+  ValidOtpForCheckoutResModel({
       this.status, 
       this.message, 
       this.response,});
 
-  CheckOutOtpModel.fromJson(dynamic json) {
+  ValidOtpForCheckoutResModel.fromJson(dynamic json) {
     status = json['status'];
     message = json['message'];
-    response = json['response'] != null ? CheckOutLogInOtpResponse.fromJson(json['response']) : null;
+    response = json['response'] != null ? Response.fromJson(json['response']) : null;
   }
   bool? status;
   String? message;
-  CheckOutLogInOtpResponse? response;
+  Response? response;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

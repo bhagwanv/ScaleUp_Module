@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/utils/constants.dart';
 import 'package:scale_up_module/view/business_details_screen/business_details_screen.dart';
+import 'package:scale_up_module/view/checkoutView/CheckOutLogInOtpScreen.dart';
 import 'package:scale_up_module/view/checkoutView/CheckOutOtpScreen.dart';
 import 'package:scale_up_module/view/login_screen/login_screen.dart';
 import 'package:scale_up_module/view/personal_info/PersonalInformation.dart';
@@ -59,8 +60,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _initializeData() async {
     try {
-      /*final prefsUtil = await SharedPref.getInstance();
-      prefsUtil.saveString(BASE_URL, "https://gateway-qa.scaleupfin.com");*/
+      final prefsUtil = await SharedPref.getInstance();
+      prefsUtil.saveString(BASE_URL, "https://gateway-qa.scaleupfin.com");
       await MyApp.platform.invokeMethod('ScaleUP');
     } catch (e) {
       print("Error initializing data: $e");
@@ -77,7 +78,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget _buildHome() {
     if (transactionId.isNotEmpty) {
-      return CheckOutOtpScreen(transactionId: transactionId);
+      return CheckOutLogInOtpScreen(transactionId: transactionId);
     } else if (mobileNumber.isNotEmpty) {
       return SplashScreen(
         mobileNumber: mobileNumber,
@@ -116,9 +117,9 @@ class _MyAppState extends State<MyApp> {
             return Scaffold(
                 body: Center(child: Text('Error: ${snapshot.error}')));
           } else {
-            return _buildHome();
+           // return _buildHome();
 
-         //return LoginScreen(activityId: 2, subActivityId: 2);
+         return CheckOutLogInOtpScreen(transactionId:"2024853" );
             //return CheckOutOtpScreen(transactionId: "202457");
            // return PaymentConfirmation(transactionReqNo: "202457",customerName: "Aarti Mukati",imageUrl:"https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/0d625556-7f61-47c9-a522-8fef21215b14.jpg",customerCareMoblie: "6263246384",customerCareEmail: "customer.care@scaleupfin.com");
             //return CongratulationScreen();

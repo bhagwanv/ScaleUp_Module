@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:scale_up_module/api/ApiUrls.dart';
@@ -29,6 +30,9 @@ import '../view/checkoutView/model/CheckOutOtpModel.dart';
 import '../view/checkoutView/model/OrderPaymentModel.dart';
 import '../view/checkoutView/model/PayemtOrderPostRequestModel.dart';
 import '../view/checkoutView/model/ValidOtpForCheckoutModel.dart';
+import '../view/checkoutView/model/ValidOtpForCheckoutResModel.dart';
+import '../view/checkoutView/model/ValidateOrderOtpReqModel.dart';
+import '../view/checkoutView/model/ValidateOrderOtpResModel.dart';
 import '../view/dashboard_screen/model/CustomerTransactionListRequestModel.dart';
 import '../view/dashboard_screen/my_account/model/CustomerOrderSummaryResModel.dart';
 import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespModel.dart';
@@ -1525,7 +1529,7 @@ class ApiService {
     }
   }
 
-  Future<Result<ValidOtpForCheckoutModel, Exception>> ValidateOrderOTPGetToken(
+  Future<Result<ValidOtpForCheckoutResModel, Exception>> ValidateOrderOTPGetToken(
       String MobileNumber, String Otp, String TransactionNo) async {
     try {
       if (await internetConnectivity.networkConnectivity()) {
@@ -1533,10 +1537,10 @@ class ApiService {
         var token = await prefsUtil.getString(TOKEN);
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.get(Uri.parse(
-            '${base_url! + apiUrls.ValidateOrderOTPGetToken}?MobileNo=$MobileNumber&otp=$Otp&TransactionReqNo=$TransactionNo'),
+            '${base_url! + apiUrls.ValidateOrderOTPGetToken}?TransactionReqNo=$TransactionNo&otp=$Otp'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token'
+            'Authorization': 'Bearer'
             // Set the content type as JSON// Set the content type as JSON
           },);
 
@@ -1545,8 +1549,8 @@ class ApiService {
           case 200:
             // Parse the JSON response
             final dynamic jsonData = json.decode(response.body);
-            final ValidOtpForCheckoutModel responseModel =
-                ValidOtpForCheckoutModel.fromJson(jsonData);
+            final ValidOtpForCheckoutResModel responseModel =
+            ValidOtpForCheckoutResModel.fromJson(jsonData);
             return Success(responseModel);
 
           default:
@@ -1942,4 +1946,77 @@ class ApiService {
       return Failure(e);
     }
   }
+
+  Future<Result<bool, Exception>>
+  resentOrderLoginOTP(String transactionReqNo) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse(
+            '${base_url! + apiUrls.resentOrderLoginOTP}?TransactionReqNo=$transactionReqNo'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '
+            // Set the content type as JSON// Set the content type as JSON
+          },);
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final bool responseModel = jsonData;
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        Utils.showBottomToast("No Internet connection");
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+  Future<Result<ValidateOrderOtpResModel, Exception>> ValidateOrderOtp(
+      ValidateOrderOtpReqModel validateOrderOtpResModel) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        var base_url = prefsUtil.getString(BASE_URL);
+        final response = await interceptor.post(Uri.parse(
+            '${base_url! + apiUrls.ValidateOrderOtp}'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer'
+              // Set the content type as JSON// Set the content type as JSON
+            },
+            body: json.encode(validateOrderOtpResModel)
+        );
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+          // Parse the JSON response
+            final dynamic jsonData = json.decode(response.body);
+            final ValidateOrderOtpResModel responseModel =
+            ValidateOrderOtpResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        Utils.showBottomToast("No Internet connection");
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      // 4. return Failure here too
+      return Failure(e);
+    }
+  }
+
 }

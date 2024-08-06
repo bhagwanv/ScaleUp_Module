@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/checkoutView/model/CheckOutOtpModel.dart';
-import 'package:scale_up_module/view/checkoutView/model/ValidOtpForCheckoutModel.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
@@ -18,23 +17,19 @@ import '../../utils/Utils.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
 import '../../utils/loader.dart';
-import '../bank_details_screen/model/TransactionDetailModel.dart';
-import 'CongratulationScreen.dart';
 import 'PaymentConfirmation.dart';
-import 'model/ValidateOrderOtpReqModel.dart';
-import 'model/ValidateOrderOtpResModel.dart';
+import 'model/ValidOtpForCheckoutResModel.dart';
 
-class CheckOutOtpScreen extends StatefulWidget {
-  TransactionDetailModel transactionDetailModel;
-  int creditDays;
+class CheckOutLogInOtpScreen extends StatefulWidget {
+  String transactionId;
 
-   CheckOutOtpScreen({super.key,required this.transactionDetailModel,required this.creditDays});
+  CheckOutLogInOtpScreen({super.key,required this.transactionId});
 
   @override
-  State<CheckOutOtpScreen> createState() => _CheckOutOtpScreenState();
+  State<CheckOutLogInOtpScreen> createState() => _CheckOutOtpScreenState();
 }
 
-class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
+class _CheckOutOtpScreenState extends State<CheckOutLogInOtpScreen> {
   int _start = 30;
   bool isReSendDisable = true;
   var isLoading = true;
@@ -42,14 +37,14 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
   final TextEditingController pinController = TextEditingController();
 
   CheckOutOtpModel? checkOutOtpModel = null;
-  ValidateOrderOtpResModel? validateOrderOtpResModel = null;
+  ValidOtpForCheckoutResModel? validOtpForCheckoutModel = null;
 
 
   @override
   void initState() {
     super.initState();
     _start = 30;
-   // callGenrateOtp(widget.transactionId);
+    callGenrateOtp(widget.transactionId);
   }
 
   @override
@@ -72,10 +67,11 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
             top: true,
             bottom: true,
             child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-              /*if (productProvider.genrateOptPaymentData == null && isLoading) {
+              if (productProvider.genrateOptPaymentData == null && isLoading) {
                 return Center(child: Loader());
               } else {
-                if (productProvider.genrateOptPaymentData != null && isLoading) {
+                if (productProvider.genrateOptPaymentData != null &&
+                    isLoading) {
                   Navigator.of(context, rootNavigator: true).pop();
                   isLoading = false;
                 }
@@ -93,16 +89,16 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                     },
                     failure: (exception) {
                       if (exception is ApiException) {
-                        if(exception.statusCode==401){
+                        if (exception.statusCode == 401) {
                           productProvider.disposeAllProviderData();
                           ApiService().handle401(context);
-                        }else{
-                          Utils.showToast(exception.errorMessage,context);
+                        } else {
+                          Utils.showToast(exception.errorMessage, context);
                         }
                       }
                     },
                   );
-                }*/
+                }
 
                 return SingleChildScrollView(
                   child: Container(
@@ -114,22 +110,23 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                           padding: const EdgeInsets.all(18.0),
                           child: Row(
                             children: [
-                              checkOutOtpModel!.response!.imageUrl!=null?
+                              checkOutOtpModel!.response!.imageUrl != null ?
                               Container(
                                 width: 34,
                                 height: 34,
-                                decoration:  BoxDecoration(
+                                decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
                                       image: NetworkImage(
-                                          checkOutOtpModel!.response!.imageUrl!),
+                                          checkOutOtpModel!.response!
+                                              .imageUrl!),
                                       fit: BoxFit.fill),
                                 ),
-                              ):Container(),
+                              ) : Container(),
                               const SizedBox(
                                 width: 10,
                               ),
-                               Column(
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   const Text('Welcome back',
@@ -140,7 +137,8 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                           letterSpacing: 0.20000000298023224,
                                           fontWeight: FontWeight.normal,
                                           height: 1.5)),
-                                  Text(checkOutOtpModel!.response!.customerName!,
+                                  Text(
+                                      checkOutOtpModel!.response!.customerName!,
                                       textAlign: TextAlign.left,
                                       style: const TextStyle(
                                           color: whiteColor,
@@ -153,9 +151,9 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                               const Spacer(),
                               GestureDetector(
                                 onTap: () {
-                                  customerCarePopup(context,checkOutOtpModel!);
+                                  // customerCarePopup(context,checkOutOtpModel!);
                                 }, // Image tapped
-                                child:  Image.asset(
+                                child: Image.asset(
                                   'assets/images/customer.png',
                                   color: whiteColor,
                                 ),
@@ -164,7 +162,10 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                           ),
                         ),
                         Container(
-                            height: MediaQuery.of(context).size.height,
+                            height: MediaQuery
+                                .of(context)
+                                .size
+                                .height,
                             decoration: const BoxDecoration(
                               color: text_light_whit_color,
                               borderRadius: BorderRadius.only(
@@ -185,7 +186,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                           bottom: 30),
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Container(
                                               height: 69,
@@ -226,11 +227,11 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                                     .allow(RegExp("[0-9\]")),
                                               ],
                                               pinputAutovalidateMode:
-                                                  PinputAutovalidateMode
-                                                      .onSubmit,
+                                              PinputAutovalidateMode
+                                                  .onSubmit,
                                               defaultPinTheme: defaultPinTheme,
                                               focusedPinTheme:
-                                                  defaultPinTheme.copyWith(
+                                              defaultPinTheme.copyWith(
                                                 decoration: defaultPinTheme
                                                     .decoration!
                                                     .copyWith(
@@ -249,25 +250,25 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                             width: double.infinity,
                                             child: isReSendDisable
                                                 ? Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        'Resend Code in ',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            color:
-                                                                kPrimaryColor,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal),
-                                                      ),
-                                                      buildCountdown(),
-                                                    ],
-                                                  )
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .center,
+                                              children: [
+                                                Text(
+                                                  'Resend Code in ',
+                                                  textAlign:
+                                                  TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      color:
+                                                      kPrimaryColor,
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .normal),
+                                                ),
+                                                buildCountdown(),
+                                              ],
+                                            )
                                                 : Container(),
                                           ),
                                           const SizedBox(
@@ -279,7 +280,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                                 child: RichText(
                                                   text: TextSpan(
                                                       text:
-                                                          'If you didn’t received a code!',
+                                                      'If you didn’t received a code!',
                                                       style: const TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 14,
@@ -288,39 +289,43 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                                       children: <TextSpan>[
                                                         isReSendDisable
                                                             ? TextSpan(
-                                                                text:
-                                                                    '  Resend',
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .normal),
-                                                                recognizer:
-                                                                    TapGestureRecognizer()
-                                                                      ..onTap =
-                                                                          () async {})
+                                                            text:
+                                                            '  Resend',
+                                                            style: const TextStyle(
+                                                                color: Colors
+                                                                    .grey,
+                                                                fontSize:
+                                                                14,
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .normal),
+                                                            recognizer:
+                                                            TapGestureRecognizer()
+                                                              ..onTap =
+                                                                  () async {})
                                                             : TextSpan(
-                                                                text:
-                                                                    '  Resend',
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .blueAccent,
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .normal),
-                                                                recognizer:
-                                                                    TapGestureRecognizer()
-                                                                      ..onTap = () async {
-                                                                         pinController.clear();
-                                                                        isReSendDisable = true;
+                                                            text:
+                                                            '  Resend',
+                                                            style: const TextStyle(
+                                                                color: Colors
+                                                                    .blueAccent,
+                                                                fontSize:
+                                                                14,
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .normal),
+                                                            recognizer:
+                                                            TapGestureRecognizer()
+                                                              ..onTap = () async {
+                                                                pinController
+                                                                    .clear();
+                                                                isReSendDisable =
+                                                                true;
 
-                                                                        reSendOtpCall(context,productProvider);
-                                                                      })
+                                                                resentOrderLoginOTP(
+                                                                    context,
+                                                                    productProvider);
+                                                              })
                                                       ]),
                                                 ),
                                               )),
@@ -329,19 +334,22 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                           ),
                                           CommonElevatedButton(
                                             onPressed: () async {
-
-                                              if(pinController.text.isEmpty){
+                                              if (pinController.text.isEmpty) {
                                                 Utils.showBottomSheet(
                                                     context,
                                                     "Please enter the OTP we just sent you on your mobile number",
                                                     VALIDACTION_IMAGE_PATH);
-                                              }else if(pinController.text.length < 6){
+                                              } else
+                                              if (pinController.text.length <
+                                                  6) {
                                                 Utils.showBottomSheet(
                                                     context,
                                                     "Please enter the OTP we just sent you on your mobile number",
                                                     VALIDACTION_IMAGE_PATH);
-                                              }else{
-                                                //callValidOtpApi(context,pinController.text,productProvider);
+                                              } else {
+                                                callValidOtpApi(
+                                                    context, pinController.text,
+                                                    productProvider);
                                               }
                                             },
                                             text: "Verify Code",
@@ -358,7 +366,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                   ),
                 );
               }
-            )));
+            })));
   }
 
   Widget buildCountdown() {
@@ -386,12 +394,13 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
     await Provider.of<DataProvider>(context, listen: false).GetByTransactionReqNoForOTP(transactionReqNo);
   }
 
-  void reSendOtpCall(BuildContext context, DataProvider productProvider)async {
+  void resentOrderLoginOTP(BuildContext context, DataProvider productProvider)async {
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false).reSendOtpPaymentConfromation(widget.transactionDetailModel.response!.mobileNo.toString(),widget.transactionDetailModel.response!.transactionReqNo.toString());
+    print("transactionId${widget.transactionId}");
+    await Provider.of<DataProvider>(context, listen: false).resentOrderLoginOTP(widget.transactionId);
     Navigator.of(context, rootNavigator: true).pop();
 
-    productProvider.reSendOptPaymentData!.when(
+    productProvider.reSendOptPaymentData?.when(
       success: (bool) {
         // Handle successful response
         var genrateOptResponceModel = bool;
@@ -417,28 +426,22 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
 
   void callValidOtpApi(BuildContext context, String otptext, DataProvider productProvider)async {
     Utils.onLoading(context, "");
-
-    var model =ValidateOrderOtpReqModel(mobileNo: widget.transactionDetailModel.response!.mobileNo,otp: otptext,transactionReqNo:  widget.transactionDetailModel.response!.transactionReqNo,amount:  widget.transactionDetailModel.response!.totalAmount,loanAccountId: widget.transactionDetailModel.response!.loanAccountId,creditDay:  widget.creditDays);
-    await Provider.of<DataProvider>(context, listen: false).ValidateOrderOtp(model);
+    await Provider.of<DataProvider>(context, listen: false).ValidateOrderOTPGetToken("",otptext,widget.transactionId);
     Navigator.of(context, rootNavigator: true).pop();
     final prefsUtil = await SharedPref.getInstance();
 
     productProvider.validOptPaymentData!.when(
       success: (data) async {
-        validateOrderOtpResModel = data as ValidateOrderOtpResModel?;
+        validOtpForCheckoutModel = data ;
 
-        if(validateOrderOtpResModel!=null){
-          if(validateOrderOtpResModel!.status!){
-           /* await prefsUtil.saveString(TOKEN_CHECKOUT, validOtpForCheckoutModel!.response!.token!);
+        if(validOtpForCheckoutModel!=null){
+          if(validOtpForCheckoutModel!.status!){
+            await prefsUtil.saveString(TOKEN_CHECKOUT,validOtpForCheckoutModel!.response!.token! );
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => PaymentConfirmation(transactionReqNo: validOtpForCheckoutModel!.response!.transactionReqNo!,customerName: checkOutOtpModel!.response!.customerName!,imageUrl: checkOutOtpModel!.response!.imageUrl!,customerCareMoblie: checkOutOtpModel!.response!.customerCareMoblie!,customerCareEmail: checkOutOtpModel!.response!.customerCareEmail!,)),
-            );*/
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => CongratulationScreen(transactionReqNo: widget.transactionDetailModel.response!.transactionReqNo!,amount:widget.transactionDetailModel.response!.totalAmount,mobileNo:widget.transactionDetailModel.response!.mobileNo!, loanAccountId: widget.transactionDetailModel.response!.loanAccountId!,creditDay:widget.creditDays)),
+              MaterialPageRoute(builder: (context) => PaymentConfirmation(transactionReqNo: validOtpForCheckoutModel!.response!.transactionReqNo!,customerName: validOtpForCheckoutModel!.response!.customerName!,imageUrl: validOtpForCheckoutModel!.response!.imageUrl!,customerCareMoblie: validOtpForCheckoutModel!.response!.customerCareMoblie!,customerCareEmail: validOtpForCheckoutModel!.response!.customerCareEmail!,)),
             );
-
           }else{
-            Utils.showToast(validateOrderOtpResModel!.message!, context);
+            Utils.showToast(validOtpForCheckoutModel!.message!, context);
             pinController.clear();
           }
         }
@@ -454,6 +457,8 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
         }
       },
     );
+
+
   }
 
   void customerCarePopup(BuildContext context, CheckOutOtpModel checkOutOtpModel)async {
@@ -522,7 +527,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                         ),
                       ],
                     ),
-                   /* Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
@@ -544,7 +549,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                         ),
 
                       ],
-                    ),*/
+                    ),
                   ],
                 ),
 

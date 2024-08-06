@@ -28,6 +28,9 @@ import '../view/checkoutView/model/CheckOutOtpModel.dart';
 import '../view/checkoutView/model/OrderPaymentModel.dart';
 import '../view/checkoutView/model/PayemtOrderPostRequestModel.dart';
 import '../view/checkoutView/model/ValidOtpForCheckoutModel.dart';
+import '../view/checkoutView/model/ValidOtpForCheckoutResModel.dart';
+import '../view/checkoutView/model/ValidateOrderOtpReqModel.dart';
+import '../view/checkoutView/model/ValidateOrderOtpResModel.dart';
 import '../view/dashboard_screen/model/CustomerTransactionListRequestModel.dart';
 import '../view/dashboard_screen/my_account/model/CustomerOrderSummaryResModel.dart';
 import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespModel.dart';
@@ -223,8 +226,11 @@ class DataProvider extends ChangeNotifier {
   Result< bool, Exception>? _reSendOptPaymentData;
   Result< bool, Exception>? get reSendOptPaymentData => _reSendOptPaymentData;
 
-  Result< ValidOtpForCheckoutModel, Exception>? _validOptPaymentData;
-  Result< ValidOtpForCheckoutModel, Exception>? get validOptPaymentData => _validOptPaymentData;
+  Result< ValidOtpForCheckoutResModel, Exception>? _validOptPaymentData;
+  Result< ValidOtpForCheckoutResModel, Exception>? get validOptPaymentData => _validOptPaymentData;
+
+  Result< ValidateOrderOtpResModel, Exception>? _validateOrderOtpData;
+  Result< ValidateOrderOtpResModel, Exception>? get validateOrderOtpData => _validateOrderOtpData;
 
   Result< TransactionDetailModel, Exception>? _getTranscationData;
   Result< TransactionDetailModel, Exception>? get getTranscationData => _getTranscationData;
@@ -270,6 +276,11 @@ class DataProvider extends ChangeNotifier {
 
   Result<InProgressScreenModel,Exception>? _InProgressScreen;
   Result<InProgressScreenModel,Exception>? get InProgressScreenData => _InProgressScreen;
+
+  Result< bool, Exception>? _lesentOrderLoginOTPData;
+  Result< bool, Exception>? get lesentOrderLoginOTPData => _lesentOrderLoginOTPData;
+
+
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -601,6 +612,18 @@ class DataProvider extends ChangeNotifier {
     _getElectricityAuthenticationData = await apiService.getKarzaElectricityAuthentication(electricityAuthenticationReqModel) ;
     notifyListeners();
   }
+
+  Future<void> resentOrderLoginOTP(String transactionReqNo) async {
+    _lesentOrderLoginOTPData = await apiService.resentOrderLoginOTP(transactionReqNo);
+    notifyListeners();
+  }
+
+  Future<void> ValidateOrderOtp( ValidateOrderOtpReqModel validateOrderOtpResModel) async {
+    _validateOrderOtpData = await apiService.ValidateOrderOtp(validateOrderOtpResModel);
+    notifyListeners();
+  }
+
+
 
   Future<void> disposeAllProviderData() async {
     _getCustomerOrderSummaryData = null;

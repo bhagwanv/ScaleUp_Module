@@ -508,8 +508,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                     padding: const EdgeInsets.all(10.0),
                                     child: CommonElevatedButton(
                                       onPressed: () async {
-                                        payemtOrderPost(context,productProvider,transactionDetailModel!);
+                                       // payemtOrderPost(context,productProvider,transactionDetailModel!);
 
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (context) => CheckOutOtpScreen(transactionDetailModel:transactionDetailModel!,creditDays:creditDays)),
+                                        );
                                       },
                                       text: "Proceed",
                                       upperCase: true,
@@ -570,9 +573,7 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      creditDayWiseAmounts[index]
-                                              .days
-                                              .toString() +
+                                      creditDayWiseAmounts[index].days.toString() +
                                           ' Days',
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
