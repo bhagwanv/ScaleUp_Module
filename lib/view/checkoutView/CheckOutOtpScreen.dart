@@ -21,6 +21,7 @@ import '../../utils/loader.dart';
 import '../bank_details_screen/model/TransactionDetailModel.dart';
 import 'CongratulationScreen.dart';
 import 'PaymentConfirmation.dart';
+import 'model/ValidOtpForCheckoutResModel.dart';
 import 'model/ValidateOrderOtpReqModel.dart';
 import 'model/ValidateOrderOtpResModel.dart';
 
@@ -45,7 +46,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
   final TextEditingController pinController = TextEditingController();
 
   CheckOutOtpModel? checkOutOtpModel = null;
-  ValidateOrderOtpResModel? validateOrderOtpResModel = null;
+  ValidOtpForCheckoutResModel? validateOrderOtpResModel = null;
 
   @override
   void initState() {
@@ -449,7 +450,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
 
     productProvider.validOptPaymentData!.when(
       success: (data) async {
-        validateOrderOtpResModel = data as ValidateOrderOtpResModel?;
+        validateOrderOtpResModel = data;
 
         if (validateOrderOtpResModel != null) {
           if (validateOrderOtpResModel!.status!) {
