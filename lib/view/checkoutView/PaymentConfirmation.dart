@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -28,7 +29,6 @@ class PaymentConfirmation extends StatefulWidget {
   final String customerCareMoblie;
   final String customerCareEmail;
 
-
   const PaymentConfirmation(
       {super.key,
       required this.transactionReqNo,
@@ -44,7 +44,7 @@ class PaymentConfirmation extends StatefulWidget {
 class _PaymentConfirmationState extends State<PaymentConfirmation> {
   var isLoading = true;
   TransactionDetailModel? transactionDetailModel = null;
-   int creditDays=0;
+  int creditDays = 0;
   OrderPaymentModel? orderPaymentModel = null;
 
   @override
@@ -56,12 +56,24 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        debugPrint("didPop1: $didPop");
+        if (didPop) {
+          return;
+        }
+        final bool shouldPop = await Utils().onback(context);
+        if (shouldPop) {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
         body: SafeArea(
-            top: true,
-            bottom: true,
-            child: Consumer<DataProvider>(
-                builder: (context, productProvider, child) {
+          top: true,
+          bottom: true,
+          child: Consumer<DataProvider>(
+            builder: (context, productProvider, child) {
               if (productProvider.getTranscationData == null && isLoading) {
                 return Center(child: Loader());
               } else {
@@ -83,11 +95,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                   },
                   failure: (exception) {
                     if (exception is ApiException) {
-                      if(exception.statusCode==401){
+                      if (exception.statusCode == 401) {
                         productProvider.disposeAllProviderData();
                         ApiService().handle401(context);
-                      }else{
-                        Utils.showToast(exception.errorMessage,context);
+                      } else {
+                        Utils.showToast(exception.errorMessage, context);
                       }
                     }
                   },
@@ -159,7 +171,8 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                 10), // Adjust the value to change the roundness
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 10.0,left: 10.0,top: 10),
+                            padding: const EdgeInsets.only(
+                                right: 10.0, left: 10.0, top: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -261,7 +274,8 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                               10), // Adjust the value to change the roundness
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.only(left: 10,right: 10),
+                                          padding: const EdgeInsets.only(
+                                              left: 10, right: 10),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -338,11 +352,12 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                                     .bold),
                                                       ),
                                                       const SizedBox(height: 5),
-                                                      Text("₹"+
-                                                        transactionDetailModel!
-                                                            .response!
-                                                            .invoiceAmount
-                                                            .toString(),
+                                                      Text(
+                                                        "₹" +
+                                                            transactionDetailModel!
+                                                                .response!
+                                                                .invoiceAmount
+                                                                .toString(),
                                                         textAlign:
                                                             TextAlign.start,
                                                         style: TextStyle(
@@ -367,157 +382,199 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                   ),
                                   SizedBox(height: 10),
 
-                                  (transactionDetailModel!.response!.transactionStatus=="Overdue")?Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          Center(
-                                            child: Text(
-                                              'Credit Limit Blocked',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.black87,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                          SizedBox(height: 20),
-                                          Center(
-                                            child: Text(
-                                              'Dear Customer, your credit limit is currently blocked due to non-payment of an invoice on the due date. Please settle the outstanding amount to restore your credit limit',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.black87,
-                                                  fontWeight: FontWeight.normal),
-                                            ),
-                                          ),
-                                          SizedBox(height: 50),
-                                        ],
-                                      ),
-                                    ),
-                                  ): (transactionDetailModel!.response!.availableCreditLimit! < transactionDetailModel!.response!.invoiceAmount!)?Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          Center(
-                                            child: Text(
-                                              'Insufficient Credit Limit',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.black87,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                          SizedBox(height: 20),
-                                          Center(
-                                            child: Text(
-                                              'Your Scaleup Account has insufficient credit amount to pay for this invoice.',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.black87,
-                                                  fontWeight: FontWeight.normal),
-                                            ),
-                                          ),
-                                          SizedBox(height: 20),
-                                          Center(
-                                            child: Text(
-                                              ' You may clear your outstanding dues to free your credit limit.',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.black87,
-                                                  fontWeight: FontWeight.normal),
-                                            ),
-                                          ),
-                                          SizedBox(height: 50),
-                                        ],
-                                      ),
-                                    ),
-                                  ):Column(
-                                    children: [
-                                      Center(
-                                        child: Text(
-                                          'Choose Repayment Duration',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      Container(child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                height: 180,
-                                                // Set the height of the horizontal list container
-                                                child:
-                                                CallDayWiseIntrestCalculateWidget(
-                                                    context,
-                                                    transactionDetailModel!
-                                                        .response!
-                                                        .creditDayWiseAmounts!),
-                                              ),
-                                              SizedBox(height: 10),
-                                              Center(
-                                                child: Padding(
-                                                  padding:
-                                                  const EdgeInsets.all(10.0),
+                                  (transactionDetailModel!
+                                              .response!.transactionStatus ==
+                                          "Overdue")
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Container(
+                                            child: Column(
+                                              children: [
+                                                Center(
                                                   child: Text(
-                                                    'Credit Cycle will begin after your order is delivered You will be notified via SMS and Email about repayment date.',
-                                                    textAlign: TextAlign.start,
+                                                    'Credit Limit Blocked',
+                                                    textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                        fontSize: 13,
-                                                        letterSpacing: 0.10,
+                                                        fontSize: 15,
                                                         color: Colors.black87,
                                                         fontWeight:
-                                                        FontWeight.bold),
+                                                            FontWeight.bold),
                                                   ),
                                                 ),
+                                                SizedBox(height: 20),
+                                                Center(
+                                                  child: Text(
+                                                    'Dear Customer, your credit limit is currently blocked due to non-payment of an invoice on the due date. Please settle the outstanding amount to restore your credit limit',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.normal),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 50),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : (transactionDetailModel!.response!
+                                                  .availableCreditLimit! <
+                                              transactionDetailModel!
+                                                  .response!.invoiceAmount!)
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
+                                              child: Container(
+                                                child: Column(
+                                                  children: [
+                                                    Center(
+                                                      child: Text(
+                                                        'Insufficient Credit Limit',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            color:
+                                                                Colors.black87,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 20),
+                                                    Center(
+                                                      child: Text(
+                                                        'Your Scaleup Account has insufficient credit amount to pay for this invoice.',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            color:
+                                                                Colors.black87,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal),
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 20),
+                                                    Center(
+                                                      child: Text(
+                                                        ' You may clear your outstanding dues to free your credit limit.',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            color:
+                                                                Colors.black87,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal),
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 50),
+                                                  ],
+                                                ),
                                               ),
-                                              SizedBox(height: 20),
-                                            ]),
-                                      ))
-                                    ],
-                                  ),
-                                  transactionDetailModel!.response!.transactionStatus=="Overdue"?
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: CommonElevatedButton(
-                                      onPressed: () async {
+                                            )
+                                          : Column(
+                                              children: [
+                                                Center(
+                                                  child: Text(
+                                                    'Choose Repayment Duration',
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                Container(
+                                                    child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          height: 180,
+                                                          // Set the height of the horizontal list container
+                                                          child: CallDayWiseIntrestCalculateWidget(
+                                                              context,
+                                                              transactionDetailModel!
+                                                                  .response!
+                                                                  .creditDayWiseAmounts!),
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        Center(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(10.0),
+                                                            child: Text(
+                                                              'Credit Cycle will begin after your order is delivered You will be notified via SMS and Email about repayment date.',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
+                                                              style: TextStyle(
+                                                                  fontSize: 13,
+                                                                  letterSpacing:
+                                                                      0.10,
+                                                                  color: Colors
+                                                                      .black87,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 20),
+                                                      ]),
+                                                ))
+                                              ],
+                                            ),
+                                  transactionDetailModel!
+                                              .response!.transactionStatus ==
+                                          "Overdue"
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: CommonElevatedButton(
+                                            onPressed: () async {
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BottomNav()),
+                                              );
 
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(builder: (context) => BottomNav()),
-                                        );
+                                              // payemtOrderPost(context,productProvider,transactionDetailModel!);
+                                            },
+                                            text: "Clear Dues",
+                                            upperCase: true,
+                                          ),
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: CommonElevatedButton(
+                                            onPressed: () async {
+                                              // payemtOrderPost(context,productProvider,transactionDetailModel!);
 
-                                       // payemtOrderPost(context,productProvider,transactionDetailModel!);
-
-                                      },
-                                      text: "Clear Dues",
-                                      upperCase: true,
-                                    ),
-                                  ): Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: CommonElevatedButton(
-                                      onPressed: () async {
-                                       // payemtOrderPost(context,productProvider,transactionDetailModel!);
-
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(builder: (context) => CheckOutOtpScreen(transactionDetailModel:transactionDetailModel!,creditDays:creditDays)),
-                                        );
-                                      },
-                                      text: "Proceed",
-                                      upperCase: true,
-                                    ),
-                                  ),
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CheckOutOtpScreen(
+                                                            transactionDetailModel:
+                                                                transactionDetailModel!,
+                                                            creditDays:
+                                                                creditDays)),
+                                              );
+                                            },
+                                            text: "Proceed",
+                                            upperCase: true,
+                                          ),
+                                        ),
 
                                   //CallDayWiseIntrestCalculateWidget()
                                 ]),
@@ -526,18 +583,23 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                   ),
                 ),
               );
-            })));
+            },
+          ),
+        ),
+      ),
+    );
   }
 
-  Widget CallDayWiseIntrestCalculateWidget(BuildContext context, List<CreditDayWiseAmounts> creditDayWiseAmounts) {
-    creditDays =creditDayWiseAmounts[0].days!;
+  Widget CallDayWiseIntrestCalculateWidget(
+      BuildContext context, List<CreditDayWiseAmounts> creditDayWiseAmounts) {
+    creditDays = creditDayWiseAmounts[0].days!;
     return ListView.builder(
       itemCount: creditDayWiseAmounts.length,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           onTap: () {
-            creditDays =creditDayWiseAmounts[index].days!;
+            creditDays = creditDayWiseAmounts[index].days!;
           },
           child: Card(
               borderOnForeground: true,
@@ -565,7 +627,6 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                     SvgPicture.asset(
                                       'assets/images/check_white.svg',
                                       allowDrawingOutsideViewBox: true,
-
                                     ),
                                   ],
                                 ),
@@ -573,7 +634,9 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      creditDayWiseAmounts[index].days.toString() +
+                                      creditDayWiseAmounts[index]
+                                              .days
+                                              .toString() +
                                           ' Days',
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
@@ -601,7 +664,8 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                               ),
                                             ),
                                             WidgetSpan(
-                                              child: Icon(Icons.info_outlined, size: 14),
+                                              child: Icon(Icons.info_outlined,
+                                                  size: 14),
                                             ),
                                           ],
                                         ),
@@ -621,10 +685,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     const SizedBox(height: 5),
-                                    Text("₹"+
-                                      creditDayWiseAmounts[index]
-                                          .finalAmount!
-                                          .toString(),
+                                    Text(
+                                      "₹" +
+                                          creditDayWiseAmounts[index]
+                                              .finalAmount!
+                                              .toString(),
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
                                           fontSize: 17,
@@ -649,7 +714,8 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
     );
   }
 
-  void showPriceBreakDialog(BuildContext context, CreditDayAmountCals creditDayAmountCals) {
+  void showPriceBreakDialog(
+      BuildContext context, CreditDayAmountCals creditDayAmountCals) {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -809,32 +875,46 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
         .GetByTransactionReqNo(transactionReqNo);
   }
 
-  void payemtOrderPost(BuildContext context, DataProvider productProvider, TransactionDetailModel transactionDetailModel)async {
+  void payemtOrderPost(BuildContext context, DataProvider productProvider,
+      TransactionDetailModel transactionDetailModel) async {
     Utils.onLoading(context, "");
-    var  payemtOrderPostRequestModel =  PayemtOrderPostRequestModel(transactionReqNo: transactionDetailModel.response!.transactionReqNo,amount: transactionDetailModel.response!.transactionAmount!,mobileNo: transactionDetailModel.response!.mobileNo!,loanAccountId: transactionDetailModel.response!.loanAccountId!,creditDay:creditDays);
-    await Provider.of<DataProvider>(context, listen: false).PostOrderPlacement(payemtOrderPostRequestModel);
+    var payemtOrderPostRequestModel = PayemtOrderPostRequestModel(
+        transactionReqNo: transactionDetailModel.response!.transactionReqNo,
+        amount: transactionDetailModel.response!.transactionAmount!,
+        mobileNo: transactionDetailModel.response!.mobileNo!,
+        loanAccountId: transactionDetailModel.response!.loanAccountId!,
+        creditDay: creditDays);
+    await Provider.of<DataProvider>(context, listen: false)
+        .PostOrderPlacement(payemtOrderPostRequestModel);
     Navigator.of(context, rootNavigator: true).pop();
 
     productProvider.postPaymentOrderData!.when(
       success: (OrderPaymentModel) async {
         orderPaymentModel = OrderPaymentModel;
-        if(orderPaymentModel!=null){
-          if(orderPaymentModel!.status!){
+        if (orderPaymentModel != null) {
+          if (orderPaymentModel!.status!) {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => CongratulationScreen(transactionReqNo: payemtOrderPostRequestModel.transactionReqNo!,amount:payemtOrderPostRequestModel.amount,mobileNo:payemtOrderPostRequestModel.mobileNo!, loanAccountId: payemtOrderPostRequestModel.loanAccountId!,creditDay:payemtOrderPostRequestModel.creditDay!)),
+              MaterialPageRoute(
+                  builder: (context) => CongratulationScreen(
+                      transactionReqNo:
+                          payemtOrderPostRequestModel.transactionReqNo!,
+                      amount: payemtOrderPostRequestModel.amount,
+                      mobileNo: payemtOrderPostRequestModel.mobileNo!,
+                      loanAccountId: payemtOrderPostRequestModel.loanAccountId!,
+                      creditDay: payemtOrderPostRequestModel.creditDay!)),
             );
-          }else{
+          } else {
             Utils.showToast(orderPaymentModel!.message!, context);
           }
         }
       },
       failure: (exception) {
         if (exception is ApiException) {
-          if(exception.statusCode==401){
+          if (exception.statusCode == 401) {
             productProvider.disposeAllProviderData();
             ApiService().handle401(context);
-          }else{
-            Utils.showToast(exception.errorMessage,context);
+          } else {
+            Utils.showToast(exception.errorMessage, context);
           }
         }
       },

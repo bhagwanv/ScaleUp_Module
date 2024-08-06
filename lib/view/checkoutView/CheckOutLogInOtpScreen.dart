@@ -23,7 +23,7 @@ import 'model/ValidOtpForCheckoutResModel.dart';
 class CheckOutLogInOtpScreen extends StatefulWidget {
   String transactionId;
 
-  CheckOutLogInOtpScreen({super.key,required this.transactionId});
+  CheckOutLogInOtpScreen({super.key, required this.transactionId});
 
   @override
   State<CheckOutLogInOtpScreen> createState() => _CheckOutOtpScreenState();
@@ -39,12 +39,11 @@ class _CheckOutOtpScreenState extends State<CheckOutLogInOtpScreen> {
   CheckOutOtpModel? checkOutOtpModel = null;
   ValidOtpForCheckoutResModel? validOtpForCheckoutModel = null;
 
-
   @override
   void initState() {
     super.initState();
     _start = 30;
-    callGenrateOtp(widget.transactionId);
+    // callCustomerDetails(widget.transactionId);
   }
 
   @override
@@ -62,12 +61,25 @@ class _CheckOutOtpScreenState extends State<CheckOutLogInOtpScreen> {
         border: Border.all(color: kPrimaryColor),
       ),
     );
-    return Scaffold(
-        body: SafeArea(
-            top: true,
-            bottom: true,
-            child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-              if (productProvider.genrateOptPaymentData == null && isLoading) {
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          debugPrint("didPop1: $didPop");
+          if (didPop) {
+            return;
+          }
+          final bool shouldPop = await Utils().onback(context);
+          if (shouldPop) {
+            SystemNavigator.pop();
+          }
+        },
+        child: Scaffold(
+            body: SafeArea(
+                top: true,
+                bottom: true,
+                child: Consumer<DataProvider>(
+                    builder: (context, productProvider, child) {
+                  /*if (productProvider.genrateOptPaymentData == null && isLoading) {
                 return Center(child: Loader());
               } else {
                 if (productProvider.genrateOptPaymentData != null &&
@@ -98,19 +110,19 @@ class _CheckOutOtpScreenState extends State<CheckOutLogInOtpScreen> {
                       }
                     },
                   );
-                }
+                }*/
 
-                return SingleChildScrollView(
-                  child: Container(
-                    color: kPrimaryColor,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: Row(
-                            children: [
-                              checkOutOtpModel!.response!.imageUrl != null ?
+                  return SingleChildScrollView(
+                    child: Container(
+                      color: kPrimaryColor,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: Row(
+                              children: [
+                                /*checkOutOtpModel!.response!.imageUrl != null ?
                               Container(
                                 width: 34,
                                 height: 34,
@@ -125,19 +137,19 @@ class _CheckOutOtpScreenState extends State<CheckOutLogInOtpScreen> {
                               ) : Container(),
                               const SizedBox(
                                 width: 10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  const Text('Welcome back',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          color: whiteColor,
-                                          fontSize: 10,
-                                          letterSpacing: 0.20000000298023224,
-                                          fontWeight: FontWeight.normal,
-                                          height: 1.5)),
-                                  Text(
+                              ),*/
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    const Text('Welcome back',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            color: whiteColor,
+                                            fontSize: 15,
+                                            letterSpacing: 0.20000000298023224,
+                                            fontWeight: FontWeight.normal,
+                                            height: 1.5)),
+                                    /*Text(
                                       checkOutOtpModel!.response!.customerName!,
                                       textAlign: TextAlign.left,
                                       style: const TextStyle(
@@ -145,228 +157,249 @@ class _CheckOutOtpScreenState extends State<CheckOutLogInOtpScreen> {
                                           fontSize: 15,
                                           letterSpacing: 0.20000000298023224,
                                           fontWeight: FontWeight.normal,
-                                          height: 1.5))
-                                ],
-                              ),
-                              const Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  // customerCarePopup(context,checkOutOtpModel!);
-                                }, // Image tapped
-                                child: Image.asset(
-                                  'assets/images/customer.png',
-                                  color: whiteColor,
+                                          height: 1.5))*/
+                                  ],
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height,
-                            decoration: const BoxDecoration(
-                              color: text_light_whit_color,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(30.0),
-                                topRight: Radius.circular(30.0),
-                              ),
+                                const Spacer(),
+                                GestureDetector(
+                                  onTap: () {
+                                    // customerCarePopup(context,checkOutOtpModel!);
+                                  }, // Image tapped
+                                  child: Image.asset(
+                                    'assets/images/customer.png',
+                                    color: whiteColor,
+                                  ),
+                                )
+                              ],
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 30,
-                                          top: 50,
-                                          right: 30,
-                                          bottom: 30),
-                                      child: Column(
-                                        crossAxisAlignment:
+                          ),
+                          Container(
+                              height: MediaQuery.of(context).size.height,
+                              decoration: const BoxDecoration(
+                                color: text_light_whit_color,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30.0),
+                                  topRight: Radius.circular(30.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                    crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                              height: 69,
-                                              width: 51,
-                                              alignment: Alignment.topLeft,
-                                              child: Image.asset(
-                                                  'assets/images/scale.png')),
-                                          const SizedBox(
-                                            height: 50,
-                                          ),
-                                          const Text(
-                                            'Enter\nConfirmation Code',
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                                fontSize: 25,
-                                                color: Colors.black),
-                                          ),
-                                          const SizedBox(
-                                            height: 20,
-                                          ),
-                                          Text(
-                                            'Enter the One Time Confirmation code sent on your registered Scaleup mobile number',
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.black),
-                                          ),
-                                          const SizedBox(
-                                            height: 55,
-                                          ),
-                                          Center(
-                                            child: Pinput(
-                                              controller: pinController,
-                                              length: 6,
-                                              showCursor: true,
-                                              inputFormatters: [
-                                                FilteringTextInputFormatter
-                                                    .allow(RegExp("[0-9\]")),
-                                              ],
-                                              pinputAutovalidateMode:
-                                              PinputAutovalidateMode
-                                                  .onSubmit,
-                                              defaultPinTheme: defaultPinTheme,
-                                              focusedPinTheme:
-                                              defaultPinTheme.copyWith(
-                                                decoration: defaultPinTheme
-                                                    .decoration!
-                                                    .copyWith(
-                                                  border: Border.all(
-                                                      color: kPrimaryColor),
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 30,
+                                            top: 50,
+                                            right: 30,
+                                            bottom: 30),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                                height: 69,
+                                                width: 51,
+                                                alignment: Alignment.topLeft,
+                                                child: Image.asset(
+                                                    'assets/images/scale.png')),
+                                            const SizedBox(
+                                              height: 50,
+                                            ),
+                                            const Text(
+                                              'Enter\ Login Code',
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                  fontSize: 25,
+                                                  color: Colors.black),
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            Text(
+                                              'Please enter the OTP sent to your mobile number to continue with your order checkout via Scaleup Pay.',
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black),
+                                            ),
+                                            const SizedBox(
+                                              height: 55,
+                                            ),
+                                            Center(
+                                              child: Pinput(
+                                                controller: pinController,
+                                                length: 6,
+                                                showCursor: true,
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter
+                                                      .allow(RegExp("[0-9\]")),
+                                                ],
+                                                pinputAutovalidateMode:
+                                                    PinputAutovalidateMode
+                                                        .onSubmit,
+                                                defaultPinTheme:
+                                                    defaultPinTheme,
+                                                focusedPinTheme:
+                                                    defaultPinTheme.copyWith(
+                                                  decoration: defaultPinTheme
+                                                      .decoration!
+                                                      .copyWith(
+                                                    border: Border.all(
+                                                        color: kPrimaryColor),
+                                                  ),
+                                                ),
+                                                onCompleted: (pin) =>
+                                                    debugPrint(pin),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 40,
+                                            ),
+                                            SizedBox(
+                                              width: double.infinity,
+                                              child: isReSendDisable
+                                                  ? Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Resend Code in ',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontSize: 15,
+                                                              color:
+                                                                  kPrimaryColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal),
+                                                        ),
+                                                        buildCountdown(),
+                                                      ],
+                                                    )
+                                                  : Container(),
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            Container(
+                                                padding: EdgeInsets.all(10),
+                                                child: Center(
+                                                  child: RichText(
+                                                    text: TextSpan(
+                                                        text:
+                                                            'If you didn’t received a code!',
+                                                        style: const TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal),
+                                                        children: <TextSpan>[
+                                                          isReSendDisable
+                                                              ? TextSpan(
+                                                                  text:
+                                                                      '  Resend',
+                                                                  style: const TextStyle(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .normal),
+                                                                  recognizer:
+                                                                      TapGestureRecognizer()
+                                                                        ..onTap =
+                                                                            () async {})
+                                                              : TextSpan(
+                                                                  text:
+                                                                      '  Resend',
+                                                                  style: const TextStyle(
+                                                                      color: Colors
+                                                                          .blueAccent,
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .normal),
+                                                                  recognizer:
+                                                                      TapGestureRecognizer()
+                                                                        ..onTap =
+                                                                            () async {
+                                                                          pinController
+                                                                              .clear();
+                                                                          isReSendDisable =
+                                                                              true;
+
+                                                                          resentOrderLoginOTP(
+                                                                              context,
+                                                                              productProvider);
+                                                                        })
+                                                        ]),
+                                                  ),
+                                                )),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            CommonElevatedButton(
+                                              onPressed: () async {
+                                                if (pinController
+                                                    .text.isEmpty) {
+                                                  Utils.showBottomSheet(
+                                                      context,
+                                                      "Please enter the OTP we just sent you on your mobile number",
+                                                      VALIDACTION_IMAGE_PATH);
+                                                } else if (pinController
+                                                        .text.length <
+                                                    6) {
+                                                  Utils.showBottomSheet(
+                                                      context,
+                                                      "Please enter the OTP we just sent you on your mobile number",
+                                                      VALIDACTION_IMAGE_PATH);
+                                                } else {
+                                                  callValidOtpApi(
+                                                      context,
+                                                      pinController.text,
+                                                      productProvider);
+                                                }
+                                              },
+                                              text: "Verify Code",
+                                              upperCase: true,
+                                            ),
+                                            const SizedBox(
+                                              height: 16,
+                                            ),
+                                            Align(
+                                              alignment: Alignment.center,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  SystemNavigator.pop();
+                                                },
+                                                child: Text(
+                                                  'CANCEL',
+                                                  style: const TextStyle(
+                                                      color: Colors.red,
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
                                               ),
-                                              onCompleted: (pin) =>
-                                                  debugPrint(pin),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 40,
-                                          ),
-                                          SizedBox(
-                                            width: double.infinity,
-                                            child: isReSendDisable
-                                                ? Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .center,
-                                              children: [
-                                                Text(
-                                                  'Resend Code in ',
-                                                  textAlign:
-                                                  TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      color:
-                                                      kPrimaryColor,
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .normal),
-                                                ),
-                                                buildCountdown(),
-                                              ],
                                             )
-                                                : Container(),
-                                          ),
-                                          const SizedBox(
-                                            height: 20,
-                                          ),
-                                          Container(
-                                              padding: EdgeInsets.all(10),
-                                              child: Center(
-                                                child: RichText(
-                                                  text: TextSpan(
-                                                      text:
-                                                      'If you didn’t received a code!',
-                                                      style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 14,
-                                                          fontWeight: FontWeight
-                                                              .normal),
-                                                      children: <TextSpan>[
-                                                        isReSendDisable
-                                                            ? TextSpan(
-                                                            text:
-                                                            '  Resend',
-                                                            style: const TextStyle(
-                                                                color: Colors
-                                                                    .grey,
-                                                                fontSize:
-                                                                14,
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .normal),
-                                                            recognizer:
-                                                            TapGestureRecognizer()
-                                                              ..onTap =
-                                                                  () async {})
-                                                            : TextSpan(
-                                                            text:
-                                                            '  Resend',
-                                                            style: const TextStyle(
-                                                                color: Colors
-                                                                    .blueAccent,
-                                                                fontSize:
-                                                                14,
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .normal),
-                                                            recognizer:
-                                                            TapGestureRecognizer()
-                                                              ..onTap = () async {
-                                                                pinController
-                                                                    .clear();
-                                                                isReSendDisable =
-                                                                true;
-
-                                                                resentOrderLoginOTP(
-                                                                    context,
-                                                                    productProvider);
-                                                              })
-                                                      ]),
-                                                ),
-                                              )),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          CommonElevatedButton(
-                                            onPressed: () async {
-                                              if (pinController.text.isEmpty) {
-                                                Utils.showBottomSheet(
-                                                    context,
-                                                    "Please enter the OTP we just sent you on your mobile number",
-                                                    VALIDACTION_IMAGE_PATH);
-                                              } else
-                                              if (pinController.text.length <
-                                                  6) {
-                                                Utils.showBottomSheet(
-                                                    context,
-                                                    "Please enter the OTP we just sent you on your mobile number",
-                                                    VALIDACTION_IMAGE_PATH);
-                                              } else {
-                                                callValidOtpApi(
-                                                    context, pinController.text,
-                                                    productProvider);
-                                              }
-                                            },
-                                            text: "Verify Code",
-                                            upperCase: true,
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                    //CallDayWiseIntrestCalculateWidget()
-                                  ]),
-                            )),
-                      ],
+                                          ],
+                                        ),
+                                      )
+                                      //CallDayWiseIntrestCalculateWidget()
+                                    ]),
+                              )),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              }
-            })));
+                  );
+                }))));
   }
 
   Widget buildCountdown() {
@@ -390,57 +423,72 @@ class _CheckOutOtpScreenState extends State<CheckOutLogInOtpScreen> {
     );
   }
 
-  Future<void> callGenrateOtp(String transactionReqNo) async {
-    await Provider.of<DataProvider>(context, listen: false).GetByTransactionReqNoForOTP(transactionReqNo);
+  Future<void> callCustomerDetails(String transactionReqNo) async {
+    await Provider.of<DataProvider>(context, listen: false)
+        .GetByTransactionReqNoForOTP(transactionReqNo);
   }
 
-  void resentOrderLoginOTP(BuildContext context, DataProvider productProvider)async {
+  void resentOrderLoginOTP(
+      BuildContext context, DataProvider productProvider) async {
     Utils.onLoading(context, "");
     print("transactionId${widget.transactionId}");
-    await Provider.of<DataProvider>(context, listen: false).resentOrderLoginOTP(widget.transactionId);
+    await Provider.of<DataProvider>(context, listen: false)
+        .resentOrderLoginOTP(widget.transactionId);
     Navigator.of(context, rootNavigator: true).pop();
 
     productProvider.reSendOptPaymentData?.when(
       success: (bool) {
         // Handle successful response
         var genrateOptResponceModel = bool;
-             print(genrateOptResponceModel);
+        print(genrateOptResponceModel);
         if (genrateOptResponceModel) {
           Utils.showToast("Otp send Successfully", context);
         }
       },
       failure: (exception) {
         if (exception is ApiException) {
-          if(exception.statusCode==401){
+          if (exception.statusCode == 401) {
             productProvider.disposeAllProviderData();
             ApiService().handle401(context);
-          }else{
-            Utils.showToast(exception.errorMessage,context);
+          } else {
+            Utils.showToast(exception.errorMessage, context);
           }
         }
       },
     );
-
-
   }
 
-  void callValidOtpApi(BuildContext context, String otptext, DataProvider productProvider)async {
+  void callValidOtpApi(BuildContext context, String otptext,
+      DataProvider productProvider) async {
     Utils.onLoading(context, "");
-    await Provider.of<DataProvider>(context, listen: false).ValidateOrderOTPGetToken("",otptext,widget.transactionId);
+    await Provider.of<DataProvider>(context, listen: false)
+        .ValidateOrderOTPGetToken("", otptext, widget.transactionId);
     Navigator.of(context, rootNavigator: true).pop();
     final prefsUtil = await SharedPref.getInstance();
 
     productProvider.validOptPaymentData!.when(
       success: (data) async {
-        validOtpForCheckoutModel = data ;
+        validOtpForCheckoutModel = data;
 
-        if(validOtpForCheckoutModel!=null){
-          if(validOtpForCheckoutModel!.status!){
-            await prefsUtil.saveString(TOKEN_CHECKOUT,validOtpForCheckoutModel!.response!.token! );
+        if (validOtpForCheckoutModel != null) {
+          if (validOtpForCheckoutModel!.status!) {
+            await prefsUtil.saveString(
+                TOKEN_CHECKOUT, validOtpForCheckoutModel!.response!.token!);
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => PaymentConfirmation(transactionReqNo: validOtpForCheckoutModel!.response!.transactionReqNo!,customerName: validOtpForCheckoutModel!.response!.customerName!,imageUrl: validOtpForCheckoutModel!.response!.imageUrl!,customerCareMoblie: validOtpForCheckoutModel!.response!.customerCareMoblie!,customerCareEmail: validOtpForCheckoutModel!.response!.customerCareEmail!,)),
+              MaterialPageRoute(
+                  builder: (context) => PaymentConfirmation(
+                        transactionReqNo: validOtpForCheckoutModel!
+                            .response!.transactionReqNo!,
+                        customerName:
+                            validOtpForCheckoutModel!.response!.customerName!,
+                        imageUrl: validOtpForCheckoutModel!.response!.imageUrl!,
+                        customerCareMoblie: validOtpForCheckoutModel!
+                            .response!.customerCareMoblie!,
+                        customerCareEmail: validOtpForCheckoutModel!
+                            .response!.customerCareEmail!,
+                      )),
             );
-          }else{
+          } else {
             Utils.showToast(validOtpForCheckoutModel!.message!, context);
             pinController.clear();
           }
@@ -448,21 +496,19 @@ class _CheckOutOtpScreenState extends State<CheckOutLogInOtpScreen> {
       },
       failure: (exception) {
         if (exception is ApiException) {
-          if(exception.statusCode==401){
+          if (exception.statusCode == 401) {
             productProvider.disposeAllProviderData();
             ApiService().handle401(context);
-          }else{
-            Utils.showToast(exception.errorMessage,context);
+          } else {
+            Utils.showToast(exception.errorMessage, context);
           }
         }
       },
     );
-
-
   }
 
-  void customerCarePopup(BuildContext context, CheckOutOtpModel checkOutOtpModel)async {
-
+  void customerCarePopup(
+      BuildContext context, CheckOutOtpModel checkOutOtpModel) async {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -547,12 +593,10 @@ class _CheckOutOtpScreenState extends State<CheckOutLogInOtpScreen> {
                               color: Colors.black87,
                               fontWeight: FontWeight.bold),
                         ),
-
                       ],
                     ),
                   ],
                 ),
-
               ],
             ),
           ),
