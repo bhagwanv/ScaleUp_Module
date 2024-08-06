@@ -62,7 +62,7 @@ class ApiUrls{
   final String getKarzaElectricityAuthentication="/services/kyc/v1/KYCDoc/KarzaElectricityAuthentication";
 
   final String resentOrderLoginOTP="/aggregator/LoanAccountAgg/ResentOrderLoginOTP";
-  final String ValidateOrderOtp="aggregator/LoanAccountAgg/ValidateOrderOtp";
+  final String ValidateOrderOtp="/aggregator/LoanAccountAgg/ValidateOrderOtp";
 
 
 

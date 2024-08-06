@@ -453,6 +453,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
         validateOrderOtpResModel = data;
         if (validateOrderOtpResModel != null) {
           print("data status ::::  ${validateOrderOtpResModel!.status!}");
+          print("data ::::  ${validateOrderOtpResModel!.toJson()}");
           if (validateOrderOtpResModel!.status!) {
             /* await prefsUtil.saveString(TOKEN_CHECKOUT, validOtpForCheckoutModel!.response!.token!);
             Navigator.of(context).push(
