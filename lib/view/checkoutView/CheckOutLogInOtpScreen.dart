@@ -496,12 +496,7 @@ class _CheckOutOtpScreenState extends State<CheckOutLogInOtpScreen> {
       },
       failure: (exception) {
         if (exception is ApiException) {
-          if (exception.statusCode == 401) {
-            productProvider.disposeAllProviderData();
-            ApiService().handle401(context);
-          } else {
-            Utils.showToast(exception.errorMessage, context);
-          }
+          Utils.showToast("Something went wrong", context);
         }
       },
     );

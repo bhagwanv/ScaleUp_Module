@@ -12,6 +12,7 @@ import 'package:scale_up_module/view/splash_screen/SplashScreen.dart';
 import 'package:scale_up_module/view/splash_screen/model/GetLeadResponseModel.dart';
 import '../shared_preferences/SharedPref.dart';
 import '../utils/Utils.dart';
+import '../utils/constants.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';
 import '../view/aadhaar_screen/models/ValidateAadhaarOTPRequestModel.dart';
 import '../view/agreement_screen/model/AggrementDetailsResponce.dart';
@@ -1498,7 +1499,7 @@ class ApiService {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
         var base_url = prefsUtil.getString(BASE_URL);
-        var token = await prefsUtil.getString(TOKEN);
+        var token = await prefsUtil.getString(TOKEN_CHECKOUT);
         final response = await interceptor.get(Uri.parse(
             '${base_url! + apiUrls.ResentOrderOTP}?MobileNo=$MobileNumber&TransactionNo=$TransactionNo'),
           headers: {
@@ -1984,13 +1985,13 @@ class ApiService {
     try {
       if (await internetConnectivity.networkConnectivity()) {
         final prefsUtil = await SharedPref.getInstance();
-        var token = await prefsUtil.getString(TOKEN);
+        var token = await prefsUtil.getString(TOKEN_CHECKOUT);
         var base_url = prefsUtil.getString(BASE_URL);
         final response = await interceptor.post(Uri.parse(
             '${base_url! + apiUrls.ValidateOrderOtp}'),
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Bearer'
+              'Authorization': 'Bearer $token'
               // Set the content type as JSON// Set the content type as JSON
             },
             body: json.encode(validateOrderOtpResModel)

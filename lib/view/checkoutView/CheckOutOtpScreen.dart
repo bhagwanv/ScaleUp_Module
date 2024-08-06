@@ -46,7 +46,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
   final TextEditingController pinController = TextEditingController();
 
   CheckOutOtpModel? checkOutOtpModel = null;
-  ValidOtpForCheckoutResModel? validateOrderOtpResModel = null;
+  ValidateOrderOtpResModel? validateOrderOtpResModel = null;
 
   @override
   void initState() {
@@ -440,7 +440,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
         otp: otptext,
         transactionReqNo:
             widget.transactionDetailModel.response!.transactionReqNo,
-        amount: widget.transactionDetailModel.response!.totalAmount,
+        amount: widget.transactionDetailModel.response!.transactionAmount,
         loanAccountId: widget.transactionDetailModel.response!.loanAccountId,
         creditDay: widget.creditDays);
     await Provider.of<DataProvider>(context, listen: false)
@@ -448,11 +448,11 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
     Navigator.of(context, rootNavigator: true).pop();
     final prefsUtil = await SharedPref.getInstance();
 
-    productProvider.validOptPaymentData!.when(
+    productProvider.validateOrderOtpData!.when(
       success: (data) async {
         validateOrderOtpResModel = data;
-
         if (validateOrderOtpResModel != null) {
+          print("data status ::::  ${validateOrderOtpResModel!.status!}");
           if (validateOrderOtpResModel!.status!) {
             /* await prefsUtil.saveString(TOKEN_CHECKOUT, validOtpForCheckoutModel!.response!.token!);
             Navigator.of(context).push(
@@ -464,7 +464,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                       transactionReqNo: widget
                           .transactionDetailModel.response!.transactionReqNo!,
                       amount:
-                          widget.transactionDetailModel.response!.totalAmount,
+                          widget.transactionDetailModel.response!.transactionAmount,
                       mobileNo:
                           widget.transactionDetailModel.response!.mobileNo!,
                       loanAccountId: widget
@@ -479,12 +479,7 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
       },
       failure: (exception) {
         if (exception is ApiException) {
-          if (exception.statusCode == 401) {
-            productProvider.disposeAllProviderData();
-            ApiService().handle401(context);
-          } else {
-            Utils.showToast(exception.errorMessage, context);
-          }
+          Utils.showToast("Something went wrong", context);
         }
       },
     );
