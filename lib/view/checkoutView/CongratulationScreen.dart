@@ -33,14 +33,14 @@ class CongratulationScreen extends StatefulWidget {
 }
 
 class _CongratulationScreenState extends State<CongratulationScreen> {
-  int _start = 5;
+  int _start = 1;
   static const platform = MethodChannel('com.ScaleUP');
 
   final CountdownController _controller = CountdownController(autoStart: true);
 
   @override
   void initState() {
-    _start = 5;
+    _start = 1;
     buildCountdown();
     super.initState();
   }

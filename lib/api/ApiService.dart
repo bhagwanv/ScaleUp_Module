@@ -126,7 +126,7 @@ class ApiService {
   }
 
   Future<GetLeadResponseModel> getLeads(
-      String mobile, int productId, int companyId, int leadId) async {
+      String mobile, int companyId, int productId, int leadId) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);

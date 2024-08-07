@@ -290,9 +290,9 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> getLeads(
-      String mobile, int productId, int companyId, int leadId) async {
+      String mobile, int companyId, int productId, int leadId) async {
     _getLeadData =
-    await apiService.getLeads(mobile, productId, companyId, leadId);
+    await apiService.getLeads(mobile, companyId, productId, leadId);
     notifyListeners();
   }
 

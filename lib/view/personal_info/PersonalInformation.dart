@@ -408,6 +408,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
                     },
                   );
                 }
+              } else {
+                if (productProvider.getCurrentAllCityData != null) {
+                  citylist = productProvider.getCurrentAllCityData!;
+                }
               }
               if (productProvider
                           .getpostElectricityBillDocumentSingleFileData !=
@@ -1679,6 +1683,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 _currentAddressLineOneCl.clear();
                 _currentAddressLineTwoCl.clear();
                 _currentAddressPinCodeCl.clear();
+                citylist.clear();
               }
             });
           },
