@@ -213,7 +213,7 @@ class _PancardScreenState extends State<PancardScreen> {
                               style: GoogleFonts.urbanist(
                                 fontSize: 15,
                                 color: Colors.black,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                             const SizedBox(height: 20),
@@ -533,6 +533,7 @@ class _PancardScreenState extends State<PancardScreen> {
                                 // Handle the state change here
                                 print('Checkbox state changed: $isChecked');
                                 if (isChecked) {
+                                  Utils.hideKeyBored(context);
                                   isDataClear=true;
                                   final result = await Navigator.push(
                                     context,
@@ -555,15 +556,16 @@ class _PancardScreenState extends State<PancardScreen> {
                                   TextSpan(
                                     text: 'I hereby accept ',
                                     style: GoogleFonts.urbanist(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: blackSmall,
+                                      fontWeight: FontWeight.w500,
                                     ),
 
                                   ),
                                   _buildClickableTextSpan(
                                     text: 'T&C  & Privacy Policy',
                                     onClick: ()async {
+                                      Utils.hideKeyBored(context);
                                       isDataClear=true;
                                       final result = await Navigator.push(
                                         context,
@@ -578,9 +580,9 @@ class _PancardScreenState extends State<PancardScreen> {
                                     text:
                                     '. Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners',
                                     style: GoogleFonts.urbanist(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color:blackSmall,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ],
@@ -665,8 +667,8 @@ class _PancardScreenState extends State<PancardScreen> {
       text: text,
 
       style: GoogleFonts.urbanist(
-        fontSize: 14,
-        color: Colors.black,
+        fontSize: 12,
+        color: blackSmall,
         fontWeight: FontWeight.w700,
         decoration: TextDecoration.underline,
       ),

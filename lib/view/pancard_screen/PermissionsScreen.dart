@@ -61,7 +61,7 @@ class _PermissionsWidget extends State<PermissionsWidget> {
               style: GoogleFonts.urbanist(
                 fontSize: 20,
                 color: Color(0xff0196CE),
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 20),
@@ -71,7 +71,7 @@ class _PermissionsWidget extends State<PermissionsWidget> {
               style: GoogleFonts.urbanist(
                 fontSize: 18,
                 color: Colors.black,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 20),
@@ -97,7 +97,7 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                           style: GoogleFonts.urbanist(
                             fontSize: 15,
                             color: Color(0xff0196CE),
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
@@ -141,7 +141,7 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                           style: GoogleFonts.urbanist(
                             fontSize: 15,
                             color: Color(0xff0196CE),
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
@@ -184,7 +184,7 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                           style: GoogleFonts.urbanist(
                             fontSize: 15,
                             color: Color(0xff0196CE),
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
@@ -227,7 +227,7 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                           style: GoogleFonts.urbanist(
                             fontSize: 15,
                             color: Color(0xff0196CE),
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
@@ -270,7 +270,7 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                           style: GoogleFonts.urbanist(
                             fontSize: 15,
                             color: Color(0xff0196CE),
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w600,
                           ),
 
                         ),

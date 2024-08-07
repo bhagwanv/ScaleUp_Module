@@ -458,7 +458,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                               style: GoogleFonts.urbanist(
                                 fontSize: 16.0,
                                 color: Colors.grey,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
@@ -538,7 +538,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                         style: GoogleFonts.urbanist(
                                           fontSize: 16.0,
                                           color: Colors.grey,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ),

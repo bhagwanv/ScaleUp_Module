@@ -159,7 +159,7 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                         textAlign: TextAlign.start,
                         style: GoogleFonts.urbanist(
                           fontSize: 35.0,
-                          color:Colors.black,
+                          color:blackSmall,
                           fontWeight: FontWeight.w400,
 
                         ),
@@ -172,8 +172,8 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                         textAlign: TextAlign.start,
                         style: GoogleFonts.urbanist(
                           fontSize: 15.0,
-                          color:Colors.black,
-                          fontWeight: FontWeight.w400,
+                          color:blackSmall,
+                          fontWeight: FontWeight.w500,
 
                         ),
                       ),

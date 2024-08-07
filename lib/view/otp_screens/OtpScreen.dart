@@ -85,10 +85,10 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       seconds: _start,
       build: (_, double time) => Text(
         time.toStringAsFixed(0) + " S",
-        style: TextStyle(
-          fontSize: 15,
-          color: Colors.blue,
-          fontWeight: FontWeight.normal,
+      style: GoogleFonts.urbanist(
+        fontSize: 15.0,
+        color: Colors.blue,
+        fontWeight: FontWeight.w400,
         ),
       ),
       interval: Duration(seconds: 1),
@@ -222,7 +222,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                                     style: GoogleFonts.urbanist(
                                       fontSize: 14,
                                       color: Colors.grey,
-                                      fontWeight: FontWeight.w400,
+                                      fontWeight: FontWeight.w500,
                                     ),
 
                                         recognizer: TapGestureRecognizer()
@@ -232,7 +232,7 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                                     style: GoogleFonts.urbanist(
                                       fontSize: 14,
                                       color: Colors.blueAccent,
-                                      fontWeight: FontWeight.w400,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () async {

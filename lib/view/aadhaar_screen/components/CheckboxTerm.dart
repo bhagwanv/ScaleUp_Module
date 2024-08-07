@@ -55,7 +55,7 @@ class _CheckboxTermState extends State<CheckboxTerm> {
               textAlign: TextAlign.justify,
               style: GoogleFonts.urbanist(
                 fontSize: 14,
-                color: Colors.black,
+                color: blackSmall,
                 fontWeight: FontWeight.w400,
               )
             ),),

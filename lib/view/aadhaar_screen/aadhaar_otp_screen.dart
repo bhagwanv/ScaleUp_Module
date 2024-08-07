@@ -122,7 +122,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                 style: GoogleFonts.urbanist(
                   fontSize: 15.0,
                   color:Colors.black ,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(
@@ -177,7 +177,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                           style: GoogleFonts.urbanist(
                             fontSize: 14.0,
                             color:Colors.black ,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w500,
                           ),
                           children: <TextSpan>[
                             isReSendDisable
@@ -186,7 +186,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                                 style: GoogleFonts.urbanist(
                                   fontSize: 14.0,
                                   color:Colors.grey ,
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w500,
                                 ),
 
                                     recognizer: TapGestureRecognizer()
@@ -196,7 +196,7 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                                 style: GoogleFonts.urbanist(
                                   fontSize: 14.0,
                                   color:Colors.blueAccent ,
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w500,
                                 ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
