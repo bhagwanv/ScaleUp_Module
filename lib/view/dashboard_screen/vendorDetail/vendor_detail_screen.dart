@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../api/ApiService.dart';
@@ -193,20 +194,24 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                               children: <Widget>[
                                 Text('Welcome back',
                                     textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: whiteColor,
-                                        fontSize: 10,
-                                        letterSpacing: 0.20000000298023224,
-                                        fontWeight: FontWeight.normal,
-                                        height: 1.5)),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 10.0,
+                                      color: whiteColor,
+                                      letterSpacing: 0.20000000298023224,
+                                      fontWeight: FontWeight.w400,
+                                        height: 1.5
+                                    ),
+                                ),
                                 Text(customerName,
                                     textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: whiteColor,
-                                        fontSize: 15,
-                                        letterSpacing: 0.20000000298023224,
-                                        fontWeight: FontWeight.normal,
-                                        height: 1.5))
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 15.0,
+                                      color: whiteColor,
+                                      letterSpacing: 0.20000000298023224,
+                                      fontWeight: FontWeight.w400,
+                                        height: 1.5
+                                    ),
+                                )
                               ],
                             ),
                             const Spacer(),
@@ -254,10 +259,10 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                               ),
                                               Text(
                                                 'Shopkirana'.toUpperCase(),
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12.0,
                                                   color: text_orange_color,
+                                                  fontWeight: FontWeight.w700,
                                                 ),
                                               ),
                                             ],
@@ -294,32 +299,41 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                             Text(
                                               'Available to spend',
                                               textAlign: TextAlign.end,
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  color: gryColor),
+                                              style: GoogleFonts.urbanist(
+                                                fontSize: 10.0,
+                                                color: gryColor,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+
                                             ),
                                             Text(
                                               '₹ $availableLimit',
                                               textAlign: TextAlign.end,
-                                              style: TextStyle(
-                                                  fontSize: 25,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold),
+
+                                              style: GoogleFonts.urbanist(
+                                                fontSize: 25.0,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w700,
+                                              ),
                                             ),
                                             SizedBox(height: 10),
                                             Text(
                                               'Total Outstanding ',
                                               textAlign: TextAlign.end,
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  color: Colors.black),
+                                              style: GoogleFonts.urbanist(
+                                                fontSize: 10.0,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w400,
+                                              ),
                                             ),
                                             Text(
                                               '₹ $totalOutStanding',
                                               textAlign: TextAlign.end,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: text_orange_color),
+                                              style: GoogleFonts.urbanist(
+                                                fontSize: 15.0,
+                                                color: text_orange_color,
+                                                fontWeight: FontWeight.w400,
+                                              ),
                                             ),
                                             SizedBox(height: 10),
                                           ],
@@ -367,15 +381,20 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                         Text(
                                           '₹ $totalPayableAmount  Payable Today',
                                           textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black,fontWeight: FontWeight.bold),
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 12.0,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
                                         Text(
                                           'Total Pending Invoice Count: $totalPendingInvoiceCount',
                                           textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontSize: 10, color: gryColor),
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 10.0,
+                                            color: gryColor,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -471,11 +490,13 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                               alignment: Alignment.center,
                               child: Text(
                                 "PENDING",
-                                style: TextStyle(
-                                    fontSize: 12,
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 12.0,
                                     color: selectedTab == 0
                                         ? Colors.white
-                                        : Colors.black),
+                                        : Colors.black,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
                           ),
@@ -496,11 +517,13 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                             child: Align(
                               alignment: Alignment.center,
                               child: Text("PAID PAYMENT",
-                                  style: TextStyle(
-                                      fontSize: 12,
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
                                       color: selectedTab == 1
                                           ? Colors.white
-                                          : Colors.black)),
+                                          : Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),),
                             ),
                           ),
                         )
@@ -605,8 +628,11 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                     child: Text(
                                       'Due on : $dueDate',
                                       textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontSize: 10, color: Colors.white),
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 10.0,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -637,17 +663,19 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                               children: [
                                 Text(
                                   anchorName,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                                 Text(
                                   "$status",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: kPrimaryColor,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
 
                               ],
@@ -659,17 +687,19 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                               children: [
                                 Text(
                                   "Order No : $orderId",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.normal),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                                 Text(
                                   "Invoice No: $invoiceNo",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.normal),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ],
                             ),
@@ -690,18 +720,21 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                 Text(
                                   'Order Amount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+
                                 ),
                                 Text(
                                   'Payable Amount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
 
                               ],
@@ -714,18 +747,20 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                                 Text(
                                   '₹ $amount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: text_green_color,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 20.0,
+                                    color: text_green_color,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                                 Text(
                                   '₹ $paidAmount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: text_green_color,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 20.0,
+                                    color: text_green_color,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
 
                               ],
@@ -867,10 +902,11 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                 child: Text(
                   'Full Breakdown',
                   textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+                  style: GoogleFonts.urbanist(
+                    fontSize: 15.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               )
             ],
@@ -898,18 +934,20 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                     Text(
                       'Total Amount',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     Text(
                       '₹ $totalAmount',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ],
                 ),
@@ -951,18 +989,20 @@ class _VendorDetailScreenState extends State<VendorDetailScreen> {
                   Text(
                     '$transactionType',
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   Text(
                     '₹ $amount',
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               )

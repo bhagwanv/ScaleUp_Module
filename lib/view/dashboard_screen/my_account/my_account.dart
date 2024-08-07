@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../api/ApiService.dart';
@@ -202,20 +203,22 @@ class _MyAccountState extends State<MyAccount> {
                             children: <Widget>[
                               Text('Welcome back',
                                   textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      color: whiteColor,
-                                      fontSize: 10,
-                                      letterSpacing: 0.20000000298023224,
-                                      fontWeight: FontWeight.normal,
-                                      height: 1.5)),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 10.0,
+                                    color: whiteColor,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: 0.20000000298023224,
+                                      height: 1.5
+                                  ),),
                               Text(customerName,
                                   textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      color: whiteColor,
-                                      fontSize: 15,
-                                      letterSpacing: 0.20000000298023224,
-                                      fontWeight: FontWeight.normal,
-                                      height: 1.5))
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: whiteColor,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: 0.20000000298023224,
+                                      height: 1.5
+                                  ),)
                             ],
                           ),
                           const Spacer(),
@@ -272,28 +275,39 @@ class _MyAccountState extends State<MyAccount> {
                                       Text(
                                         'Available to spend',
                                         textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 10, color: gryColor),
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 10.0,
+                                          color: gryColor,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                       Text(
                                         "₹ $availableLimit",
                                         textAlign: TextAlign.right,
-                                        style: TextStyle(
-                                            fontSize: 20, color: Colors.black),
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 20.0,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                       SizedBox(height: 15),
                                       Text(
                                         'Total Utilized Limit ',
                                         textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 10, color: gryColor),
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 10.0,
+                                          color: gryColor,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                       Text(
                                         "₹ $totalOutStanding",
                                         textAlign: TextAlign.right,
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: text_orange_color),
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 15.0,
+                                          color: text_orange_color,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -338,14 +352,20 @@ class _MyAccountState extends State<MyAccount> {
                                       Text(
                                         '₹ $totalPayableAmount  Payable Today',
                                         textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold,),
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 12.0,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                       Text(
                                         'Total Pending Invoice Count : $totalPendingInvoiceCount  ',
                                         textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 10, color: gryColor),
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 10.0,
+                                          color: gryColor,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                     ],
 
@@ -399,13 +419,17 @@ class _MyAccountState extends State<MyAccount> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Padding(
+                                 Padding(
                                   padding:
                                       EdgeInsets.only(top: 10.0, left: 10.0),
                                   child: Text(
                                     'Recent Transactions',
-                                    style: TextStyle(
-                                        fontSize: 15, color: Colors.black),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 15.0,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+
                                   ),
                                 ),
                                 const SizedBox(height: 8),
@@ -538,8 +562,11 @@ class _MyAccountState extends State<MyAccount> {
                                     child: Text(
                                       'Due on : $dueDate',
                                       textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontSize: 10, color: Colors.white),
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 10.0,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -565,10 +592,11 @@ class _MyAccountState extends State<MyAccount> {
                             ),
                             Text(
                               anchorName,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                             SizedBox(
                               height: 5,
@@ -578,18 +606,20 @@ class _MyAccountState extends State<MyAccount> {
                               children: [
                                 Text(
                                   "Order ID  $orderId",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                                 invoiceNo.isNotEmpty?
                                 Text(
                                   "Invoice No : $invoiceNo",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ):Container()
                               ],
                             ),
@@ -608,10 +638,11 @@ class _MyAccountState extends State<MyAccount> {
                                 Text(
                                   'Order Amount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                                 Text(
                                   'Payable Amount',
@@ -630,18 +661,20 @@ class _MyAccountState extends State<MyAccount> {
                                 Text(
                                   '₹ $amount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                                 Text(
                                   '₹ $paidAmount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ],
                             ),
@@ -651,10 +684,11 @@ class _MyAccountState extends State<MyAccount> {
                               children: [
                                 Text(
                                   "Status : $status",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ],
                             ),
@@ -762,10 +796,11 @@ class _MyAccountState extends State<MyAccount> {
                 child: Text(
                   'Full Breakdown',
                   textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+                  style: GoogleFonts.urbanist(
+                    fontSize: 15.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               )
             ],
@@ -793,18 +828,20 @@ class _MyAccountState extends State<MyAccount> {
                     Text(
                       'Total Amount',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     Text(
                       '₹ $totalAmount',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ],
                 ),
@@ -846,18 +883,21 @@ class _MyAccountState extends State<MyAccount> {
                   Text(
                     '$transactionType',
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   Text(
                     '₹ $amount',
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
+
                   ),
                 ],
               )

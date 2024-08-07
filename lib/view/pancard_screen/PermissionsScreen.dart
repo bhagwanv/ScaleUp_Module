@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:scale_up_module/utils/common_elevted_button.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
@@ -54,16 +55,24 @@ class _PermissionsWidget extends State<PermissionsWidget> {
               ],
             ),
             const SizedBox(height: 20),
-            const Text(
+             Text(
               'to setup your account, we need a few permissions',
               textAlign: TextAlign.start,
-              style: TextStyle(fontSize: 20, color: Color(0xff0196CE)),
+              style: GoogleFonts.urbanist(
+                fontSize: 20,
+                color: Color(0xff0196CE),
+                fontWeight: FontWeight.w400,
+              ),
             ),
             const SizedBox(height: 20),
-            const Text(
+             Text(
               'We need some permissions to make your experience better',
               textAlign: TextAlign.start,
-              style: TextStyle(fontSize: 18, color: Colors.black),
+              style: GoogleFonts.urbanist(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+              ),
             ),
             const SizedBox(height: 20),
             ListTile(
@@ -77,7 +86,7 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                       semanticsLabel: 'mobile_icon',
                     ),
                   ),
-                  const Padding(
+                   Padding(
                     padding: EdgeInsets.only(left: 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,12 +94,19 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                         // Adjust the spacing between icon and text
                         Text(
                           'Read Phone State & Phone Number',
-                          style:
-                              TextStyle(fontSize: 15, color: Color(0xff0196CE)),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: Color(0xff0196CE),
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                         Text(
                           'This will help us in reading your mobile number and securely link your account',
-                          style: TextStyle(fontSize: 15, color: Colors.black),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ],
                     ),
@@ -114,7 +130,7 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                       semanticsLabel: 'Call_icon',
                     ),
                   ),
-                  const Padding(
+                   Padding(
                     padding: EdgeInsets.only(left: 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,12 +138,19 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                         // Adjust the spacing between icon and text
                         Text(
                           'sms (send/read)',
-                          style:
-                              TextStyle(fontSize: 15, color: Color(0xff0196CE)),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: Color(0xff0196CE),
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                         Text(
                           'Our app collects SMS data to assess your profile for various Scaleup products and/or services, including those offered in partnership with lending partners and other financial services providers. Additionally, send SMS access is required to verify your phone number and other verification purposes. This data may be collected even when the app is closed or not in use.',
-                          style: TextStyle(fontSize: 15, color: Colors.black),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ],
                     ),
@@ -150,7 +173,7 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                       semanticsLabel: 'camera_icon',
                     ),
                   ),
-                  const Padding(
+                   Padding(
                     padding: EdgeInsets.only(left: 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,12 +181,19 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                         // Adjust the spacing between icon and text
                         Text(
                           'Camera & Microphone Permission',
-                          style:
-                              TextStyle(fontSize: 15, color: Color(0xff0196CE)),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: Color(0xff0196CE),
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                         Text(
                           'This app needs camera access so that you can easily scan or capture required KYC documents or to initiate an audio/video call for KYC purpose. This ensures that you are provided with a seamless experience while using the app.',
-                          style: TextStyle(fontSize: 15, color: Colors.black),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ],
                     ),
@@ -186,7 +216,7 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                       semanticsLabel: 'file_icon',
                     ),
                   ),
-                  const Padding(
+                   Padding(
                     padding: EdgeInsets.only(left: 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,12 +224,19 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                         // Adjust the spacing between icon and text
                         Text(
                           'Storage',
-                          style:
-                              TextStyle(fontSize: 15, color: Color(0xff0196CE)),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: Color(0xff0196CE),
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                         Text(
                           'This app can access the file stored on your device to help you submit your KYC documents, Bank statement and other required documents to complete the loan application process.',
-                          style: TextStyle(fontSize: 15, color: Colors.black),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ],
                     ),
@@ -230,12 +267,20 @@ class _PermissionsWidget extends State<PermissionsWidget> {
                         // Adjust the spacing between icon and text
                         Text(
                           'Location',
-                          style:
-                              TextStyle(fontSize: 15, color: Color(0xff0196CE)),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: Color(0xff0196CE),
+                            fontWeight: FontWeight.w400,
+                          ),
+
                         ),
                         Text(
                           'This will help us in showing Cash Deposit Points near you',
-                          style: TextStyle(fontSize: 15, color: Colors.black),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ],
                     ),

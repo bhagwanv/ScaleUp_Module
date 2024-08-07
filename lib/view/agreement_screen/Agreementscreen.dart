@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -99,11 +100,13 @@ class _AgreementScreenState extends State<AgreementScreen> {
                           Center(
                             child: Text(
                               "Agreement",
-                              style: TextStyle(
+                              style: GoogleFonts.urbanist(
                                 fontSize: 40.0,
-                                color: Colors.black,
+                                color:Colors.black,
                                 fontWeight: FontWeight.w100,
+
                               ),
+
                               textAlign: TextAlign.start,
                             ),
                           ),

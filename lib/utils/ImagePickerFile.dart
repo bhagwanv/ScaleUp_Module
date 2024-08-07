@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -103,7 +104,13 @@ class _ImagePickerWidgetsState extends State<ImagePickerFileWidgets> {
                     SizedBox(height: 10),
                     Text(
                       "Camera",
-                      style: TextStyle(color: Colors.black),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16.0,
+                        color:Colors.black,
+                        fontWeight: FontWeight.w400,
+
+                      ),
+
                     )
                   ],
                 ),
@@ -126,7 +133,12 @@ class _ImagePickerWidgetsState extends State<ImagePickerFileWidgets> {
                     SizedBox(height: 10),
                     Text(
                       "Gallery",
-                      style: TextStyle(color: Colors.black),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16.0,
+                        color:Colors.black,
+                        fontWeight: FontWeight.w400,
+
+                      ),
                     )
                   ],
                 ),
@@ -156,7 +168,12 @@ class _ImagePickerWidgetsState extends State<ImagePickerFileWidgets> {
                     SizedBox(height: 10),
                     Text(
                       "File",
-                      style: TextStyle(color: Colors.black),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16.0,
+                        color:Colors.black,
+                        fontWeight: FontWeight.w400,
+
+                      ),
                     )
                   ],
                 ),

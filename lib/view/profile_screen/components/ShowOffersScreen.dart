@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/profile_screen/model/AcceptedResponceModel.dart';
 import 'package:scale_up_module/view/profile_screen/model/DisbursementResponce.dart';
@@ -130,7 +131,12 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
             Center(
               child: Text(
                 "₹ ${offerResponceModel!.response?.creditLimit}",
-                style: TextStyle(color: Colors.black, fontSize: 30),
+                style: GoogleFonts.urbanist(
+                  fontSize: 30.0,
+                  color:Colors.black,
+                  fontWeight: FontWeight.w400,
+
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -141,7 +147,12 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
             )),
             Text(
               "(will be charged on every transaction)",
-              style: TextStyle(color: Colors.black, fontSize: 15),
+              style: GoogleFonts.urbanist(
+                fontSize: 15.0,
+                color:Colors.black,
+                fontWeight: FontWeight.w400,
+
+              ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -163,40 +174,76 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
             Center(
               child: Text(
                 "₹ ${offerResponceModel!.response?.creditLimit}",
-                style: TextStyle(color: Colors.black, fontSize: 30),
+                style: GoogleFonts.urbanist(
+                  fontSize: 30.0,
+                  color:Colors.black,
+                  fontWeight: FontWeight.w400,
+
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
             SizedBox(height: 20),
             Text.rich(TextSpan(
                 text: 'PF Charges :',
-                style: TextStyle(color: Colors.black, fontSize: 15),
+                style: GoogleFonts.urbanist(
+                  fontSize: 15.0,
+                  color:Colors.black,
+                  fontWeight: FontWeight.w400,
+
+                ),
                 children: <InlineSpan>[
                   TextSpan(
                     text:
                     '₹ ${offerResponceModel!.response!.processingFeeAmount}',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15.0,
+                      color:Colors.black,
+                      fontWeight: FontWeight.w700,
+
+                    ),
                   )
                 ])),
             Text(
               "(Inclusive of GST)",
-              style: TextStyle(color: Colors.black, fontSize: 15),
+              style: GoogleFonts.urbanist(
+                fontSize: 15.0,
+                color:Colors.black,
+                fontWeight: FontWeight.w400,
+
+              ),
+
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
             Text.rich(TextSpan(
                 text:
                 'Interest Rate : ${offerResponceModel!.response?.convenionGSTAmount} ',
-                style: TextStyle(color: Colors.black, fontSize: 15),
+                style: GoogleFonts.urbanist(
+                  fontSize: 15.0,
+                  color:Colors.black,
+                  fontWeight: FontWeight.w400,
+
+                ),
                 children: <InlineSpan>[
                   TextSpan(
                     text: 'per annum',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15.0,
+                      color:Colors.black,
+                      fontWeight: FontWeight.w700,
+
+                    ),
                   )
                 ])),
             Text(
               "(will be charged on every transaction)",
-              style: TextStyle(color: Colors.black, fontSize: 15),
+              style: GoogleFonts.urbanist(
+                fontSize: 15.0,
+                color:Colors.black,
+                fontWeight: FontWeight.w400,
+
+              ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -353,12 +400,23 @@ class _DisbursementScreenState extends State<ShowOffersScreen> {
                                   Text(
                                     textAlign: TextAlign.center,
                                     "Congratulations ${offerPersonNameResponceModel?.response ?? ''}!! ",
-                                    style: TextStyle(color: kPrimaryColor, fontSize: 18),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 18.0,
+                                      color:kPrimaryColor,
+                                      fontWeight: FontWeight.w400,
+
+                                    ),
                                   ),
                                   SizedBox(height: 10),
                                   Text(
                                     "You are qualified for credit limit of",
-                                    style: TextStyle(color: Colors.black, fontSize: 15),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 15.0,
+                                      color:Colors.black,
+                                      fontWeight: FontWeight.w400,
+
+                                    ),
+
                                     textAlign: TextAlign.center,
                                   ),
                                   offerResponceModel != null &&

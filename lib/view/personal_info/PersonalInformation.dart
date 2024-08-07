@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/api/ApiService.dart';
 import 'package:scale_up_module/utils/Utils.dart';
@@ -425,10 +426,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 50),
-                    const Text(
+                     Text(
                       'Personal Information',
                       textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 35, color: Colors.black),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 35.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                     const SizedBox(height: 15),
                     Padding(
@@ -446,7 +451,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             padding: const EdgeInsets.only(left: 4.0),
                             child: Text(
                               "Ownership Type",
-                              style: TextStyle(color: Colors.grey),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 16.0,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
                           SizedBox(height: 8),
@@ -473,11 +482,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                     color: kPrimaryColor, width: 1),
                               ),
                             ),
-                            hint: const Text(
+                            hint:  Text(
                               'Ownership Type',
-                              style: TextStyle(
-                                color: blueColor,
+                              style: GoogleFonts.urbanist(
                                 fontSize: 14.0,
+                                color: blueColor,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -522,7 +531,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                       padding: const EdgeInsets.only(left: 4.0),
                                       child: Text(
                                         "Ownership Proof",
-                                        style: TextStyle(color: Colors.grey),
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 16.0,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                     ),
                                     SizedBox(height: 8),
@@ -553,11 +566,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                               color: kPrimaryColor, width: 1),
                                         ),
                                       ),
-                                      hint: const Text(
+                                      hint:  Text(
                                         'Select Ownership Proof',
-                                        style: TextStyle(
-                                          color: blueColor,
+                                        style: GoogleFonts.urbanist(
                                           fontSize: 14.0,
+                                          color: blueColor,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -683,16 +696,21 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                                                       children: [
                                                                         SvgPicture.asset(
                                                                             'assets/images/gallery.svg'),
-                                                                        const Text(
+                                                                         Text(
                                                                           'Upload Electry City Bill Image',
-                                                                          style: TextStyle(
-                                                                              color: Color(0xff0196CE),
-                                                                              fontSize: 12),
+                                                                          style: GoogleFonts.urbanist(
+                                                                            fontSize: 12.0,
+                                                                            color: Color(0xff0196CE),
+                                                                            fontWeight: FontWeight.w400,
+                                                                          ),
                                                                         ),
-                                                                        const Text(
+                                                                         Text(
                                                                             'Supports : JPEG, PNG',
-                                                                            style:
-                                                                                TextStyle(fontSize: 12, color: Color(0xffCACACA))),
+                                                                            style: GoogleFonts.urbanist(
+                                                                              fontSize: 12.0,
+                                                                              color: Color(0xffCACACA),
+                                                                              fontWeight: FontWeight.w400,
+                                                                            ),),
                                                                       ],
                                                                     ),
                                                         ),
@@ -869,8 +887,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
             value: item,
             child: Text(
               item,
-              style: const TextStyle(
-                fontSize: 14,
+              style: GoogleFonts.urbanist(
+                fontSize: 14.0,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -901,8 +921,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
             child: Text(
               item!.serviceProvider!,
               // Assuming 'name' is the property to display
-              style: const TextStyle(
-                fontSize: 14,
+              style: GoogleFonts.urbanist(
+                fontSize: 14.0,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -929,9 +951,12 @@ class _PersonalInformationState extends State<PersonalInformation> {
           DropdownMenuItem<ElectricityStateResModel>(
             value: item,
             child: Text(
-              item!.districtName!, // Assuming 'name' is the property to display
-              style: const TextStyle(
-                fontSize: 14,
+              item!.districtName!,
+              // Assuming 'name' is the property to display
+              style: GoogleFonts.urbanist(
+                fontSize: 14.0,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -1030,8 +1055,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
             value: item,
             child: Text(
               item!.name!, // Assuming 'name' is the property to display
-              style: const TextStyle(
-                fontSize: 14,
+              style: GoogleFonts.urbanist(
+                fontSize: 14.0,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -1058,8 +1085,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
             value: item,
             child: Text(
               item!.name!, // Assuming 'name' is the property to display
-              style: const TextStyle(
-                fontSize: 14,
+              style: GoogleFonts.urbanist(
+                fontSize: 14.0,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -1087,8 +1116,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
             value: item,
             child: Text(
               item!.name!, // Assuming 'name' is the property to display
-              style: const TextStyle(
-                fontSize: 14,
+              style: GoogleFonts.urbanist(
+                fontSize: 14.0,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -1204,11 +1235,15 @@ class _PersonalInformationState extends State<PersonalInformation> {
   Widget permanentAddressField(DataProvider productProvider) {
     return Column(
       children: [
-        const Align(
+         Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Permanent Address',
-            style: TextStyle(fontSize: 15, color: Colors.black),
+            style: GoogleFonts.urbanist(
+              fontSize: 15.0,
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
         const SizedBox(height: 15),
@@ -1419,11 +1454,15 @@ class _PersonalInformationState extends State<PersonalInformation> {
               )),
         ),
         const SizedBox(height: 15),
-        const Padding(
+         Padding(
           padding: EdgeInsets.only(left: 4.0),
           child: Text(
             "Martial Status",
-            style: TextStyle(color: Colors.grey),
+            style: GoogleFonts.urbanist(
+              fontSize: 16.0,
+              color: Colors.grey,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
         const SizedBox(height: 8),
@@ -1446,11 +1485,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
               borderSide: const BorderSide(color: kPrimaryColor, width: 1),
             ),
           ),
-          hint: const Text(
+          hint:  Text(
             'marital Status',
-            style: TextStyle(
-              color: blueColor,
+            style: GoogleFonts.urbanist(
               fontSize: 14.0,
+              color: blueColor,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -1537,10 +1576,12 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   children: [
                     Text(
                       'VERIFIED',
-                      style: TextStyle(
-                          fontSize: 16,
-                          decoration: TextDecoration.underline,
-                          color: Colors.blue),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 16.0,
+                        decoration: TextDecoration.underline,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                     SizedBox(
                       width: 8,
@@ -1563,10 +1604,12 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   },
                   child: Text(
                     'Click here to Verify',
-                    style: TextStyle(
-                        fontSize: 16,
-                        decoration: TextDecoration.underline,
-                        color: Colors.blue),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 16.0,
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 )),
         SizedBox(height: 24),
@@ -1604,11 +1647,15 @@ class _PersonalInformationState extends State<PersonalInformation> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Align(
+         Align(
           alignment: Alignment.centerLeft,
           child: Text(
             'Current Address',
-            style: TextStyle(fontSize: 16, color: Colors.black),
+            style: GoogleFonts.urbanist(
+              fontSize: 16.0,
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
         const SizedBox(height: 15),
@@ -1755,11 +1802,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   BorderSide(color: kPrimaryColor, width: 1),
                             ),
                           ),
-                          hint: const Text(
+                          hint:  Text(
                             'State',
-                            style: TextStyle(
-                              color: blueColor,
+                            style: GoogleFonts.urbanist(
                               fontSize: 14.0,
+                              color: blueColor,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -1820,11 +1867,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                   BorderSide(color: kPrimaryColor, width: 1),
                             ),
                           ),
-                          hint: const Text(
+                          hint:  Text(
                             'City',
-                            style: TextStyle(
-                              color: blueColor,
+                            style: GoogleFonts.urbanist(
                               fontSize: 14.0,
+                              color: blueColor,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -2226,7 +2273,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
               padding: const EdgeInsets.only(left: 4.0),
               child: Text(
                 "Digital Verification",
-                style: TextStyle(color: Colors.black, fontSize: 18),
+                style: GoogleFonts.urbanist(
+                  fontSize: 18.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
             SizedBox(height: 15),
@@ -2307,7 +2358,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                 padding: const EdgeInsets.only(left: 4.0),
                                 child: Text(
                                   "Select Service Provider",
-                                  style: TextStyle(color: Colors.grey),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 16.0,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 8),
@@ -2335,11 +2390,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                         color: kPrimaryColor, width: 1),
                                   ),
                                 ),
-                                hint: const Text(
+                                hint:  Text(
                                   'Select service provider',
-                                  style: TextStyle(
-                                    color: blueColor,
+                                  style: GoogleFonts.urbanist(
                                     fontSize: 14.0,
+                                    color: blueColor,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -2437,7 +2492,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                 padding: const EdgeInsets.only(left: 4.0),
                                 child: Text(
                                   "Select District",
-                                  style: TextStyle(color: Colors.grey),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 16.0,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -2466,11 +2525,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                                         color: kPrimaryColor, width: 1),
                                   ),
                                 ),
-                                hint: const Text(
+                                hint:  Text(
                                   'Select District',
-                                  style: TextStyle(
-                                    color: blueColor,
+                                  style: GoogleFonts.urbanist(
                                     fontSize: 14.0,
+                                    color: blueColor,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -2567,7 +2626,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         padding: const EdgeInsets.only(left: 4.0),
                         child: Text(
                           "Name (As per IVRS No.)",
-                          style: TextStyle(color: Colors.grey, fontSize: 15),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15.0,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                       SizedBox(height: 8),
@@ -2575,7 +2638,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         padding: const EdgeInsets.only(left: 4.0),
                         child: Text(
                           "$customerName",
-                          style: TextStyle(color: Colors.black, fontSize: 15),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                       SizedBox(height: 15),
@@ -2583,7 +2650,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         padding: const EdgeInsets.only(left: 4.0),
                         child: Text(
                           "Address : $customerAddress",
-                          style: TextStyle(color: Colors.black, fontSize: 15),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                     ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../utils/Utils.dart';
@@ -103,33 +104,47 @@ class _ProfileReviewState extends State<ProfileReview> {
                         children: [
                           Text(
                             leadCode,
-                            style:
-                                TextStyle(color: kPrimaryColor, fontSize: 20),
+                            style: GoogleFonts.urbanist(
+                              fontSize: 20.0,
+                              color:kPrimaryColor,
+                              fontWeight: FontWeight.w600,
+
+                            ),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 10),
-                    const Padding(
+                     Padding(
                       padding: EdgeInsets.only(left: 5, right: 5),
                       child: Column(
                         children: [
                           Text(
                             "Your profile is under review",
-                            style:
-                                TextStyle(color: kPrimaryColor, fontSize: 20),
+                            style: GoogleFonts.urbanist(
+                              fontSize: 20.0,
+                              color:kPrimaryColor,
+                              fontWeight: FontWeight.w600,
+
+                            ),
+
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 20),
-                    const Padding(
+                     Padding(
                       padding: EdgeInsets.only(left: 50, right: 50, top: 10),
                       child: Column(
                         children: [
                           Text(
                             "Your profile has been submitted & will be reviewed by our team You will be notified if any additional information is required ",
-                            style: TextStyle(color: Colors.black, fontSize: 14),
+                            style: GoogleFonts.urbanist(
+                              fontSize: 14.0,
+                              color:Colors.black,
+                              fontWeight: FontWeight.w400,
+
+                            ),
                             textAlign: TextAlign.justify,
                           ),
                         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'constants.dart';
 
@@ -69,10 +70,11 @@ class _CommonTextFieldState extends State<CommonTextField> {
       textInputAction: widget.textInputAction,
       maxLines: !_isObscure ? widget.maxLines : 1,
       maxLength: !_isMaxLength ? widget.maxLength : 1,
-      style: TextStyle(
+      style: GoogleFonts.urbanist(
         fontSize: 16.0,
+        color: widget.textColor ?? Colors.black,
         fontWeight: FontWeight.w500,
-        color: widget.textColor ?? Colors.black,),
+      ),
       decoration: InputDecoration(
         fillColor: widget.fillColor,
         filled: true,

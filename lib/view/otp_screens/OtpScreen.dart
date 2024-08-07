@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/shared_preferences/SharedPref.dart';
@@ -114,11 +115,11 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Consumer<DataProvider>(builder: (context, productProvider, child) {
+        child:
+            Consumer<DataProvider>(builder: (context, productProvider, child) {
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -134,11 +135,13 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                   const SizedBox(
                     height: 50,
                   ),
-                  const Text(
-                    'Enter \nVerification Code',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 35, color: Colors.black),
-                  ),
+                  Text('Enter \nVerification Code',
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.urbanist(
+                        fontSize: 35,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                      )),
                   const SizedBox(
                     height: 20,
                   ),
@@ -146,8 +149,11 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                       ? Text(
                           'We just sent to +91 XXXXXX${userLoginMobile!.substring(userLoginMobile!.length - 4)}',
                           textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 15, color: Colors.black),
-                        )
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ))
                       : Container(),
                   const SizedBox(
                     height: 55,
@@ -181,14 +187,13 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                'Resend Code in ',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
+                              Text('Resend Code in ',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.urbanist(
                                     fontSize: 15,
                                     color: kPrimaryColor,
-                                    fontWeight: FontWeight.normal),
-                              ),
+                                    fontWeight: FontWeight.w400,
+                                  )),
                               buildCountdown(),
                             ],
                           )
@@ -203,26 +208,32 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
                         child: RichText(
                           text: TextSpan(
                               text: 'If you didn’t received a code!',
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal),
+
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+
                               children: <TextSpan>[
                                 isReSendDisable
                                     ? TextSpan(
                                         text: '  Resend',
-                                        style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.normal),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () async {})
                                     : TextSpan(
                                         text: '  Resend',
-                                        style: const TextStyle(
-                                            color: Colors.blueAccent,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.normal),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 14,
+                                      color: Colors.blueAccent,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () async {
                                             listenOtp();
@@ -286,7 +297,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
       productProvider.disposeAllProviderData();
       Utils.onLoading(context, "");
       final prefsUtil = await SharedPref.getInstance();
-      await Provider.of<DataProvider>(context, listen: false).verifyOtp(VarifayOtpRequest(
+      await Provider.of<DataProvider>(context, listen: false)
+          .verifyOtp(VarifayOtpRequest(
         activityId: activityId,
         companyId: prefsUtil.getInt(COMPANY_ID),
         mobileNo: userLoginMobile,
@@ -311,7 +323,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
             } else {
               await prefsUtil.saveString(
                   USER_ID, verifyOtpResponce.userId.toString());
-              await prefsUtil.saveString(TOKEN, verifyOtpResponce.userTokan.toString());
+              await prefsUtil.saveString(
+                  TOKEN, verifyOtpResponce.userTokan.toString());
               await prefsUtil.saveInt(LEADE_ID, verifyOtpResponce.leadId!);
               await prefsUtil.saveBool(IS_LOGGED_IN, true);
 
@@ -346,7 +359,9 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
         vintageDays: 0,
         isEditable: true,
       );
-      leadCurrentActivityAsyncData = await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel) as LeadCurrentResponseModel?;
+      leadCurrentActivityAsyncData =
+          await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+              as LeadCurrentResponseModel?;
       Navigator.of(context, rootNavigator: true).pop();
       GetLeadResponseModel? getLeadData;
       getLeadData = await ApiService().getLeads(
@@ -354,7 +369,8 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
           prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
-      customerSequence(context, getLeadData, leadCurrentActivityAsyncData, "pushReplacement");
+      customerSequence(context, getLeadData, leadCurrentActivityAsyncData,
+          "pushReplacement");
     } catch (error) {
       Navigator.of(context, rootNavigator: true).pop();
       if (kDebugMode) {
