@@ -657,8 +657,8 @@ class _MyAccountState extends State<MyAccount> {
 
   Future<void> callAccountDetailApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    //final int? leadId = prefsUtil.getInt(LEADE_ID);
-    final int? leadId = 257;
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+    //final int? leadId = 257;
 
     await Provider.of<DataProvider>(context, listen: false)
         .getRepaymentAccountDetails(leadId);

@@ -800,8 +800,8 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
 
   Future<void> callAccountDetailApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-    //final int? leadId = prefsUtil.getInt(LEADE_ID);
-    final int? leadId = 257;
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+   // final int? leadId = 257;
 
     await Provider.of<DataProvider>(context, listen: false)
         .getRepaymentAccountDetails(leadId);

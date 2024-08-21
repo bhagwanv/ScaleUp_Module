@@ -2029,7 +2029,7 @@ class ApiService {
         var base_url = prefsUtil.getString(BASE_URL);
         var token = prefsUtil.getString(TOKEN);
         final response = await interceptor.get(Uri.parse(
-            '${"https://gateway-qa.scaleupfin.com" + apiUrls.GetRepaymentAccountDetails}?LeadId=$leadId'),
+            '${base_url! + apiUrls.GetRepaymentAccountDetails}?LeadId=$leadId'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'
