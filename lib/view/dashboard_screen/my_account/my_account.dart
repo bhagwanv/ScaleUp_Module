@@ -434,8 +434,6 @@ class _MyAccountState extends State<MyAccount> {
   void showBottomSheet(BuildContext context, DataProvider productProvider) {
     bool loading = true; // Initialize the loading flag
 
-    callAccountDetailApi(context); // Call your API
-
     // Call your API and handle response within the StateSetter to trigger UI updates
     Future<void> fetchData(StateSetter updateState) async {
       await callAccountDetailApi(context); // Call your API
@@ -470,9 +468,9 @@ class _MyAccountState extends State<MyAccount> {
       builder: (builder) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              if(loading) {
-                fetchData(setState);
-              }
+          if (loading) {
+            fetchData(setState);
+          }
           return Container(
             color: Colors.transparent,
             child: Container(
@@ -493,12 +491,18 @@ class _MyAccountState extends State<MyAccount> {
                       // Close Button
                       Row(
                         children: [
-                          Expanded(child: Container(child: Text("Account Detail",textAlign: TextAlign.center,
-                            style: GoogleFonts.urbanist(
-                              fontSize: 22.0,
-                              color: gryColor,
-                              fontWeight: FontWeight.w700,
-                            ),),)),
+                          Expanded(
+                              child: Container(
+                            child: Text(
+                              "Account Detail",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 22.0,
+                                color: gryColor,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          )),
                           IconButton(
                             icon: const Icon(Icons.close),
                             onPressed: () {
@@ -512,138 +516,157 @@ class _MyAccountState extends State<MyAccount> {
                           ? const Center(
                               child: CircularProgressIndicator(),
                             )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 16),
-                                Text(
-                                  "Repayment Bank A/C",
-                                  textAlign: TextAlign.start,
-                                  style: GoogleFonts.urbanist(
-                                    fontSize: 18.0,
-                                    color: text_light_blue_color,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                          : repaymentAccountDetailsResModel!.result != null
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    const SizedBox(height: 16),
                                     Text(
-                                      "Virtual A/C #: ",
+                                      "Repayment Bank A/C",
                                       textAlign: TextAlign.start,
                                       style: GoogleFonts.urbanist(
-                                        fontSize: 14.0,
-                                        color: gryColor,
+                                        fontSize: 18.0,
+                                        color: text_light_blue_color,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
-                                    Flexible(
-                                      child: Text(
-                                        "${repaymentAccountDetailsResModel!.result!.virtualAccountNumber}",
-                                        textAlign: TextAlign.start,
-                                        style: GoogleFonts.urbanist(
-                                          fontSize: 14.0,
-                                          color: gryColor,
-                                          fontWeight: FontWeight.w700,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Virtual A/C #: ",
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 14.0,
+                                            color: gryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
-                                      ),
+                                        Flexible(
+                                          child: Text(
+                                            "${repaymentAccountDetailsResModel!.result!.virtualAccountNumber}",
+                                            textAlign: TextAlign.start,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 14.0,
+                                              color: gryColor,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Virtual A/C Bank: ",
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 14.0,
+                                            color: gryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            "${repaymentAccountDetailsResModel!.result!.virtualBankName}",
+                                            textAlign: TextAlign.start,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 14.0,
+                                              color: gryColor,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Virtual A/C IFSC: ",
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 14.0,
+                                            color: gryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            "${repaymentAccountDetailsResModel!.result!.virtualIFSCCode}",
+                                            textAlign: TextAlign.start,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 14.0,
+                                              color: gryColor,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    const DashLineSeparator(),
+                                    const SizedBox(height: 20),
                                     Text(
-                                      "Virtual A/C Bank: ",
+                                      "Repayment UPI ID",
                                       textAlign: TextAlign.start,
                                       style: GoogleFonts.urbanist(
-                                        fontSize: 14.0,
-                                        color: gryColor,
+                                        fontSize: 18.0,
+                                        color: text_light_blue_color,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
-                                    Flexible(
-                                      child: Text(
-                                        "${repaymentAccountDetailsResModel!.result!.virtualBankName}",
-                                        textAlign: TextAlign.start,
-                                        style: GoogleFonts.urbanist(
-                                          fontSize: 14.0,
-                                          color: gryColor,
-                                          fontWeight: FontWeight.w700,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Virtual A/C VPA: ",
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 14.0,
+                                            color: gryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
-                                      ),
+                                        Flexible(
+                                          child: Text(
+                                            "${repaymentAccountDetailsResModel!.result!.virtualUPIId}",
+                                            textAlign: TextAlign.start,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 14.0,
+                                              color: gryColor,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                    const SizedBox(height: 16),
                                   ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                )
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "Virtual A/C IFSC: ",
-                                      textAlign: TextAlign.start,
-                                      style: GoogleFonts.urbanist(
-                                        fontSize: 14.0,
-                                        color: gryColor,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    Flexible(
+                                    const SizedBox(height: 16),
+                                    Center(
                                       child: Text(
-                                        "${repaymentAccountDetailsResModel!.result!.virtualIFSCCode}",
-                                        textAlign: TextAlign.start,
+                                        "${repaymentAccountDetailsResModel!.message}",
+                                        textAlign: TextAlign.center,
                                         style: GoogleFonts.urbanist(
-                                          fontSize: 14.0,
-                                          color: gryColor,
-                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16.0,
+                                          color: blackSmall,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),
+                                    const SizedBox(height: 16),
                                   ],
                                 ),
-                                const SizedBox(height: 20),
-                                const DashLineSeparator(),
-                                const SizedBox(height: 20),
-                                Text(
-                                  "Repayment UPI ID",
-                                  textAlign: TextAlign.start,
-                                  style: GoogleFonts.urbanist(
-                                    fontSize: 18.0,
-                                    color: text_light_blue_color,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Virtual A/C VPA: ",
-                                      textAlign: TextAlign.start,
-                                      style: GoogleFonts.urbanist(
-                                        fontSize: 14.0,
-                                        color: gryColor,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: Text(
-                                        "${repaymentAccountDetailsResModel!.result!.virtualUPIId}",
-                                        textAlign: TextAlign.start,
-                                        style: GoogleFonts.urbanist(
-                                          fontSize: 14.0,
-                                          color: gryColor,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
-                              ],
-                            ),
                     ],
                   ),
                 ),
@@ -658,7 +681,7 @@ class _MyAccountState extends State<MyAccount> {
   Future<void> callAccountDetailApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    //final int? leadId = 257;
+  //  final int? leadId = 257;
 
     await Provider.of<DataProvider>(context, listen: false)
         .getRepaymentAccountDetails(leadId);

@@ -576,9 +576,6 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
   }
   void showBottomSheet(BuildContext context, DataProvider productProvider) {
     bool loading = true; // Initialize the loading flag
-
-    callAccountDetailApi(context); // Call your API
-
     // Call your API and handle response within the StateSetter to trigger UI updates
     Future<void> fetchData(StateSetter updateState) async {
       await callAccountDetailApi(context); // Call your API
@@ -655,7 +652,8 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
                               ? const Center(
                             child: CircularProgressIndicator(),
                           )
-                              : Column(
+                              : repaymentAccountDetailsResModel!.result != null
+                              ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(height: 16),
@@ -783,6 +781,24 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
                                     ),
                                   ),
                                 ],
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                          )
+                              : Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 16),
+                              Center(
+                                child: Text(
+                                  "${repaymentAccountDetailsResModel!.message}",
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 16.0,
+                                    color: blackSmall,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
                               const SizedBox(height: 16),
                             ],
