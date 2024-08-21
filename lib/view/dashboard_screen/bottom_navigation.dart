@@ -4,10 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/dashboard_screen/transactions_screen/transactions_screen.dart';
-import 'package:scale_up_module/view/dashboard_screen/vendorDetail/vendor_detail_screen.dart';
 import 'package:scale_up_module/view/dashboard_screen/vendorDetail/vendor_detail_screen1.dart';
-import 'package:scale_up_module/view/dashboard_screen/vendors_screen/vendors_screen.dart';
-
 import '../../data_provider/DataProvider.dart';
 import '../../utils/Utils.dart';
 import '../../utils/constants.dart';
@@ -59,14 +56,14 @@ class _BottomNavState extends State<BottomNav> {
                 productProvider.disposegetCustomerTransactionList();
               });
             },
-            child: SvgPicture.asset(
-              'assets/icons/ic_home.svg',
-              semanticsLabel: 'home',
-            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
             backgroundColor: kPrimaryColor,
+            child: SvgPicture.asset(
+              'assets/icons/ic_home.svg',
+              semanticsLabel: 'home',
+            ),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
@@ -145,7 +142,7 @@ class _BottomNavState extends State<BottomNav> {
                     ),
                   ),
                 ),
-                SizedBox(width: 24.0),
+                const SizedBox(width: 24.0),
                 // Print item
                 GestureDetector(
                   onTap: () {

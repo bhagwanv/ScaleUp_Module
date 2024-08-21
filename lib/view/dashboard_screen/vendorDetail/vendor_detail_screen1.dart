@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/utils/Utils.dart';
@@ -13,6 +14,9 @@ import 'package:scale_up_module/view/dashboard_screen/vendorDetail/model/Transac
 import '../../../api/ApiService.dart';
 import '../../../api/FailureException.dart';
 import '../../../data_provider/DataProvider.dart';
+import '../../../utils/DashLineSeparator.dart';
+import '../../../utils/kyc_faild_widgets.dart';
+import '../model/RepaymentAccountDetailsResModel.dart';
 
 class Vendor_detail_screen1 extends StatefulWidget {
   const Vendor_detail_screen1({
@@ -28,6 +32,7 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
   late TabController _tabController;
   var isLoading = true;
   late CustomerOrderSummaryResModel? customerOrderSummaryResModel = null;
+  late RepaymentAccountDetailsResModel? repaymentAccountDetailsResModel = null;
   List<CustomerTransactionListRespModel> customerTransactionList = [];
   List<TransactionList> transactionList = [];
   var customerName = "";
@@ -224,7 +229,7 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text(
+                                    const Text(
                                       'Welcome back',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
@@ -238,7 +243,7 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
                                     Text(
                                       customerName,
                                       textAlign: TextAlign.left,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: whiteColor,
                                         fontSize: 15,
                                         letterSpacing: 0.2,
@@ -376,42 +381,77 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          child: SvgPicture.asset(
-                                            'assets/icons/clock.svg',
-                                            semanticsLabel: 'clock SVG',
+                                    SizedBox(
+                                      child: SvgPicture.asset(
+                                        'assets/icons/clock.svg',
+                                        semanticsLabel: 'clock SVG',
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            '₹ $totalPayableAmount  Payable Today',
+                                            textAlign: TextAlign.start,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 12.0,
+                                              color:Colors.black,
+                                              fontWeight: FontWeight.bold,
+
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            'Total Pending Invoice Count: $totalPendingInvoiceCount',
+                                            textAlign: TextAlign.start,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 10.0,
+                                              color:gryColor,
+                                              fontWeight: FontWeight.w400,
+
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    InkWell(
+                                      // Wrap the button in InkWell to make it clickable
+                                      onTap: () {
+                                        showBottomSheet(context, productProvider);
+                                      },
+                                      child: Container(
+                                        height: 36,
+                                        width: 92,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: greenColor,
+                                            width: 0.0,
+                                          ),
+                                          borderRadius: BorderRadius.circular(20.0),
+                                          color: greenColor,
+                                          // Uniform radius
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'PAY NOW',
+                                            textAlign: TextAlign.start,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 12.0,
+                                              color:Colors.white,
+                                              fontWeight: FontWeight.bold,
+
+                                            ),
                                           ),
                                         ),
-                                        const SizedBox(width: 10),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '₹ $totalPayableAmount  Payable Today',
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Text(
-                                              'Total Pending Invoice Count: $totalPendingInvoiceCount',
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                color: gryColor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -533,6 +573,238 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
         }
       }),
     ));
+  }
+  void showBottomSheet(BuildContext context, DataProvider productProvider) {
+    bool loading = true; // Initialize the loading flag
+
+    callAccountDetailApi(context); // Call your API
+
+    // Call your API and handle response within the StateSetter to trigger UI updates
+    Future<void> fetchData(StateSetter updateState) async {
+      await callAccountDetailApi(context); // Call your API
+
+      if (productProvider.getRepaymentAccountDetailsData != null) {
+        productProvider.getRepaymentAccountDetailsData!.when(
+          success: (RepaymentAccountDetailsResModel) {
+            updateState(() {
+              loading = false;
+              repaymentAccountDetailsResModel = RepaymentAccountDetailsResModel;
+            });
+          },
+          failure: (exception) {
+            updateState(() {
+              loading = false; // Set loading to false in case of failure
+            });
+            if (exception is ApiException) {
+              if (exception.statusCode == 401) {
+                productProvider.disposeAllProviderData();
+                ApiService().handle401(context);
+              } else {
+                Utils.showToast(exception.errorMessage, context);
+              }
+            }
+          },
+        );
+      }
+    }
+
+    showModalBottomSheet(
+      context: context,
+      builder: (builder) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              if(loading) {
+                fetchData(setState);
+              }
+              return Container(
+                color: Colors.transparent,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 24.0, right: 24.0, bottom: 24.0, top: 12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Close Button
+                          Row(
+                            children: [
+                              Expanded(child: Container(child: Text("Account Detail",textAlign: TextAlign.center,
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 22.0,
+                                  color: gryColor,
+                                  fontWeight: FontWeight.w700,
+                                ),),)),
+                              IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                          // Check if loading is true, show CircularProgressIndicator else show content
+                          loading
+                              ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                              : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 16),
+                              Text(
+                                "Repayment Bank A/C",
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 18.0,
+                                  color: text_light_blue_color,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Virtual A/C #: ",
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 14.0,
+                                      color: gryColor,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      "${repaymentAccountDetailsResModel!.result!.virtualAccountNumber}",
+                                      textAlign: TextAlign.start,
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 14.0,
+                                        color: gryColor,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Virtual A/C Bank: ",
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 14.0,
+                                      color: gryColor,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      "${repaymentAccountDetailsResModel!.result!.virtualBankName}",
+                                      textAlign: TextAlign.start,
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 14.0,
+                                        color: gryColor,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Virtual A/C IFSC: ",
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 14.0,
+                                      color: gryColor,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      "${repaymentAccountDetailsResModel!.result!.virtualIFSCCode}",
+                                      textAlign: TextAlign.start,
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 14.0,
+                                        color: gryColor,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              const DashLineSeparator(),
+                              const SizedBox(height: 20),
+                              Text(
+                                "Repayment UPI ID",
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 18.0,
+                                  color: text_light_blue_color,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Virtual A/C VPA: ",
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 14.0,
+                                      color: gryColor,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      "${repaymentAccountDetailsResModel!.result!.virtualUPIId}",
+                                      textAlign: TextAlign.start,
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 14.0,
+                                        color: gryColor,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            });
+      },
+    );
+  }
+
+  Future<void> callAccountDetailApi(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    //final int? leadId = prefsUtil.getInt(LEADE_ID);
+    final int? leadId = 257;
+
+    await Provider.of<DataProvider>(context, listen: false)
+        .getRepaymentAccountDetails(leadId);
   }
 
   Future<void> getCustomerOrderSummary(BuildContext context) async {
@@ -917,10 +1189,12 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
                 child: Text(
                   'Full Breakdown',
                   textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+                  style: GoogleFonts.urbanist(
+                    fontSize: 15.0,
+                    color:Colors.black,
+                    fontWeight: FontWeight.bold,
+
+                  ),
                 ),
               )
             ],

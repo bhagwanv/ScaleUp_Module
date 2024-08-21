@@ -63,6 +63,7 @@ class ApiUrls{
 
   final String resentOrderLoginOTP="/aggregator/LoanAccountAgg/ResentOrderLoginOTP";
   final String ValidateOrderOtp="/aggregator/LoanAccountAgg/ValidateOrderOtp";
+  final String GetRepaymentAccountDetails="/services/loanaccount/v1/GetRepaymentAccountDetails";
 
 
 

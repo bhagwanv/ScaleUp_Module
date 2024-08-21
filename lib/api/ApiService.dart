@@ -35,6 +35,7 @@ import '../view/checkoutView/model/ValidOtpForCheckoutResModel.dart';
 import '../view/checkoutView/model/ValidateOrderOtpReqModel.dart';
 import '../view/checkoutView/model/ValidateOrderOtpResModel.dart';
 import '../view/dashboard_screen/model/CustomerTransactionListRequestModel.dart';
+import '../view/dashboard_screen/model/RepaymentAccountDetailsResModel.dart';
 import '../view/dashboard_screen/my_account/model/CustomerOrderSummaryResModel.dart';
 import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
@@ -2016,6 +2017,40 @@ class ApiService {
       }
     } on Exception catch (e) {
       // 4. return Failure here too
+      return Failure(e);
+    }
+  }
+
+  Future<Result<RepaymentAccountDetailsResModel, Exception>>
+  getRepaymentAccountDetails(int leadId) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = prefsUtil.getString(TOKEN);
+        final response = await interceptor.get(Uri.parse(
+            '${"https://gateway-qa.scaleupfin.com" + apiUrls.GetRepaymentAccountDetails}?LeadId=$leadId'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },);
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final RepaymentAccountDetailsResModel responseModel =
+            RepaymentAccountDetailsResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        Utils.showBottomToast("No Internet connection");
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
       return Failure(e);
     }
   }
