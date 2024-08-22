@@ -148,7 +148,7 @@ class _MyAppState extends State<MyApp> {
            // return SupplyChainSplashScreen(mobileNumber: "8989804393", companyID: "CN_1", productID: 'CreditLine',);
            // return LoanOfferScreen(activityId: 0, subActivityId: 0,);
 
-            var product="CreditLine";
+            var product="BusinessLoan";
             //var product="BusinessLoan";
 
             return product == "BusinessLoan"

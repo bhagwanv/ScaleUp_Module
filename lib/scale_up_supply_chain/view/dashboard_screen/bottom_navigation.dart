@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:scale_up_module/business_loan/view/dashboard_screen/transactions_screen/transactions_screen.dart';
-import 'package:scale_up_module/business_loan/view/dashboard_screen/vendorDetail/vendor_detail_screen.dart';
-import 'package:scale_up_module/business_loan/view/dashboard_screen/vendorDetail/vendor_detail_screen1.dart';
-import 'package:scale_up_module/business_loan/view/dashboard_screen/vendors_screen/vendors_screen.dart';
+import 'package:scale_up_module/scale_up_supply_chain/view/dashboard_screen/transactions_screen/transactions_screen.dart';
+import 'package:scale_up_module/scale_up_supply_chain/view/dashboard_screen/vendorDetail/vendor_detail_screen1.dart';
 
 import '../../data_provider/DataProvider.dart';
 import '../../utils/Utils.dart';

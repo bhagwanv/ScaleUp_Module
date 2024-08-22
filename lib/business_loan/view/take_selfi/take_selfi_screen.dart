@@ -5,12 +5,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/business_loan/utils/common_elevted_button.dart';
 import 'package:scale_up_module/business_loan/utils/constants.dart';
 import 'package:scale_up_module/business_loan/view/personal_info/PersonalInformation.dart';
 import 'package:scale_up_module/business_loan/view/take_selfi/camera_page.dart';
-
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
@@ -153,18 +153,27 @@ class _TakeSelfieScreenState extends State<TakeSelfieScreen> {
                       const SizedBox(
                         height: 50,
                       ),
-                      const Text(
+                       Text(
                         'Take a Selfie',
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 35, color: Colors.black),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 35,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      const Text(
+                       Text(
                         'Position your face in the center of the\nframe. Make sure your face is well-lit and nclearly visible.',
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 15,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        ),
+
                       ),
                       const SizedBox(
                         height: 50,

@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/business_loan/shared_preferences/SharedPref.dart';
@@ -49,10 +50,10 @@ class _OtpScreenState extends State<EmailOtpScreen> {
       seconds: _start,
       build: (_, double time) => Text(
           time.toStringAsFixed(0)+" S",
-        style: TextStyle(
+        style: GoogleFonts.urbanist(
           fontSize: 15,
           color: Colors.blue,
-          fontWeight: FontWeight.normal,
+          fontWeight: FontWeight.w400,
         ),
       ),
       interval: Duration(seconds: 1),
@@ -75,10 +76,11 @@ class _OtpScreenState extends State<EmailOtpScreen> {
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 60,
-      textStyle: const TextStyle(
-        fontSize: 22,
-        color: Colors.black,
-      ),
+      textStyle:  GoogleFonts.urbanist(
+      fontSize: 22,
+      color: Colors.black,
+      fontWeight: FontWeight.w400,
+    ),
       decoration: BoxDecoration(
         color: textFiledBackgroundColour,
         borderRadius: BorderRadius.circular(8),
@@ -108,7 +110,11 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                   Text(
                     'We just sent you an verification code on your emailID Please enter otp to verify',
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 15, color: Colors.black),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                   const SizedBox(
                     height: 55,
@@ -142,10 +148,11 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                         Text(
                           'Resend Code in ',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: kPrimaryColor,
-                              fontWeight: FontWeight.normal),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color: kPrimaryColor,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                         buildCountdown(),
                       ],
@@ -160,26 +167,31 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                         child: RichText(
                           text: TextSpan(
                               text: 'If you didnt received a code click',
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+
                               children: <TextSpan>[
                                 isReSendDisable
                                     ? TextSpan(
                                     text: '  Resend',
-                                    style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {})
                                     : TextSpan(
                                     text: '  Resend',
-                                    style: const TextStyle(
-                                        color: Colors.blueAccent,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 14,
+                                      color: Colors.blueAccent,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
                                         reSendOpt(context, productProvider, _controller, widget.emailID);
@@ -199,7 +211,11 @@ class _OtpScreenState extends State<EmailOtpScreen> {
                       child: Text(
                         'Back',
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 15, color: Colors.blue),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 15,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     )
                   ),

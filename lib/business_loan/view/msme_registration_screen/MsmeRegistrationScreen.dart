@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_download_manager/flutter_download_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -156,11 +157,12 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
                           ),
                           Text(
                             "MSME Registration Verification",
-                            style: TextStyle(
-                              fontSize: 30.0,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 30,
                               color: blackSmall,
                               fontWeight: FontWeight.w400,
                             ),
+
                           ),
                           SizedBox(
                             height: 16.0,
@@ -168,8 +170,8 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
 
                           Text(
                             "Udyam Registration number",
-                            style: TextStyle(
-                              fontSize: 15.0,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 15,
                               color: Colors.grey,
                               fontWeight: FontWeight.w400,
                             ),
@@ -302,15 +304,22 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             SvgPicture.asset('assets/images/gallery.svg'),
-                                            const Text(
+                                             Text(
                                               'Upload Bank Proof',
-                                              style: TextStyle(
-                                                  color: Color(0xff0196CE), fontSize: 12),
+                                              style: GoogleFonts.urbanist(
+                                                fontSize: 12,
+                                                color: Color(0xff0196CE),
+                                                fontWeight: FontWeight.w400,
+                                              ),
+
                                             ),
-                                            const Text('Supports : PDF',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Color(0xffCACACA))),
+                                             Text('Supports : PDF',
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: Color(0xffCACACA),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                               ),
 
                                           ],
                                         ),
@@ -440,9 +449,9 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
         ),
       ),
       hint: Text('Business Type',
-        style: TextStyle(
+        style: GoogleFonts.urbanist(
+          fontSize: 14,
           color: blueColor,
-          fontSize: 14.0,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -481,8 +490,10 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
             value: item,
             child: Text(
               item,
-              style: const TextStyle(
+              style: GoogleFonts.urbanist(
                 fontSize: 14,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),

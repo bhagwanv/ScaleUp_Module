@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
@@ -46,10 +47,10 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
       seconds: _start,
       build: (_, double time) => Text(
         time.toStringAsFixed(0) + " S",
-        style: TextStyle(
+        style: GoogleFonts.urbanist(
           fontSize: 15,
-          color: Colors.blue,
-          fontWeight: FontWeight.normal,
+          color:Colors.blue,
+          fontWeight: FontWeight.w400,
         ),
       ),
       interval: Duration(seconds: 1),
@@ -108,11 +109,15 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                      SizedBox(
                       height: 20,
                     ),
-                    const Center(
+                     Center(
                       child: Text(
                         "Congratulation",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 17, color: kPrimaryColor,fontWeight: FontWeight.bold),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 17,
+                          color:kPrimaryColor,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                      SizedBox(
@@ -125,7 +130,11 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                         child: Text(
                           "Your order is Confirmed. To complete the process, avoid clicking back or closing the page. Thank you for choosing us!",
                           textAlign: TextAlign.justify,
-                          style: TextStyle(fontSize: 15, color: Colors.black,),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
+                            color:Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                     ),
@@ -139,7 +148,12 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
                           Text(
                             "You will be redirected in ",
                             textAlign: TextAlign.justify,
-                            style: TextStyle(fontSize: 15, color: kPrimaryColor,),
+                            style: GoogleFonts.urbanist(
+                              fontSize: 15,
+                              color:kPrimaryColor,
+                              fontWeight: FontWeight.w400,
+                            ),
+
                           ),
                           buildCountdown(),
                         ],

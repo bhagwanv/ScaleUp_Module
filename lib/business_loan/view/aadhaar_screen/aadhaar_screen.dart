@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
@@ -182,27 +183,28 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                         fit: BoxFit.fill,
                       ),
                     )),
-                const Padding(
+                 Padding(
                   padding: EdgeInsets.only(left: 30, right: 30, top: 50),
                   child: Text(
                     "Verify Aadhaar",
-                    style: TextStyle(
-                      fontSize: 40.0,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 40,
                       color: blackSmall,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
-                const Padding(
+                 Padding(
                   padding:
                       EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 44),
                   child: Text(
                     "Please validate your Aadhaar number",
-                    style: TextStyle(
-                      fontSize: 15.0,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15,
                       color: blackSmall,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w400,
                     ),
+
                     textAlign: TextAlign.start,
                   ),
                 ),
@@ -216,8 +218,9 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                     controller: _aadhaarController,
                     textInputAction: TextInputAction.done,
                     keyboardType: TextInputType.number,
-                    style: const TextStyle(
-                      fontSize: 16.0,
+
+                    style: GoogleFonts.urbanist(
+                      fontSize: 16,
                       color: blackSmall,
                       fontWeight: FontWeight.w500,
                     ),
@@ -288,21 +291,22 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                                                     const ColorFilter.mode(
                                                         kPrimaryColor,
                                                         BlendMode.srcIn))),
-                                        const Text(
+                                         Text(
                                           'Upload Aadhar Front Image',
-                                          style: TextStyle(
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 12,
                                             color: kPrimaryColor,
-                                            fontSize: 12.0,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
-                                        const Text(
+                                         Text(
                                           'Supports : JPEG, PNG',
-                                          style: TextStyle(
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 12,
                                             color: blackSmall,
-                                            fontSize: 12.0,
                                             fontWeight: FontWeight.w400,
                                           ),
+
                                         ),
                                       ],
                                     ),
@@ -376,19 +380,22 @@ class _AadhaarScreenState extends State<AadhaarScreen> {
                                                     const ColorFilter.mode(
                                                         kPrimaryColor,
                                                         BlendMode.srcIn))),
-                                        const Text(
+                                         Text(
                                           'Upload Aadhar Back Image',
-                                          style: TextStyle(
+
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 12,
                                             color: kPrimaryColor,
-                                            fontSize: 12.0,
                                             fontWeight: FontWeight.w400,
                                           ),
+
                                         ),
-                                        const Text(
+                                         Text(
                                           'Supports : JPEG, PNG',
-                                          style: TextStyle(
+
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 12,
                                             color: blackSmall,
-                                            fontSize: 12.0,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),

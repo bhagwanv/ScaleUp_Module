@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/business_loan/view/checkoutView/model/CheckOutOtpModel.dart';
@@ -52,10 +53,11 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 60,
-      textStyle: const TextStyle(
-        fontSize: 22,
-        color: Colors.black,
-      ),
+      textStyle: GoogleFonts.urbanist(
+      fontSize: 22,
+      color:Colors.black,
+      fontWeight: FontWeight.w400,
+    ),
       decoration: BoxDecoration(
         color: textFiledBackgroundColour,
         borderRadius: BorderRadius.circular(8),
@@ -127,22 +129,26 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  const Text('Welcome back',
+                                   Text('Welcome back',
                                       textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          color: whiteColor,
-                                          fontSize: 10,
-                                          letterSpacing: 0.20000000298023224,
-                                          fontWeight: FontWeight.normal,
-                                          height: 1.5)),
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 10,
+                                        color: whiteColor,
+                                        letterSpacing: 0.20000000298023224,
+                                        fontWeight: FontWeight.w400,
+                                          height: 1.5
+                                      ),
+                                      ),
                                   Text(checkOutOtpModel!.response!.customerName!,
                                       textAlign: TextAlign.left,
-                                      style: const TextStyle(
-                                          color: whiteColor,
-                                          fontSize: 15,
-                                          letterSpacing: 0.20000000298023224,
-                                          fontWeight: FontWeight.normal,
-                                          height: 1.5))
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 15,
+                                        color: whiteColor,
+                                        letterSpacing: 0.20000000298023224,
+                                        fontWeight: FontWeight.w400,
+                                          height: 1.5
+                                      ),
+                                    )
                                 ],
                               ),
                               const Spacer(),
@@ -191,12 +197,15 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                           const SizedBox(
                                             height: 50,
                                           ),
-                                          const Text(
+                                           Text(
                                             'Enter\nConfirmation Code',
                                             textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                                fontSize: 25,
-                                                color: Colors.black),
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 25,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+
                                           ),
                                           const SizedBox(
                                             height: 20,
@@ -204,9 +213,11 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                           Text(
                                             'Enter the One Time Confirmation code sent on your registered Scaleup mobile number',
                                             textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.black),
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 15,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
                                           ),
                                           const SizedBox(
                                             height: 55,
@@ -252,13 +263,11 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                                         'Resend Code in ',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            color:
-                                                                kPrimaryColor,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal),
+                                                        style: GoogleFonts.urbanist(
+                                                          fontSize: 15,
+                                                          color: kPrimaryColor,
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
                                                       ),
                                                       buildCountdown(),
                                                     ],
@@ -275,24 +284,21 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                                   text: TextSpan(
                                                       text:
                                                           'If you didn’t received a code!',
-                                                      style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 14,
-                                                          fontWeight: FontWeight
-                                                              .normal),
+                                                      style: GoogleFonts.urbanist(
+                                                        fontSize: 14,
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w400,
+                                                      ),
                                                       children: <TextSpan>[
                                                         isReSendDisable
                                                             ? TextSpan(
                                                                 text:
                                                                     '  Resend',
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .normal),
+                                                            style: GoogleFonts.urbanist(
+                                                              fontSize: 14,
+                                                              color: Colors.grey,
+                                                              fontWeight: FontWeight.w400,
+                                                            ),
                                                                 recognizer:
                                                                     TapGestureRecognizer()
                                                                       ..onTap =
@@ -300,14 +306,11 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                                                             : TextSpan(
                                                                 text:
                                                                     '  Resend',
-                                                                style: const TextStyle(
-                                                                    color: Colors
-                                                                        .blueAccent,
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .normal),
+                                                            style: GoogleFonts.urbanist(
+                                                              fontSize: 14,
+                                                              color: Colors.blueAccent,
+                                                              fontWeight: FontWeight.w400,
+                                                            ),
                                                                 recognizer:
                                                                     TapGestureRecognizer()
                                                                       ..onTap = () async {
@@ -362,10 +365,10 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
       seconds: _start,
       build: (_, double time) => Text(
         time.toStringAsFixed(0) + " S",
-        style: TextStyle(
+        style: GoogleFonts.urbanist(
           fontSize: 15,
           color: Colors.blue,
-          fontWeight: FontWeight.normal,
+          fontWeight: FontWeight.w400,
         ),
       ),
       interval: Duration(seconds: 1),
@@ -465,10 +468,11 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                       child: Text(
                         'Customer Care',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12,
+                          color:Colors.black87,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     GestureDetector(
@@ -497,19 +501,21 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                         Text(
                           'Mobile Number',
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 11,
+                            color:Colors.black87,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         SizedBox(height: 10),
                         Text(
                           'Email Id',
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 11,
+                            color:Colors.black87,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ],
                     ),
@@ -519,19 +525,22 @@ class _CheckOutOtpScreenState extends State<CheckOutOtpScreen> {
                         Text(
                           checkOutOtpModel.response!.mobileNo!,
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 11,
+                            color:Colors.black87,
+                            fontWeight: FontWeight.w700,
+                          ),
+
                         ),
                         SizedBox(height: 10),
                         Text(
                           checkOutOtpModel.response!.customerCareEmail!,
                           textAlign: TextAlign.start,
-                          style: const TextStyle(
-                              fontSize: 11,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 11,
+                            color:Colors.black87,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
 
                       ],

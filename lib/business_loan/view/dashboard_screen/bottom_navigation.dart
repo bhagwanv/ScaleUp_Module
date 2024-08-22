@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/business_loan/view/dashboard_screen/transactions_screen/transactions_screen.dart';
-import 'package:scale_up_module/business_loan/view/dashboard_screen/vendorDetail/vendor_detail_screen.dart';
 import 'package:scale_up_module/business_loan/view/dashboard_screen/vendorDetail/vendor_detail_screen1.dart';
 import 'package:scale_up_module/business_loan/view/dashboard_screen/vendors_screen/vendors_screen.dart';
 
@@ -102,9 +102,10 @@ class _BottomNavState extends State<BottomNav> {
                         const SizedBox(height: 3), // Add space between icon and text
                         Text(
                           'Vendors',
-                          style: TextStyle(
-                            color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                          style: GoogleFonts.urbanist(
                             fontSize: 10,
+                            color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],
@@ -132,9 +133,10 @@ class _BottomNavState extends State<BottomNav> {
                         const SizedBox(height: 3), // Add space between icon and text
                         Text(
                           'Transactions',
-                          style: TextStyle(
-                            color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                          style: GoogleFonts.urbanist(
                             fontSize: 10,
+                            color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],
@@ -162,9 +164,10 @@ class _BottomNavState extends State<BottomNav> {
                         const SizedBox(height: 3), // Add space between icon and text
                         Text(
                           'Services',
-                          style: TextStyle(
-                            color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                          style: GoogleFonts.urbanist(
                             fontSize: 10,
+                            color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],
@@ -188,9 +191,10 @@ class _BottomNavState extends State<BottomNav> {
                         const SizedBox(height: 3), // Add space between icon and text
                         Text(
                           'Setting',
-                          style: TextStyle(
-                            color: selectedIndex == 4 ? kPrimaryColor : Colors.black, // Change color based on selected index
+                          style: GoogleFonts.urbanist(
                             fontSize: 10,
+                            color: selectedIndex == 4 ? kPrimaryColor : Colors.black,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],

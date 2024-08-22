@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/business_loan/utils/Utils.dart';
 import 'package:scale_up_module/business_loan/utils/common_text_field.dart';
@@ -73,9 +74,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           DropdownMenuItem<ReturnObject>(
             value: item,
             child: Text(
-              item!.name!, // Assuming 'name' is the property to display
-              style: const TextStyle(
+              item!.name!,
+              style: GoogleFonts.urbanist(
                 fontSize: 14,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -178,9 +181,12 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
             value: item,
             child: Text(
               item,
-              style: const TextStyle(
+              style: GoogleFonts.urbanist(
                 fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
               ),
+
             ),
           ),
           //If it's last item, we will not add Divider after it.
@@ -234,7 +240,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           color: Colors.black38,
         ),
         title: 'Business Incorporation Date',
-        titleTextStyle: const TextStyle(fontSize: 14),
+        titleTextStyle:  GoogleFonts.urbanist(
+        fontSize: 14,
+        color: Colors.black,
+        fontWeight: FontWeight.w400,
+      ),
         showTitle: _showTitle,
         selectionOverlayColor: Colors.blue,
         // showTitle: false,
@@ -432,22 +442,24 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                             colorFilter: const ColorFilter.mode(
                                 kPrimaryColor, BlendMode.srcIn)),
                       ),
-                      const Padding(
+                       Padding(
                         padding: EdgeInsets.only(top: 20, bottom: 0),
                         child: Text(
                           "Step 1",
-                          style: TextStyle(
-                            fontSize: 15.0,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 15,
                             color: kPrimaryColor,
                             fontWeight: FontWeight.w600,
                           ),
+
                           textAlign: TextAlign.start,
                         ),
                       ),
-                      const Text(
+                       Text(
                         "Business Details",
-                        style: TextStyle(
-                          fontSize: 40.0,
+
+                        style: GoogleFonts.urbanist(
+                          fontSize: 40,
                           color: blackSmall,
                           fontWeight: FontWeight.w400,
                         ),
@@ -581,10 +593,10 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       const SizedBox(
                         height: 22.0,
                       ),
-                      const Text(
+                       Text(
                         "Business Address ",
-                        style: TextStyle(
-                          fontSize: 14.0,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 14,
                           color: gryColor,
                           fontWeight: FontWeight.w500,
                         ),
@@ -653,11 +665,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 const BorderSide(color: kPrimaryColor, width: 1),
                           ),
                         ),
-                        hint: const Text(
+                        hint:  Text(
                           'Business Type',
-                          style: TextStyle(
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
                             color: blueColor,
-                            fontSize: 16.0,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -712,11 +724,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 const BorderSide(color: kPrimaryColor, width: 1),
                           ),
                         ),
-                        hint: const Text(
+                        hint:  Text(
                           'Monthly Sales Turnover',
-                          style: TextStyle(
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
                             color: blueColor,
-                            fontSize: 16.0,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -770,7 +782,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                               children: [
                                 Text(
                                   slectedDate!.isNotEmpty ? '$slectedDate' : 'Business Incorporation Date',
-                                  style: const TextStyle(fontSize: 16.0),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                                 const Icon(Icons.date_range),
                               ],
@@ -821,11 +837,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                             const BorderSide(color: kPrimaryColor, width: 1),
                           ),
                         ),
-                        hint: const Text(
+                        hint:  Text(
                           'Choose Surrogate Type',
-                          style: TextStyle(
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
                             color: blueColor,
-                            fontSize: 16.0,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -859,13 +875,14 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                       ),
 
 
-                      const Text(
+                       Text(
                         "Business Address ",
-                        style: TextStyle(
-                          fontSize: 14.0,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 14,
                           color: gryColor,
                           fontWeight: FontWeight.w500,
                         ),
+
                         textAlign: TextAlign.start,
                       ),
                       const SizedBox(
@@ -894,11 +911,12 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                 const BorderSide(color: kPrimaryColor, width: 1),
                           ),
                         ),
-                        hint: const Text(
+                        hint:  Text(
                           'Choose Business Proof',
-                          style: TextStyle(
+
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
                             color: blueColor,
-                            fontSize: 16.0,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -1052,18 +1070,23 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                                                 children: [
                                                   SvgPicture.asset(
                                                       'assets/images/gallery.svg'),
-                                                  const Text(
+                                                   Text(
                                                     'Upload Business Proof',
-                                                    style: TextStyle(
-                                                        color: Color(0xff0196CE),
-                                                        fontSize: 12),
+
+                                                    style: GoogleFonts.urbanist(
+                                                      fontSize: 12,
+                                                      color: Color(0xff0196CE),
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
                                                   ),
-                                                  const Text(
+                                                   Text(
                                                       'Supports : JPEG, PNG',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color:
-                                                              Color(0xffCACACA))),
+                                                      style: GoogleFonts.urbanist(
+                                                        fontSize: 12,
+                                                        color: Color(0xffCACACA),
+                                                        fontWeight: FontWeight.w400,
+                                                      ),
+                                                      ),
                                                 ],
                                               ),
                                   ),
@@ -1233,13 +1256,14 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
             borderSide: const BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint: const Text(
+        hint:  Text(
           'State',
-          style: TextStyle(
+          style: GoogleFonts.urbanist(
+            fontSize: 14,
             color: blueColor,
-            fontSize: 14.0,
             fontWeight: FontWeight.w500,
           ),
+
         ),
         items: getAllState(productProvider.getAllStateData!.returnObject!),
         onChanged: setStateListFirstTime
@@ -1334,11 +1358,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
             borderSide: const BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint: const Text(
+        hint:  Text(
           'City',
-          style: TextStyle(
+          style: GoogleFonts.urbanist(
+            fontSize: 14,
             color: blueColor,
-            fontSize: 14.0,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -1384,10 +1408,12 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
           DropdownMenuItem<CityResponce>(
             value: item,
             child: Text(
-              item!.name!, // Assuming 'name' is the property to display
-              style: const TextStyle(
+              item!.name!,
+              style: GoogleFonts.urbanist(
                 fontSize: 14,
-              ),
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+              ),// Assuming 'name' is the property to display
             ),
           ),
           // If it's not the last item, add Divider after it.

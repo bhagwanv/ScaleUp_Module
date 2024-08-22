@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/business_loan/view/aadhaar_screen/components/CheckboxTerm.dart';
 import 'package:scale_up_module/business_loan/view/pancard_screen/model/PostLeadPANRequestModel.dart';
@@ -195,23 +196,35 @@ class _PancardScreenState extends State<PancardScreen> {
                                 width: 100,
                                 alignment: Alignment.topLeft,
                                 child: Image.asset('assets/images/scale.png')),
-                            const Text(
+                             Text(
                               'Enter Your PAN',
                               textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 40, color: Colors.black),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 40,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+
                             ),
                             const SizedBox(height: 20),
-                            const Text(
+                             Text(
                               'Verify the PAN number',
                               textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 15, color: Colors.black),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                             const SizedBox(height: 20),
-                            const Text(
+                             Text(
                               'PAN Number',
                               textAlign: TextAlign.start,
-                              style:
-                              TextStyle(fontSize: 14, color: Color(0xff858585)),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14,
+                                color: Color(0xff858585),
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                             const SizedBox(height: 5),
                             Container(
@@ -307,11 +320,14 @@ class _PancardScreenState extends State<PancardScreen> {
                               ),
                             ),
                             SizedBox(height: 20),
-                            const Text(
+                             Text(
                               'Name ( As per PAN )',
                               textAlign: TextAlign.start,
-                              style:
-                              TextStyle(fontSize: 14, color: Color(0xff858585)),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14,
+                                color: Color(0xff858585),
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                             const SizedBox(height: 5),
                             TextField(
@@ -341,8 +357,11 @@ class _PancardScreenState extends State<PancardScreen> {
                             Text(
                               'DOB ( As per PAN )',
                               textAlign: TextAlign.start,
-                              style:
-                              TextStyle(fontSize: 14, color: Color(0xff858585)),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14,
+                                color: Color(0xff858585),
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                             SizedBox(height: 5),
                             TextField(
@@ -372,8 +391,11 @@ class _PancardScreenState extends State<PancardScreen> {
                             Text(
                               'Father’s Name ( As per PAN )',
                               textAlign: TextAlign.start,
-                              style:
-                              TextStyle(fontSize: 14, color: Color(0xff858585)),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14,
+                                color: Color(0xff858585),
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                             SizedBox(height: 5),
                             TextField(
@@ -447,19 +469,22 @@ class _PancardScreenState extends State<PancardScreen> {
                                           children: [
                                             SvgPicture.asset(
                                                 'assets/images/gallery.svg'),
-                                            const Text(
+                                             Text(
                                               'Upload PAN Image',
-                                              style: TextStyle(
-                                                  color:
-                                                  Color(0xff0196CE),
-                                                  fontSize: 12),
+                                              style: GoogleFonts.urbanist(
+                                                fontSize: 12,
+                                                color:  Color(0xff0196CE),
+                                                fontWeight: FontWeight.w400,
+                                              ),
                                             ),
-                                            const Text(
+                                             Text(
                                                 'Supports : JPEG, PNG',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Color(
-                                                        0xffCACACA))),
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: Color(0xffCACACA),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                               ),
                                           ],
                                         ),
                                       ),
@@ -530,8 +555,10 @@ class _PancardScreenState extends State<PancardScreen> {
                                 children: [
                                   TextSpan(
                                     text: 'I hereby accept ',
-                                    style: TextStyle(
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 14,
                                       color: Colors.black,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                   _buildClickableTextSpan(
@@ -554,8 +581,10 @@ class _PancardScreenState extends State<PancardScreen> {
                                   TextSpan(
                                     text:
                                     '. Further, I hereby agree to share my details, including PAN, Date of birth, Name, Pin code, Mobile number, Email id and device information with you and for further sharing with your partners including lending partners',
-                                    style: TextStyle(
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 14,
                                       color: Colors.black,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ],
@@ -638,10 +667,11 @@ class _PancardScreenState extends State<PancardScreen> {
       {required String text, required VoidCallback onClick}) {
     return TextSpan(
       text: text,
-      style: TextStyle(
-          color: Colors.black, // Set text color to blue for clickable text
-          decoration: TextDecoration.underline,
-          fontWeight: FontWeight.bold // Underline clickable text
+      style: GoogleFonts.urbanist(
+        fontSize: 14,
+        color: Colors.black,
+        decoration: TextDecoration.underline,
+        fontWeight: FontWeight.w700,
       ),
       recognizer: TapGestureRecognizer()..onTap = onClick,
     );

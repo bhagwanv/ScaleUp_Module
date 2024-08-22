@@ -150,8 +150,8 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
                         Center(
                           child: Text(
                             "loan Offer",
-                            style: TextStyle(
-                              fontSize: 30.0,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 30,
                               color: blackSmall,
                               fontWeight: FontWeight.w600,
                             ),
@@ -163,8 +163,8 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
                         Center(
                           child: Text(
                             "$nameOnCard",
-                            style: TextStyle(
-                              fontSize: 16.0,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 16,
                               color: dark_green,
                               fontWeight: FontWeight.w600,
                             ),
@@ -176,8 +176,8 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
                         Center(
                           child: Text(
                             "You are qualified for credit limit of",
-                            style: TextStyle(
-                              fontSize: 12.0,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 12,
                               color: Colors.black,
                               fontWeight: FontWeight.w600,
                             ),
@@ -189,10 +189,10 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
                         Center(
                           child: Text(
                             "₹50,000,00",
-                            style: TextStyle(
-                              fontSize: 30.0,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 30,
+                              color:  Colors.black,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -406,12 +406,11 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
                                                             _isToggled
                                                                 ? 'Mo'
                                                                 : 'Yr',
-                                                            style: TextStyle(
+                                                            style: GoogleFonts.urbanist(
+                                                              fontSize: 14,
                                                               color: Colors
                                                                   .white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                              fontWeight: FontWeight.w700,
                                                             ),
                                                           ),
                                                         ),
@@ -432,12 +431,10 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
                                                           _isToggled
                                                               ? 'Yr'
                                                               : 'Mo',
-                                                          style: TextStyle(
-                                                            color:
-                                                                Colors.black,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold,
+                                                          style: GoogleFonts.urbanist(
+                                                            fontSize: 14,
+                                                            color: Colors.black,
+                                                            fontWeight: FontWeight.w700,
                                                           ),
                                                         ),
                                                       ),

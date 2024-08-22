@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/business_loan/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/business_loan/utils/Utils.dart';
@@ -227,22 +228,23 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
                                     Text(
                                       'Welcome back',
                                       textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: whiteColor,
+                                      style: GoogleFonts.urbanist(
                                         fontSize: 10,
+                                        color: whiteColor,
+                                        fontWeight: FontWeight.w400,
                                         letterSpacing: 0.2,
-                                        fontWeight: FontWeight.normal,
                                         height: 1.5,
                                       ),
+
                                     ),
                                     Text(
                                       customerName,
                                       textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: whiteColor,
+                                      style: GoogleFonts.urbanist(
                                         fontSize: 15,
+                                        color: whiteColor,
                                         letterSpacing: 0.2,
-                                        fontWeight: FontWeight.normal,
+                                        fontWeight: FontWeight.w400,
                                         height: 1.5,
                                       ),
                                     ),
@@ -295,12 +297,12 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
                                                   ),
                                                   Text(
                                                     'Shopkirana'.toUpperCase(),
-                                                    style: TextStyle(
+                                                    style: GoogleFonts.urbanist(
                                                       fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
                                                       color: text_orange_color,
+                                                      fontWeight: FontWeight.w700,
                                                     ),
+
                                                   ),
                                                 ],
                                               ),
@@ -321,35 +323,40 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
                                                 Text(
                                                   'Available to spend',
                                                   textAlign: TextAlign.end,
-                                                  style: TextStyle(
+                                                  style: GoogleFonts.urbanist(
                                                     fontSize: 10,
                                                     color: gryColor,
+                                                    fontWeight: FontWeight.w400,
                                                   ),
+
                                                 ),
                                                 Text(
                                                   '₹ $availableLimit',
                                                   textAlign: TextAlign.end,
-                                                  style: TextStyle(
+                                                  style: GoogleFonts.urbanist(
                                                     fontSize: 25,
                                                     color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
+                                                    fontWeight: FontWeight.w700,
                                                   ),
+
                                                 ),
                                                 SizedBox(height: 10),
                                                 Text(
                                                   'Total Outstanding ',
                                                   textAlign: TextAlign.end,
-                                                  style: TextStyle(
+                                                  style: GoogleFonts.urbanist(
                                                     fontSize: 10,
                                                     color: Colors.black,
+                                                    fontWeight: FontWeight.w400,
                                                   ),
                                                 ),
                                                 Text(
                                                   '₹ $totalOutStanding',
                                                   textAlign: TextAlign.end,
-                                                  style: TextStyle(
+                                                  style: GoogleFonts.urbanist(
                                                     fontSize: 15,
                                                     color: text_orange_color,
+                                                    fontWeight: FontWeight.w400,
                                                   ),
                                                 ),
                                                 SizedBox(height: 10),
@@ -395,19 +402,21 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
                                             Text(
                                               '₹ $totalPayableAmount  Payable Today',
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
+                                              style: GoogleFonts.urbanist(
                                                 fontSize: 12,
                                                 color: Colors.black,
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.w700,
                                               ),
                                             ),
                                             Text(
                                               'Total Pending Invoice Count: $totalPendingInvoiceCount',
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
+                                              style: GoogleFonts.urbanist(
                                                 fontSize: 10,
-                                                color: gryColor,
+                                                color:gryColor,
+                                                fontWeight: FontWeight.w400,
                                               ),
+
                                             ),
                                           ],
                                         ),
@@ -479,11 +488,12 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
                                   alignment: Alignment.center,
                                   child: Text(
                                     "PENDING",
-                                    style: TextStyle(
+                                    style: GoogleFonts.urbanist(
                                       fontSize: 12,
                                       color: selectedTab == 0
                                           ? Colors.white
                                           : Colors.black,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 ),
@@ -508,12 +518,14 @@ class _Vendor_detail_screen1State extends State<Vendor_detail_screen1>
                                   alignment: Alignment.center,
                                   child: Text(
                                     "PAID PAYMENT",
-                                    style: TextStyle(
+                                    style: GoogleFonts.urbanist(
                                       fontSize: 12,
                                       color: selectedTab == 1
                                           ? Colors.white
                                           : Colors.black,
+                                      fontWeight: FontWeight.w400,
                                     ),
+
                                   ),
                                 ),
                               ),
@@ -732,8 +744,11 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
                                     child: Text(
                                       'Due on : $dueDate',
                                       textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontSize: 10, color: Colors.white),
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -763,17 +778,20 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
                               children: [
                                 Text(
                                   anchorName,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                                 Text(
                                   "$status",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: kPrimaryColor,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15,
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+
                                 ),
                               ],
                             ),
@@ -783,17 +801,20 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
                               children: [
                                 Text(
                                   "Order No : $orderId",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.normal),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+
                                 ),
                                 Text(
                                   "Invoice No: $invoiceNo",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.normal),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ],
                             ),
@@ -812,18 +833,20 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
                                 Text(
                                   'Order Amount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                                 Text(
                                   'Payable Amount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ],
                             ),
@@ -834,18 +857,21 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
                                 Text(
                                   '₹ $amount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: text_green_color,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 20,
+                                    color: text_green_color,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                                 Text(
                                   '₹ $paidAmount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: text_green_color,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 20,
+                                    color: text_green_color,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+
                                 ),
                               ],
                             ),
@@ -917,10 +943,11 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
                 child: Text(
                   'Full Breakdown',
                   textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+                  style: GoogleFonts.urbanist(
+                    fontSize: 15,
+                    color:  Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               )
             ],
@@ -948,18 +975,20 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
                     Text(
                       'Total Amount',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     Text(
                       '₹ $totalAmount',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ],
                 ),
@@ -1001,18 +1030,20 @@ class _TabAState extends State<TabA> with SingleTickerProviderStateMixin {
                   Text(
                     '$transactionType',
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   Text(
                     '₹ $amount',
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               )

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../utils/Utils.dart';
 import '../../utils/common_elevted_button.dart';
@@ -43,23 +44,34 @@ class RejectedScreen extends StatelessWidget {
                     child: SvgPicture.asset('assets/images/rejected.svg'),
                   ),
                   const SizedBox(height: 60),
-                  const Padding(
+                   Padding(
                     padding: EdgeInsets.only(left: 5, right: 5),
                     child: Column(
                       children: [
                         Text(
                           "Rejected",
-                          style: TextStyle(color: kPrimaryColor, fontSize: 32, fontWeight: FontWeight.w600),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 32,
+                            color: kPrimaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Column(
+                   Column(
                     children: [
                       Text(
                         "We can not proceed wth your application as per our internal policy.",
-                        style: TextStyle(color: Colors.black, fontSize: 14),
+
+                        style: GoogleFonts.urbanist(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        ),
+
                         textAlign: TextAlign.center,
                       ),
                     ],

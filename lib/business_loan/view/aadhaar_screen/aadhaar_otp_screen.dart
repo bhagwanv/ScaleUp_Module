@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:timer_count_down/timer_controller.dart';
@@ -43,10 +44,12 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
   final defaultPinTheme = PinTheme(
     width: 56,
     height: 60,
-    textStyle: const TextStyle(
-      fontSize: 22,
-      color: Colors.black,
-    ),
+
+    textStyle: GoogleFonts.urbanist(
+    fontSize: 22,
+    color: Colors.black,
+    fontWeight: FontWeight.w400,
+  ),
     decoration: BoxDecoration(
       color: textFiledBackgroundColour,
       borderRadius: BorderRadius.circular(8),
@@ -64,10 +67,11 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
       seconds: _start,
       build: (_, double time) => Text(
         time.toStringAsFixed(0)+" S",
-        style: TextStyle(
+
+        style: GoogleFonts.urbanist(
           fontSize: 15,
           color: Colors.blue,
-          fontWeight: FontWeight.normal,
+          fontWeight: FontWeight.w400,
         ),
       ),
       interval: Duration(seconds: 1),
@@ -102,18 +106,26 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
               const SizedBox(
                 height: 50,
               ),
-              const Text(
+               Text(
                 'Enter \nVerification Code',
                 textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 35, color: Colors.black),
+                style: GoogleFonts.urbanist(
+                  fontSize: 35,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               const SizedBox(
                 height: 20,
               ),
-              const Text(
+               Text(
                 'Enter the verification code sent on Aadhaar registered mobile number',
                 textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 15, color: Colors.black),
+                style: GoogleFonts.urbanist(
+                  fontSize: 15,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               const SizedBox(
                 height: 55,
@@ -141,13 +153,14 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                     Text(
                       'Resend Code in ',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.normal),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15,
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                     buildCountdown(),
                   ],
@@ -162,26 +175,33 @@ class _AadhaarOtpScreenState extends State<AadhaarOtpScreen> {
                     child: RichText(
                       text: TextSpan(
                           text: 'If you didn’t received a code!',
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+
                           children: <TextSpan>[
                             isReSendDisable
                                 ? TextSpan(
                                     text: '  Resend',
-                                    style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal),
+
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w400,
+                                ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {})
                                 : TextSpan(
                                     text: '  Resend',
-                                    style: const TextStyle(
-                                        color: Colors.blueAccent,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal),
+
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 14,
+                                  color: Colors.blueAccent,
+                                  fontWeight: FontWeight.w400,
+                                ),
+
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
                                         isReSendDisable = true;
