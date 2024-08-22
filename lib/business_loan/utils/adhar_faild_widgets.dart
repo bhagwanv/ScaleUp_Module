@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../api/ApiService.dart';
 import '../shared_preferences/SharedPref.dart';
@@ -72,7 +73,11 @@ class AdharFailedWidgets extends StatelessWidget {
                 child: Text(
                   "Oops ...",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 15, color: Colors.red),
+                  style: GoogleFonts.urbanist(
+                    fontSize: 15,
+                    color: Colors.red,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
               const SizedBox(
@@ -84,7 +89,12 @@ class AdharFailedWidgets extends StatelessWidget {
                   child: Text(
                     message,
                     textAlign: TextAlign.justify,
-                    style: TextStyle(fontSize: 15, color: Colors.black,letterSpacing: 0.5),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                        letterSpacing: 0.5
+                    ),
                   ),
                 ),
               ),

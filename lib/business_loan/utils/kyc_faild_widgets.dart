@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../view/pancard_screen/PancardScreen.dart';
 import 'common_elevted_button.dart';
@@ -61,7 +62,12 @@ class KycFailedWidgets extends StatelessWidget {
                 child: Text(
                   message,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 15, color: Colors.black),
+                  style: GoogleFonts.urbanist(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                  ),
+
                 ),
               ),
               const SizedBox(

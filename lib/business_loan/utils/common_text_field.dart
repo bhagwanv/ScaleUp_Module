@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'constants.dart';
 
@@ -69,16 +70,22 @@ class _CommonTextFieldState extends State<CommonTextField> {
       textInputAction: widget.textInputAction,
       maxLines: !_isObscure ? widget.maxLines : 1,
       maxLength: !_isMaxLength ? widget.maxLength : 1,
-      style: TextStyle(
-        fontSize: 16.0,
+      style: GoogleFonts.urbanist(
+        fontSize: 16,
+        color: widget.textColor ?? Colors.black,
         fontWeight: FontWeight.w500,
-        color: widget.textColor ?? Colors.black,),
+      ),
+
       decoration: InputDecoration(
         fillColor: widget.fillColor,
         filled: true,
         hintText: widget.hintText,
         labelText: widget.labelText ?? 'Default Simple TextField', // Use confirmation text as label if provided, else use default label text
-        labelStyle: TextStyle(color: widget.accentColor ?? blackSmall), // Set accent color
+        labelStyle:GoogleFonts.urbanist(
+        fontSize: 14,
+          color: widget.accentColor ?? blackSmall,
+        fontWeight: FontWeight.w400,
+      ),
         helperText: widget.helperText,
         prefixIcon: widget.prefixIconData != null
             ? Icon(widget.prefixIconData, color: widget.accentColor ?? kPrimaryColor) // Set accent color for prefix icon
