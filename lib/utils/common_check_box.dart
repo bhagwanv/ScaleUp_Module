@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'constants.dart';
 
@@ -62,7 +63,12 @@ class _CommonCheckBoxState extends State<CommonCheckBox> {
             SizedBox(width: 18.0),
             Expanded(
               child: Text(
-                widget.upperCase ? widget.text!.toUpperCase() : widget.text!,
+                widget.upperCase ? widget.text!.toUpperCase() : widget.text!,style: GoogleFonts.urbanist(
+                fontSize: 12.0,
+                fontWeight: FontWeight.w400,
+                color: blackSmall
+
+              ),
               ),
             ),
           ],

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data_provider/DataProvider.dart';
@@ -83,25 +84,28 @@ class _VendorsScreenState extends State<VendorsScreen> {
                       const SizedBox(
                         width: 16,
                       ),
-                      const Column(
+                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text('Welcome back',
                               textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: Color.fromRGBO(30, 30, 30, 1),
-                                  fontSize: 10,
-                                  letterSpacing: 0.20000000298023224,
-                                  fontWeight: FontWeight.normal,
-                                  height: 1.5)),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 10.0,
+                                color: Color.fromRGBO(30, 30, 30, 1),
+                                letterSpacing: 0.20000000298023224,
+                                fontWeight: FontWeight.w400,
+                                  height: 1.5
+                              ),),
                           Text('Hello Vaibhav',
                               textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: Color.fromRGBO(30, 30, 30, 1),
-                                  fontSize: 15,
-                                  letterSpacing: 0.20000000298023224,
-                                  fontWeight: FontWeight.normal,
-                                  height: 1.5))
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15.0,
+                                color: Color.fromRGBO(30, 30, 30, 1),
+                                letterSpacing: 0.20000000298023224,
+                                fontWeight: FontWeight.w400,
+                                  height: 1.5
+                              ),
+                          )
                         ],
                       ),
                       const Spacer(),
@@ -157,10 +161,12 @@ class _VendorsScreenState extends State<VendorsScreen> {
                               ),
                               Text(
                                 'Shopkirana'.toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 12,
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 12.0,
                                   color: whiteColor,
+                                  fontWeight: FontWeight.w400,
                                 ),
+
                               ),
                             ],
                           ),
@@ -178,42 +184,59 @@ class _VendorsScreenState extends State<VendorsScreen> {
                             Text(
                               'Total Balance',
                               textAlign: TextAlign.end,
-                              style: TextStyle(fontSize: 10, color: gryColor),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 10.0,
+                                color: gryColor,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                             Text(
                               '₹30,000',
                               textAlign: TextAlign.end,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: text_green_color,
-                                  fontWeight: FontWeight.bold),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15.0,
+                                color: text_green_color,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                             SizedBox(height: 10),
                             Text(
                               'Available to spend',
                               textAlign: TextAlign.end,
-                              style: TextStyle(fontSize: 10, color: gryColor),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 10.0,
+                                color: gryColor,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                             Text(
                               '₹3,30,000',
                               textAlign: TextAlign.end,
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 25.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                              ),
+
                             ),
                             SizedBox(height: 10),
                             Text(
                               'Total Outstanding ',
                               textAlign: TextAlign.end,
-                              style:
-                                  TextStyle(fontSize: 10, color: Colors.black),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 10.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                             Text(
                               '₹15,000',
                               textAlign: TextAlign.end,
-                              style: TextStyle(
-                                  fontSize: 15, color: text_orange_color),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15.0,
+                                color: text_orange_color,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                             SizedBox(height: 10),
                           ],

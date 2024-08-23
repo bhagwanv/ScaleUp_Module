@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scale_up_module/utils/constants.dart';
@@ -155,14 +156,19 @@ class _CameraPageState extends State<CameraPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Padding(
+                 Padding(
                   padding: EdgeInsets.only(top: 50),
                   child: Column(
                     children: [
                       Text(
                         'Take a Selfie !',
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 18, color: Colors.black,fontWeight: FontWeight.bold),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 18.0,
+                          color:Colors.black,
+                          fontWeight: FontWeight.w700,
+
+                        ),
                       ),
                       SizedBox(
                         height: 10,
@@ -170,7 +176,12 @@ class _CameraPageState extends State<CameraPage> {
                       Text(
                         'Please point the camera on your Face',
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 15, color: Colors.black),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 15.0,
+                          color:Colors.black,
+                          fontWeight: FontWeight.w400,
+
+                        ),
                       )
                     ],
                   ),

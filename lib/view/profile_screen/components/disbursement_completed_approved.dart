@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../api/ApiService.dart';
@@ -88,7 +89,12 @@ class _DisbursementCompletedState extends State<DisbursementCompleted> {
                         SizedBox(height: 10),
                         Text(
                           "Thank You For Choosing Us!Your Disbursement Amount",
-                          style: TextStyle(color: kPrimaryColor, fontSize: 18),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 18.0,
+                            color:kPrimaryColor,
+                            fontWeight: FontWeight.w400,
+
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 10),
@@ -127,7 +133,12 @@ class _DisbursementCompletedState extends State<DisbursementCompleted> {
             Center(
               child: Text(
                 "₹ ${disbursementResponce!.response?.disbursalAmount.toString()}",
-                style: TextStyle(color: Colors.black, fontSize: 30),
+                style: GoogleFonts.urbanist(
+                  fontSize: 30.0,
+                  color:Colors.black,
+                  fontWeight: FontWeight.w400,
+
+                ),
                 textAlign: TextAlign.center,
               ),
             ),

@@ -32,6 +32,7 @@ import '../view/checkoutView/model/ValidOtpForCheckoutResModel.dart';
 import '../view/checkoutView/model/ValidateOrderOtpReqModel.dart';
 import '../view/checkoutView/model/ValidateOrderOtpResModel.dart';
 import '../view/dashboard_screen/model/CustomerTransactionListRequestModel.dart';
+import '../view/dashboard_screen/model/RepaymentAccountDetailsResModel.dart';
 import '../view/dashboard_screen/my_account/model/CustomerOrderSummaryResModel.dart';
 import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
@@ -279,6 +280,9 @@ class DataProvider extends ChangeNotifier {
   Result< bool, Exception>? _lesentOrderLoginOTPData;
   Result< bool, Exception>? get lesentOrderLoginOTPData => _lesentOrderLoginOTPData;
 
+  Result<RepaymentAccountDetailsResModel,Exception>? _getRepaymentAccountDetailsData;
+  Result<RepaymentAccountDetailsResModel,Exception>? get getRepaymentAccountDetailsData => _getRepaymentAccountDetailsData;
+
 
 
   Future<void> productCompanyDetail(
@@ -289,9 +293,9 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> getLeads(
-      String mobile, int productId, int companyId, int leadId) async {
+      String mobile, int companyId, int productId, int leadId) async {
     _getLeadData =
-    await apiService.getLeads(mobile, productId, companyId, leadId);
+    await apiService.getLeads(mobile, companyId, productId, leadId);
     notifyListeners();
   }
 
@@ -622,6 +626,11 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getRepaymentAccountDetails(leadId) async {
+    _getRepaymentAccountDetailsData = await apiService.getRepaymentAccountDetails(leadId);
+    notifyListeners();
+  }
+
 
 
   Future<void> disposeAllProviderData() async {
@@ -675,6 +684,7 @@ class DataProvider extends ChangeNotifier {
     _getElectricityStateListData = null;
     _getElectricityAuthenticationData = null;
     _InProgressScreen = null;
+    _getRepaymentAccountDetailsData = null;
     notifyListeners();
   }
 

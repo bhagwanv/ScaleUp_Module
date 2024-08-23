@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/utils/Utils.dart';
@@ -213,9 +214,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       ),
                       Text(
                         "Step 4",
-                        style: TextStyle(
+                        style: GoogleFonts.urbanist(
                           fontSize: 15.0,
-                          color: kPrimaryColor,
+                          color:kPrimaryColor ,
                           fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.start,
@@ -225,9 +226,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       ),
                       Text(
                         "Bank Details",
-                        style: TextStyle(
+                        style: GoogleFonts.urbanist(
                           fontSize: 40.0,
-                          color: blackSmall,
+                          color:blackSmall ,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -331,15 +332,20 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SvgPicture.asset('assets/images/gallery.svg'),
-                                const Text(
+                                 Text(
                                   'Upload Bank Proof',
-                                  style: TextStyle(
-                                      color: Color(0xff0196CE), fontSize: 12),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
+                                    color: Color(0xff0196CE),
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                                const Text('Supports : PDF',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xffCACACA))),
+                                 Text('Supports : PDF',
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 12.0,
+                                      color: Color(0xffCACACA),
+                                      fontWeight: FontWeight.w400,
+                                    ),),
 
                               ],
                             ),
@@ -472,11 +478,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             borderSide: BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint: const Text(
+        hint:  Text(
           'Bank Name',
-          style: TextStyle(
-            color: blueColor,
+          style: GoogleFonts.urbanist(
             fontSize: 14.0,
+            color: blueColor,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -524,13 +530,14 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             borderSide: BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint: const Text(
+        hint:  Text(
           'Bank Name',
-          style: TextStyle(
-            color: blueColor,
+          style: GoogleFonts.urbanist(
             fontSize: 14.0,
+            color: blueColor,
             fontWeight: FontWeight.w500,
           ),
+
         ),
         items: _addDividersAfterItems1(liveBankList!),
         onChanged: (LiveBankList? value) {
@@ -592,11 +599,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                 borderSide: BorderSide(color: kPrimaryColor, width: 1),
               ),
             ),
-            hint: const Text(
+            hint:  Text(
               'Account Type',
-              style: TextStyle(
-                color: blueColor,
+              style: GoogleFonts.urbanist(
                 fontSize: 14.0,
+                color: blueColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -644,11 +651,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                 borderSide: BorderSide(color: kPrimaryColor, width: 1),
               ),
             ),
-            hint: const Text(
+            hint:  Text(
               'Account Type',
-              style: TextStyle(
-                color: blueColor,
+              style: GoogleFonts.urbanist(
                 fontSize: 14.0,
+                color: blueColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -697,11 +704,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
               borderSide: BorderSide(color: kPrimaryColor, width: 1),
             ),
           ),
-          hint: const Text(
+          hint:  Text(
             'Account Type',
-            style: TextStyle(
-              color: blueColor,
+            style: GoogleFonts.urbanist(
               fontSize: 14.0,
+              color: blueColor,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -750,11 +757,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             borderSide: BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint: const Text(
+        hint:  Text(
           'Account Type',
-          style: TextStyle(
-            color: blueColor,
+          style: GoogleFonts.urbanist(
             fontSize: 14.0,
+            color: blueColor,
             fontWeight: FontWeight.w500,
           ),
         ),

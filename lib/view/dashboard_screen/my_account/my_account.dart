@@ -2,16 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../api/ApiService.dart';
 import '../../../api/FailureException.dart';
 import '../../../data_provider/DataProvider.dart';
 import '../../../shared_preferences/SharedPref.dart';
+import '../../../utils/DashLineSeparator.dart';
 import '../../../utils/Utils.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/loader.dart';
 import '../model/CustomerTransactionListRequestModel.dart';
+import '../model/RepaymentAccountDetailsResModel.dart';
 import '../vendorDetail/model/TransactionList.dart';
 import 'model/CustomerOrderSummaryResModel.dart';
 import 'model/CustomerTransactionListRespModel.dart';
@@ -26,22 +29,7 @@ class MyAccount extends StatefulWidget {
 class _MyAccountState extends State<MyAccount> {
   var isLoading = true;
   late CustomerOrderSummaryResModel? customerOrderSummaryResModel = null;
-
-  // Sample data for the lists
-  final List<String> verticalList = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5'
-  ];
-  final List<String> horizontalList = [
-    'Item A',
-    'Item B',
-    'Item C',
-    'Item D',
-    'Item E'
-  ];
+  late RepaymentAccountDetailsResModel? repaymentAccountDetailsResModel = null;
 
   var customerName = "";
   var customerImage = "";
@@ -64,8 +52,6 @@ class _MyAccountState extends State<MyAccount> {
     //Api Call
     getCustomerOrderSummary(context);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,9 +96,6 @@ class _MyAccountState extends State<MyAccount> {
                       customerOrderSummaryResModel!.customerImage!);
                 }
 
-
-
-
                 if (customerOrderSummaryResModel!.totalOutStanding != null) {
                   totalOutStanding = customerOrderSummaryResModel!
                       .totalOutStanding!
@@ -131,19 +114,19 @@ class _MyAccountState extends State<MyAccount> {
                 }
                 if (customerOrderSummaryResModel!.totalPendingInvoiceCount !=
                     null) {
-
-
-                  totalPendingInvoiceCount = customerOrderSummaryResModel!.totalPendingInvoiceCount.toString();
-                 Utils.removeTrailingZeros(totalPendingInvoiceCount);
+                  totalPendingInvoiceCount = customerOrderSummaryResModel!
+                      .totalPendingInvoiceCount
+                      .toString();
+                  Utils.removeTrailingZeros(totalPendingInvoiceCount);
                 }
               },
               failure: (exception) {
                 if (exception is ApiException) {
-                  if(exception.statusCode==401){
+                  if (exception.statusCode == 401) {
                     productProvider.disposeAllProviderData();
                     ApiService().handle401(context);
-                  }else{
-                    Utils.showToast(exception.errorMessage,context);
+                  } else {
+                    Utils.showToast(exception.errorMessage, context);
                   }
                 }
               },
@@ -156,18 +139,17 @@ class _MyAccountState extends State<MyAccount> {
                 if (data.isNotEmpty) {
                   customerTransactionList.clear();
                   customerTransactionList.addAll(data);
-                  print("sdfhksf$customerTransactionList");
                 } else {
                   loading = false;
                 }
               },
               failure: (exception) {
                 if (exception is ApiException) {
-                  if(exception.statusCode==401){
+                  if (exception.statusCode == 401) {
                     productProvider.disposeAllProviderData();
                     ApiService().handle401(context);
-                  }else{
-                    Utils.showToast(exception.errorMessage,context);
+                  } else {
+                    Utils.showToast(exception.errorMessage, context);
                   }
                 }
               },
@@ -187,7 +169,7 @@ class _MyAccountState extends State<MyAccount> {
                           Container(
                             width: 44,
                             height: 44,
-                            decoration:  BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
                                   image: NetworkImage(customerImage),
@@ -200,22 +182,26 @@ class _MyAccountState extends State<MyAccount> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text('Welcome back',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      color: whiteColor,
-                                      fontSize: 10,
-                                      letterSpacing: 0.20000000298023224,
-                                      fontWeight: FontWeight.normal,
-                                      height: 1.5)),
-                              Text(customerName,
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      color: whiteColor,
-                                      fontSize: 15,
-                                      letterSpacing: 0.20000000298023224,
-                                      fontWeight: FontWeight.normal,
-                                      height: 1.5))
+                              Text(
+                                'Welcome back',
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.urbanist(
+                                    fontSize: 10.0,
+                                    color: whiteColor,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: 0.20000000298023224,
+                                    height: 1.5),
+                              ),
+                              Text(
+                                customerName,
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: whiteColor,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: 0.20000000298023224,
+                                    height: 1.5),
+                              )
                             ],
                           ),
                           const Spacer(),
@@ -255,7 +241,7 @@ class _MyAccountState extends State<MyAccount> {
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                     /* Text(
+                                      /* Text(
                                         'Total Balance',
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
@@ -272,28 +258,39 @@ class _MyAccountState extends State<MyAccount> {
                                       Text(
                                         'Available to spend',
                                         textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 10, color: gryColor),
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 10.0,
+                                          color: gryColor,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                       Text(
                                         "₹ $availableLimit",
                                         textAlign: TextAlign.right,
-                                        style: TextStyle(
-                                            fontSize: 20, color: Colors.black),
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 20.0,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                       SizedBox(height: 15),
                                       Text(
                                         'Total Utilized Limit ',
                                         textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 10, color: gryColor),
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 10.0,
+                                          color: gryColor,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                       Text(
                                         "₹ $totalOutStanding",
                                         textAlign: TextAlign.right,
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: text_orange_color),
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 15.0,
+                                          color: text_orange_color,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -312,73 +309,79 @@ class _MyAccountState extends State<MyAccount> {
                         height: 55,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                              20), // Adjust the value to change the roundness
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            // Align children to the start and end of the row
                             children: [
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    child: SvgPicture.asset(
-                                      'assets/icons/clock.svg',
-                                      semanticsLabel: 'clock  SVG',
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  // Add some space between the icon and text
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '₹ $totalPayableAmount  Payable Today',
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold,),
-                                      ),
-                                      Text(
-                                        'Total Pending Invoice Count : $totalPendingInvoiceCount  ',
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 10, color: gryColor),
-                                      ),
-                                    ],
-
-                                  ),
-                                ],
+                              SizedBox(
+                                child: SvgPicture.asset(
+                                  'assets/icons/clock.svg',
+                                  semanticsLabel: 'clock SVG',
+                                ),
                               ),
-                              /* InkWell(
-                                    // Wrap the button in InkWell to make it clickable
-                                    onTap: () {
-                                      // Handle the pay now button tap
-                                    },
-                                    child: Container(
-                                      height: 40,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: greenColor,
-                                          width: 5.0,
-                                        ),
-                                        borderRadius: BorderRadius.circular(20.0),
-                                        color: greenColor,
-                                        // Uniform radius
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          'PAY NOW',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontSize: 10, color: Colors.white),
-                                        ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      '₹ $totalPayableAmount  Payable Today',
+                                      textAlign: TextAlign.start,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 12.0,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),*/
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      'Total Pending Invoice Count: $totalPendingInvoiceCount',
+                                      textAlign: TextAlign.start,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 10.0,
+                                        color: gryColor,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              InkWell(
+                                // Wrap the button in InkWell to make it clickable
+                                onTap: () {
+                                  showBottomSheet(context, productProvider);
+                                },
+                                child: Container(
+                                  height: 36,
+                                  width: 92,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: greenColor,
+                                      width: 0.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    color: greenColor,
+                                    // Uniform radius
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'PAY NOW',
+                                      textAlign: TextAlign.start,
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 12.0,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -399,13 +402,16 @@ class _MyAccountState extends State<MyAccount> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Padding(
+                                Padding(
                                   padding:
                                       EdgeInsets.only(top: 10.0, left: 10.0),
                                   child: Text(
                                     'Recent Transactions',
-                                    style: TextStyle(
-                                        fontSize: 15, color: Colors.black),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 15.0,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 8),
@@ -425,9 +431,265 @@ class _MyAccountState extends State<MyAccount> {
     ));
   }
 
+  void showBottomSheet(BuildContext context, DataProvider productProvider) {
+    bool loading = true; // Initialize the loading flag
+
+    // Call your API and handle response within the StateSetter to trigger UI updates
+    Future<void> fetchData(StateSetter updateState) async {
+      await callAccountDetailApi(context); // Call your API
+
+      if (productProvider.getRepaymentAccountDetailsData != null) {
+        productProvider.getRepaymentAccountDetailsData!.when(
+          success: (RepaymentAccountDetailsResModel) {
+            updateState(() {
+              loading = false;
+              repaymentAccountDetailsResModel = RepaymentAccountDetailsResModel;
+            });
+          },
+          failure: (exception) {
+            updateState(() {
+              loading = false; // Set loading to false in case of failure
+            });
+            if (exception is ApiException) {
+              if (exception.statusCode == 401) {
+                productProvider.disposeAllProviderData();
+                ApiService().handle401(context);
+              } else {
+                Utils.showToast(exception.errorMessage, context);
+              }
+            }
+          },
+        );
+      }
+    }
+
+    showModalBottomSheet(
+      context: context,
+      builder: (builder) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          if (loading) {
+            fetchData(setState);
+          }
+          return Container(
+            color: Colors.transparent,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30.0),
+                  topRight: Radius.circular(30.0),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 24.0, right: 24.0, bottom: 24.0, top: 12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Close Button
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Container(
+                            child: Text(
+                              "Account Detail",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 22.0,
+                                color: gryColor,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          )),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      ),
+                      // Check if loading is true, show CircularProgressIndicator else show content
+                      loading
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : repaymentAccountDetailsResModel!.result != null
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      "Repayment Bank A/C",
+                                      textAlign: TextAlign.start,
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 18.0,
+                                        color: text_light_blue_color,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Virtual A/C #: ",
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 14.0,
+                                            color: gryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            "${repaymentAccountDetailsResModel!.result!.virtualAccountNumber}",
+                                            textAlign: TextAlign.start,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 14.0,
+                                              color: gryColor,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Virtual A/C Bank: ",
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 14.0,
+                                            color: gryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            "${repaymentAccountDetailsResModel!.result!.virtualBankName}",
+                                            textAlign: TextAlign.start,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 14.0,
+                                              color: gryColor,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Virtual A/C IFSC: ",
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 14.0,
+                                            color: gryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            "${repaymentAccountDetailsResModel!.result!.virtualIFSCCode}",
+                                            textAlign: TextAlign.start,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 14.0,
+                                              color: gryColor,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    const DashLineSeparator(),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      "Repayment UPI ID",
+                                      textAlign: TextAlign.start,
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 18.0,
+                                        color: text_light_blue_color,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Virtual A/C VPA: ",
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 14.0,
+                                            color: gryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            "${repaymentAccountDetailsResModel!.result!.virtualUPIId}",
+                                            textAlign: TextAlign.start,
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 14.0,
+                                              color: gryColor,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 16),
+                                  ],
+                                )
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 16),
+                                    Center(
+                                      child: Text(
+                                        "${repaymentAccountDetailsResModel!.message}",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 16.0,
+                                          color: blackSmall,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                  ],
+                                ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  Future<void> callAccountDetailApi(BuildContext context) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+  //  final int? leadId = 257;
+
+    await Provider.of<DataProvider>(context, listen: false)
+        .getRepaymentAccountDetails(leadId);
+  }
+
   Future<void> getCustomerOrderSummary(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-     final int? leadId = prefsUtil.getInt(LEADE_ID);
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
     //final int? leadId = 257;
 
     await Provider.of<DataProvider>(context, listen: false)
@@ -438,7 +700,7 @@ class _MyAccountState extends State<MyAccount> {
     final prefsUtil = await SharedPref.getInstance();
 
     var leadeId = prefsUtil.getInt(LEADE_ID)!;
-     var companyId = prefsUtil.getInt(COMPANY_ID)!;
+    var companyId = prefsUtil.getInt(COMPANY_ID)!;
     //var companyId = "2";
     //var leadeId = 257;
     Utils.onLoading(context, "");
@@ -538,8 +800,11 @@ class _MyAccountState extends State<MyAccount> {
                                     child: Text(
                                       'Due on : $dueDate',
                                       textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontSize: 10, color: Colors.white),
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 10.0,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -565,10 +830,11 @@ class _MyAccountState extends State<MyAccount> {
                             ),
                             Text(
                               anchorName,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                             SizedBox(
                               height: 5,
@@ -578,19 +844,22 @@ class _MyAccountState extends State<MyAccount> {
                               children: [
                                 Text(
                                   "Order ID  $orderId",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                                invoiceNo.isNotEmpty?
-                                Text(
-                                  "Invoice No : $invoiceNo",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal),
-                                ):Container()
+                                invoiceNo.isNotEmpty
+                                    ? Text(
+                                        "Invoice No : $invoiceNo",
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 12.0,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      )
+                                    : Container()
                               ],
                             ),
                             Padding(
@@ -608,10 +877,11 @@ class _MyAccountState extends State<MyAccount> {
                                 Text(
                                   'Order Amount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                                 Text(
                                   'Payable Amount',
@@ -630,18 +900,20 @@ class _MyAccountState extends State<MyAccount> {
                                 Text(
                                   '₹ $amount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                                 Text(
                                   '₹ $paidAmount',
                                   textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ],
                             ),
@@ -651,10 +923,11 @@ class _MyAccountState extends State<MyAccount> {
                               children: [
                                 Text(
                                   "Status : $status",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ],
                             ),
@@ -724,11 +997,11 @@ class _MyAccountState extends State<MyAccount> {
         },
         failure: (exception) {
           if (exception is ApiException) {
-            if(exception.statusCode==401){
+            if (exception.statusCode == 401) {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
-            }else{
-              Utils.showToast(exception.errorMessage,context);
+            } else {
+              Utils.showToast(exception.errorMessage, context);
             }
           }
         },
@@ -762,10 +1035,11 @@ class _MyAccountState extends State<MyAccount> {
                 child: Text(
                   'Full Breakdown',
                   textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+                  style: GoogleFonts.urbanist(
+                    fontSize: 15.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               )
             ],
@@ -793,18 +1067,20 @@ class _MyAccountState extends State<MyAccount> {
                     Text(
                       'Total Amount',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     Text(
                       '₹ $totalAmount',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ],
                 ),
@@ -846,18 +1122,20 @@ class _MyAccountState extends State<MyAccount> {
                   Text(
                     '$transactionType',
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   Text(
                     '₹ $amount',
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               )

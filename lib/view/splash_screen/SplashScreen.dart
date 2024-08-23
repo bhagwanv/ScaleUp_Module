@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/ProductCompanyDetailResponseModel.dart';
 import 'package:scale_up_module/api/ApiService.dart';
@@ -43,8 +44,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Center(child: Text('Scaleup')),
-        ),
+          title:  Center(child: Text('Scaleup',style: GoogleFonts.urbanist(
+            fontSize: 20,
+            color: Colors.black,
+            fontWeight: FontWeight.w400,
+          )))),
         body:
         Consumer<DataProvider>(builder: (context, productProvider, child) {
           if (productProvider.productCompanyDetailResponseModel != null) {

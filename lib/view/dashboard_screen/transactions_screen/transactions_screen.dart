@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 
@@ -134,20 +135,22 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         children: <Widget>[
                           Text('Welcome back',
                               textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: Color.fromRGBO(30, 30, 30, 1),
-                                  fontSize: 10,
-                                  letterSpacing: 0.20000000298023224,
-                                  fontWeight: FontWeight.normal,
-                                  height: 1.5)),
+                              style: GoogleFonts.urbanist(
+                                fontSize: 10.0,
+                                color: Color.fromRGBO(30, 30, 30, 1),
+                                letterSpacing: 0.20000000298023224,
+                                height: 1.5,
+                                fontWeight: FontWeight.w400,
+                              ),),
                           Text(customerName,
                               textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: Color.fromRGBO(30, 30, 30, 1),
-                                  fontSize: 15,
-                                  letterSpacing: 0.20000000298023224,
-                                  fontWeight: FontWeight.normal,
-                                  height: 1.5))
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15.0,
+                                color: Color.fromRGBO(30, 30, 30, 1),
+                                letterSpacing: 0.20000000298023224,
+                                fontWeight: FontWeight.w400,
+                                  height: 1.5
+                              ),)
                         ],
                       ),
                       const Spacer(),
@@ -267,18 +270,21 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                                   ),
                                 Text(
                                   anchorName,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+
                                 ),
                                 Spacer(),
                                 Text(
                                   dueDate,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.normal),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ],
                             ),
@@ -290,17 +296,19 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               children: [
                                 Text(
                                   "",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: kPrimaryColor,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                                 Text(
                                   " ₹ ${amount.toString()}",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: kPrimaryColor,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 15.0,
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ],
                             ),
@@ -312,17 +320,20 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               children: [
                                 Text(
                                   "Order No : $orderId",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.normal),
-                                ),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                                                 ),
                                 Text(
                                   " Invoice No : $invoiceNo",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold),
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 12.0,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+
                                 ),
                               ],
                             ),
@@ -429,10 +440,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 child: Text(
                   'Full Breakdown',
                   textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
+                  style: GoogleFonts.urbanist(
+                    fontSize: 15.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               )
             ],
@@ -460,18 +472,20 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     Text(
                       'Total Amount',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     Text(
                       '₹ $totalAmount',
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ],
                 ),
@@ -513,18 +527,20 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   Text(
                     '$transactionType',
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   Text(
                     '₹ $amount',
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               )

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/view/dashboard_screen/transactions_screen/transactions_screen.dart';
-import 'package:scale_up_module/view/dashboard_screen/vendorDetail/vendor_detail_screen.dart';
 import 'package:scale_up_module/view/dashboard_screen/vendorDetail/vendor_detail_screen1.dart';
-import 'package:scale_up_module/view/dashboard_screen/vendors_screen/vendors_screen.dart';
-
 import '../../data_provider/DataProvider.dart';
 import '../../utils/Utils.dart';
 import '../../utils/constants.dart';
@@ -58,14 +56,14 @@ class _BottomNavState extends State<BottomNav> {
                 productProvider.disposegetCustomerTransactionList();
               });
             },
-            child: SvgPicture.asset(
-              'assets/icons/ic_home.svg',
-              semanticsLabel: 'home',
-            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
             backgroundColor: kPrimaryColor,
+            child: SvgPicture.asset(
+              'assets/icons/ic_home.svg',
+              semanticsLabel: 'home',
+            ),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
@@ -102,10 +100,12 @@ class _BottomNavState extends State<BottomNav> {
                         const SizedBox(height: 3), // Add space between icon and text
                         Text(
                           'Vendors',
-                          style: TextStyle(
-                            color: selectedIndex == 0 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                            fontSize: 10,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 10.0,
+                            color: selectedIndex == 0 ? kPrimaryColor : Colors.black,
+                            fontWeight: FontWeight.w400,
                           ),
+
                         ),
                       ],
                     ),
@@ -132,16 +132,17 @@ class _BottomNavState extends State<BottomNav> {
                         const SizedBox(height: 3), // Add space between icon and text
                         Text(
                           'Transactions',
-                          style: TextStyle(
-                            color: selectedIndex == 1 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                            fontSize: 10,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 10.0,
+                            color: selectedIndex == 1 ? kPrimaryColor : Colors.black,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(width: 24.0),
+                const SizedBox(width: 24.0),
                 // Print item
                 GestureDetector(
                   onTap: () {
@@ -162,9 +163,10 @@ class _BottomNavState extends State<BottomNav> {
                         const SizedBox(height: 3), // Add space between icon and text
                         Text(
                           'Services',
-                          style: TextStyle(
-                            color: selectedIndex == 3 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                            fontSize: 10,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 10.0,
+                            color: selectedIndex == 3 ? kPrimaryColor : Colors.black,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],
@@ -188,9 +190,10 @@ class _BottomNavState extends State<BottomNav> {
                         const SizedBox(height: 3), // Add space between icon and text
                         Text(
                           'Setting',
-                          style: TextStyle(
-                            color: selectedIndex == 4 ? kPrimaryColor : Colors.black, // Change color based on selected index
-                            fontSize: 10,
+                          style: GoogleFonts.urbanist(
+                            fontSize: 10.0,
+                            color: selectedIndex == 4 ? kPrimaryColor : Colors.black,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],

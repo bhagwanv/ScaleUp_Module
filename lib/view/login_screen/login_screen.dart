@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/data_provider/DataProvider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
@@ -13,12 +14,18 @@ class LoginScreen extends StatelessWidget {
   final int activityId;
   final int subActivityId;
   final int? companyID;
-  final int?  ProductID;
-  final String?  MobileNumber;
-  final String?  pageType;
+  final int? ProductID;
+  final String? MobileNumber;
+  final String? pageType;
 
   const LoginScreen(
-      {super.key, required this.activityId, required this.subActivityId, this.companyID, this.ProductID,this.MobileNumber, this.pageType});
+      {super.key,
+      required this.activityId,
+      required this.subActivityId,
+      this.companyID,
+      this.ProductID,
+      this.MobileNumber,
+      this.pageType});
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +44,10 @@ class LoginScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-              top: false,
-              child: Consumer<DataProvider>(builder: (context, productProvider, child) {
-                      return SingleChildScrollView(
+          top: false,
+          child: Consumer<DataProvider>(
+              builder: (context, productProvider, child) {
+            return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
                   LoginScreenTopImage(),
@@ -49,22 +57,21 @@ class LoginScreen extends StatelessWidget {
                       Expanded(
                         flex: 8,
                         child: LoginForm(
-                          productProvider: productProvider,
-                          activityId: activityId,
-                          subActivityId: subActivityId,
-                          companyID: companyID,
-                          ProductID: ProductID,
-                            MobileNumber:MobileNumber
-                        ),
+                            productProvider: productProvider,
+                            activityId: activityId,
+                            subActivityId: subActivityId,
+                            companyID: companyID,
+                            ProductID: ProductID,
+                            MobileNumber: MobileNumber),
                       ),
                       Spacer(),
                     ],
                   ),
                 ],
               ),
-                      );
-                    }),
-            ),
+            );
+          }),
+        ),
       ),
     );
   }
@@ -84,19 +91,22 @@ class LoginScreenTopImage extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(left: 30, top: 50),
-            child: Text(
-              "Enter\nPhone Number",
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 35.5),
-            ),
+            child: Text("Enter\nPhone Number",
+                style: GoogleFonts.urbanist(
+                  fontSize: 35.5,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                )),
           ),
           Padding(
             padding: EdgeInsets.only(top: 50, left: 30),
             child: Text(
               "Please Enter Your registered number.",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 15,
-                  color: Colors.black),
+              style: GoogleFonts.urbanist(
+                fontSize: 15,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
               textAlign: TextAlign.start,
             ),
           ),
@@ -104,10 +114,11 @@ class LoginScreenTopImage extends StatelessWidget {
             padding: EdgeInsets.only(top: 10, left: 30),
             child: Text(
               "Enter Your Number",
-              style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14,
-                  color: gryColor),
+              style: GoogleFonts.urbanist(
+                fontSize: 14,
+                color: gryColor,
+                fontWeight: FontWeight.w400,
+              ),
               textAlign: TextAlign.start,
             ),
           ),

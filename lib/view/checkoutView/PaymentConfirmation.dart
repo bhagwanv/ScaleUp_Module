@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/view/bank_details_screen/model/CreditDayAmountCals.dart';
@@ -135,20 +136,22 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                               children: <Widget>[
                                 Text('Welcome back',
                                     textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: whiteColor,
-                                        fontSize: 10,
-                                        letterSpacing: 0.20000000298023224,
-                                        fontWeight: FontWeight.normal,
-                                        height: 1.5)),
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 10.0,
+                                      color:whiteColor,
+                                      height: 1.5,
+                                      letterSpacing: 0.20000000298023224,
+                                      fontWeight: FontWeight.w400,
+                                    ),),
                                 Text(widget.customerName,
                                     textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: whiteColor,
-                                        fontSize: 15,
-                                        letterSpacing: 0.20000000298023224,
-                                        fontWeight: FontWeight.normal,
-                                        height: 1.5))
+                                    style: GoogleFonts.urbanist(
+                                      fontSize: 15.0,
+                                      color:whiteColor,
+                                      height: 1.5,
+                                      letterSpacing: 0.20000000298023224,
+                                      fontWeight: FontWeight.w400,
+                                    ))
                               ],
                             ),
                             const Spacer(),
@@ -188,11 +191,15 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
                                       children: [
-                                        const Text(
+                                         Text(
                                           'Total Utilised',
                                           textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontSize: 11, color: gryColor),
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 11.0,
+                                            color: gryColor,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+
                                         ),
                                         Text(
                                           "₹" +
@@ -200,17 +207,21 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                   .response!.utilizateLimit!
                                                   .toString(),
                                           textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                              color: text_green_color),
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 15.0,
+                                            color: text_green_color,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
                                         const SizedBox(height: 15),
-                                        const Text(
+                                         Text(
                                           'Available Credit',
                                           textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              fontSize: 12, color: gryColor),
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 12.0,
+                                            color: gryColor,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
                                         Text(
                                           "₹" +
@@ -218,9 +229,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                   .availableCreditLimit!
                                                   .toString(),
                                           textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.black),
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 20.0,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
                                         const SizedBox(height: 15),
                                       ],
@@ -253,10 +266,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                     child: Center(
                                       child: Text(
                                         'Invoice Payment Confirmation',
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.normal),
+                                        style: GoogleFonts.urbanist(
+                                          fontSize: 13.0,
+                                          color:Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -290,16 +304,15 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      const Text(
+                                                       Text(
                                                         'Invoice Summary',
                                                         textAlign:
                                                             TextAlign.start,
-                                                        style: TextStyle(
-                                                            fontSize: 13,
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                        style: GoogleFonts.urbanist(
+                                                          fontSize: 13.0,
+                                                          color:Colors.black,
+                                                          fontWeight: FontWeight.w700,
+                                                        ),
                                                       ),
                                                       const SizedBox(
                                                           height: 20),
@@ -310,12 +323,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                                 .anchorName!,
                                                         textAlign:
                                                             TextAlign.start,
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                        style: GoogleFonts.urbanist(
+                                                          fontSize: 12.0,
+                                                          color:Colors.black,
+                                                          fontWeight: FontWeight.w700,
+                                                        ),
                                                       ),
                                                       const SizedBox(height: 5),
                                                       Text(
@@ -325,12 +337,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                                 .orderNo!,
                                                         textAlign:
                                                             TextAlign.start,
-                                                        style: TextStyle(
-                                                            fontSize: 11,
-                                                            color: gryColor,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                        style: GoogleFonts.urbanist(
+                                                          fontSize: 11.0,
+                                                          color:gryColor,
+                                                          fontWeight: FontWeight.w700,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -344,12 +355,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                         'Invoice Amount',
                                                         textAlign:
                                                             TextAlign.start,
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                        style: GoogleFonts.urbanist(
+                                                          fontSize: 12.0,
+                                                          color:Colors.black,
+                                                          fontWeight: FontWeight.w700,
+                                                        ),
                                                       ),
                                                       const SizedBox(height: 5),
                                                       Text(
@@ -360,13 +370,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                                 .toString(),
                                                         textAlign:
                                                             TextAlign.start,
-                                                        style: TextStyle(
-                                                            fontSize: 17,
-                                                            color:
-                                                                Colors.black87,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                        style: GoogleFonts.urbanist(
+                                                          fontSize: 17.0,
+                                                          color:Colors.black87,
+                                                          fontWeight: FontWeight.w700,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -394,11 +402,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                   child: Text(
                                                     'Credit Limit Blocked',
                                                     textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        color: Colors.black87,
-                                                        fontWeight:
-                                                            FontWeight.bold),
+                                                    style: GoogleFonts.urbanist(
+                                                      fontSize: 15.0,
+                                                      color:Colors.black87,
+                                                      fontWeight: FontWeight.w700,
+                                                    ),
                                                   ),
                                                 ),
                                                 SizedBox(height: 20),
@@ -406,11 +414,12 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                   child: Text(
                                                     'Dear Customer, your credit limit is currently blocked due to non-payment of an invoice on the due date. Please settle the outstanding amount to restore your credit limit',
                                                     textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        color: Colors.black87,
-                                                        fontWeight:
-                                                            FontWeight.normal),
+                                                    style: GoogleFonts.urbanist(
+                                                      fontSize: 15.0,
+                                                      color:Colors.black87,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+
                                                   ),
                                                 ),
                                                 SizedBox(height: 50),
@@ -433,13 +442,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                         'Insufficient Credit Limit',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            color:
-                                                                Colors.black87,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                        style: GoogleFonts.urbanist(
+                                                          fontSize: 15.0,
+                                                          color:Colors.black87,
+                                                          fontWeight: FontWeight.w700,
+                                                        ),
                                                       ),
                                                     ),
                                                     SizedBox(height: 20),
@@ -448,13 +455,12 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                         'Your Scaleup Account has insufficient credit amount to pay for this invoice.',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            color:
-                                                                Colors.black87,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal),
+                                                        style: GoogleFonts.urbanist(
+                                                          fontSize: 15.0,
+                                                          color:Colors.black87,
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
+
                                                       ),
                                                     ),
                                                     SizedBox(height: 20),
@@ -463,13 +469,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                         ' You may clear your outstanding dues to free your credit limit.',
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            color:
-                                                                Colors.black87,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal),
+                                                        style: GoogleFonts.urbanist(
+                                                          fontSize: 15.0,
+                                                          color:Colors.black87,
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
                                                       ),
                                                     ),
                                                     SizedBox(height: 50),
@@ -483,11 +487,12 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                   child: Text(
                                                     'Choose Repayment Duration',
                                                     textAlign: TextAlign.start,
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.black87,
-                                                        fontWeight:
-                                                            FontWeight.bold),
+                                                    style: GoogleFonts.urbanist(
+                                                      fontSize: 12.0,
+                                                      color:Colors.black87,
+                                                      fontWeight: FontWeight.w700,
+                                                    ),
+
                                                   ),
                                                 ),
                                                 Container(
@@ -519,15 +524,13 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                               textAlign:
                                                                   TextAlign
                                                                       .start,
-                                                              style: TextStyle(
-                                                                  fontSize: 13,
-                                                                  letterSpacing:
-                                                                      0.10,
-                                                                  color: Colors
-                                                                      .black87,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                              style: GoogleFonts.urbanist(
+                                                                fontSize: 13.0,
+                                                                letterSpacing:
+                                                                0.10,
+                                                                color:Colors.black87,
+                                                                fontWeight: FontWeight.w700,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
@@ -636,10 +639,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                               .toString() +
                                           ' Days',
                                       textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 13.0,
+                                        color:Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                     const SizedBox(height: 5),
                                     new GestureDetector(
@@ -654,10 +658,10 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                           children: [
                                             TextSpan(
                                               text: "See full breakdown ",
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.normal,
+                                              style: GoogleFonts.urbanist(
+                                                fontSize: 10.0,
+                                                color:Colors.white,
+                                                fontWeight: FontWeight.w400,
                                               ),
                                             ),
                                             WidgetSpan(
@@ -676,10 +680,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                     Text(
                                       'Invoice Amount',
                                       textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 12.0,
+                                        color:Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                     const SizedBox(height: 5),
                                     Text(
@@ -688,10 +693,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                               .finalAmount!
                                               .toString(),
                                       textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 17.0,
+                                        color:Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -729,10 +735,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                       child: Text(
                         'Full Breakdown',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12.0,
+                          color:Colors.black87,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     GestureDetector(
@@ -761,10 +768,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                         Text(
                           'Invoice Amount',
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 12.0,
+                            color:Colors.black87,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         SizedBox(height: 10),
                         Text(
@@ -774,19 +782,21 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                   .toString() +
                               "% )",
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 12.0,
+                            color:Colors.black87,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         SizedBox(height: 10),
                         Text(
                           'Gst Amount',
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 12.0,
+                            color:Colors.black87,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ],
                     ),
@@ -796,28 +806,31 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                         Text(
                           creditDayAmountCals.invoiceAmount.toString(),
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 12.0,
+                            color:Colors.black87,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         SizedBox(height: 10),
                         Text(
                           creditDayAmountCals.interestAmount.toStringAsFixed(3),
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 12.0,
+                            color:Colors.black87,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         SizedBox(height: 10),
                         Text(
                           creditDayAmountCals.gstAmount.toString(),
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 12.0,
+                            color:Colors.black87,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ],
                     ),
@@ -837,10 +850,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                         Text(
                           'Total Payble',
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 12.0,
+                            color:Colors.black87,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ],
                     ),
@@ -850,10 +864,11 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                         Text(
                           creditDayAmountCals.totalAmount.toString(),
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold),
+                          style: GoogleFonts.urbanist(
+                            fontSize: 12.0,
+                            color:Colors.black87,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ],
                     )

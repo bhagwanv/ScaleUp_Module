@@ -123,7 +123,8 @@ class _MyAppState extends State<MyApp> {
             //return CheckOutOtpScreen(transactionId: "202457");
            // return PaymentConfirmation(transactionReqNo: "202457",customerName: "Aarti Mukati",imageUrl:"https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/0d625556-7f61-47c9-a522-8fef21215b14.jpg",customerCareMoblie: "6263246384",customerCareEmail: "customer.care@scaleupfin.com");
             //return CongratulationScreen();
-           // return SplashScreen(mobileNumber: "7803994667", companyID: "CN_67", productID: "CreditLine",);
+           // return SplashScreen(mobileNumber: "6263246384", companyID: "CN_67", productID: "CreditLine",);
+           // return SplashScreen(mobileNumber: "6263246384", companyID: "CN_1", productID: "CreditLine",);
             //return SplashScreen(mobileNumber: "8989804393", companyID: "2", productID: "2");
             //return ShowOffersScreen(activityId: 2, subActivityId: 2);
           }
