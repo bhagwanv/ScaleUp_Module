@@ -326,6 +326,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
+  flutter_download_manager:
+    dependency: "direct main"
+    description:
+      name: flutter_download_manager
+      sha256: "287976e0cba0047925cec247fbb88e1924ed18cae78b69af85ffd6b55d590b32"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.4"
   flutter_lints:
     dependency: "direct dev"
     description:
