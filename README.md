@@ -1,7 +1,6 @@
 # scale_up_module
 
 A new Flutter project.
-
 ## Getting Started
 
 For help getting started with Flutter development, view the online
