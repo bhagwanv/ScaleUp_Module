@@ -112,7 +112,7 @@ class _MyAppState extends State<MyApp> {
         future: _initializeData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Scaffold(body: Center(child: CircularProgressIndicator()));
+            return const Scaffold(body: Center(child: CircularProgressIndicator()));
           } else if (snapshot.hasError) {
             return Scaffold(
                 body: Center(child: Text('Error: ${snapshot.error}')));

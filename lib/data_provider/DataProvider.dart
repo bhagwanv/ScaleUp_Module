@@ -58,7 +58,6 @@ import '../view/personal_info/model/PersonalDetailsResponce.dart';
 import '../view/personal_info/model/SendOtpOnEmailResponce.dart';
 import '../view/personal_info/model/ValidEmResponce.dart';
 import '../view/profile_screen/model/AcceptedResponceModel.dart';
-import '../view/profile_screen/model/CheckStatusModel.dart';
 import '../view/profile_screen/model/DisbursementCompletedResponse.dart';
 import '../view/profile_screen/model/DisbursementResponce.dart';
 import '../view/profile_screen/model/InProgressScreenModel.dart';

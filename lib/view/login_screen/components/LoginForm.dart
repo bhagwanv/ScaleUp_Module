@@ -6,10 +6,8 @@ import 'package:scale_up_module/data_provider/DataProvider.dart';
 import 'package:scale_up_module/utils/Utils.dart';
 import 'package:scale_up_module/utils/common_elevted_button.dart';
 import 'package:scale_up_module/view/otp_screens/OtpScreen.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../../shared_preferences/SharedPref.dart';
-import '../../../utils/common_check_box.dart';
 import '../../../utils/constants.dart';
 import '../../aadhaar_screen/components/CheckboxTerm.dart';
 
@@ -50,7 +48,7 @@ class _LoginFormState extends State<LoginForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(children: [
-           SizedBox(
+           const SizedBox(
             width: 58,
             child: TextField(
               readOnly: true,
@@ -73,7 +71,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 20,
           ),
           Expanded(

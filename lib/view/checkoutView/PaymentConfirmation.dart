@@ -536,10 +536,7 @@ class _PaymentConfirmationState extends State<PaymentConfirmation> {
                                                 ))
                                               ],
                                             ),
-                                  transactionDetailModel!
-                                              .response!.transactionStatus ==
-                                          "Overdue"
-                                      ? Padding(
+                                  transactionDetailModel!.response!.transactionStatus == "Overdue" ? Padding(
                                           padding: const EdgeInsets.all(10.0),
                                           child: CommonElevatedButton(
                                             onPressed: () async {

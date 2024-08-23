@@ -21,8 +21,7 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   late CameraController _cameraController;
-  bool _isRearCameraSelected = false;
-  File? _imageFile;
+
 
   @override
   void dispose() {
