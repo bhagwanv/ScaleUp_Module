@@ -6,7 +6,7 @@ import 'package:scale_up_module/business_loan/view/profile_screen/components/Sho
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../api/ApiService.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
 import '../../utils/customer_sequence_logic.dart';

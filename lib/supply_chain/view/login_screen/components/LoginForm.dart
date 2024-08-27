@@ -7,7 +7,7 @@ import 'package:scale_up_module/supply_chain/utils/Utils.dart';
 import 'package:scale_up_module/supply_chain/utils/common_elevted_button.dart';
 import 'package:scale_up_module/supply_chain/view/otp_screens/OtpScreen.dart';
 
-import '../../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../../utils/constants.dart';
 import '../../aadhaar_screen/components/CheckboxTerm.dart';
 

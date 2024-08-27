@@ -71,21 +71,16 @@ class _CommonTextFieldState extends State<CommonTextField> {
       maxLines: !_isObscure ? widget.maxLines : 1,
       maxLength: !_isMaxLength ? widget.maxLength : 1,
       style: GoogleFonts.urbanist(
-        fontSize: 16,
+        fontSize: 16.0,
         color: widget.textColor ?? Colors.black,
         fontWeight: FontWeight.w500,
       ),
-
       decoration: InputDecoration(
         fillColor: widget.fillColor,
         filled: true,
         hintText: widget.hintText,
         labelText: widget.labelText ?? 'Default Simple TextField', // Use confirmation text as label if provided, else use default label text
-        labelStyle:GoogleFonts.urbanist(
-        fontSize: 14,
-          color: widget.accentColor ?? blackSmall,
-        fontWeight: FontWeight.w400,
-      ),
+        labelStyle: TextStyle(color: widget.accentColor ?? blackSmall), // Set accent color
         helperText: widget.helperText,
         prefixIcon: widget.prefixIconData != null
             ? Icon(widget.prefixIconData, color: widget.accentColor ?? kPrimaryColor) // Set accent color for prefix icon

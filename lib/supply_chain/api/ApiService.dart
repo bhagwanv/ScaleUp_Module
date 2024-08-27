@@ -8,7 +8,7 @@ import 'package:scale_up_module/supply_chain/view/profile_screen/model/OfferPers
 import 'package:scale_up_module/supply_chain/view/splash_screen/SplashScreen.dart';
 import 'package:scale_up_module/supply_chain/view/splash_screen/model/GetLeadResponseModel.dart';
 import '../../ProductCompanyDetailResponseModel.dart';
-import '../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../utils/Utils.dart';
 import '../utils/constants.dart';
 import '../view/aadhaar_screen/models/LeadAadhaarResponse.dart';

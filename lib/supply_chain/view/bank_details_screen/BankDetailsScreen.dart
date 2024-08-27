@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:scale_up_module/supply_chain/shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/supply_chain/utils/Utils.dart';
 import 'package:scale_up_module/supply_chain/view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import 'package:scale_up_module/supply_chain/view/bank_details_screen/model/LiveBankList.dart';

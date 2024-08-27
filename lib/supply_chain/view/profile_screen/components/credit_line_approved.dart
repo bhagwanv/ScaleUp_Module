@@ -6,7 +6,7 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/supply_chain/api/ApiService.dart';
-import 'package:scale_up_module/supply_chain/shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/supply_chain/utils/Utils.dart';
 import 'package:scale_up_module/supply_chain/view/profile_screen/model/DisbursementResponce.dart';
 import 'package:scale_up_module/supply_chain/view/profile_screen/model/OfferPersonNameResponceModel.dart';

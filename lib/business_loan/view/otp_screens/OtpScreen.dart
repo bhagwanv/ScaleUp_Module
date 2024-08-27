@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
-import 'package:scale_up_module/business_loan/shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/business_loan/utils/Utils.dart';
 import 'package:scale_up_module/business_loan/utils/common_elevted_button.dart';
 import 'package:sms_autofill/sms_autofill.dart';

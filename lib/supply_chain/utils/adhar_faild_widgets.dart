@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../api/ApiService.dart';
-import '../shared_preferences/SharedPref.dart';
-import '../view/pancard_screen/PancardScreen.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';

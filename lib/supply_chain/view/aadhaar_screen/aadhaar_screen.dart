@@ -12,7 +12,7 @@ import 'package:scale_up_module/supply_chain/view/aadhaar_screen/models/LeadAadh
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/ImagePicker.dart';
 import '../../utils/Utils.dart';
 import '../../utils/aadhaar_number_formatter.dart';

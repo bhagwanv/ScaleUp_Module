@@ -16,7 +16,7 @@ import 'package:scale_up_module/business_loan/view/splash_screen/model/LeadCurre
 import '../../../business_loan/data_provider/BusinessDataProvider.dart';
 import '../../../business_loan/utils/Utils.dart';
 import '../../../business_loan/utils/constants.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'loan_offer_otp_screen.dart';
 
 class LoanOfferScreen extends StatefulWidget {

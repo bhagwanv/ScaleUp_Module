@@ -12,7 +12,7 @@ import 'package:scale_up_module/business_loan/view/pancard_screen/model/PostLead
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../data_provider/BusinessDataProvider.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/DateTextFormatter.dart';
 import '../../utils/ImagePicker.dart';
 import '../../utils/Utils.dart';
@@ -141,7 +141,7 @@ class _PancardScreenState extends State<PancardScreen> {
 
                           if(LeadPANData.dob!=null){
                             var formateDob =
-                            Utils.dateFormate(context, LeadPANData.dob!);
+                            Utils.dateFormate(context, LeadPANData.dob!,"dd/MM/yyyy");
                             dobAsPan = LeadPANData.dob!;
                             _dOBAsPanCl.text = formateDob;
                           }
@@ -769,7 +769,8 @@ class _PancardScreenState extends State<PancardScreen> {
           // Handle successful response
           fathersNameByValidPanCardResponseModel = FathersNameByValidPanCardResponseModel;
           if (fathersNameByValidPanCardResponseModel.dob != null) {
-            var formateDob = Utils.dateFormate(context, fathersNameByValidPanCardResponseModel.dob);dobAsPan = fathersNameByValidPanCardResponseModel.dob;_dOBAsPanCl.text = formateDob;
+            var formateDob = Utils.dateFormate(context, fathersNameByValidPanCardResponseModel.dob, "dd/MM/yyyy");
+            dobAsPan = fathersNameByValidPanCardResponseModel.dob;_dOBAsPanCl.text = formateDob;
           } else {
             if(fathersNameByValidPanCardResponseModel.message != null) {
               Utils.showToast(fathersNameByValidPanCardResponseModel.message!, context);

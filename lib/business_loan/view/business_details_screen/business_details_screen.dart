@@ -14,7 +14,7 @@ import 'package:scale_up_module/business_loan/utils/common_text_field.dart';
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../data_provider/BusinessDataProvider.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/ImagePickerFile.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
@@ -266,7 +266,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       onConfirm: (dateTime, List<int> index) {
         setState(() {
           _dateTime = dateTime;
-          slectedDate = Utils.dateFormate(context, _dateTime.toString());
+          slectedDate = Utils.dateFormate(context, _dateTime.toString(),"dd/MM/yyyy");
           if (kDebugMode) {
             print("$_dateTime");
           }
@@ -329,7 +329,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   _addressLineController.text =
                       productProvider.getLeadBusinessDetailData!.addressLineOne!;
                   slectedDate = Utils.dateFormate(
-                      context, productProvider.getLeadBusinessDetailData!.doi!);
+                      context, productProvider.getLeadBusinessDetailData!.doi!,"dd/MM/yyyy");
                   _addressLine2Controller.text =
                       productProvider.getLeadBusinessDetailData!.addressLineTwo!;
                   _pinCodeController.text = productProvider
@@ -379,7 +379,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   if (productProvider
                       .getCustomerDetailUsingGSTData!.busGSTNO!.isNotEmpty) {
                     slectedDate = Utils.dateFormate(context,
-                        productProvider.getCustomerDetailUsingGSTData!.doi!);
+                        productProvider.getCustomerDetailUsingGSTData!.doi!,"dd/MM/yyyy");
                     if (productProvider
                             .getCustomerDetailUsingGSTData!.buisnessProofDocId !=
                         0) {

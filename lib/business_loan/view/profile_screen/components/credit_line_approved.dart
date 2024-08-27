@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/business_loan/api/ApiService.dart';
-import 'package:scale_up_module/business_loan/shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/business_loan/utils/Utils.dart';
 import 'package:scale_up_module/business_loan/view/profile_screen/model/DisbursementResponce.dart';
 import 'package:scale_up_module/business_loan/view/profile_screen/model/OfferPersonNameResponceModel.dart';

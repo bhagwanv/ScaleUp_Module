@@ -11,7 +11,7 @@ import 'package:scale_up_module/supply_chain/utils/Utils.dart';
 import '../../../api/ApiService.dart';
 import '../../../api/FailureException.dart';
 import '../../../data_provider/DataProvider.dart';
-import '../../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/loader.dart';
 import '../model/CustomerTransactionListRequestModel.dart';

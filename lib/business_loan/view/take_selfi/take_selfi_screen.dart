@@ -14,7 +14,7 @@ import 'package:scale_up_module/business_loan/view/take_selfi/camera_page.dart';
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../data_provider/BusinessDataProvider.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/Utils.dart';
 import '../../utils/customer_sequence_logic.dart';
 import '../../utils/loader.dart';

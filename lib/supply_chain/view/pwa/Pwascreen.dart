@@ -7,7 +7,7 @@ import 'package:scale_up_module/supply_chain/view/profile_screen/components/Show
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../api/ApiService.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
 import '../../utils/customer_sequence_logic.dart';

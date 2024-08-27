@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../api/ApiService.dart';
-import '../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../view/splash_screen/model/GetLeadResponseModel.dart';
 import '../view/splash_screen/model/LeadCurrentRequestModel.dart';
 import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
@@ -71,9 +72,10 @@ class AdharFailedWidgets extends StatelessWidget {
                   "Oops ...",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.urbanist(
-                    fontSize: 15,
-                    color: Colors.red,
+                    fontSize: 15.0,
+                    color:Colors.red,
                     fontWeight: FontWeight.w400,
+
                   ),
                 ),
               ),
@@ -87,10 +89,11 @@ class AdharFailedWidgets extends StatelessWidget {
                     message,
                     textAlign: TextAlign.justify,
                     style: GoogleFonts.urbanist(
-                      fontSize: 15,
-                      color: Colors.black,
+                      fontSize: 15.0,
+                      color:Colors.black,
                       fontWeight: FontWeight.w400,
                         letterSpacing: 0.5
+
                     ),
                   ),
                 ),

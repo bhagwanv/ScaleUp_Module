@@ -16,7 +16,7 @@ import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/ImagePicker.dart';
 import '../../utils/common_check_box.dart';
 import '../../utils/customer_sequence_logic.dart';

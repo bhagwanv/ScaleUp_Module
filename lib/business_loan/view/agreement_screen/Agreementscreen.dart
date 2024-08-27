@@ -9,7 +9,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../data_provider/BusinessDataProvider.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/Utils.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';

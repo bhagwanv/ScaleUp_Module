@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'constants.dart';
+
 class Loader extends StatefulWidget {
   const Loader({
     Key? key,

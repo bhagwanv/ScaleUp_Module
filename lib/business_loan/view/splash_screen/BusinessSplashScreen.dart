@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:scale_up_module/ProductCompanyDetailResponseModel.dart';
 import 'package:scale_up_module/business_loan/api/ApiService.dart';
 import 'package:scale_up_module/business_loan/data_provider/BusinessDataProvider.dart';
-import 'package:scale_up_module/business_loan/shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/business_loan/utils/Utils.dart';
 import 'package:scale_up_module/business_loan/utils/constants.dart';
 import 'package:scale_up_module/business_loan/utils/customer_sequence_logic.dart';

@@ -11,7 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:scale_up_module/business_loan/shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/business_loan/utils/Utils.dart';
 import 'package:scale_up_module/business_loan/view/bank_details_screen/model/LiveBankList.dart';
 

@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/supply_chain/data_provider/DataProvider.dart';
 import 'package:scale_up_module/supply_chain/utils/Utils.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/constants.dart';
 import 'components/LoginForm.dart';
 

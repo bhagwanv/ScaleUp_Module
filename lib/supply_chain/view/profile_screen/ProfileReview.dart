@@ -7,7 +7,7 @@ import '../../api/FailureException.dart';
 import '../../utils/Utils.dart';
 import 'package:provider/provider.dart';
 import '../../data_provider/DataProvider.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/common_elevted_button.dart';
 import '../../utils/constants.dart';
 import '../../utils/loader.dart';

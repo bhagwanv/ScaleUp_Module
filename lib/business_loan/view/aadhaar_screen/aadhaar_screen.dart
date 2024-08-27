@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../data_provider/BusinessDataProvider.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/ImagePicker.dart';
 import '../../utils/Utils.dart';
 import '../../utils/aadhaar_number_formatter.dart';

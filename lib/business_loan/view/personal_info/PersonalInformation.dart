@@ -15,7 +15,7 @@ import 'package:scale_up_module/business_loan/view/personal_info/EmailOtpScreen.
 
 import '../../api/FailureException.dart';
 import '../../data_provider/BusinessDataProvider.dart';
-import '../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../utils/ImagePicker.dart';
 import '../../utils/common_check_box.dart';
 import '../../utils/customer_sequence_logic.dart';

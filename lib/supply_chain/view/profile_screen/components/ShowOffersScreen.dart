@@ -17,7 +17,7 @@ import 'package:scale_up_module/supply_chain/view/splash_screen/model/LeadCurren
 import '../../../api/ApiService.dart';
 import '../../../api/FailureException.dart';
 import '../../../data_provider/DataProvider.dart';
-import '../../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../../utils/Utils.dart';
 import '../../../utils/common_elevted_button.dart';
 import '../../../utils/constants.dart';

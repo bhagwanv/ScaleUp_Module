@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data_provider/BusinessDataProvider.dart';
-import '../../../shared_preferences/SharedPref.dart';
+import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/loader.dart';
 import '../model/CustomerTransactionListRequestModel.dart';

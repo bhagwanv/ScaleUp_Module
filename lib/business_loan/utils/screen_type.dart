@@ -15,6 +15,4 @@ enum ScreenType {
   Rejected,
   PrepareAgreement,
   MyAccount,
-  Msme,
-  loanOffer
 }
