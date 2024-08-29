@@ -279,23 +279,23 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               _nachAccountHolderController.text =
                                   bankDetailsResponceModel!
                                       .result!
-                                      .leadBankDetailDTOs![1]
+                                      .leadBankDetailDTOs![0]
                                       .accountHolderName!;
                               _nachBankAccountNumberCl.text =
                                   bankDetailsResponceModel!.result!
-                                      .leadBankDetailDTOs![1].accountNumber!;
+                                      .leadBankDetailDTOs![0].accountNumber!;
                               _nachIfsccodeCl.text = bankDetailsResponceModel!
-                                  .result!.leadBankDetailDTOs![1].ifscCode!;
+                                  .result!.leadBankDetailDTOs![0].ifscCode!;
                               nachSelectedBankValue = bankDetailsResponceModel!
-                                  .result!.leadBankDetailDTOs![1].bankName!;
+                                  .result!.leadBankDetailDTOs![0].bankName!;
                               selectedNachAccountTypeValue =
                                   bankDetailsResponceModel!.result!
-                                      .leadBankDetailDTOs![1].accountType!;
+                                      .leadBankDetailDTOs![0].accountType!;
                               _bankStatmentPassworedController.text =
                                   bankDetailsResponceModel!.result!
-                                      .leadBankDetailDTOs![1].pdfPassword!;
+                                      .leadBankDetailDTOs![0].pdfPassword!;
                               nachTpye = bankDetailsResponceModel!
-                                  .result!.leadBankDetailDTOs![1].type!;
+                                  .result!.leadBankDetailDTOs![0].type!;
 
                               isFillData = true;
                             }
@@ -1212,7 +1212,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         selectedBankinitialData = null;
       }
       return DropdownButtonFormField2<LiveBankList>(
-        value: selectedBankinitialData?.first,
+        //value: selectedBankinitialData?.first,
         isExpanded: true,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -1324,14 +1324,13 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
         if (bankDetailsResponceModel!.result!.leadBankDetailDTOs != null) {
-          if (bankDetailsResponceModel!
-                  .result!.leadBankDetailDTOs![1].bankName !=
+          if (bankDetailsResponceModel!.result!.leadBankDetailDTOs![0].bankName !=
               null) {
             selectedNatchBankinitialData = liveBankList!
                 .where((element) =>
                     element?.bankName ==
                     bankDetailsResponceModel!
-                        .result!.leadBankDetailDTOs![1].bankName!)
+                        .result!.leadBankDetailDTOs![0].bankName!)
                 .toList();
             /*if (selectedNatchBankinitialData.isNotEmpty) {
               nachSelectedBankValue = selectedNatchBankinitialData[1].bankName!.toString();
@@ -1345,11 +1344,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       }
       return DropdownButtonFormField2<LiveBankList>(
         //value: selectedNatchBankinitialData!=null?selectedBankinitialData?.first:null,
-        value: isSameBank
+       /* value: isSameBank
             ? selectedBankinitialData?.first
             : !isSelectedNatchBank
                 ? selectedNatchBankinitialData[0]
-                : null,
+                : null,*/
         isExpanded: true,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -1422,7 +1421,6 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         ),
         hint:  Text(
           'Bank Name',
-
           style: GoogleFonts.urbanist(
             fontSize: 14,
             color: blueColor,
@@ -1660,7 +1658,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
   Widget accountTypeWidget(BusinessDataProvider productProvider) {
     return DropdownButtonFormField2<String>(
-      value: selectedAccountTypeValue,
+     // value: selectedAccountTypeValue,
       isExpanded: true,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -1717,7 +1715,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
   Widget nachAccountTypeWidget(BusinessDataProvider productProvider) {
     return DropdownButtonFormField2<String>(
-      value: selectedNachAccountTypeValue,
+      //value: selectedNachAccountTypeValue,
       isExpanded: true,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 16),

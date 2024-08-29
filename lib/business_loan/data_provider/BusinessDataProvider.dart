@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:scale_up_module/ProductCompanyDetailResponseModel.dart';
-
 import '../api/ApiService.dart';
 import '../api/ExceptionHandling.dart';
 import '../view/aadhaar_screen/models/AadhaaGenerateOTPRequestModel.dart';
@@ -32,6 +31,14 @@ import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionLi
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
 import '../view/dashboard_screen/vendorDetail/model/TransactionBreakupResModel.dart';
 import '../view/loan_offer_screen/model/AadhaarOtpGenerateResModel.dart';
+import '../view/loan_offer_screen/model/AadhaarOtpVerifyReqModel.dart';
+import '../view/loan_offer_screen/model/AadhaarOtpVerifyResModel.dart';
+import '../view/loan_offer_screen/model/AcceptOfferByLeadReqModel.dart';
+import '../view/loan_offer_screen/model/AcceptOfferByLeadResModel.dart';
+import '../view/loan_offer_screen/model/GenerateKarzaAadhaarOtpForNBFCResModel.dart';
+import '../view/loan_offer_screen/model/GetOfferEmiDetailsDownloadPdfReqModel.dart';
+import '../view/loan_offer_screen/model/GetOfferEmiDetailsDownloadPdfResModel.dart';
+import '../view/loan_offer_screen/model/GetOfferEmiDetailsResModel.dart';
 import '../view/loan_offer_screen/model/LeadMasterByLeadIdResModel.dart';
 import '../view/loan_offer_screen/model/RateOfInterestResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
@@ -72,6 +79,7 @@ import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
 import '../view/take_selfi/model/LeadSelfieResponseModel.dart';
 import '../view/take_selfi/model/PostLeadSelfieRequestModel.dart';
 import '../view/take_selfi/model/PostLeadSelfieResponseModel.dart';
+
 
 class BusinessDataProvider extends ChangeNotifier {
   final ApiService apiService = ApiService();
@@ -292,6 +300,20 @@ class BusinessDataProvider extends ChangeNotifier {
   Result<AadhaarOtpGenerateResModel,Exception>? _getaadhaarOtpGenerateData;
   Result<AadhaarOtpGenerateResModel,Exception>? get getaadhaarOtpGenerateData => _getaadhaarOtpGenerateData;
 
+  Result<GenerateKarzaAadhaarOtpForNbfcResModel,Exception>? _getGenerateKarzaAadhaarOtpForNBFCData;
+  Result<GenerateKarzaAadhaarOtpForNbfcResModel,Exception>? get getGenerateKarzaAadhaarOtpForNBFCData => _getGenerateKarzaAadhaarOtpForNBFCData;
+
+  Result<AadhaarOtpVerifyResModel,Exception>? _getAadhaarOtpVerifyData;
+  Result<AadhaarOtpVerifyResModel,Exception>? get getAadhaarOtpVerifyData => _getAadhaarOtpVerifyData;
+
+  Result<AcceptOfferByLeadResModel,Exception>? _getAcceptOfferByLeadData;
+  Result<AcceptOfferByLeadResModel,Exception>? get getAcceptOfferByLeadData => _getAcceptOfferByLeadData;
+
+  Result<GetOfferEmiDetailsDownloadPdfResModel,Exception>? _getGetOfferEmiDetailsDownloadData;
+  Result<GetOfferEmiDetailsDownloadPdfResModel,Exception>? get getGetOfferEmiDetailsDownloadData => _getGetOfferEmiDetailsDownloadData;
+
+  Result<GetOfferEmiDetailsResModel,Exception>? _getGetOfferEmiDetailsData;
+  Result<GetOfferEmiDetailsResModel,Exception>? get getGetOfferEmiDetailsData => _getGetOfferEmiDetailsData;
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -643,8 +665,34 @@ class BusinessDataProvider extends ChangeNotifier {
     _getRateOfInterestData = await apiService.getRateOfInterest(tenure);
     notifyListeners();
   }
+
   Future<void> aadhaarOtpGenerate(int leadid) async {
     _getaadhaarOtpGenerateData = await apiService.aadhaarOtpGenerate(leadid);
+    notifyListeners();
+  }
+
+  Future<void> generateKarzaAadhaarOtpForNBFC(int leadid) async {
+    _getGenerateKarzaAadhaarOtpForNBFCData = await apiService.generateKarzaAadhaarOtpForNBFC(leadid);
+    notifyListeners();
+  }
+
+  Future<void> aadhaarOtpVerify(AadhaarOtpVerifyReqModel aadhaarOtpVerifyReqModel) async {
+    _getAadhaarOtpVerifyData = await apiService.aadhaarOtpVerify(aadhaarOtpVerifyReqModel);
+    notifyListeners();
+  }
+
+  Future<void> acceptOfferByLead(AcceptOfferByLeadReqModel acceptOfferByLeadReqModel) async {
+    _getAcceptOfferByLeadData = await apiService.acceptOfferByLead(acceptOfferByLeadReqModel);
+    notifyListeners();
+  }
+
+  Future<void> getOfferEmiDetailsDownloadPdf(GetOfferEmiDetailsDownloadPdfReqModel getOfferEmiDetailsDownloadPdfReqModel) async {
+    _getGetOfferEmiDetailsDownloadData = await apiService.getOfferEmiDetailsDownloadPdf(getOfferEmiDetailsDownloadPdfReqModel);
+    notifyListeners();
+  }
+
+  Future<void> getOfferEmiDetails(int leadid,int reqTenure) async {
+    _getGetOfferEmiDetailsData = await apiService.getOfferEmiDetails(leadid,reqTenure);
     notifyListeners();
   }
 

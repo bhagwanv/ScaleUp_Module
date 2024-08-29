@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:scale_up_module/business_loan/view/profile_screen/components/ShowOffersScreen.dart';
 import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/supply_chain/data_provider/DataProvider.dart';
 import 'package:scale_up_module/supply_chain/utils/constants.dart';
@@ -10,6 +11,8 @@ import 'package:scale_up_module/supply_chain/view/checkoutView/CheckOutLogInOtpS
 import 'package:scale_up_module/supply_chain/view/splash_screen/SplashScreen.dart';
 
 import 'business_loan/data_provider/BusinessDataProvider.dart';
+import 'business_loan/view/loan_offer_screen/LoanOfferScreen.dart';
+import 'business_loan/view/loan_offer_screen/loan_offer_otp_screen.dart';
 import 'business_loan/view/splash_screen/BusinessSplashScreen.dart';
 
 var mobileNumber = "";
@@ -60,8 +63,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _initializeData() async {
     try {
-      /* final prefsUtil = await SharedPref.getInstance();
-      prefsUtil.saveString(BASE_URL, "https://gateway-qa.scaleupfin.com");*/
+       final prefsUtil = await SharedPref.getInstance();
+      prefsUtil.saveString(BASE_URL, "https://gateway-qa.scaleupfin.com");
       await MyApp.platform.invokeMethod('ScaleUP');
     } catch (e) {
       print("Error initializing data: $e");
@@ -115,16 +118,18 @@ class _MyAppState extends State<MyApp> {
             return Scaffold(
                 body: Center(child: Text('Error: ${snapshot.error}')));
           } else {
-            return _buildHome();
+            //return _buildHome();
 
             // return CheckOutLogInOtpScreen(transactionId:"2024853" );
             //return CheckOutOtpScreen(transactionId: "202457");
             // return PaymentConfirmation(transactionReqNo: "202457",customerName: "Aarti Mukati",imageUrl:"https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/0d625556-7f61-47c9-a522-8fef21215b14.jpg",customerCareMoblie: "6263246384",customerCareEmail: "customer.care@scaleupfin.com");
             //return CongratulationScreen();
-            // return SplashScreen(mobileNumber: "6263246384", companyID: "CN_67", productID: "CreditLine",);
+             //return SplashScreen(mobileNumber: "7803994667", companyID: "CN_67", productID: "CreditLine",);
+            print("sdfksf");
+             return BusinessLoanSplashScreen(mobileNumber: "9179173021", companyID: "CN_1", productID: "BusinessLoan",);
             // return SplashScreen(mobileNumber: "6263246384", companyID: "CN_1", productID: "CreditLine",);
             //return SplashScreen(mobileNumber: "8989804393", companyID: "2", productID: "2");
-            //return ShowOffersScreen(activityId: 2, subActivityId: 2);
+           // return LoanOfferScreen(activityId: 2, subActivityId: 2, pageType:"",);
           }
         },
       ),

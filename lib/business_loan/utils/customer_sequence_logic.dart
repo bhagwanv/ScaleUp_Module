@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:scale_up_module/business_loan/utils/screen_type.dart';
-import 'package:scale_up_module/business_loan/view/aadhaar_screen/aadhaar_screen.dart';
-import 'package:scale_up_module/business_loan/view/agreement_screen/Agreementscreen.dart';
-import 'package:scale_up_module/business_loan/view/bank_details_screen/BankDetailsScreen.dart';
-import 'package:scale_up_module/business_loan/view/business_details_screen/business_details_screen.dart';
-import 'package:scale_up_module/business_loan/view/dashboard_screen/bottom_navigation.dart';
-import 'package:scale_up_module/business_loan/view/login_screen/login_screen.dart';
-import 'package:scale_up_module/business_loan/view/pancard_screen/PancardScreen.dart';
-import 'package:scale_up_module/business_loan/view/personal_info/PersonalInformation.dart';
-import 'package:scale_up_module/business_loan/view/profile_screen/ProfileReview.dart';
-import 'package:scale_up_module/business_loan/view/profile_screen/components/ShowOffersScreen.dart';
-import 'package:scale_up_module/business_loan/view/profile_screen/components/credit_line_approved.dart';
-import 'package:scale_up_module/business_loan/view/rejected/rejected_screen.dart';
-import 'package:scale_up_module/business_loan/view/splash_screen/model/GetLeadResponseModel.dart';
-import 'package:scale_up_module/business_loan/view/splash_screen/model/LeadCurrentResponseModel.dart';
-import 'package:scale_up_module/business_loan/view/take_selfi/take_selfi_screen.dart';
-
-
+import 'package:scale_up_module/business_loan/view/msme_registration_screen/MsmeRegistrationScreen.dart';
+import '../view/aadhaar_screen/aadhaar_screen.dart';
+import '../view/bank_details_screen/BankDetailsScreen.dart';
+import '../view/business_details_screen/business_details_screen.dart';
+import '../view/dashboard_screen/bottom_navigation.dart';
+import '../view/loan_offer_screen/LoanOfferScreen.dart';
+import '../view/pancard_screen/PancardScreen.dart';
+import '../view/personal_info/PersonalInformation.dart';
+import '../view/profile_screen/components/ShowOffersScreen.dart';
+import '../view/agreement_screen/Agreementscreen.dart';
+import '../view/login_screen/login_screen.dart';
+import '../view/profile_screen/ProfileReview.dart';
+import '../view/profile_screen/components/credit_line_approved.dart';
+import '../view/rejected/rejected_screen.dart';
+import '../view/splash_screen/model/GetLeadResponseModel.dart';
+import '../view/splash_screen/model/LeadCurrentResponseModel.dart';
+import '../view/take_selfi/take_selfi_screen.dart';
 
 ScreenType? customerSequence(
     BuildContext context,
@@ -28,9 +28,7 @@ ScreenType? customerSequence(
       if (leadCurrentActivityAsyncData.currentSequence! != 0) {
         var currentSequence = leadCurrentActivityAsyncData.currentSequence!;
         debugPrint("sequence no.  $currentSequence");
-        var leadCurrentActivity = leadCurrentActivityAsyncData
-            .leadProductActivity!
-            .firstWhere((product) => product.sequence == currentSequence);
+        var leadCurrentActivity = leadCurrentActivityAsyncData.leadProductActivity!.firstWhere((product) => product.sequence == currentSequence);
         debugPrint("ACTIVITYnAME  ${leadCurrentActivity.activityName}");
         debugPrint("SubActivityName  ${leadCurrentActivity.subActivityName}");
         if (leadCurrentActivity.activityName == "MobileOtp") {
@@ -160,6 +158,18 @@ ScreenType? customerSequence(
                 builder: (context) => BottomNav(pageType: pageType)),
           );
           return ScreenType.MyAccount;
+        } else if (leadCurrentActivity.activityName == "MSME") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => MsmeRegistrationScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)));
+          return ScreenType.Msme;
+        }
+        else if (leadCurrentActivity.activityName == "Arthmate Show Offer") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => LoanOfferScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)),
+          );
+          return ScreenType.loanOffer;
         }
       } else {
         return null;
@@ -286,7 +296,8 @@ ScreenType? customerSequence(
                     isDisbursement: true)),
           );
           return ScreenType.Disbursement;
-        } else if (leadCurrentActivity.activityName ==
+        }
+        else if (leadCurrentActivity.activityName ==
             "Disbursement Completed") {
           Navigator.of(context).push(
             //MaterialPageRoute(builder: (context) => CreditLineApproved(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,isDisbursement: true,)),
@@ -294,12 +305,26 @@ ScreenType? customerSequence(
                 builder: (context) => BottomNav(pageType: pageType)),
           );
           return ScreenType.DisbursementCompleted;
-        } else if (leadCurrentActivity.activityName == "MyAccount") {
+        }
+        else if (leadCurrentActivity.activityName == "MyAccount") {
           Navigator.of(context).push(
             MaterialPageRoute(
                 builder: (context) => BottomNav(pageType: pageType)),
           );
           return ScreenType.MyAccount;
+        } else if (leadCurrentActivity.activityName == "MSME") {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => MsmeRegistrationScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)),
+          );
+          return ScreenType.Msme;
+        }
+        else if (leadCurrentActivity.activityName == "Arthmate Show Offer") {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => LoanOfferScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)),
+          );
+          return ScreenType.loanOffer;
         }
       } else {
         return null;

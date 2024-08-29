@@ -66,9 +66,18 @@ class ApiUrls{
   final String getLeadMSME="/aggregator/LeadAgg/GetLeadMSME";
   final String postLeadMSME="/services/lead/v1/PostLeadMSME";
 
+
   final String getLeadMasterByLeadId="/services/lead/v1/ArthMate/GetLeadMasterByLeadId";
   final String getRateOfInterest="/services/lead/v1/ArthMate/GetRateOfInterest";
+
+  final String getOfferEmiDetails="/services/lead/v1/ArthMate/GetOfferEmiDetails";
+  final String getOfferEmiDetailsDownloadPdf="/aggregator/LeadAgg/GetOfferEmiDetailsDownloadPdf";
+
   final String aadhaarOtpGenerate="/services/lead/v1/ArthMate/AadhaarOtpGenerate";
+  final String generateKarzaAadhaarOtpForNBFC="/services/lead/v1/GenerateKarzaAadhaarOtpForNBFC";
+
+  final String aadhaarOtpVerify="/aggregator/LeadAgg/AadhaarOtpVerify";
+  final String acceptOfferByLead="/aggregator/LeadAgg/AcceptOfferByLead";
 
 
 }

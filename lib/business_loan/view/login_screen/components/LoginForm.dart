@@ -19,12 +19,12 @@ class LoginForm extends StatefulWidget {
 
   LoginForm(
       {required this.productProvider,
-      required this.activityId,
-      required this.subActivityId,
-      this.companyID,
-      this.ProductID,
-      this.MobileNumber,
-      super.key});
+        required this.activityId,
+        required this.subActivityId,
+        this.companyID,
+        this.ProductID,
+        this.MobileNumber,
+        super.key});
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -46,7 +46,7 @@ class _LoginFormState extends State<LoginForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(children: [
-           SizedBox(
+          SizedBox(
             width: 58,
             child: TextField(
               readOnly: true,

@@ -36,9 +36,9 @@ class LoginScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-              top: false,
-              child: Consumer<BusinessDataProvider>(builder: (context, productProvider, child) {
-                      return SingleChildScrollView(
+          top: false,
+          child: Consumer<BusinessDataProvider>(builder: (context, productProvider, child) {
+            return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
                   LoginScreenTopImage(),
@@ -48,11 +48,11 @@ class LoginScreen extends StatelessWidget {
                       Expanded(
                         flex: 8,
                         child: LoginForm(
-                          productProvider: productProvider,
-                          activityId: activityId,
-                          subActivityId: subActivityId,
-                          companyID: companyID,
-                          ProductID: ProductID,
+                            productProvider: productProvider,
+                            activityId: activityId,
+                            subActivityId: subActivityId,
+                            companyID: companyID,
+                            ProductID: ProductID,
                             MobileNumber:MobileNumber
                         ),
                       ),
@@ -61,9 +61,9 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ],
               ),
-                      );
-                    }),
-            ),
+            );
+          }),
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/ProductCompanyDetailResponseModel.dart';
 import 'package:scale_up_module/business_loan/api/ApiService.dart';
@@ -28,28 +29,34 @@ class BusinessLoanSplashScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<BusinessLoanSplashScreen> createState() => _SplashScreenState();
+  State<BusinessLoanSplashScreen> createState() => _BusinessLoanSplashScreenState();
 }
 
-class _SplashScreenState extends State<BusinessLoanSplashScreen> {
+class _BusinessLoanSplashScreenState extends State<BusinessLoanSplashScreen> {
   @override
   void initState() {
     super.initState();
-      productCompanyDetail(widget.productID, widget.companyID);
+    productCompanyDetail(widget.productID, widget.companyID);
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
-          title: const Center(child: Text('Scaleup')),
-        ),
+            title: Center(
+                child: Text('Scaleup',
+                    style: GoogleFonts.urbanist(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    )))),
         body:
         Consumer<BusinessDataProvider>(builder: (context, productProvider, child) {
           if (productProvider.productCompanyDetailResponseModel != null) {
             if (productProvider.productCompanyDetailResponseModel!.status!) {
-              SaveData(productProvider.productCompanyDetailResponseModel!.response!).then((leadCurrentActivityAsyncData) {
+              SaveData(productProvider
+                  .productCompanyDetailResponseModel!.response!)
+                  .then((leadCurrentActivityAsyncData) {
                 // Handle the returned LeadCurrentResponseModel here
                 if (leadCurrentActivityAsyncData != null) {
                   if (leadCurrentActivityAsyncData
@@ -102,7 +109,7 @@ class _SplashScreenState extends State<BusinessLoanSplashScreen> {
                         ? productProvider
                         .productCompanyDetailResponseModel!.message!
                         .toString()
-                        : "",
+                        : "Something went wrong",
                     context);
               });
             }
@@ -125,13 +132,15 @@ class _SplashScreenState extends State<BusinessLoanSplashScreen> {
 
   Future<void> productCompanyDetail(product, company) async {
     final prefsUtil = await SharedPref.getInstance();
-    if(prefsUtil.getBool(IS_LOGGED_IN) != null) {
-      widget.isLoggedIn =  prefsUtil.getBool(IS_LOGGED_IN)!;
+    if (prefsUtil.getBool(IS_LOGGED_IN) != null) {
+      widget.isLoggedIn = prefsUtil.getBool(IS_LOGGED_IN)!;
     }
-    Provider.of<BusinessDataProvider>(context, listen: false).productCompanyDetail(product, company);
+    Provider.of<BusinessDataProvider>(context, listen: false)
+        .productCompanyDetail(product, company);
   }
 
-  Future<LeadCurrentResponseModel?> SaveData(ProductCompanyDetailResponse response) async {
+  Future<LeadCurrentResponseModel?> SaveData(
+      ProductCompanyDetailResponse response) async {
     final prefsUtil = await SharedPref.getInstance();
     ValueType checkValueType<T>(T value) {
       if (value is bool) {
@@ -172,14 +181,13 @@ class _SplashScreenState extends State<BusinessLoanSplashScreen> {
     );
 
     var leadId = 0;
-    if(prefsUtil.getInt(LEADE_ID) != null) {
+    if (prefsUtil.getInt(LEADE_ID) != null) {
       leadId = prefsUtil.getInt(LEADE_ID)!;
     }
     widget.getLeadData = await ApiService().getLeads(
-        widget.mobileNumber,
-        response.companyId,
-        response.productId,
-        leadId) as GetLeadResponseModel?;
-    return await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel) as LeadCurrentResponseModel?;
+        widget.mobileNumber, response.companyId, response.productId, leadId)
+    as GetLeadResponseModel?;
+    return await ApiService().leadCurrentActivityAsync(leadCurrentRequestModel)
+    as LeadCurrentResponseModel?;
   }
 }

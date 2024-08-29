@@ -1,3 +1,4 @@
+
 sealed class Result<S, E extends Exception> {
   const Result();
   R when<R>({
