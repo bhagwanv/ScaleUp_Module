@@ -369,11 +369,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
                             isElectriCityDistrictEdit = false;
                           }
                           isOwnerShipProofEditable = true;
-                          getIvrsNumberExist(
+                         /* getIvrsNumberExist(
                             context,
                             productProvider,
                             _customerIvrsCl,
-                          );
+                          );*/
                         }
                       } else {
                         if (!isEmailClear && !isValidEmail) {

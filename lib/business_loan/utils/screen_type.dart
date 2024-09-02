@@ -17,5 +17,6 @@ enum ScreenType {
   MyAccount,
   Msme,
   loanOffer,
-  congratulations
+  congratulations,
+  loanDetail,
 }

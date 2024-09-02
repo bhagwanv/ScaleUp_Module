@@ -81,5 +81,8 @@ class ApiUrls{
   final String karzaAadhaarOtpVerifyForNBFC="/services/lead/v1/KarzaAadhaarOtpVerifyForNBFC";
   final String acceptOffer="/aggregator/LeadAgg/AcceptOffer";
 
+  final String getDisbursedLoanDetail="/services/loanaccount/v1/GetDisbursedLoanDetail";
+  final String BLEMIDownloadPdf="/aggregator/LoanAccountAgg/BLEMIDownloadPdf";
+
 
 }

@@ -247,29 +247,26 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                             if (bankDetailsResponceModel!
                                     .result!.leadBankDetailDTOs !=
                                 null) {
-                              _accountHolderController.text =
-                                  bankDetailsResponceModel!
-                                      .result!
-                                      .leadBankDetailDTOs!
-                                      .first
-                                      .accountHolderName!;
+                              _accountHolderController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs![0].accountHolderName!;
                               _bankAccountNumberCl.text =
                                   bankDetailsResponceModel!.result!
-                                      .leadBankDetailDTOs!.first.accountNumber!;
+                                      .leadBankDetailDTOs![0].accountNumber!;
                               _ifsccodeCl.text = bankDetailsResponceModel!
-                                  .result!.leadBankDetailDTOs!.first.ifscCode!;
-                              selectedBankValue = bankDetailsResponceModel!
-                                  .result!.leadBankDetailDTOs!.first.bankName!;
+                                  .result!.leadBankDetailDTOs![0].ifscCode!;
+
+                              selectedBankValue = bankDetailsResponceModel!.result!.leadBankDetailDTOs![0].bankName!;
+                              print("selectedBankValue=$selectedBankValue");
+
                               selectedAccountTypeValue =
                                   bankDetailsResponceModel!.result!
-                                      .leadBankDetailDTOs!.first.accountType!;
+                                      .leadBankDetailDTOs![0].accountType!;
                               nachsurrogateType = bankDetailsResponceModel!
                                   .result!
                                   .leadBankDetailDTOs!
-                                  .first
+                              [0]
                                   .surrogateType!;
                               disbursementDetailType = bankDetailsResponceModel!
-                                  .result!.leadBankDetailDTOs!.first.type!;
+                                  .result!.leadBankDetailDTOs![0].type!;
                             }
 
                             //natch bank Details
@@ -279,23 +276,23 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               _nachAccountHolderController.text =
                                   bankDetailsResponceModel!
                                       .result!
-                                      .leadBankDetailDTOs![0]
+                                      .leadBankDetailDTOs![1]
                                       .accountHolderName!;
                               _nachBankAccountNumberCl.text =
                                   bankDetailsResponceModel!.result!
-                                      .leadBankDetailDTOs![0].accountNumber!;
+                                      .leadBankDetailDTOs![1].accountNumber!;
                               _nachIfsccodeCl.text = bankDetailsResponceModel!
-                                  .result!.leadBankDetailDTOs![0].ifscCode!;
+                                  .result!.leadBankDetailDTOs![1].ifscCode!;
                               nachSelectedBankValue = bankDetailsResponceModel!
-                                  .result!.leadBankDetailDTOs![0].bankName!;
+                                  .result!.leadBankDetailDTOs![1].bankName!;
                               selectedNachAccountTypeValue =
                                   bankDetailsResponceModel!.result!
-                                      .leadBankDetailDTOs![0].accountType!;
+                                      .leadBankDetailDTOs![1].accountType!;
                               _bankStatmentPassworedController.text =
                                   bankDetailsResponceModel!.result!
-                                      .leadBankDetailDTOs![0].pdfPassword!;
+                                      .leadBankDetailDTOs![1].pdfPassword!;
                               nachTpye = bankDetailsResponceModel!
-                                  .result!.leadBankDetailDTOs![0].type!;
+                                  .result!.leadBankDetailDTOs![1].type!;
 
                               isFillData = true;
                             }
@@ -480,6 +477,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               selectedNachAccountTypeValue =
                                   selectedAccountTypeValue;
                               nachSelectedBankValue = selectedBankValue;
+                              print("nachSelectedBankValue-$selectedBankValue");
+                              print("nachSelectedBankValue1-$nachSelectedBankValue");
+
                               isSelectedNatchBank = false;
                             } else {
                               _nachAccountHolderController.text = "";
@@ -1192,18 +1192,12 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       if (bankDetailsResponceModel!.result != null) {
         if (bankDetailsResponceModel!.result!.leadBankDetailDTOs != null) {
           if (bankDetailsResponceModel!
-                  .result!.leadBankDetailDTOs!.first.bankName !=
+                  .result!.leadBankDetailDTOs![0].bankName !=
               null) {
             selectedBankinitialData = liveBankList!
                 .where((element) =>
-                    element?.bankName ==
-                    bankDetailsResponceModel!
-                        .result!.leadBankDetailDTOs!.first.bankName!)
+                    element?.bankName == selectedBankValue)
                 .toList();
-            if (selectedBankinitialData.isNotEmpty) {
-              selectedBankValue =
-                  selectedBankinitialData.first!.bankName!.toString();
-            }
           } else {
             selectedBankinitialData = null;
           }
@@ -1212,7 +1206,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         selectedBankinitialData = null;
       }
       return DropdownButtonFormField2<LiveBankList>(
-        //value: selectedBankinitialData?.first,
+        value: selectedBankinitialData != null && selectedBankinitialData.isNotEmpty ? selectedBankinitialData[0]: null,
         isExpanded: true,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -1324,17 +1318,13 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
         if (bankDetailsResponceModel!.result!.leadBankDetailDTOs != null) {
-          if (bankDetailsResponceModel!.result!.leadBankDetailDTOs![0].bankName !=
+          if (bankDetailsResponceModel!
+                  .result!.leadBankDetailDTOs![1].bankName !=
               null) {
             selectedNatchBankinitialData = liveBankList!
                 .where((element) =>
-                    element?.bankName ==
-                    bankDetailsResponceModel!
-                        .result!.leadBankDetailDTOs![0].bankName!)
+                    element?.bankName == nachSelectedBankValue)
                 .toList();
-            /*if (selectedNatchBankinitialData.isNotEmpty) {
-              nachSelectedBankValue = selectedNatchBankinitialData[1].bankName!.toString();
-            }*/
           } else {
             selectedNatchBankinitialData = null;
           }
@@ -1344,11 +1334,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       }
       return DropdownButtonFormField2<LiveBankList>(
         //value: selectedNatchBankinitialData!=null?selectedBankinitialData?.first:null,
-       /* value: isSameBank
-            ? selectedBankinitialData?.first
-            : !isSelectedNatchBank
-                ? selectedNatchBankinitialData[0]
-                : null,*/
+        value: selectedNatchBankinitialData != null && selectedNatchBankinitialData.isNotEmpty ? selectedNatchBankinitialData[0]: null,
         isExpanded: true,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -1376,9 +1362,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           ),
         ),
         items: _addDividersAfterItems1(liveBankList!),
-        onChanged: (LiveBankList? value) {
+        onChanged: !isSameBank?(LiveBankList? value) {
           nachSelectedBankValue = value!.bankName!;
-        },
+        }:null,
         dropdownStyleData: DropdownStyleData(
           maxHeight: 400,
           decoration: BoxDecoration(
@@ -1421,6 +1407,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         ),
         hint:  Text(
           'Bank Name',
+
           style: GoogleFonts.urbanist(
             fontSize: 14,
             color: blueColor,
@@ -1658,7 +1645,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
   Widget accountTypeWidget(BusinessDataProvider productProvider) {
     return DropdownButtonFormField2<String>(
-     // value: selectedAccountTypeValue,
+      value: selectedAccountTypeValue,
       isExpanded: true,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -1687,10 +1674,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
       ),
       items: _addDividersAfterItems(accountTypeList),
-      onChanged: (String? value) {
+      onChanged: !isSameBank?(String? value) {
         selectedAccountTypeValue = value!;
-        print("atul${value}");
-      },
+      }:null,
       dropdownStyleData: DropdownStyleData(
         maxHeight: 400,
         decoration: BoxDecoration(
@@ -1715,7 +1701,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
   Widget nachAccountTypeWidget(BusinessDataProvider productProvider) {
     return DropdownButtonFormField2<String>(
-      //value: selectedNachAccountTypeValue,
+      value: selectedNachAccountTypeValue,
       isExpanded: true,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 16),

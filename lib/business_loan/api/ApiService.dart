@@ -37,6 +37,8 @@ import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespMod
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
 import '../view/dashboard_screen/vendorDetail/model/TransactionBreakupResModel.dart';
+import '../view/loan_detail_screen/model/BLEMIDownloadPdfResModel.dart';
+import '../view/loan_detail_screen/model/GetDisbursedLoanDetailResModel.dart';
 import '../view/loan_offer_screen/model/AadhaarOtpGenerateResModel.dart';
 import '../view/loan_offer_screen/model/AadhaarOtpVerifyReqModel.dart';
 import '../view/loan_offer_screen/model/AcceptOfferByLeadReqModel.dart';
@@ -1025,19 +1027,18 @@ class ApiService {
           },
           body: json.encode(postLeadBuisnessDetailRequestModel));
       //print(json.encode(leadCurrentRequestModel));
-      print(response.body); // Print the response body once here
-      if (response.statusCode == 200) {
+      switch (response.statusCode) {
+        case 200:
         // Parse the JSON response
-        final dynamic jsonData = json.decode(response.body);
-        final PostLeadBuisnessDetailResponsModel responseModel =
-            PostLeadBuisnessDetailResponsModel.fromJson(jsonData);
-        return Success(responseModel);
+          final dynamic jsonData = json.decode(response.body);
+          final PostLeadBuisnessDetailResponsModel responseModel =
+          PostLeadBuisnessDetailResponsModel.fromJson(jsonData);
+          return Success(responseModel);
+
+        default:
+          return Failure(ApiException(response.statusCode, ""));
       }
-      if (response.statusCode == 401) {
-        return Failure(ApiException(response.statusCode, ""));
-      } else {
-        throw Exception('Failed to load products');
-      }
+
     } else {
       Utils.showBottomToast("No Internet connection");
       throw Exception('No internet connection');
@@ -2320,6 +2321,78 @@ class ApiService {
             final dynamic jsonData = json.decode(response.body);
             final AcceptOfferResModel responseModel =
             AcceptOfferResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        Utils.showBottomToast("No Internet connection");
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<GetDisbursedLoanDetailResModel, Exception>> getDisbursedLoanDetail(int leadid) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        var base_url = prefsUtil.getString(BASE_URL);
+        final response = await interceptor.get(Uri.parse(
+            '${base_url! + apiUrls.getDisbursedLoanDetail}?Leadmasterid=$leadid'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+        );
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final GetDisbursedLoanDetailResModel responseModel =
+            GetDisbursedLoanDetailResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        Utils.showBottomToast("No Internet connection");
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<BlemiDownloadPdfResModel, Exception>> BLEMIDownloadPdf(int leadid) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        var base_url = prefsUtil.getString(BASE_URL);
+        final response = await interceptor.get(Uri.parse(
+            '${base_url! + apiUrls.BLEMIDownloadPdf}?leadId=$leadid'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+        );
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final BlemiDownloadPdfResModel responseModel =
+            BlemiDownloadPdfResModel.fromJson(jsonData);
             return Success(responseModel);
 
           default:

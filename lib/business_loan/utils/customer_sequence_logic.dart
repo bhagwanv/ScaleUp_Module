@@ -6,6 +6,7 @@ import '../view/bank_details_screen/BankDetailsScreen.dart';
 import '../view/business_details_screen/business_details_screen.dart';
 import '../view/congratulation_screen/BusinessCongatulationsScreen.dart';
 import '../view/dashboard_screen/bottom_navigation.dart';
+import '../view/loan_detail_screen/LoanDetailScreen.dart';
 import '../view/loan_offer_screen/LoanOfferScreen.dart';
 import '../view/pancard_screen/PancardScreen.dart';
 import '../view/personal_info/PersonalInformation.dart';
@@ -179,6 +180,13 @@ ScreenType? customerSequence(
           );
           return ScreenType.congratulations;
         }
+        else if (leadCurrentActivity.activityName == "LoanDetail") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => LoanDetailscreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)),
+          );
+          return ScreenType.loanDetail;
+        }
       } else {
         return null;
       }
@@ -340,6 +348,13 @@ ScreenType? customerSequence(
                 builder: (context) => BusinessCongatulationsScreen()),
           );
           return ScreenType.loanOffer;
+        }
+        else if (leadCurrentActivity.activityName == "loanDetail") {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => LoanDetailscreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)),
+          );
+          return ScreenType.loanDetail;
         }
       } else {
         return null;

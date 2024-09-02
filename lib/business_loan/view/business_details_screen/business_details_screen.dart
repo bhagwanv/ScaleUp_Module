@@ -266,7 +266,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
       onConfirm: (dateTime, List<int> index) {
         setState(() {
           _dateTime = dateTime;
-          slectedDate = Utils.dateFormate(context, _dateTime.toString(),"dd/MM/yyyy");
+          slectedDate = Utils.dateFormate(context, _dateTime.toString(),"yyyy-MM-dd");
           if (kDebugMode) {
             print("$_dateTime");
           }
@@ -314,10 +314,11 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                 Navigator.of(context, rootNavigator: true).pop();
                 isLoading = false;
               }
+
+
               if (productProvider.getLeadBusinessDetailData != null) {
                 if (productProvider.getLeadBusinessDetailData?.businessName != null && productProvider.getLeadBusinessDetailData?.doi != null && !isClearData && !isImageDelete) {
-                  if (productProvider.getLeadBusinessDetailData!.busGSTNO !=
-                      null) {
+                  if (productProvider.getLeadBusinessDetailData!.busGSTNO != null) {
                     _gstController.text =
                         productProvider.getLeadBusinessDetailData!.busGSTNO!;
                     gstNumber =
@@ -329,7 +330,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   _addressLineController.text =
                       productProvider.getLeadBusinessDetailData!.addressLineOne!;
                   slectedDate = Utils.dateFormate(
-                      context, productProvider.getLeadBusinessDetailData!.doi!,"dd/MM/yyyy");
+                      context, productProvider.getLeadBusinessDetailData!.doi!,"yyyy-MM-dd");
                   _addressLine2Controller.text =
                       productProvider.getLeadBusinessDetailData!.addressLineTwo!;
                   _pinCodeController.text = productProvider
@@ -379,7 +380,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                   if (productProvider
                       .getCustomerDetailUsingGSTData!.busGSTNO!.isNotEmpty) {
                     slectedDate = Utils.dateFormate(context,
-                        productProvider.getCustomerDetailUsingGSTData!.doi!,"dd/MM/yyyy");
+                        productProvider.getCustomerDetailUsingGSTData!.doi!,"yyyy-MM-dd");
                     if (productProvider
                             .getCustomerDetailUsingGSTData!.buisnessProofDocId !=
                         0) {
@@ -1491,7 +1492,12 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
             }else{
-              Utils.showToast(exception.errorMessage,context);
+              if(exception.errorMessage.isNotEmpty){
+                Utils.showToast(exception.errorMessage,context);
+              }else{
+                Utils.showToast("Server error ",context);
+              }
+
             }
           }
         },
@@ -1510,11 +1516,9 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   Future<void> getPersonalDetailAndStateApi(BuildContext context) async {
     final prefsUtil = await SharedPref.getInstance();
-  //  final String? userId = prefsUtil.getString(USER_ID);
-   // final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    final String? userId = prefsUtil.getString(USER_ID);
+    final String? productCode = prefsUtil.getString(PRODUCT_CODE);
 
-    final String? userId = "0ae22741-5bba-48e8-a768-569beebaabfa";
-    final String? productCode = "BusinessLoan";
 
 
     await Provider.of<BusinessDataProvider>(context, listen: false)

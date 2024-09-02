@@ -31,6 +31,8 @@ import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespMod
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
 import '../view/dashboard_screen/vendorDetail/model/TransactionBreakupResModel.dart';
+import '../view/loan_detail_screen/model/BLEMIDownloadPdfResModel.dart';
+import '../view/loan_detail_screen/model/GetDisbursedLoanDetailResModel.dart';
 import '../view/loan_offer_screen/model/AadhaarOtpGenerateResModel.dart';
 import '../view/loan_offer_screen/model/AadhaarOtpVerifyReqModel.dart';
 import '../view/loan_offer_screen/model/AadhaarOtpVerifyResModel.dart';
@@ -323,6 +325,12 @@ class BusinessDataProvider extends ChangeNotifier {
 
   Result<AcceptOfferResModel,Exception>? _getacceptOffersData;
   Result<AcceptOfferResModel,Exception>? get getacceptOffersData => _getacceptOffersData;
+
+  Result<GetDisbursedLoanDetailResModel,Exception>? _getDisbursedLoanDetailData;
+  Result<GetDisbursedLoanDetailResModel,Exception>? get getDisbursedLoanDetailData => _getDisbursedLoanDetailData;
+
+  Result<BlemiDownloadPdfResModel,Exception>? _getBlemiDownloadPdfData;
+  Result<BlemiDownloadPdfResModel,Exception>? get getBlemiDownloadPdfData => _getBlemiDownloadPdfData;
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -714,6 +722,16 @@ class BusinessDataProvider extends ChangeNotifier {
     _getacceptOffersData = await apiService.acceptOffer(leadid);
     notifyListeners();
   }
+  Future<void> getDisbursedLoanDetail(int leadid) async {
+    _getDisbursedLoanDetailData = await apiService.getDisbursedLoanDetail(leadid);
+    notifyListeners();
+  }
+
+  Future<void> BLEMIDownloadPdf(int leadid) async {
+    _getBlemiDownloadPdfData = await apiService.BLEMIDownloadPdf(leadid);
+    notifyListeners();
+  }
+
 
 
   Future<void> disposeAllProviderData() async {
