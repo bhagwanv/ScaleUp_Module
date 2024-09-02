@@ -448,7 +448,7 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Flexible(
-                                            child: Text('Loan Tenure',
+                                            child: Text('Loan Tenure (${updatedLoanTnr.toInt()>0?updatedLoanTnr.toInt():1} Month)',
                                                 textAlign: TextAlign.left,
                                                 style: GoogleFonts.urbanist(
                                                   fontSize: 12,
@@ -1047,12 +1047,13 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
                               height: 16.0,
                             ),
                             CommonElevatedButton(
-                              onPressed: () async {
+                              onPressed: () {
+
                                 if (companyIdentificationCode == "ArthMate") {
-                                  await arthMateGenerateAadhaarOTPAPI(
+                                   arthMateGenerateAadhaarOTPAPI(
                                       context, productProvider);
                                 } else {
-                                  await getGenerateKarzaAadhaarOtpForNBFC(
+                                   getGenerateKarzaAadhaarOtpForNBFC(
                                       context, productProvider);
                                 }
                               },
@@ -1326,41 +1327,33 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
 
   Future<void> getGenerateKarzaAadhaarOtpForNBFC(
       BuildContext context, BusinessDataProvider productProvider) async {
-    //Utils.onLoading(context, "");
+    Utils.onLoading(context, "");
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
-    /*Provider.of<BusinessDataProvider>(context, listen: false)
+   await Provider.of<BusinessDataProvider>(context, listen: false)
         .generateKarzaAadhaarOtpForNBFC(leadId!);
-    Navigator.of(context, rootNavigator: true).pop();*/
+    Navigator.of(context, rootNavigator: true).pop();
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-          builder: (context) => LoanOfferOtpScreen(
-              activityId: widget.activityId,
-              subActivityId: widget.activityId,
-              companyIdentificationCode: companyIdentificationCode,
-              leadMasterByLeadId: getLeadMasterByLeadIdData)),
-    );
-
-    if (productProvider.getGenerateKarzaAadhaarOtpForNBFCData != null) {
+    if(productProvider.getGenerateKarzaAadhaarOtpForNBFCData!=null){
       productProvider.getGenerateKarzaAadhaarOtpForNBFCData!.when(
         success: (data) async {
           var generateKarzaAadhaarOtpForNBFC = data;
           if (generateKarzaAadhaarOtpForNBFC != null) {
             if (generateKarzaAadhaarOtpForNBFC.status != null) {
-              //  Utils.showToast(" ${generateKarzaAadhaarOtpForNBFC.data!.result!.message}", context);
-              requestId =
-                  generateKarzaAadhaarOtpForNBFC.data!.requestId.toString();
-              statusCode =
-                  generateKarzaAadhaarOtpForNBFC.data!.statusCode.toString();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                    builder: (context) => LoanOfferOtpScreen(
+              if(generateKarzaAadhaarOtpForNBFC.status!){
+                requestId = generateKarzaAadhaarOtpForNBFC.data!.requestId.toString();
+                statusCode = generateKarzaAadhaarOtpForNBFC.data!.statusCode.toString();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => LoanOfferOtpScreen(
                         activityId: widget.activityId,
                         subActivityId: widget.activityId,
                         companyIdentificationCode: companyIdentificationCode,
-                        leadMasterByLeadId: getLeadMasterByLeadIdData)),
-              );
+                        leadMasterByLeadId: getLeadMasterByLeadIdData,
+                        generateKarzaAadhaarOtpForNbfcResModel:generateKarzaAadhaarOtpForNBFC,
+                        updatedLoanTnr:updatedLoanTnr.toInt(),)),
+                );
+              }
             }
           }
         },
@@ -1370,12 +1363,18 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
             } else {
-              Utils.showToast(exception.errorMessage, context);
+              if(exception.errorMessage.isNotEmpty){
+                Utils.showToast(exception.errorMessage, context);
+              }else{
+                Utils.showToast("Server error", context);
+              }
+
             }
           }
         },
       );
     }
+
   }
 
   void calcEMI(

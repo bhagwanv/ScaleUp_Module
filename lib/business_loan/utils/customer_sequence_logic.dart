@@ -4,6 +4,7 @@ import 'package:scale_up_module/business_loan/view/msme_registration_screen/Msme
 import '../view/aadhaar_screen/aadhaar_screen.dart';
 import '../view/bank_details_screen/BankDetailsScreen.dart';
 import '../view/business_details_screen/business_details_screen.dart';
+import '../view/congratulation_screen/BusinessCongatulationsScreen.dart';
 import '../view/dashboard_screen/bottom_navigation.dart';
 import '../view/loan_offer_screen/LoanOfferScreen.dart';
 import '../view/pancard_screen/PancardScreen.dart';
@@ -171,6 +172,13 @@ ScreenType? customerSequence(
           );
           return ScreenType.loanOffer;
         }
+        else if (leadCurrentActivity.activityName == "Congratulations") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => BusinessCongatulationsScreen()),
+          );
+          return ScreenType.congratulations;
+        }
       } else {
         return null;
       }
@@ -323,6 +331,13 @@ ScreenType? customerSequence(
           Navigator.of(context).push(
             MaterialPageRoute(
                 builder: (context) => LoanOfferScreen(activityId: leadCurrentActivity.activityMasterId!, subActivityId: leadCurrentActivity.subActivityMasterId!,sequenceNo: leadCurrentActivity.sequence!)),
+          );
+          return ScreenType.loanOffer;
+        }
+        else if (leadCurrentActivity.activityName == "Congratulations") {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => BusinessCongatulationsScreen()),
           );
           return ScreenType.loanOffer;
         }

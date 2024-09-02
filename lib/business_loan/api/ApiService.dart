@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -40,10 +41,12 @@ import '../view/loan_offer_screen/model/AadhaarOtpGenerateResModel.dart';
 import '../view/loan_offer_screen/model/AadhaarOtpVerifyReqModel.dart';
 import '../view/loan_offer_screen/model/AcceptOfferByLeadReqModel.dart';
 import '../view/loan_offer_screen/model/AcceptOfferByLeadResModel.dart';
+import '../view/loan_offer_screen/model/AcceptOfferResModel.dart';
 import '../view/loan_offer_screen/model/GenerateKarzaAadhaarOtpForNBFCResModel.dart';
 import '../view/loan_offer_screen/model/GetOfferEmiDetailsDownloadPdfReqModel.dart';
 import '../view/loan_offer_screen/model/GetOfferEmiDetailsDownloadPdfResModel.dart';
 import '../view/loan_offer_screen/model/GetOfferEmiDetailsResModel.dart';
+import '../view/loan_offer_screen/model/KarzaAadhaarOtpVerifyForNBFCReqModel.dart';
 import '../view/loan_offer_screen/model/LeadMasterByLeadIdResModel.dart';
 import '../view/loan_offer_screen/model/RateOfInterestResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
@@ -115,13 +118,11 @@ class ApiService {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var base_url = prefsUtil.getString(BASE_URL);
-      var token = await prefsUtil.getString(TOKEN);
       //  var base_url = apiUrls.baseUrl;
       final response = await interceptor.get(Uri.parse(
           '${base_url! + apiUrls.productCompanyDetail}?product=$product&company=$company'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
         },);
       print(response.body); // Print the response body once here
       if (response.statusCode == 200) {
@@ -2251,6 +2252,74 @@ class ApiService {
             final dynamic jsonData = json.decode(response.body);
             final GetOfferEmiDetailsResModel responseModel =
             GetOfferEmiDetailsResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        Utils.showBottomToast("No Internet connection");
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<bool, Exception>> karzaAadhaarOtpVerifyForNBFC(
+      KarzaAadhaarOtpVerifyForNbfcReqModel karzaAadhaarOtpVerifyForNbfcReqModel) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var base_url = prefsUtil.getString(BASE_URL);
+        var token = await prefsUtil.getString(TOKEN);
+        final response = await interceptor.post(
+            Uri.parse(base_url!  + apiUrls.karzaAadhaarOtpVerifyForNBFC ),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token'
+            },
+            body: json.encode(karzaAadhaarOtpVerifyForNbfcReqModel));
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+           // final  responseModel = GetOfferEmiDetailsDownloadPdfResModel.fromJson(jsonData);
+            return Success(jsonData);
+          default:
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        Utils.showBottomToast("No Internet connection");
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<AcceptOfferResModel, Exception>> acceptOffer(int leadid) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        var base_url = prefsUtil.getString(BASE_URL);
+        final response = await interceptor.get(Uri.parse(
+            '${base_url! + apiUrls.acceptOffer}?leadId=$leadid'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+        );
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final AcceptOfferResModel responseModel =
+            AcceptOfferResModel.fromJson(jsonData);
             return Success(responseModel);
 
           default:

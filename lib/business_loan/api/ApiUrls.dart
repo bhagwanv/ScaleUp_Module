@@ -78,6 +78,8 @@ class ApiUrls{
 
   final String aadhaarOtpVerify="/aggregator/LeadAgg/AadhaarOtpVerify";
   final String acceptOfferByLead="/aggregator/LeadAgg/AcceptOfferByLead";
+  final String karzaAadhaarOtpVerifyForNBFC="/services/lead/v1/KarzaAadhaarOtpVerifyForNBFC";
+  final String acceptOffer="/aggregator/LeadAgg/AcceptOffer";
 
 
 }

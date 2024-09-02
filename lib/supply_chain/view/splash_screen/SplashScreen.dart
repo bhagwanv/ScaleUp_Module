@@ -66,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           context);
                     });
                   } else {
-                    if (widget.isLoggedIn) {
+                    if (widget.isLoggedIn && leadCurrentActivityAsyncData.currentSequence != 1) {
                       customerSequence(context, widget.getLeadData,
                           leadCurrentActivityAsyncData, "pushReplacement");
                     } else {

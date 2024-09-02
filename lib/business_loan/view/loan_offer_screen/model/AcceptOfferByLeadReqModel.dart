@@ -11,8 +11,7 @@ class AcceptOfferByLeadReqModel {
       this.activityId, 
       this.subActivityId, 
       this.nbfcCompanyId, 
-      this.productSlabConfigResponse, 
-      this.gst,});
+      this.productSlabConfigResponse,});
 
   AcceptOfferByLeadReqModel.fromJson(dynamic json) {
     leadId = json['leadId'];
@@ -29,8 +28,7 @@ class AcceptOfferByLeadReqModel {
       json['productSlabConfigResponse'].forEach((v) {
         productSlabConfigResponse?.add(ProductSlabConfigResponse.fromJson(v));
       });
-    }
-    gst = json['gst'];
+    };
   }
   int? leadId;
   int? tenure;
@@ -42,7 +40,6 @@ class AcceptOfferByLeadReqModel {
   int? subActivityId;
   int? nbfcCompanyId;
   List<ProductSlabConfigResponse>? productSlabConfigResponse;
-  int? gst;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -58,7 +55,7 @@ class AcceptOfferByLeadReqModel {
     if (productSlabConfigResponse != null) {
       map['productSlabConfigResponse'] = productSlabConfigResponse?.map((v) => v.toJson()).toList();
     }
-    map['gst'] = gst;
+
     return map;
   }
 

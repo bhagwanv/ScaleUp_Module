@@ -25,6 +25,8 @@ import '../splash_screen/model/LeadCurrentRequestModel.dart';
 import '../splash_screen/model/LeadCurrentResponseModel.dart';
 import 'model/AadhaarOtpVerifyReqModel.dart';
 import 'model/AcceptOfferByLeadReqModel.dart';
+import 'model/GenerateKarzaAadhaarOtpForNBFCResModel.dart';
+import 'model/KarzaAadhaarOtpVerifyForNBFCReqModel.dart';
 import 'model/LeadMasterByLeadIdResModel.dart';
 import 'model/ProductSlabConfigResponse.dart';
 
@@ -35,16 +37,19 @@ class LoanOfferOtpScreen extends StatefulWidget {
   // final AadhaarGenerateOTPRequestModel? document;
   String companyIdentificationCode;
   LeadMasterByLeadIdResModel leadMasterByLeadId;
+  GenerateKarzaAadhaarOtpForNbfcResModel generateKarzaAadhaarOtpForNbfcResModel;
+  int updatedLoanTnr;
 
-  LoanOfferOtpScreen(
-      {super.key,
-      required this.activityId,
-      required this.subActivityId,
-      // required this.document,
-      required this.companyIdentificationCode,
-      required this.leadMasterByLeadId
-
-      });
+  LoanOfferOtpScreen({
+    super.key,
+    required this.activityId,
+    required this.subActivityId,
+    // required this.document,
+    required this.companyIdentificationCode,
+    required this.leadMasterByLeadId,
+    required this.generateKarzaAadhaarOtpForNbfcResModel,
+    required this.updatedLoanTnr,
+  });
 
   @override
   State<LoanOfferOtpScreen> createState() => _LoanOfferOtpScreenState();
@@ -67,9 +72,11 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
   );
   int _start = 60;
   final CountdownController _controller = CountdownController(autoStart: true);
-  bool isReSendDisable = false;
-  var requestId="";
-  var statusCode="";
+  bool isReSendDisable = true;
+  var requestId = "";
+  var statusCode = "";
+  var loanAmt = 0;
+  var nbfcCompanyId = 0;
 
   Widget buildCountdown() {
     print("_start $_start");
@@ -96,108 +103,118 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
   @override
   Widget build(BuildContext context) {
     final pinController = TextEditingController();
+    if (widget.generateKarzaAadhaarOtpForNbfcResModel.data!.requestId != null) {
+      requestId =
+          widget.generateKarzaAadhaarOtpForNbfcResModel!.data!.requestId!;
+    }
+    if (widget.leadMasterByLeadId.arthMateOffer!.loanAmt != null) {
+      loanAmt = widget.leadMasterByLeadId.arthMateOffer!.loanAmt!;
+    }
+    if (widget.leadMasterByLeadId.nbfcCompanyId != null) {
+      nbfcCompanyId = widget.leadMasterByLeadId.nbfcCompanyId!;
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Consumer<BusinessDataProvider>(
             builder: (context, productProvider, child) {
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 30, top: 50, right: 30, bottom: 30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                          height: 69,
-                          width: 51,
-                          alignment: Alignment.topLeft,
-                          child: Image.asset('assets/images/scale.png')),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      Text(
-                        'Enter \nVerification Code',
-                        textAlign: TextAlign.start,
-                        style: GoogleFonts.urbanist(
-                          fontSize: 35,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 30, top: 50, right: 30, bottom: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      height: 69,
+                      width: 51,
+                      alignment: Alignment.topLeft,
+                      child: Image.asset('assets/images/scale.png')),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Text(
+                    'Enter \nVerification Code',
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 35,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'Enter the verification code sent on Aadhaar registered mobile number',
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 55,
+                  ),
+                  Center(
+                    child: Pinput(
+                      length: 6,
+                      controller: pinController,
+                      showCursor: true,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9\]")),
+                      ],
+                      defaultPinTheme: defaultPinTheme,
+                      focusedPinTheme: defaultPinTheme.copyWith(
+                        decoration: defaultPinTheme.decoration!.copyWith(
+                          border: Border.all(color: kPrimaryColor),
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        'Enter the verification code sent on Aadhaar registered mobile number',
-                        textAlign: TextAlign.start,
-                        style: GoogleFonts.urbanist(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 55,
-                      ),
-                      Center(
-                        child: Pinput(
-                          length: 6,
-                          controller: pinController,
-                          showCursor: true,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp("[0-9\]")),
-                          ],
-                          defaultPinTheme: defaultPinTheme,
-                          focusedPinTheme: defaultPinTheme.copyWith(
-                            decoration: defaultPinTheme.decoration!.copyWith(
-                              border: Border.all(color: kPrimaryColor),
-                            ),
+                      onCompleted: (pin) => debugPrint(pin),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  isReSendDisable
+                      ? SizedBox(
+                          width: double.infinity,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Resend Code in ',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 15,
+                                  color: kPrimaryColor,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              buildCountdown(),
+                            ],
                           ),
-                          onCompleted: (pin) => debugPrint(pin),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      isReSendDisable
-                          ? SizedBox(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Resend Code in ',
-                              textAlign: TextAlign.center,
+                        )
+                      : Container(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                      padding: EdgeInsets.all(10),
+                      child: Center(
+                        child: RichText(
+                          text: TextSpan(
+                              text: 'If you didn’t received a code!',
                               style: GoogleFonts.urbanist(
-                                fontSize: 15,
-                                color: kPrimaryColor,
+                                fontSize: 14,
+                                color: Colors.black,
                                 fontWeight: FontWeight.w400,
                               ),
-                            ),
-                            buildCountdown(),
-                          ],
-                        ),
-                      )
-                          : Container(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                          padding: EdgeInsets.all(10),
-                          child: Center(
-                            child: RichText(
-                              text: TextSpan(
-                                  text: 'If you didn’t received a code!',
-                                  style: GoogleFonts.urbanist(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  children: <TextSpan>[
-                                    isReSendDisable
-                                        ? TextSpan(
+                              children: <TextSpan>[
+                                isReSendDisable
+                                    ? TextSpan(
                                         text: '  Resend',
                                         style: GoogleFonts.urbanist(
                                           fontSize: 14,
@@ -206,7 +223,7 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
                                         ),
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () async {})
-                                        : TextSpan(
+                                    : TextSpan(
                                         text: '  Resend',
                                         style: GoogleFonts.urbanist(
                                           fontSize: 14,
@@ -216,44 +233,48 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () async {
                                             isReSendDisable = true;
-                                            if (widget.companyIdentificationCode == "ArthMate") {
-                                              await arthMateGenerateAadhaarOTPAPI(context,productProvider);
+                                            if (widget
+                                                    .companyIdentificationCode ==
+                                                "ArthMate") {
+                                              arthMateGenerateAadhaarOTPAPI(
+                                                  context, productProvider);
                                             } else {
-                                              await getGenerateKarzaAadhaarOtpForNBFC(context,productProvider);
+                                              getGenerateKarzaAadhaarOtpForNBFC(
+                                                  context, productProvider);
                                             }
                                           })
-                                  ]),
-                            ),
-                          )),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CommonElevatedButton(
-                        onPressed: () {
-                          if (widget.companyIdentificationCode == "ArthMate") {
-                            arthMateValidateAadhaarOtpVerify(
-                                context, pinController.text, productProvider);
-                          } else {
-                            nbfcValidateAcceptOfferByLead(
-                                context, pinController.text, productProvider);
-                          }
-                        },
-                        text: "Verify Code",
-                        upperCase: true,
-                      )
-                    ],
+                              ]),
+                        ),
+                      )),
+                  const SizedBox(
+                    height: 10,
                   ),
-                ),
-              );
+                  CommonElevatedButton(
+                    onPressed: () {
+                      if (widget.companyIdentificationCode == "ArthMate") {
+                        arthMateValidateAadhaarOtpVerify(
+                            context, pinController.text, productProvider);
+                      } else {
+                        /*nbfcValidateAcceptOfferByLead(
+                                context, pinController.text, productProvider);*/
+                        validateKarzaAadhaarOtpVerifyForNBFC(
+                            context, pinController.text, productProvider);
+                      }
+                    },
+                    text: "Verify Code",
+                    upperCase: true,
+                  )
+                ],
+              ),
+            ),
+          );
         }),
       ),
     );
   }
 
   Future<void> arthMateGenerateAadhaarOTPAPI(
-      BuildContext context,
-      BusinessDataProvider productProvider
-      ) async {
+      BuildContext context, BusinessDataProvider productProvider) async {
     var request = AadhaarGenerateOTPRequestModel(otp: "", requestId: "");
     await Provider.of<BusinessDataProvider>(context, listen: false)
         .leadAadharGenerateOTP(request);
@@ -264,10 +285,8 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
           var getaadhaarOtpGenerateData = data;
           if (getaadhaarOtpGenerateData != null) {
             if (getaadhaarOtpGenerateData.msg != null) {
-              Utils.showToast(
-                  " ${getaadhaarOtpGenerateData.msg}", context);
+              Utils.showToast(" ${getaadhaarOtpGenerateData.msg}", context);
             }
-
 
             //widget.requestId = leadAadhaarResponse.requestId!;
           }
@@ -287,24 +306,22 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
   }
 
   Future<void> getGenerateKarzaAadhaarOtpForNBFC(
-      BuildContext context,
-      BusinessDataProvider productProvider
-      ) async {
+      BuildContext context, BusinessDataProvider productProvider) async {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     Provider.of<BusinessDataProvider>(context, listen: false)
         .generateKarzaAadhaarOtpForNBFC(leadId!);
 
-    if (productProvider.getGenerateKarzaAadhaarOtpForNBFCData !=
-        null) {
+    if (productProvider.getGenerateKarzaAadhaarOtpForNBFCData != null) {
       productProvider.getGenerateKarzaAadhaarOtpForNBFCData!.when(
         success: (data) async {
           var generateKarzaAadhaarOtpForNBFC = data;
           if (generateKarzaAadhaarOtpForNBFC != null) {
             if (generateKarzaAadhaarOtpForNBFC.status != null) {
               //  Utils.showToast(" ${generateKarzaAadhaarOtpForNBFC.data!.result!.message}", context);
-              requestId=generateKarzaAadhaarOtpForNBFC.data!.requestId.toString();
-              statusCode=generateKarzaAadhaarOtpForNBFC.data!.statusCode.toString();
+              requestId = requestId;
+              statusCode =
+                  generateKarzaAadhaarOtpForNBFC.data!.statusCode.toString();
               print("dskjfhskafhd");
             }
           }
@@ -354,7 +371,6 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
             if (getAadhaarOtpVerifyData != null) {
               if (getAadhaarOtpVerifyData.status != null) {
                 if (getAadhaarOtpVerifyData.status!) {
-
                 } else {
                   Utils.showBottomSheetKeyFailed(
                       context,
@@ -383,63 +399,80 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
 
   void nbfcValidateAcceptOfferByLead(
     BuildContext context,
-    String otpText,
     BusinessDataProvider productProvider,
   ) async {
     List<ProductSlabConfigResponse> productSlabConfigResponse = [];
+    final prefsUtil = await SharedPref.getInstance();
+    var req = AcceptOfferByLeadReqModel(
+        leadId: prefsUtil.getInt(LEADE_ID),
+        userId: prefsUtil.getString(USER_ID),
+        tenure: widget.updatedLoanTnr,
+        amount: loanAmt,
+        otp: "",
+        requestId: requestId,
+        activityId: widget.activityId,
+        subActivityId: widget.subActivityId,
+        nbfcCompanyId: nbfcCompanyId,
+        productSlabConfigResponse: productSlabConfigResponse);
 
+    Utils.onLoading(context, "");
+    await Provider.of<BusinessDataProvider>(context, listen: false)
+        .acceptOfferByLead(req);
+    Navigator.of(context, rootNavigator: true).pop();
+    if (productProvider.getAcceptOfferByLeadData != null) {
+      productProvider.getAcceptOfferByLeadData!.when(
+        success: (data) async {
+          var getAcceptOfferByLeadData = data;
+          if (getAcceptOfferByLeadData.status != null) {
+            if (getAcceptOfferByLeadData.status!) {
+              acceptOffer(context,productProvider);
+
+            }
+          }
+        },
+        failure: (exception) {
+          if (exception is ApiException) {
+            if (exception.statusCode == 401) {
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            } else {
+              Utils.showToast(exception.errorMessage, context);
+            }
+          }
+        },
+      );
+    }
+  }
+
+  Future<void> validateKarzaAadhaarOtpVerifyForNBFC(
+    BuildContext context,
+    String otpText,
+    BusinessDataProvider productProvider,
+  ) async {
     if (otpText.isEmpty) {
       Utils.showToast("Please Enter OTP", context);
     } else if (otpText.length < 6) {
       Utils.showToast("PLease Enter Valid Otp", context);
     } else {
       final prefsUtil = await SharedPref.getInstance();
-
-      productSlabConfigResponse.add(ProductSlabConfigResponse(
-          companyId: prefsUtil.getInt(COMPANY_ID),
-          productId: prefsUtil.getInt(PRODUCT_ID),
-          slabType: "",
-          minLoanAmount: 0,
-          maxLoanAmount: 0,
-          minValue: 0,
-          maxValue: 0,
-          valueType: "",
-          isFixed: true,
-          sharePercentage: 0));
-
-      var req = AcceptOfferByLeadReqModel(
-          leadId: prefsUtil.getInt(LEADE_ID),
-          userId: prefsUtil.getString(USER_ID),
-          activityId: widget.activityId,
-          subActivityId: widget.subActivityId,
+      final int? leadId = prefsUtil.getInt(LEADE_ID);
+      var reqModel = KarzaAadhaarOtpVerifyForNbfcReqModel(
           otp: otpText,
-          requestId: requestId!,
-          productSlabConfigResponse: productSlabConfigResponse,
-          gst: 0);
-
-
-     // Utils.onLoading(context, "");
-     /* await Provider.of<BusinessDataProvider>(context, listen: false)
-          .acceptOfferByLead(req);
-      Navigator.of(context, rootNavigator: true).pop();*/
-
-      if (productProvider.getAcceptOfferByLeadData != null) {
-        productProvider.getAcceptOfferByLeadData!.when(
+          requestId: requestId,
+          consent: "Y",
+          aadhaarNo: "",
+          leadMasterId: leadId);
+      Utils.onLoading(context, "");
+      await Provider.of<BusinessDataProvider>(context, listen: false)
+          .getkarzaAadhaarOtpVerifyForNBFC(reqModel);
+      Navigator.of(context, rootNavigator: true).pop();
+      if (productProvider.getKarzaAadhaarOtpVerifyForNBFCData != null) {
+        productProvider.getKarzaAadhaarOtpVerifyForNBFCData!.when(
           success: (data) async {
-            var getAcceptOfferByLeadData = data;
-            if (getAcceptOfferByLeadData != null) {
-              if (getAcceptOfferByLeadData.status != null) {
-                if (getAcceptOfferByLeadData.status!) {
-                  //fetchData(context);
-                } else {
-                  Utils.showBottomSheetKeyFailed(
-                      context,
-                      "${getAcceptOfferByLeadData.message!}",
-                      KYC_FAild_PATH,
-                      widget.activityId,
-                      widget.subActivityId);
-                }
-              }
+            if (data) {
+              nbfcValidateAcceptOfferByLead(context, productProvider);
+            } else {
+              Utils.showToast("Invalid otp ", context);
             }
           },
           failure: (exception) {
@@ -448,12 +481,47 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
                 productProvider.disposeAllProviderData();
                 ApiService().handle401(context);
               } else {
-                Utils.showToast(exception.errorMessage, context);
+                if (exception.errorMessage.isNotEmpty) {
+                  Utils.showToast(exception.errorMessage, context);
+                } else {
+                  Utils.showToast("Server error", context);
+                }
               }
             }
           },
         );
       }
+    }
+  }
+
+  Future<void> acceptOffer(
+      BuildContext context, BusinessDataProvider productProvider) async {
+    final prefsUtil = await SharedPref.getInstance();
+    final int? leadId = prefsUtil.getInt(LEADE_ID);
+    Utils.onLoading(context, "");
+    await Provider.of<BusinessDataProvider>(context, listen: false)
+        .acceptOffer(leadId!);
+
+    if (productProvider.getacceptOffersData != null) {
+      productProvider.getacceptOffersData!.when(
+        success: (data) async {
+          var getacceptOffersData = data;
+          if (getacceptOffersData != null) {
+            fetchData(context);
+          }
+        },
+        failure: (exception) {
+          if (exception is ApiException) {
+            Utils.onLoading(context, "");
+            if (exception.statusCode == 401) {
+              productProvider.disposeAllProviderData();
+              ApiService().handle401(context);
+            } else {
+              Utils.showToast(exception.errorMessage, context);
+            }
+          }
+        },
+      );
     }
   }
 
@@ -483,7 +551,7 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
           prefsUtil.getInt(COMPANY_ID)!,
           prefsUtil.getInt(PRODUCT_ID)!,
           prefsUtil.getInt(LEADE_ID)!) as GetLeadResponseModel?;
-
+      Navigator.of(context, rootNavigator: true).pop();
       customerSequence(
           context, getLeadData, leadCurrentActivityAsyncData, "push");
     } catch (error) {
@@ -492,4 +560,7 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
       }
     }
   }
+
+
+
 }

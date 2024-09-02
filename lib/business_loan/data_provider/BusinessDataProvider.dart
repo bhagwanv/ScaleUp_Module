@@ -1,4 +1,5 @@
 
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -35,10 +36,12 @@ import '../view/loan_offer_screen/model/AadhaarOtpVerifyReqModel.dart';
 import '../view/loan_offer_screen/model/AadhaarOtpVerifyResModel.dart';
 import '../view/loan_offer_screen/model/AcceptOfferByLeadReqModel.dart';
 import '../view/loan_offer_screen/model/AcceptOfferByLeadResModel.dart';
+import '../view/loan_offer_screen/model/AcceptOfferResModel.dart';
 import '../view/loan_offer_screen/model/GenerateKarzaAadhaarOtpForNBFCResModel.dart';
 import '../view/loan_offer_screen/model/GetOfferEmiDetailsDownloadPdfReqModel.dart';
 import '../view/loan_offer_screen/model/GetOfferEmiDetailsDownloadPdfResModel.dart';
 import '../view/loan_offer_screen/model/GetOfferEmiDetailsResModel.dart';
+import '../view/loan_offer_screen/model/KarzaAadhaarOtpVerifyForNBFCReqModel.dart';
 import '../view/loan_offer_screen/model/LeadMasterByLeadIdResModel.dart';
 import '../view/loan_offer_screen/model/RateOfInterestResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
@@ -314,6 +317,12 @@ class BusinessDataProvider extends ChangeNotifier {
 
   Result<GetOfferEmiDetailsResModel,Exception>? _getGetOfferEmiDetailsData;
   Result<GetOfferEmiDetailsResModel,Exception>? get getGetOfferEmiDetailsData => _getGetOfferEmiDetailsData;
+
+  Result<bool,Exception>? _getKarzaAadhaarOtpVerifyForNBFCData;
+  Result<bool,Exception>? get getKarzaAadhaarOtpVerifyForNBFCData => _getKarzaAadhaarOtpVerifyForNBFCData;
+
+  Result<AcceptOfferResModel,Exception>? _getacceptOffersData;
+  Result<AcceptOfferResModel,Exception>? get getacceptOffersData => _getacceptOffersData;
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -695,6 +704,17 @@ class BusinessDataProvider extends ChangeNotifier {
     _getGetOfferEmiDetailsData = await apiService.getOfferEmiDetails(leadid,reqTenure);
     notifyListeners();
   }
+
+  Future<void> getkarzaAadhaarOtpVerifyForNBFC(KarzaAadhaarOtpVerifyForNbfcReqModel karzaAadhaarOtpVerifyForNbfcReqModel) async {
+    _getKarzaAadhaarOtpVerifyForNBFCData = await apiService.karzaAadhaarOtpVerifyForNBFC(karzaAadhaarOtpVerifyForNbfcReqModel);
+    notifyListeners();
+  }
+
+  Future<void> acceptOffer(int leadid) async {
+    _getacceptOffersData = await apiService.acceptOffer(leadid);
+    notifyListeners();
+  }
+
 
   Future<void> disposeAllProviderData() async {
     _getCustomerOrderSummaryData = null;

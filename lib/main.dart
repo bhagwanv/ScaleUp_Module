@@ -11,6 +11,7 @@ import 'package:scale_up_module/supply_chain/view/checkoutView/CheckOutLogInOtpS
 import 'package:scale_up_module/supply_chain/view/splash_screen/SplashScreen.dart';
 
 import 'business_loan/data_provider/BusinessDataProvider.dart';
+import 'business_loan/view/congratulation_screen/BusinessCongatulationsScreen.dart';
 import 'business_loan/view/loan_offer_screen/LoanOfferScreen.dart';
 import 'business_loan/view/loan_offer_screen/loan_offer_otp_screen.dart';
 import 'business_loan/view/splash_screen/BusinessSplashScreen.dart';
@@ -118,18 +119,18 @@ class _MyAppState extends State<MyApp> {
             return Scaffold(
                 body: Center(child: Text('Error: ${snapshot.error}')));
           } else {
-            //return _buildHome();
+           // return _buildHome();
 
             // return CheckOutLogInOtpScreen(transactionId:"2024853" );
             //return CheckOutOtpScreen(transactionId: "202457");
             // return PaymentConfirmation(transactionReqNo: "202457",customerName: "Aarti Mukati",imageUrl:"https://csg10037ffe956af864.blob.core.windows.net/scaleupfiles/0d625556-7f61-47c9-a522-8fef21215b14.jpg",customerCareMoblie: "6263246384",customerCareEmail: "customer.care@scaleupfin.com");
             //return CongratulationScreen();
              //return SplashScreen(mobileNumber: "7803994667", companyID: "CN_67", productID: "CreditLine",);
-            print("sdfksf");
-             return BusinessLoanSplashScreen(mobileNumber: "9179173021", companyID: "CN_1", productID: "BusinessLoan",);
-            // return SplashScreen(mobileNumber: "6263246384", companyID: "CN_1", productID: "CreditLine",);
+             //return BusinessLoanSplashScreen(mobileNumber: "9179173021", companyID: "CN_1", productID: "BusinessLoan",);
+             return BusinessLoanSplashScreen(mobileNumber: "9522392801", companyID: "CN_1", productID: "BusinessLoan",);
+            // return SplashScreen(mobileNumber: "8959311437", companyID: "CN_67", productID: "CreditLine",);
             //return SplashScreen(mobileNumber: "8989804393", companyID: "2", productID: "2");
-           // return LoanOfferScreen(activityId: 2, subActivityId: 2, pageType:"",);
+           // return BusinessCongatulationsScreen();
           }
         },
       ),
