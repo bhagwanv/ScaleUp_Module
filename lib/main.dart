@@ -64,8 +64,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _initializeData() async {
     try {
-       final prefsUtil = await SharedPref.getInstance();
-      prefsUtil.saveString(BASE_URL, "https://gateway-qa.scaleupfin.com");
+      /* final prefsUtil = await SharedPref.getInstance();
+      prefsUtil.saveString(BASE_URL, "https://gateway-qa.scaleupfin.com");*/
       await MyApp.platform.invokeMethod('ScaleUP');
     } catch (e) {
       print("Error initializing data: $e");
@@ -119,7 +119,7 @@ class _MyAppState extends State<MyApp> {
             return Scaffold(
                 body: Center(child: Text('Error: ${snapshot.error}')));
           } else {
-           // return _buildHome();
+            return _buildHome();
 
             // return CheckOutLogInOtpScreen(transactionId:"2024853" );
             //return CheckOutOtpScreen(transactionId: "202457");
@@ -127,7 +127,8 @@ class _MyAppState extends State<MyApp> {
             //return CongratulationScreen();
              //return SplashScreen(mobileNumber: "7803994667", companyID: "CN_67", productID: "CreditLine",);
              //return BusinessLoanSplashScreen(mobileNumber: "9179173021", companyID: "CN_1", productID: "BusinessLoan",);
-             return BusinessLoanSplashScreen(mobileNumber: "9522392801", companyID: "CN_1", productID: "BusinessLoan",);
+             //return BusinessLoanSplashScreen(mobileNumber: "9522392801", companyID: "CN_1", productID: "BusinessLoan",);
+             //return BusinessLoanSplashScreen(mobileNumber: "7803994667", companyID: "CN_1", productID: "BusinessLoan",);
             // return SplashScreen(mobileNumber: "8959311437", companyID: "CN_67", productID: "CreditLine",);
             //return SplashScreen(mobileNumber: "8989804393", companyID: "2", productID: "2");
            // return BusinessCongatulationsScreen();

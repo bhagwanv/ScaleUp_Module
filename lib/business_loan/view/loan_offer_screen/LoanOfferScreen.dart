@@ -280,7 +280,7 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
                           ),
                           Center(
                             child: Text(
-                              "Congratulations $name",
+                              "Congratulations $name !!",
                               style: GoogleFonts.urbanist(
                                 fontSize: 18,
                                 color: kPrimaryColor,
@@ -1347,7 +1347,7 @@ class _LoanOfferScreenState extends State<LoanOfferScreen> {
                   MaterialPageRoute(
                       builder: (context) => LoanOfferOtpScreen(
                         activityId: widget.activityId,
-                        subActivityId: widget.activityId,
+                        subActivityId: widget.subActivityId,
                         companyIdentificationCode: companyIdentificationCode,
                         leadMasterByLeadId: getLeadMasterByLeadIdData,
                         generateKarzaAadhaarOtpForNbfcResModel:generateKarzaAadhaarOtpForNBFC,

@@ -354,9 +354,9 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
 
       var req = AadhaarOtpVerifyReqModel(
           leadMasterId: prefsUtil.getInt(LEADE_ID),
-          requestId: "",
-          otp: 90,
-          loanAmt: 0,
+          requestId: requestId,
+          otp: int.parse(otpText),
+          loanAmt: loanAmt,
           insuranceApplied: true);
 
       //Utils.onLoading(context, "");
@@ -371,13 +371,9 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
             if (getAadhaarOtpVerifyData != null) {
               if (getAadhaarOtpVerifyData.status != null) {
                 if (getAadhaarOtpVerifyData.status!) {
+                  acceptOffer(context,productProvider);
                 } else {
-                  Utils.showBottomSheetKeyFailed(
-                      context,
-                      "${getAadhaarOtpVerifyData.message!}",
-                      KYC_FAild_PATH,
-                      widget.activityId,
-                      widget.subActivityId);
+                  Utils.showToast(getAadhaarOtpVerifyData.message.toString(), context);
                 }
               }
             }
@@ -399,7 +395,7 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
 
   void nbfcValidateAcceptOfferByLead(
     BuildContext context,
-    BusinessDataProvider productProvider,
+    BusinessDataProvider productProvider, String otpText,
   ) async {
     List<ProductSlabConfigResponse> productSlabConfigResponse = [];
     final prefsUtil = await SharedPref.getInstance();
@@ -408,7 +404,7 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
         userId: prefsUtil.getString(USER_ID),
         tenure: widget.updatedLoanTnr,
         amount: loanAmt,
-        otp: "",
+        otp: otpText,
         requestId: requestId,
         activityId: widget.activityId,
         subActivityId: widget.subActivityId,
@@ -470,7 +466,7 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
         productProvider.getKarzaAadhaarOtpVerifyForNBFCData!.when(
           success: (data) async {
             if (data) {
-              nbfcValidateAcceptOfferByLead(context, productProvider);
+              nbfcValidateAcceptOfferByLead(context, productProvider,otpText);
             } else {
               Utils.showToast("Invalid otp ", context);
             }

@@ -198,7 +198,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             child: Text(
               item!.bankName!,
               style: GoogleFonts.urbanist(
-                fontSize: 14,
+                fontSize: 13,
                 color: Colors.black,
                 fontWeight: FontWeight.w400,
               ),
@@ -477,8 +477,6 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               selectedNachAccountTypeValue =
                                   selectedAccountTypeValue;
                               nachSelectedBankValue = selectedBankValue;
-                              print("nachSelectedBankValue-$selectedBankValue");
-                              print("nachSelectedBankValue1-$nachSelectedBankValue");
 
                               isSelectedNatchBank = false;
                             } else {
@@ -1318,9 +1316,12 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
         if (bankDetailsResponceModel!.result!.leadBankDetailDTOs != null) {
-          if (bankDetailsResponceModel!
-                  .result!.leadBankDetailDTOs![1].bankName !=
-              null) {
+          if(isSameBank) {
+            selectedNatchBankinitialData = liveBankList!
+                .where((element) =>
+            element?.bankName == nachSelectedBankValue)
+                .toList();
+          }else if (bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].bankName != null) {
             selectedNatchBankinitialData = liveBankList!
                 .where((element) =>
                     element?.bankName == nachSelectedBankValue)
@@ -1328,9 +1329,26 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           } else {
             selectedNatchBankinitialData = null;
           }
+        } else {
+          if(isSameBank) {
+            selectedNatchBankinitialData = liveBankList!
+                .where((element) =>
+            element?.bankName == nachSelectedBankValue)
+                .toList();
+          } else {
+            selectedNatchBankinitialData = null;
+          }
+
         }
       } else {
-        selectedNatchBankinitialData = null;
+        if(isSameBank) {
+          selectedNatchBankinitialData = liveBankList!
+              .where((element) =>
+          element?.bankName == nachSelectedBankValue)
+              .toList();
+        } else {
+          selectedNatchBankinitialData = null;
+        }
       }
       return DropdownButtonFormField2<LiveBankList>(
         //value: selectedNatchBankinitialData!=null?selectedBankinitialData?.first:null,
@@ -1674,9 +1692,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
       ),
       items: _addDividersAfterItems(accountTypeList),
-      onChanged: !isSameBank?(String? value) {
+      onChanged:(String? value) {
         selectedAccountTypeValue = value!;
-      }:null,
+      },
       dropdownStyleData: DropdownStyleData(
         maxHeight: 400,
         decoration: BoxDecoration(
@@ -1730,9 +1748,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
       ),
       items: _addDividersAfterItems(accountTypeList),
-      onChanged: (String? value) {
+      onChanged: !isSameBank?(String? value) {
         selectedNachAccountTypeValue = value!;
-      },
+      }:null,
       dropdownStyleData: DropdownStyleData(
         maxHeight: 400,
         decoration: BoxDecoration(
@@ -1799,6 +1817,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
       List<LeadBankDetailDTOs> leadBankDetailsList = [];
       List<BankDocs> bankDocList = [];
+      bankDocList.clear();
 
       leadBankDetailsList.add(
         LeadBankDetailDTOs(
