@@ -14,6 +14,7 @@ import '../view/aadhaar_screen/models/ValidateAadhaarOTPResponseModel.dart';
 import '../view/agreement_screen/model/CheckSignResponceModel.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
+import '../view/bank_details_screen/model/GetLeadDocumentDetailResModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
 import '../view/bank_details_screen/model/TransactionDetailModel.dart';
@@ -331,6 +332,10 @@ class BusinessDataProvider extends ChangeNotifier {
 
   Result<BlemiDownloadPdfResModel,Exception>? _getBlemiDownloadPdfData;
   Result<BlemiDownloadPdfResModel,Exception>? get getBlemiDownloadPdfData => _getBlemiDownloadPdfData;
+
+  Result<GetLeadDocumentDetailResModel,Exception>? _getLeadDocumentDetailData;
+  Result<GetLeadDocumentDetailResModel,Exception>? get getLeadDocumentDetailData => _getLeadDocumentDetailData;
+
 
   Future<void> productCompanyDetail(
       String product, String company) async {
@@ -729,6 +734,11 @@ class BusinessDataProvider extends ChangeNotifier {
 
   Future<void> BLEMIDownloadPdf(int leadid) async {
     _getBlemiDownloadPdfData = await apiService.BLEMIDownloadPdf(leadid);
+    notifyListeners();
+  }
+
+  Future<void> getLeadDocumentDetail(int leadid) async {
+    _getLeadDocumentDetailData = await apiService.getLeadDocumentDetail(leadid);
     notifyListeners();
   }
 

@@ -20,6 +20,7 @@ import '../view/agreement_screen/model/AggrementDetailsResponce.dart';
 import '../view/agreement_screen/model/CheckSignResponceModel.dart';
 import '../view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import '../view/bank_details_screen/model/BankListResponceModel.dart';
+import '../view/bank_details_screen/model/GetLeadDocumentDetailResModel.dart';
 import '../view/bank_details_screen/model/SaveBankDetailResponce.dart';
 import '../view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
 import '../view/bank_details_screen/model/TransactionDetailModel.dart';
@@ -2393,6 +2394,42 @@ class ApiService {
             final dynamic jsonData = json.decode(response.body);
             final BlemiDownloadPdfResModel responseModel =
             BlemiDownloadPdfResModel.fromJson(jsonData);
+            return Success(responseModel);
+
+          default:
+          // 3. return Failure with the desired exception
+            return Failure(ApiException(response.statusCode, ""));
+        }
+      } else {
+        Utils.showBottomToast("No Internet connection");
+        return Failure(Exception("No Internet connection"));
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<GetLeadDocumentDetailResModel, Exception>> getLeadDocumentDetail(int leadid) async {
+    try {
+      if (await internetConnectivity.networkConnectivity()) {
+        final prefsUtil = await SharedPref.getInstance();
+        var token = await prefsUtil.getString(TOKEN);
+        var base_url = prefsUtil.getString(BASE_URL);
+        final response = await interceptor.get(Uri.parse(
+            '${base_url! + apiUrls.getLeadDocumentDetail}?leadId=$leadid'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+            // Set the content type as JSON// Set the content type as JSON
+          },
+        );
+
+        print(response.body); // Print the response body once here
+        switch (response.statusCode) {
+          case 200:
+            final dynamic jsonData = json.decode(response.body);
+            final GetLeadDocumentDetailResModel responseModel =
+            GetLeadDocumentDetailResModel.fromJson(jsonData);
             return Success(responseModel);
 
           default:

@@ -60,7 +60,7 @@ class _LoanOfferOtpScreenState extends State<LoanOfferOtpScreen> {
     width: 56,
     height: 60,
     textStyle: GoogleFonts.urbanist(
-      fontSize: 12,
+      fontSize: 22,
       color: Colors.black,
       fontWeight: FontWeight.w400,
     ),

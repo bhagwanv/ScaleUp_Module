@@ -14,9 +14,9 @@ class SaveBankDetailsRequestModel {
       });
     }
     isScaleUp = json['isScaleUp'];
-    if (json['bankDocs'] != null) {
+    if (json['BankDocs'] != null) {
       bankDocs = <BankDocs>[];
-      json['bankDocs'].forEach((v) {
+      json['BankDocs'].forEach((v) {
         bankDocs!.add(new BankDocs.fromJson(v));
       });
     }
@@ -30,18 +30,18 @@ class SaveBankDetailsRequestModel {
     }
     data['isScaleUp'] = this.isScaleUp;
     if (this.bankDocs != null) {
-      data['bankDocs'] = this.bankDocs!.map((v) => v.toJson()).toList();
+      data['BankDocs'] = this.bankDocs!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class LeadBankDetailDTOs {
-  int? leadId;
-  String? Type;
-  String? bankName;
-  String? ifscCode;
   String? accountType;
+  String? bankName;
+  String? iFSCCode;
+  int? leadId;
+  String? type;
   int? activityId;
   int? subActivityId;
   String? accountNumber;
@@ -50,11 +50,11 @@ class LeadBankDetailDTOs {
   String? surrogateType;
 
   LeadBankDetailDTOs(
-      {this.leadId,
-        this.Type,
+      {this.accountType,
         this.bankName,
-        this.ifscCode,
-        this.accountType,
+        this.iFSCCode,
+        this.leadId,
+        this.type,
         this.activityId,
         this.subActivityId,
         this.accountNumber,
@@ -63,69 +63,69 @@ class LeadBankDetailDTOs {
         this.surrogateType});
 
   LeadBankDetailDTOs.fromJson(Map<String, dynamic> json) {
-    leadId = json['leadId'];
-    Type = json['Type'];
-    bankName = json['bankName'];
-    ifscCode = json['ifscCode'];
-    accountType = json['accountType'];
-    activityId = json['activityId'];
-    subActivityId = json['subActivityId'];
-    accountNumber = json['accountNumber'];
-    accountHolderName = json['accountHolderName'];
-    pdfPassword = json['pdfPassword'];
-    surrogateType = json['surrogateType'];
+    accountType = json['AccountType'];
+    bankName = json['BankName'];
+    iFSCCode = json['IFSCCode'];
+    leadId = json['LeadId'];
+    type = json['Type'];
+    activityId = json['ActivityId'];
+    subActivityId = json['SubActivityId'];
+    accountNumber = json['AccountNumber'];
+    accountHolderName = json['AccountHolderName'];
+    pdfPassword = json['PdfPassword'];
+    surrogateType = json['SurrogateType'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['leadId'] = this.leadId;
-    data['Type'] = this.Type;
-    data['bankName'] = this.bankName;
-    data['ifscCode'] = this.ifscCode;
-    data['accountType'] = this.accountType;
-    data['activityId'] = this.activityId;
-    data['subActivityId'] = this.subActivityId;
-    data['accountNumber'] = this.accountNumber;
-    data['accountHolderName'] = this.accountHolderName;
-    data['pdfPassword'] = this.pdfPassword;
-    data['surrogateType'] = this.surrogateType;
+    data['AccountType'] = this.accountType;
+    data['BankName'] = this.bankName;
+    data['IFSCCode'] = this.iFSCCode;
+    data['LeadId'] = this.leadId;
+    data['Type'] = this.type;
+    data['ActivityId'] = this.activityId;
+    data['SubActivityId'] = this.subActivityId;
+    data['AccountNumber'] = this.accountNumber;
+    data['AccountHolderName'] = this.accountHolderName;
+    data['PdfPassword'] = this.pdfPassword;
+    data['SurrogateType'] = this.surrogateType;
     return data;
   }
 }
 
 class BankDocs {
-  String? documentType;
   String? documentName;
+  String? documentType;
   String? fileURL;
   int? sequence;
   String? pdfPassword;
   String? documentNumber;
 
   BankDocs(
-      {this.documentType,
-        this.documentName,
+      {this.documentName,
+        this.documentType,
         this.fileURL,
         this.sequence,
         this.pdfPassword,
         this.documentNumber});
 
   BankDocs.fromJson(Map<String, dynamic> json) {
-    documentType = json['documentType'];
-    documentName = json['documentName'];
-    fileURL = json['fileURL'];
-    sequence = json['sequence'];
-    pdfPassword = json['pdfPassword'];
-    documentNumber = json['documentNumber'];
+    documentName = json['DocumentName'];
+    documentType = json['DocumentType'];
+    fileURL = json['FileURL'];
+    sequence = json['Sequence'];
+    pdfPassword = json['PdfPassword'];
+    documentNumber = json['DocumentNumber'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['documentType'] = this.documentType;
-    data['documentName'] = this.documentName;
-    data['fileURL'] = this.fileURL;
-    data['sequence'] = this.sequence;
-    data['pdfPassword'] = this.pdfPassword;
-    data['documentNumber'] = this.documentNumber;
+    data['DocumentName'] = this.documentName;
+    data['DocumentType'] = this.documentType;
+    data['FileURL'] = this.fileURL;
+    data['Sequence'] = this.sequence;
+    data['PdfPassword'] = this.pdfPassword;
+    data['DocumentNumber'] = this.documentNumber;
     return data;
   }
 }

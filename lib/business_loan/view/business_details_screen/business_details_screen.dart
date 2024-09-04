@@ -145,7 +145,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
   final List<String> monthlySalesTurnoverList = [
     'Upto 3 Lacs',
-    '3 Lacs- 10 Lacs',
+    '3 Lacs - 10 Lacs',
     '10 Lacs - 25 Lacs',
     'Above 25 Lacs'
   ];
@@ -782,7 +782,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  slectedDate!.isNotEmpty ? '$slectedDate' : 'Business Incorporation Date',
+                                  slectedDate!.isNotEmpty ? '${ Utils.dateFormate(context,slectedDate!,"dd/MM/yyyy")}' : 'Business Incorporation Date',
                                   style: GoogleFonts.urbanist(
                                     fontSize: 16,
                                     color: Colors.black,

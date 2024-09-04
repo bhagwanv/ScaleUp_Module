@@ -26,6 +26,7 @@ import '../../utils/loader.dart';
 import '../splash_screen/model/GetLeadResponseModel.dart';
 import '../splash_screen/model/LeadCurrentRequestModel.dart';
 import '../splash_screen/model/LeadCurrentResponseModel.dart';
+import 'model/GetLeadDocumentDetailResModel.dart';
 
 class BankDetailsScreen extends StatefulWidget {
   final int activityId;
@@ -71,8 +72,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   List<String?>? itrDocumentList = [];
   var isEditableStatement = false;
   var isSameBank = false;
-  var disbursementDetailType = "";
-  var nachTpye = "";
+  var disbursementDetailType = "borrower";
+  var nachTpye = "beneficiary";
   var selectedBankinitialData = null;
   var selectedNatchBankinitialData = null;
   var isFillData = false;
@@ -243,30 +244,39 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       if (bankDetailsResponceModel != null) {
                         if (bankDetailsResponceModel!.result != null) {
                           if (bankDetailsResponceModel!.isSuccess!) {
+
                             //bank details
                             if (bankDetailsResponceModel!
                                     .result!.leadBankDetailDTOs !=
                                 null) {
-                              _accountHolderController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs![0].accountHolderName!;
+                              _accountHolderController.text =
+                                  bankDetailsResponceModel!
+                                      .result!
+                                      .leadBankDetailDTOs![0]
+                                      .accountHolderName!;
                               _bankAccountNumberCl.text =
                                   bankDetailsResponceModel!.result!
                                       .leadBankDetailDTOs![0].accountNumber!;
                               _ifsccodeCl.text = bankDetailsResponceModel!
                                   .result!.leadBankDetailDTOs![0].ifscCode!;
 
-                              selectedBankValue = bankDetailsResponceModel!.result!.leadBankDetailDTOs![0].bankName!;
+                              selectedBankValue = bankDetailsResponceModel!
+                                  .result!.leadBankDetailDTOs![0].bankName!;
                               print("selectedBankValue=$selectedBankValue");
 
                               selectedAccountTypeValue =
                                   bankDetailsResponceModel!.result!
                                       .leadBankDetailDTOs![0].accountType!;
-                              nachsurrogateType = bankDetailsResponceModel!
-                                  .result!
-                                  .leadBankDetailDTOs!
-                              [0]
-                                  .surrogateType!;
-                              disbursementDetailType = bankDetailsResponceModel!
-                                  .result!.leadBankDetailDTOs![0].type!;
+                              //nachsurrogateType = bankDetailsResponceModel!.result!.leadBankDetailDTOs![0].surrogateType!;
+                              if(bankDetailsResponceModel!.result!.leadBankDetailDTOs![0].type!.isNotEmpty){
+                                disbursementDetailType = bankDetailsResponceModel!.result!.leadBankDetailDTOs![0].type!;
+                              }else{
+                                 disbursementDetailType = "borrower";
+
+                              }
+
+
+
                             }
 
                             //natch bank Details
@@ -291,19 +301,20 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               _bankStatmentPassworedController.text =
                                   bankDetailsResponceModel!.result!
                                       .leadBankDetailDTOs![1].pdfPassword!;
-                              nachTpye = bankDetailsResponceModel!
-                                  .result!.leadBankDetailDTOs![1].type!;
-
+                              if(bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].type!.isNotEmpty){
+                                nachTpye = bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].type!;
+                              }else{
+                                 nachTpye = "beneficiary";
+                              }
                               isFillData = true;
                             }
 
                             // _bankStatmentPassworedController.text = bankDetailsResponceModel!.result!.leadBankDetailDTOs!.first.pdfPassword!;
                             if (!isEditableStatement) {
-                              for (int i = 0;
-                                  i <
-                                      bankDetailsResponceModel!
-                                          .result!.bankDocs!.length;
-                                  i++) {
+                              documentList!.clear();
+                              gstDocumentList!.clear();
+                              itrDocumentList!.clear();
+                              for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
                                 print("bankDocsDAta " + i.toString());
                                 if (bankDetailsResponceModel!
                                         .result!.bankDocs![i].documentName ==
@@ -328,11 +339,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               isEditableStatement = true;
                             }
 
-                            /* for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
+                             for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
                               print("bankDocsDAta1 "+i.toString());
-
-
-                            }*/
+                            }
                           } else {
                             Utils.showToast(
                                 bankDetailsResponceModel!.message!, context);
@@ -354,11 +363,21 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                 );
               }
 
+
               if (productProvider.getBankListData != null) {
                 if (productProvider.getBankListData!.liveBankList != null) {
                   liveBankList = productProvider.getBankListData!.liveBankList!;
                 }
               }
+
+              if (productProvider.getLeadBusinessDetailData != null) {
+                if (productProvider.getLeadBusinessDetailData!.surrogateType !=
+                    null) {
+                  nachsurrogateType =
+                      productProvider.getLeadBusinessDetailData!.surrogateType!;
+                }
+              }
+
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
@@ -411,6 +430,12 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       ),
                       CommonTextField(
                         controller: _accountHolderController,
+                        keyboardType: TextInputType.text,
+                        textCapitalization: TextCapitalization.characters,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Z ]'))),
+                        ],
                         hintText: "Account Holder Name ",
                         labelText: "Account Holder Name ",
                       ),
@@ -551,6 +576,12 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
                       CommonTextField(
                         controller: _bankStatmentPassworedController,
+                        keyboardType: TextInputType.text,
+                        textCapitalization: TextCapitalization.characters,
+                        inputFormatter: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[A-Za-z0-9]'))),
+                        ],
                         hintText: "Bank Statement password(optional)",
                         labelText: "Bank Statement password(optional)",
                       ),
@@ -579,7 +610,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                   print(file.path);
                                   //widget.onImageSelected(file);
                                   Utils.onLoading(context, "");
-                                  await Provider.of<BusinessDataProvider>(context,
+                                  await Provider.of<BusinessDataProvider>(
+                                          context,
                                           listen: false)
                                       .postBusineesDoumentSingleFile(
                                           file, true, "", "");
@@ -710,7 +742,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                         print(file.path);
                                         //widget.onImageSelected(file);
                                         Utils.onLoading(context, "");
-                                        await Provider.of<BusinessDataProvider>(context,
+                                        await Provider.of<BusinessDataProvider>(
+                                                context,
                                                 listen: false)
                                             .postBusineesDoumentSingleFile(
                                                 file, true, "", "");
@@ -860,7 +893,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                             print(file.path);
                                             //widget.onImageSelected(file);
                                             Utils.onLoading(context, "");
-                                            await Provider.of<BusinessDataProvider>(
+                                            await Provider.of<
+                                                        BusinessDataProvider>(
                                                     context,
                                                     listen: false)
                                                 .postBusineesDoumentSingleFile(
@@ -1012,7 +1046,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                             print(file.path);
                                             //widget.onImageSelected(file);
                                             Utils.onLoading(context, "");
-                                            await Provider.of<BusinessDataProvider>(
+                                            await Provider.of<
+                                                        BusinessDataProvider>(
                                                     context,
                                                     listen: false)
                                                 .postBusineesDoumentSingleFile(
@@ -1047,7 +1082,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                             children: [
                                               SvgPicture.asset(
                                                   'assets/images/gallery.svg'),
-                                               Text(
+                                              Text(
                                                 'Upload ITR',
                                                 style: GoogleFonts.urbanist(
                                                   fontSize: 12,
@@ -1055,21 +1090,22 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
-                                               Text('Supports : PDF',
-                                                  style: GoogleFonts.urbanist(
-                                                    fontSize: 12,
-                                                    color: Color(0xffCACACA),
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                               ),
-                                               Text(
-                                                  'You can upload multiple files',
-                                                  style: GoogleFonts.urbanist(
-                                                    fontSize: 12,
-                                                    color: Color(0xff0196CE),
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                               ),
+                                              Text(
+                                                'Supports : PDF',
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: Color(0xffCACACA),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              Text(
+                                                'You can upload multiple files',
+                                                style: GoogleFonts.urbanist(
+                                                  fontSize: 12,
+                                                  color: Color(0xff0196CE),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -1176,12 +1212,21 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     final prefsUtil = await SharedPref.getInstance();
     final int? leadId = prefsUtil.getInt(LEADE_ID);
     final String? productCode = prefsUtil.getString(PRODUCT_CODE);
+    final String? userId = prefsUtil.getString(USER_ID);
     /*final int? leadId = 85;
     final String? productCode = "BusinessLoan";*/
-    Provider.of<BusinessDataProvider>(context, listen: false)
+    await Provider.of<BusinessDataProvider>(context, listen: false)
         .getBankDetails(leadId!, productCode!);
+
+    await Provider.of<BusinessDataProvider>(context, listen: false)
+        .getLeadBusinessDetail(userId!, productCode!);
+
+   /* await Provider.of<BusinessDataProvider>(context, listen: false)
+        .getLeadDocumentDetail(leadId);*/
+
     //Utils.onLoading(context, "");
-    await Provider.of<BusinessDataProvider>(context, listen: false).getBankList();
+    await Provider.of<BusinessDataProvider>(context, listen: false)
+        .getBankList();
     // Navigator.of(context, rootNavigator: true).pop();
   }
 
@@ -1193,8 +1238,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                   .result!.leadBankDetailDTOs![0].bankName !=
               null) {
             selectedBankinitialData = liveBankList!
-                .where((element) =>
-                    element?.bankName == selectedBankValue)
+                .where((element) => element?.bankName == selectedBankValue)
                 .toList();
           } else {
             selectedBankinitialData = null;
@@ -1204,7 +1248,10 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         selectedBankinitialData = null;
       }
       return DropdownButtonFormField2<LiveBankList>(
-        value: selectedBankinitialData != null && selectedBankinitialData.isNotEmpty ? selectedBankinitialData[0]: null,
+        value: selectedBankinitialData != null &&
+                selectedBankinitialData.isNotEmpty
+            ? selectedBankinitialData[0]
+            : null,
         isExpanded: true,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -1223,9 +1270,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             borderSide: BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint:  Text(
+        hint: Text(
           'Bank Name',
-
           style: GoogleFonts.urbanist(
             fontSize: 14,
             color: blueColor,
@@ -1276,7 +1322,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             borderSide: BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint:  Text(
+        hint: Text(
           'Bank Name',
           style: GoogleFonts.urbanist(
             fontSize: 14,
@@ -1316,35 +1362,32 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     if (bankDetailsResponceModel != null) {
       if (bankDetailsResponceModel!.result != null) {
         if (bankDetailsResponceModel!.result!.leadBankDetailDTOs != null) {
-          if(isSameBank) {
+          if (isSameBank) {
             selectedNatchBankinitialData = liveBankList!
-                .where((element) =>
-            element?.bankName == nachSelectedBankValue)
+                .where((element) => element?.bankName == nachSelectedBankValue)
                 .toList();
-          }else if (bankDetailsResponceModel!.result!.leadBankDetailDTOs![1].bankName != null) {
+          } else if (bankDetailsResponceModel!
+                  .result!.leadBankDetailDTOs![1].bankName !=
+              null) {
             selectedNatchBankinitialData = liveBankList!
-                .where((element) =>
-                    element?.bankName == nachSelectedBankValue)
+                .where((element) => element?.bankName == nachSelectedBankValue)
                 .toList();
           } else {
             selectedNatchBankinitialData = null;
           }
         } else {
-          if(isSameBank) {
+          if (isSameBank) {
             selectedNatchBankinitialData = liveBankList!
-                .where((element) =>
-            element?.bankName == nachSelectedBankValue)
+                .where((element) => element?.bankName == nachSelectedBankValue)
                 .toList();
           } else {
             selectedNatchBankinitialData = null;
           }
-
         }
       } else {
-        if(isSameBank) {
+        if (isSameBank) {
           selectedNatchBankinitialData = liveBankList!
-              .where((element) =>
-          element?.bankName == nachSelectedBankValue)
+              .where((element) => element?.bankName == nachSelectedBankValue)
               .toList();
         } else {
           selectedNatchBankinitialData = null;
@@ -1352,7 +1395,10 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       }
       return DropdownButtonFormField2<LiveBankList>(
         //value: selectedNatchBankinitialData!=null?selectedBankinitialData?.first:null,
-        value: selectedNatchBankinitialData != null && selectedNatchBankinitialData.isNotEmpty ? selectedNatchBankinitialData[0]: null,
+        value: selectedNatchBankinitialData != null &&
+                selectedNatchBankinitialData.isNotEmpty
+            ? selectedNatchBankinitialData[0]
+            : null,
         isExpanded: true,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -1371,18 +1417,20 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             borderSide: BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint:  Text(
+        hint: Text(
           'Bank Name',
           style: GoogleFonts.urbanist(
             fontSize: 14,
-            color:blueColor,
+            color: blueColor,
             fontWeight: FontWeight.w500,
           ),
         ),
         items: _addDividersAfterItems1(liveBankList!),
-        onChanged: !isSameBank?(LiveBankList? value) {
-          nachSelectedBankValue = value!.bankName!;
-        }:null,
+        onChanged: !isSameBank
+            ? (LiveBankList? value) {
+                nachSelectedBankValue = value!.bankName!;
+              }
+            : null,
         dropdownStyleData: DropdownStyleData(
           maxHeight: 400,
           decoration: BoxDecoration(
@@ -1423,9 +1471,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             borderSide: BorderSide(color: kPrimaryColor, width: 1),
           ),
         ),
-        hint:  Text(
+        hint: Text(
           'Bank Name',
-
           style: GoogleFonts.urbanist(
             fontSize: 14,
             color: blueColor,
@@ -1689,10 +1736,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           color: blueColor,
           fontWeight: FontWeight.w500,
         ),
-
       ),
       items: _addDividersAfterItems(accountTypeList),
-      onChanged:(String? value) {
+      onChanged: (String? value) {
         selectedAccountTypeValue = value!;
       },
       dropdownStyleData: DropdownStyleData(
@@ -1745,12 +1791,13 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           color: blueColor,
           fontWeight: FontWeight.w500,
         ),
-
       ),
       items: _addDividersAfterItems(accountTypeList),
-      onChanged: !isSameBank?(String? value) {
-        selectedNachAccountTypeValue = value!;
-      }:null,
+      onChanged: !isSameBank
+          ? (String? value) {
+              selectedNachAccountTypeValue = value!;
+            }
+          : null,
       dropdownStyleData: DropdownStyleData(
         maxHeight: 400,
         decoration: BoxDecoration(
@@ -1811,20 +1858,34 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           "IFSC code should be minimum 9 digits and max 11 digits!!", context);
     } else if (documentList!.isEmpty) {
       Utils.showToast("Please uploade bank proof", context);
-    } else {
+    } else if (nachsurrogateType=="GST") {
+      if( gstDocumentList!.isEmpty){
+        Utils.showToast("Please uploade GST proof", context);
+      }
+    }else if (nachsurrogateType=="ITR") {
+      if( gstDocumentList!.isEmpty){
+        Utils.showToast("Please uploade GST proof", context);
+      }else if( itrDocumentList!.isEmpty){
+        Utils.showToast("Please uploade ITR proof", context);
+      }
+
+    }
+
+    else {
       final prefsUtil = await SharedPref.getInstance();
       final int? leadID = prefsUtil.getInt(LEADE_ID);
 
       List<LeadBankDetailDTOs> leadBankDetailsList = [];
       List<BankDocs> bankDocList = [];
+      leadBankDetailsList.clear();
       bankDocList.clear();
 
       leadBankDetailsList.add(
         LeadBankDetailDTOs(
           leadId: leadID!,
-          Type: disbursementDetailType,
+          type: disbursementDetailType,
           bankName: selectedBankValue,
-          ifscCode: _ifsccodeCl.text.trim(),
+          iFSCCode: _ifsccodeCl.text.trim(),
           accountType: selectedAccountTypeValue,
           activityId: widget.activityId,
           subActivityId: widget.subActivityId,
@@ -1838,9 +1899,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       leadBankDetailsList.add(
         LeadBankDetailDTOs(
           leadId: leadID!,
-          Type: nachTpye,
+          type: nachTpye,
           bankName: nachSelectedBankValue,
-          ifscCode: _nachIfsccodeCl.text.trim(),
+          iFSCCode: _nachIfsccodeCl.text.trim(),
           accountType: selectedNachAccountTypeValue,
           activityId: widget.activityId,
           subActivityId: widget.subActivityId,
@@ -1852,20 +1913,23 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       );
 
       for (int i = 0; i < docList.length; i++) {
-        bankDocList.add(BankDocs(
-            documentType: "id_proof",
-            documentName: "bank_statement",
-            fileURL: docList[i],
-            sequence: i,
-            pdfPassword: _bankStatmentPassworedController.text,
-            documentNumber: _bankAccountNumberCl.text));
+        bankDocList.add(
+          BankDocs(
+              documentType: "id_proof",
+              documentName: "bank_statement",
+              fileURL: docList[i],
+              sequence: i + 1,
+              pdfPassword: _bankStatmentPassworedController.text,
+              documentNumber: _bankAccountNumberCl.text,
+          ),
+        );
       }
       for (int i = 0; i < gstDocList.length; i++) {
         bankDocList.add(BankDocs(
             documentType: "id_proof",
             documentName: "surrogate_gst",
             fileURL: gstDocList[i],
-            sequence: i,
+            sequence: i + 1,
             pdfPassword: _bankStatmentPassworedController.text,
             documentNumber: _bankAccountNumberCl.text));
       }
@@ -1874,14 +1938,14 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             documentType: "id_proof",
             documentName: "surrogate_itr",
             fileURL: itrDocList[i],
-            sequence: i,
+            sequence: i + 1,
             pdfPassword: _bankStatmentPassworedController.text,
             documentNumber: _bankAccountNumberCl.text));
       }
 
       var postData = SaveBankDetailsRequestModel(
           leadBankDetailDTOs: leadBankDetailsList,
-          isScaleUp: true,
+          isScaleUp: false,
           bankDocs: bankDocList);
 
       print("Save Data" + postData.toJson().toString());

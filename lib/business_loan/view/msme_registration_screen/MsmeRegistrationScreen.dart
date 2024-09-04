@@ -111,12 +111,23 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
 
                             if(leadMsmeResModel!.doi!=null){
                               doi=leadMsmeResModel!.doi!;
+
+                             /* doi= calculateDiff(leadMsmeResModel!.doi!).toString();
+                              print("doi11--$doi");*/
                             }
                             if(leadMsmeResModel!.frontDocumentId!=null){
                               frontDocumentId=leadMsmeResModel!.frontDocumentId!;
                             }
                             if(leadMsmeResModel!.vintage!=null){
-                              _vintageCl.text=leadMsmeResModel!.vintage!.toString();
+                              if(leadMsmeResModel!.vintage == 0){
+                                if(leadMsmeResModel!.doi!=null){
+                                  if(doi.isNotEmpty){
+                                    _vintageCl.text= calculateDiff(doi).toString();
+                                  }
+                                }
+                              }else{
+                                _vintageCl.text=leadMsmeResModel!.vintage!.toString();
+                              }
                             }
                             if(leadMsmeResModel!.msmeCertificateUrl!=null && !isImageDelete){
                               msmeCertificateUrl=leadMsmeResModel!.msmeCertificateUrl!;
@@ -215,10 +226,6 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
                             height: 16.0,
                           ),
                           CommonTextField(
-                            inputFormatter: [
-                              LengthLimitingTextInputFormatter(17),
-                              // Limit to 10 characters
-                            ],
                             keyboardType: TextInputType.text,
                             controller: _businesNameCl,
                             maxLines: 1,
@@ -236,10 +243,7 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
                           ),
 
                           CommonTextField(
-                            inputFormatter: [
-                              LengthLimitingTextInputFormatter(17),
-                              // Limit to 10 characters
-                            ],
+                            enabled: false,
                             keyboardType: TextInputType.number,
                             controller: _vintageCl,
                             maxLines: 1,
@@ -742,7 +746,22 @@ class _MsmeRegistrationScreenState extends State<MsmeRegistrationScreen> {
     }
   }*/
 
+  int calculateDiff(String doiDate) {
+    // If MSMERegislDC.doi is null, set it to the current date
 
+  // var doi = DateTime.now().toString();
+
+    DateTime date = DateTime.parse(doiDate);
+    DateTime currentDate = DateTime.now();
+    int days = currentDate.difference(date).inDays;
+    // Assuming an average of 30 days in a month
+    int daysInMonth = 30;
+    int months = (days ~/ daysInMonth);
+
+    print("months11-- $months");
+    print("daysInMonth11-- $daysInMonth");
+    return months == 0 ? 1 : months;
+  }
 
 }
 

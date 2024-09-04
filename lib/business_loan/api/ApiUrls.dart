@@ -84,5 +84,7 @@ class ApiUrls{
   final String getDisbursedLoanDetail="/services/loanaccount/v1/GetDisbursedLoanDetail";
   final String BLEMIDownloadPdf="/aggregator/LoanAccountAgg/BLEMIDownloadPdf";
 
+  final String getLeadDocumentDetail="/services/lead/v1/api/LeadBankDetail/GetLeadDocumentDetail";
+
 
 }
