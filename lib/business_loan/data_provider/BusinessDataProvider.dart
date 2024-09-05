@@ -1,5 +1,4 @@
 
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -333,8 +332,6 @@ class BusinessDataProvider extends ChangeNotifier {
   Result<BlemiDownloadPdfResModel,Exception>? _getBlemiDownloadPdfData;
   Result<BlemiDownloadPdfResModel,Exception>? get getBlemiDownloadPdfData => _getBlemiDownloadPdfData;
 
-  Result<GetLeadDocumentDetailResModel,Exception>? _getLeadDocumentDetailData;
-  Result<GetLeadDocumentDetailResModel,Exception>? get getLeadDocumentDetailData => _getLeadDocumentDetailData;
 
 
   Future<void> productCompanyDetail(
@@ -737,8 +734,9 @@ class BusinessDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getLeadDocumentDetail(int leadid) async {
-    _getLeadDocumentDetailData = await apiService.getLeadDocumentDetail(leadid);
+
+  Future<void> disposeBusineesDoumentSingleFile() async {
+    _getpostBusineesDoumentSingleFileData = null;
     notifyListeners();
   }
 
@@ -798,6 +796,16 @@ class BusinessDataProvider extends ChangeNotifier {
     _getLeadMSMEData=null;
     _getRateOfInterestData=null;
     _getLeadMasterByLeadIdData=null;
+    _getGetOfferEmiDetailsDownloadData=null;
+    _getBlemiDownloadPdfData=null;
+    _getBlemiDownloadPdfData=null;
+    _getDisbursedLoanDetailData=null;
+    _getacceptOffersData=null;
+    _getKarzaAadhaarOtpVerifyForNBFCData=null;
+    _getGetOfferEmiDetailsData=null;
+    _getAadhaarOtpVerifyData=null;
+    _getGenerateKarzaAadhaarOtpForNBFCData=null;
+    _getaadhaarOtpGenerateData=null;
     notifyListeners();
   }
 

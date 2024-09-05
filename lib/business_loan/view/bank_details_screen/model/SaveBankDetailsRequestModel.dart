@@ -100,6 +100,7 @@ class BankDocs {
   int? sequence;
   String? pdfPassword;
   String? documentNumber;
+  int? docId;
 
   BankDocs(
       {this.documentName,
@@ -107,7 +108,8 @@ class BankDocs {
         this.fileURL,
         this.sequence,
         this.pdfPassword,
-        this.documentNumber});
+        this.documentNumber,
+        this.docId});
 
   BankDocs.fromJson(Map<String, dynamic> json) {
     documentName = json['DocumentName'];
@@ -116,6 +118,7 @@ class BankDocs {
     sequence = json['Sequence'];
     pdfPassword = json['PdfPassword'];
     documentNumber = json['DocumentNumber'];
+    docId = json['DocId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -126,6 +129,7 @@ class BankDocs {
     data['Sequence'] = this.sequence;
     data['PdfPassword'] = this.pdfPassword;
     data['DocumentNumber'] = this.documentNumber;
+    data['DocId'] = this.docId;
     return data;
   }
 }

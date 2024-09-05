@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:scale_up_module/business_loan/view/bank_details_screen/model/AddImageUrlList.dart';
 import 'package:scale_up_module/shared_preferences/SharedPref.dart';
 import 'package:scale_up_module/business_loan/utils/Utils.dart';
 import 'package:scale_up_module/business_loan/view/bank_details_screen/model/BankDetailsResponceModel.dart';
@@ -67,9 +68,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   String? selectedBankValue;
   String? nachSelectedBankValue;
   BankDetailsResponceModel? bankDetailsResponceModel = null;
-  List<String?>? documentList = [];
-  List<String?>? gstDocumentList = [];
-  List<String?>? itrDocumentList = [];
+  List<AddImageUrlList?>? documentList = [];
+  List<AddImageUrlList?>? gstDocumentList = [];
+  List<AddImageUrlList?>? itrDocumentList = [];
   var isEditableStatement = false;
   var isSameBank = false;
   var disbursementDetailType = "borrower";
@@ -78,6 +79,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   var selectedNatchBankinitialData = null;
   var isFillData = false;
   var isSelectedNatchBank = false;
+
+
 
   @override
   void initState() {
@@ -315,33 +318,30 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                               gstDocumentList!.clear();
                               itrDocumentList!.clear();
                               for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
-                                print("bankDocsDAta " + i.toString());
+                               // print("bankDocsDAta " + i.toString());
                                 if (bankDetailsResponceModel!
                                         .result!.bankDocs![i].documentName ==
                                     "bank_statement") {
-                                  documentList!.add(bankDetailsResponceModel!
-                                      .result!.bankDocs![i].fileURL);
+                                  documentList!.add(AddImageUrlList(imageUrl: bankDetailsResponceModel!.result!.bankDocs![i].fileURL,docId:bankDetailsResponceModel!.result!.bankDocs![i].docId ));
                                 }
                                 if (bankDetailsResponceModel!
                                         .result!.bankDocs![i].documentName ==
                                     "surrogate_gst") {
-                                  gstDocumentList!.add(bankDetailsResponceModel!
-                                      .result!.bankDocs![i].fileURL);
+                                  gstDocumentList!.add(AddImageUrlList(imageUrl: bankDetailsResponceModel!.result!.bankDocs![i].fileURL,docId:bankDetailsResponceModel!.result!.bankDocs![i].docId ));
                                 }
 
                                 if (bankDetailsResponceModel!
                                         .result!.bankDocs![i].documentName ==
                                     "surrogate_itr") {
-                                  itrDocumentList!.add(bankDetailsResponceModel!
-                                      .result!.bankDocs![i].fileURL);
+                                  itrDocumentList!.add(AddImageUrlList(imageUrl: bankDetailsResponceModel!.result!.bankDocs![i].fileURL,docId:bankDetailsResponceModel!.result!.bankDocs![i].docId ));
                                 }
                               }
                               isEditableStatement = true;
                             }
 
-                             for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
+                            /* for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
                               print("bankDocsDAta1 "+i.toString());
-                            }
+                            }*/
                           } else {
                             Utils.showToast(
                                 bankDetailsResponceModel!.message!, context);
@@ -618,9 +618,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                   if (productProvider
                                           .getpostBusineesDoumentSingleFileData !=
                                       null) {
-                                    documentList!.add(productProvider
-                                        .getpostBusineesDoumentSingleFileData!
-                                        .filePath);
+                                    documentList!.add(AddImageUrlList(imageUrl:productProvider.getpostBusineesDoumentSingleFileData!.filePath,docId:productProvider.getpostBusineesDoumentSingleFileData!.docId ));
+                                    productProvider.disposeBusineesDoumentSingleFile();
                                   }
                                   setState(() {
                                     Navigator.pop(context);
@@ -750,9 +749,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                         if (productProvider
                                                 .getpostBusineesDoumentSingleFileData !=
                                             null) {
-                                          gstDocumentList!.add(productProvider
-                                              .getpostBusineesDoumentSingleFileData!
-                                              .filePath);
+                                          gstDocumentList!.add(AddImageUrlList(imageUrl:  productProvider.getpostBusineesDoumentSingleFileData!.filePath,docId:productProvider.getpostBusineesDoumentSingleFileData!.docId ));
+                                          productProvider.disposeBusineesDoumentSingleFile();
                                         }
                                         setState(() {
                                           Navigator.pop(context);
@@ -902,9 +900,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                             if (productProvider
                                                     .getpostBusineesDoumentSingleFileData !=
                                                 null) {
-                                              gstDocumentList!.add(productProvider
-                                                  .getpostBusineesDoumentSingleFileData!
-                                                  .filePath);
+                                              gstDocumentList!.add(AddImageUrlList(imageUrl:  productProvider.getpostBusineesDoumentSingleFileData!.filePath,docId:productProvider.getpostBusineesDoumentSingleFileData!.docId ));
+                                              productProvider.disposeBusineesDoumentSingleFile();
                                             }
                                             setState(() {
                                               Navigator.pop(context);
@@ -1055,9 +1052,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                             if (productProvider
                                                     .getpostBusineesDoumentSingleFileData !=
                                                 null) {
-                                              itrDocumentList!.add(productProvider
-                                                  .getpostBusineesDoumentSingleFileData!
-                                                  .filePath);
+                                              itrDocumentList!.add(AddImageUrlList(imageUrl:  productProvider.getpostBusineesDoumentSingleFileData!.filePath,docId:productProvider.getpostBusineesDoumentSingleFileData!.docId ));
+                                              productProvider.disposeBusineesDoumentSingleFile();
                                             }
                                             setState(() {
                                               Navigator.pop(context);
@@ -1221,8 +1217,6 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     await Provider.of<BusinessDataProvider>(context, listen: false)
         .getLeadBusinessDetail(userId!, productCode!);
 
-   /* await Provider.of<BusinessDataProvider>(context, listen: false)
-        .getLeadDocumentDetail(leadId);*/
 
     //Utils.onLoading(context, "");
     await Provider.of<BusinessDataProvider>(context, listen: false)
@@ -1823,9 +1817,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   Future<void> submitBankDetailsApi(
       BuildContext contextz,
       BusinessDataProvider productProvider,
-      List<String?> docList,
-      List<String?> gstDocList,
-      List<String?> itrDocList) async {
+      List<AddImageUrlList?> docList,
+      List<AddImageUrlList?> gstDocList,
+      List<AddImageUrlList?> itrDocList) async {
     if (selectedBankValue == null) {
       Utils.showToast("Please Select Bank", context);
     } else if (selectedBankValue!.isEmpty) {
@@ -1858,27 +1852,21 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
           "IFSC code should be minimum 9 digits and max 11 digits!!", context);
     } else if (documentList!.isEmpty) {
       Utils.showToast("Please uploade bank proof", context);
-    } else if (nachsurrogateType=="GST") {
-      if( gstDocumentList!.isEmpty){
+    } else if (nachsurrogateType=="GST" && gstDocumentList!.isEmpty) {
         Utils.showToast("Please uploade GST proof", context);
-      }
-    }else if (nachsurrogateType=="ITR") {
-      if( gstDocumentList!.isEmpty){
-        Utils.showToast("Please uploade GST proof", context);
-      }else if( itrDocumentList!.isEmpty){
-        Utils.showToast("Please uploade ITR proof", context);
-      }
-
-    }
-
-    else {
+    }else if (nachsurrogateType=="ITR" && gstDocumentList!.isEmpty) {
+      Utils.showToast("Please uploade GST proof", context);
+    }else if (nachsurrogateType=="ITR" && itrDocumentList!.isEmpty) {
+      Utils.showToast("Please uploade Itr proof", context);
+    } else {
+      print("11111111");
       final prefsUtil = await SharedPref.getInstance();
       final int? leadID = prefsUtil.getInt(LEADE_ID);
 
       List<LeadBankDetailDTOs> leadBankDetailsList = [];
       List<BankDocs> bankDocList = [];
-      leadBankDetailsList.clear();
-      bankDocList.clear();
+
+
 
       leadBankDetailsList.add(
         LeadBankDetailDTOs(
@@ -1912,15 +1900,17 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         ),
       );
 
+
       for (int i = 0; i < docList.length; i++) {
         bankDocList.add(
           BankDocs(
               documentType: "id_proof",
               documentName: "bank_statement",
-              fileURL: docList[i],
+              fileURL: docList[i]!.imageUrl,
               sequence: i + 1,
               pdfPassword: _bankStatmentPassworedController.text,
               documentNumber: _bankAccountNumberCl.text,
+            docId: docList[i]!.docId
           ),
         );
       }
@@ -1928,19 +1918,21 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         bankDocList.add(BankDocs(
             documentType: "id_proof",
             documentName: "surrogate_gst",
-            fileURL: gstDocList[i],
+            fileURL: gstDocList[i]!.imageUrl,
             sequence: i + 1,
             pdfPassword: _bankStatmentPassworedController.text,
-            documentNumber: _bankAccountNumberCl.text));
+            documentNumber: _bankAccountNumberCl.text,
+            docId: gstDocList[i]!.docId));
       }
       for (int i = 0; i < itrDocList.length; i++) {
         bankDocList.add(BankDocs(
             documentType: "id_proof",
             documentName: "surrogate_itr",
-            fileURL: itrDocList[i],
+            fileURL: itrDocList[i]!.imageUrl,
             sequence: i + 1,
             pdfPassword: _bankStatmentPassworedController.text,
-            documentNumber: _bankAccountNumberCl.text));
+            documentNumber: _bankAccountNumberCl.text,
+            docId: itrDocList[i]!.docId));
       }
 
       var postData = SaveBankDetailsRequestModel(

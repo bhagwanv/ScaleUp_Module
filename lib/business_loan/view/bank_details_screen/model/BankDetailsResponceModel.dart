@@ -72,6 +72,7 @@ class BankDocsModel {
   String? pdfPassword;
   String? documentNumber;
   String? surrogateType;
+  int? docId;
 
   BankDocsModel(
       {this.documentType,
@@ -91,6 +92,7 @@ class BankDocsModel {
     pdfPassword = json['pdfPassword'];
     documentNumber = json['documentNumber'];
     documentNumber = json['surrogateType'];
+    docId = json['docId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -102,6 +104,7 @@ class BankDocsModel {
     data['pdfPassword'] = this.pdfPassword;
     data['documentNumber'] = this.documentNumber;
     data['surrogateType'] = this.surrogateType;
+    data['docId'] = this.docId;
     return data;
   }
 }
