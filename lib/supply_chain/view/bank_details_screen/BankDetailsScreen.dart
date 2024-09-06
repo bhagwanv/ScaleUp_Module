@@ -13,6 +13,7 @@ import 'package:scale_up_module/supply_chain/utils/Utils.dart';
 import 'package:scale_up_module/supply_chain/view/bank_details_screen/model/BankDetailsResponceModel.dart';
 import 'package:scale_up_module/supply_chain/view/bank_details_screen/model/LiveBankList.dart';
 import 'package:scale_up_module/supply_chain/view/bank_details_screen/model/SaveBankDetailsRequestModel.dart';
+import '../../../business_loan/view/bank_details_screen/model/AddImageUrlList.dart';
 import '../../api/ApiService.dart';
 import '../../api/FailureException.dart';
 import '../../data_provider/DataProvider.dart';
@@ -53,7 +54,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
   late String selectedAccountTypeValue = "";
   String? selectedBankValue;
   BankDetailsResponceModel? bankDetailsResponceModel = null;
-  List<String?>? documentList = [];
+  List<AddImageUrlList>? documentList = [];
   var isEditableStatement = false;
 
   @override
@@ -173,7 +174,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                           if(!isEditableStatement) {
                             for (int i = 0; i < bankDetailsResponceModel!.result!.bankDocs!.length; i++) {
                               print("bankDocsDAta "+i.toString());
-                              documentList!.add(bankDetailsResponceModel!.result!.bankDocs![i].fileURL);
+                              documentList!.add(AddImageUrlList(imageUrl: bankDetailsResponceModel!.result!.bankDocs![i].fileURL,docId: bankDetailsResponceModel!.result!.bankDocs![i].docId));
                             }
                             isEditableStatement = true;
                           }
@@ -311,7 +312,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                                   .postBusineesDoumentSingleFile(
                                       file, true, "", "");
                               if (productProvider.getpostBusineesDoumentSingleFileData != null) {
-                                documentList!.add(productProvider.getpostBusineesDoumentSingleFileData!.filePath);
+                                documentList!.add(AddImageUrlList(imageUrl:  productProvider.getpostBusineesDoumentSingleFileData!.filePath,docId:productProvider.getpostBusineesDoumentSingleFileData!.docId ));
                               }
                               setState(() {
                                 Navigator.pop(context);
@@ -459,7 +460,10 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         initialData = null;
       }
       return DropdownButtonFormField2<LiveBankList>(
-        value: initialData?.first,
+        value: initialData != null &&
+            initialData.isNotEmpty
+            ? initialData?.first
+            : null,
         isExpanded: true,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -792,7 +796,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
     }
   }
 
-  Future<void> submitBankDetailsApi(BuildContext contextz, DataProvider productProvider, List<String?> docList) async {
+  Future<void> submitBankDetailsApi(BuildContext contextz, DataProvider productProvider, List<AddImageUrlList> docList) async {
     if (selectedBankValue == null) {
       Utils.showToast("Please Select Bank", context);
     } else if (selectedBankValue!.isEmpty) {
@@ -818,9 +822,9 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       leadBankDetailsList.add(
         LeadBankDetailDTOs(
           leadId: leadID!,
-          Type: "borrower",
+          type: "borrower",
           bankName: selectedBankValue,
-          ifscCode: _ifsccodeCl.text.trim(),
+          iFSCCode: _ifsccodeCl.text.trim(),
           accountType: selectedAccountTypeValue,
           activityId: widget.activityId,
           subActivityId: widget.subActivityId,
@@ -832,7 +836,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
       );
 
       for (int i = 0; i < docList.length; i++) {
-        bankDocList.add(BankDocs(documentType: "id_proof",documentName: "bank_statement",fileURL: docList[i],sequence: i,pdfPassword: _bankStatmentPassworedController.text,documentNumber: _bankAccountNumberCl.text));
+        bankDocList.add(BankDocs(documentType: "id_proof",documentName: "bank_statement",fileURL: docList[i].imageUrl,sequence: i,pdfPassword: _bankStatmentPassworedController.text,documentNumber: _bankAccountNumberCl.text,docId:docList[i].docId ));
       }
 
       var postData = SaveBankDetailsRequestModel(leadBankDetailDTOs: leadBankDetailsList, isScaleUp: true,bankDocs: bankDocList);

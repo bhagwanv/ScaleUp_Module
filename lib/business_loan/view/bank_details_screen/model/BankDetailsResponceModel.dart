@@ -81,7 +81,8 @@ class BankDocsModel {
         this.sequence,
         this.pdfPassword,
         this.documentNumber,
-        this.surrogateType
+        this.surrogateType,
+        this.docId
       });
 
   BankDocsModel.fromJson(Map<String, dynamic> json) {

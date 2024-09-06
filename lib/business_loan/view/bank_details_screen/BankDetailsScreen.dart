@@ -529,10 +529,6 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       CommonTextField(
                         enabled: !isSameBank,
                         controller: _nachAccountHolderController,
-                        inputFormatter: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp((r'[A-Z ]'))),
-                        ],
                         hintText: "Account Holder Name ",
                         labelText: "Account Holder Name ",
                       ),
@@ -542,7 +538,8 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                       CommonTextField(
                         enabled: !isSameBank,
                         inputFormatter: [
-                          FilteringTextInputFormatter.allow(RegExp((r'[0-9]'))),
+                          FilteringTextInputFormatter.allow(
+                              RegExp((r'[0-9]'))),
                           LengthLimitingTextInputFormatter(17)
                         ],
                         keyboardType: TextInputType.number,
@@ -576,12 +573,6 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
 
                       CommonTextField(
                         controller: _bankStatmentPassworedController,
-                        keyboardType: TextInputType.text,
-                        textCapitalization: TextCapitalization.characters,
-                        inputFormatter: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp((r'[A-Za-z0-9]'))),
-                        ],
                         hintText: "Bank Statement password(optional)",
                         labelText: "Bank Statement password(optional)",
                       ),
@@ -1907,7 +1898,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
               documentType: "id_proof",
               documentName: "bank_statement",
               fileURL: docList[i]!.imageUrl,
-              sequence: i + 1,
+              sequence: i,
               pdfPassword: _bankStatmentPassworedController.text,
               documentNumber: _bankAccountNumberCl.text,
             docId: docList[i]!.docId
@@ -1919,7 +1910,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             documentType: "id_proof",
             documentName: "surrogate_gst",
             fileURL: gstDocList[i]!.imageUrl,
-            sequence: i + 1,
+            sequence: i ,
             pdfPassword: _bankStatmentPassworedController.text,
             documentNumber: _bankAccountNumberCl.text,
             docId: gstDocList[i]!.docId));
@@ -1929,7 +1920,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
             documentType: "id_proof",
             documentName: "surrogate_itr",
             fileURL: itrDocList[i]!.imageUrl,
-            sequence: i + 1,
+            sequence: i,
             pdfPassword: _bankStatmentPassworedController.text,
             documentNumber: _bankAccountNumberCl.text,
             docId: itrDocList[i]!.docId));
