@@ -949,7 +949,7 @@ class ApiService {
 
   //Business Detail Module
   Future<LeadBusinessDetailResponseModel> getLeadBusinessDetail(
-      String userId, String productCode) async {
+      String userId, String productCode, BuildContext context) async {
     if (await internetConnectivity.networkConnectivity()) {
       final prefsUtil = await SharedPref.getInstance();
       var token = prefsUtil.getString(TOKEN);
@@ -972,6 +972,7 @@ class ApiService {
             LeadBusinessDetailResponseModel.fromJson(jsonData);
         return responseModel;
       } else {
+        handle401(context);
         throw Exception('Failed to load products');
       }
     } else {

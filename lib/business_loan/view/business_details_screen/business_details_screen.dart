@@ -1522,7 +1522,7 @@ class _BusinessDetailsState extends State<BusinessDetailsScreen> {
 
 
     await Provider.of<BusinessDataProvider>(context, listen: false)
-        .getLeadBusinessDetail(userId!,productCode!);
+        .getLeadBusinessDetail(userId!,productCode!,context);
 
     await Provider.of<BusinessDataProvider>(context, listen: false).getAllState();
   }

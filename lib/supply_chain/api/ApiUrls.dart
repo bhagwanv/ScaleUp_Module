@@ -65,6 +65,8 @@ class ApiUrls{
   final String ValidateOrderOtp="/aggregator/LoanAccountAgg/ValidateOrderOtp";
   final String GetRepaymentAccountDetails="/services/loanaccount/v1/GetRepaymentAccountDetails";
 
+  final String getLedgerRetailerStatement="/aggregator/LoanAccountAgg/GetLedger_RetailerStatement";
+
 
 
 }

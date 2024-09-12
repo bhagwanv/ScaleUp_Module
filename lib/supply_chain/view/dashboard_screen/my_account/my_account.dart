@@ -126,7 +126,11 @@ class _MyAccountState extends State<MyAccount> {
                     productProvider.disposeAllProviderData();
                     ApiService().handle401(context);
                   } else {
-                    Utils.showToast(exception.errorMessage, context);
+                    if(exception.errorMessage.isNotEmpty){
+                      Utils.showToast(exception.errorMessage, context);
+                    }else{
+                      Utils.showToast("Server error", context);
+                    }
                   }
                 }
               },
@@ -149,7 +153,11 @@ class _MyAccountState extends State<MyAccount> {
                     productProvider.disposeAllProviderData();
                     ApiService().handle401(context);
                   } else {
-                    Utils.showToast(exception.errorMessage, context);
+                    if(exception.errorMessage.isNotEmpty){
+                      Utils.showToast(exception.errorMessage, context);
+                    }else{
+                      Utils.showToast("Server error", context);
+                    }
                   }
                 }
               },
@@ -166,14 +174,24 @@ class _MyAccountState extends State<MyAccount> {
                       padding: const EdgeInsets.all(16.0),
                       child: Row(
                         children: [
-                          Container(
+                          customerImage.isEmpty
+                              ? Container(
+                            width: 44,
+                            height: 44,
+                            child: SvgPicture.asset(
+                              'assets/images/take_selfie.svg',
+                              semanticsLabel: 'dummy_image SVG',
+                            ),
+                          )
+                              : Container(
                             width: 44,
                             height: 44,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                  image: NetworkImage(customerImage),
-                                  fit: BoxFit.fill),
+                                image: NetworkImage(customerImage),
+                                fit: BoxFit.fill,
+                              ),
                             ),
                           ),
                           const SizedBox(
@@ -455,7 +473,11 @@ class _MyAccountState extends State<MyAccount> {
                 productProvider.disposeAllProviderData();
                 ApiService().handle401(context);
               } else {
-                Utils.showToast(exception.errorMessage, context);
+                if(exception.errorMessage.isNotEmpty){
+                  Utils.showToast(exception.errorMessage, context);
+                }else{
+                  Utils.showToast("Server error", context);
+                }
               }
             }
           },
@@ -1001,7 +1023,11 @@ class _MyAccountState extends State<MyAccount> {
               productProvider.disposeAllProviderData();
               ApiService().handle401(context);
             } else {
-              Utils.showToast(exception.errorMessage, context);
+              if(exception.errorMessage.isNotEmpty){
+                Utils.showToast(exception.errorMessage, context);
+              }else{
+                Utils.showToast("Server error", context);
+              }
             }
           }
         },

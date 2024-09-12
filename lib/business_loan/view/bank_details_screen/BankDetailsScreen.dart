@@ -356,7 +356,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                         productProvider.disposeAllProviderData();
                         ApiService().handle401(context);
                       } else {
-                        Utils.showToast(exception.errorMessage, context);
+                        if(exception.errorMessage.isNotEmpty){
+                          Utils.showToast(exception.errorMessage, context);
+                        }else{
+                          Utils.showToast("Server error", context);
+                        }
                       }
                     }
                   },
@@ -1206,7 +1210,7 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
         .getBankDetails(leadId!, productCode!);
 
     await Provider.of<BusinessDataProvider>(context, listen: false)
-        .getLeadBusinessDetail(userId!, productCode!);
+        .getLeadBusinessDetail(userId!, productCode!,context);
 
 
     //Utils.onLoading(context, "");
@@ -1954,7 +1958,11 @@ class _BankDetailsScreenState extends State<BankDetailsScreen> {
                 productProvider.disposeAllProviderData();
                 ApiService().handle401(context);
               } else {
-                Utils.showToast(exception.errorMessage, context);
+                if(exception.errorMessage.isNotEmpty){
+                  Utils.showToast(exception.errorMessage, context);
+                }else{
+                  Utils.showToast("Server error", context);
+                }
               }
             }
           },

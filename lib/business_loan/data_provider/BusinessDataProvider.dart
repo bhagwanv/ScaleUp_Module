@@ -521,8 +521,8 @@ class BusinessDataProvider extends ChangeNotifier {
 
   }
 
-  Future<void> getLeadBusinessDetail(String userId,String productCode) async {
-    _getLeadBusinessDetailData = await apiService.getLeadBusinessDetail(userId,productCode);
+  Future<void> getLeadBusinessDetail(String userId,String productCode, BuildContext context) async {
+    _getLeadBusinessDetailData = await apiService.getLeadBusinessDetail(userId,productCode,context);
     notifyListeners();
   }
 

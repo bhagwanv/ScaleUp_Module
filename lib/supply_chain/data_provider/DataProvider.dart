@@ -37,6 +37,7 @@ import '../view/dashboard_screen/my_account/model/CustomerOrderSummaryResModel.d
 import '../view/dashboard_screen/my_account/model/CustomerTransactionListRespModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoReqModel.dart';
 import '../view/dashboard_screen/transactions_screen/model/CustomerTransactionListTwoRespModel.dart';
+import '../view/dashboard_screen/transactions_screen/model/LedgerRetailerStatementResModel.dart';
 import '../view/dashboard_screen/vendorDetail/model/TransactionBreakupResModel.dart';
 import '../view/login_screen/model/GenrateOptResponceModel.dart';
 import '../view/otp_screens/model/VarifayOtpRequest.dart';
@@ -282,6 +283,9 @@ class DataProvider extends ChangeNotifier {
 
   Result<RepaymentAccountDetailsResModel,Exception>? _getRepaymentAccountDetailsData;
   Result<RepaymentAccountDetailsResModel,Exception>? get getRepaymentAccountDetailsData => _getRepaymentAccountDetailsData;
+
+  Result<LedgerRetailerStatementResModel,Exception>? _getLedgerRetailerStatementData;
+  Result<LedgerRetailerStatementResModel,Exception>? get getLedgerRetailerStatementData => _getLedgerRetailerStatementData;
 
 
 
@@ -628,6 +632,11 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getRepaymentAccountDetails(leadId) async {
     _getRepaymentAccountDetailsData = await apiService.getRepaymentAccountDetails(leadId);
+    notifyListeners();
+  }
+
+  Future<void> getLedgerRetailerStatement(int loanAccountId,String fromDate,String toDate) async {
+    _getLedgerRetailerStatementData = await apiService.getLedgerRetailerStatement(loanAccountId,fromDate,toDate);
     notifyListeners();
   }
 
