@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_download_manager/flutter_download_manager.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:open_file/open_file.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/business_loan/api/ApiService.dart';
 import 'package:scale_up_module/business_loan/api/FailureException.dart';
@@ -128,7 +128,7 @@ class _LoanDetailscreenState extends State<LoanDetailscreen> {
   }
 
   openfile() {
-    OpenFile.open(filePath);
+    OpenFilex.open(filePath);
   }
   // End Download file
 
@@ -1023,7 +1023,7 @@ class _TileListState extends State<TileList> {
   }
 
   openfile() {
-    OpenFile.open(filePath);
+    OpenFilex.open(filePath);
   }
 
   @override

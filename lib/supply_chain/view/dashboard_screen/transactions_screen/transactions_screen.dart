@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:open_file/open_file.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
 import 'package:scale_up_module/supply_chain/utils/Utils.dart';
 import 'package:scale_up_module/supply_chain/utils/directory_path.dart';
@@ -122,7 +122,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   }
 
   openfile() {
-    OpenFile.open(filePath);
+    OpenFilex.open(filePath);
   }
   // End Download file
 
