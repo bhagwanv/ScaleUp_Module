@@ -51,8 +51,8 @@ dependencies:
 
   #api
   provider: ^6.1.2
-  http: ^0.13.3
-  http_interceptor: ^1.0.0
+  http: ^1.6.0
+  http_interceptor: ^2.0.0
   connectivity_plus: ^6.0.0
   shared_preferences: ^2.2.2
   timer_count_down: ^2.2.0
@@ -78,6 +78,23 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.1
+
+dependency_overrides:
+  flutter_plugin_android_lifecycle: ^2.0.33
+  audio_session: ^0.1.25
+  camera_android: ^0.10.10+14
+  file_picker: ^8.3.7
+  image_cropper: ^11.0.0
+  image_picker_android: ^0.8.13+13
+  path_provider_android: ^2.2.22
+  shared_preferences_android: ^2.4.20
+  sms_autofill: ^2.4.1
+  fluttertoast: ^9.0.0
+  url_launcher_android: ^6.3.28
+  video_player_android: ^2.9.1
+  webview_flutter_android: ^4.10.11
+  flutter_widget_from_html: ^0.17.1
+  flutter_widget_from_html_core: ^0.17.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
