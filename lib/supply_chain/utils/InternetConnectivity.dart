@@ -1,14 +1,11 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-class InternetConnectivity{
+class InternetConnectivity {
   Future<bool> networkConnectivity() async {
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi) {
-      return true;
+    final connectivityResult = await Connectivity().checkConnectivity();
 
-    } else {
-      return false;
-    }
+    return connectivityResult.contains(ConnectivityResult.mobile) ||
+        connectivityResult.contains(ConnectivityResult.wifi) ||
+        connectivityResult.contains(ConnectivityResult.ethernet);
   }
 }
